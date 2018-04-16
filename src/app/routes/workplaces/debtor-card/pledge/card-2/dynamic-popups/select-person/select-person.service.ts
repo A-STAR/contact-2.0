@@ -6,7 +6,7 @@ import { IAGridRequestParams, IAGridResponse } from '@app/shared/components/grid
 import { DataService } from '@app/core/data/data.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 
-import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
+import { FilterObject, FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class SelectPersonService {
@@ -25,15 +25,34 @@ export class SelectPersonService {
     this._filters = filters;
   }
 
-  set quickFilters(quickFilters: FilterObject) {
-    this._quickFilters = quickFilters;
-  }
-
   set params(params: IAGridRequestParams) {
     this._params = params;
   }
 
-  onRequest(): void {
+  set filtersFormData(formData: any) {
+    if (formData) {
+      const filters = FilterObject.create().and();
+      Object.keys(formData).forEach(prop => {
+        const value = formData[prop];
+        if (value) {
+          const operator: FilterOperatorType = /^\%.+\%$/.test(value)
+            ? 'LIKE'
+            : '==';
+          const filter = FilterObject
+            .create()
+            .setOperator(operator)
+            .setName(prop)
+            .setValues(value);
+          filters.addFilter(filter);
+        }
+      });
+      this._quickFilters = filters;
+    } else {
+      this._quickFilters = null;
+    }
+  }
+
+  search(): void {
     const filters = FilterObject.create().and();
     if (this._filters) {
       filters.addFilter(this._filters);

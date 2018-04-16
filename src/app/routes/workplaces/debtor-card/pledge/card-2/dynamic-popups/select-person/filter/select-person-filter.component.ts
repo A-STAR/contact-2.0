@@ -19,8 +19,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
-import { FilterObject, FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
-
 import { range } from '@app/core/utils';
 
 @Component({
@@ -167,30 +165,12 @@ export class SelectPersonFilterComponent {
 
   onClear(): void {
     this.form.formGroup.reset();
-    this.selectPersonService.quickFilters = null;
-    this.selectPersonService.onRequest();
+    this.selectPersonService.filtersFormData = null;
+    this.selectPersonService.search();
   }
 
   onSearch(): void {
-    const { data } = this.form;
-    const filters = FilterObject.create().and();
-
-    Object.keys(data).forEach(prop => {
-      const value = data[prop];
-      if (value) {
-        const operator: FilterOperatorType = /^\%.+\%$/.test(value)
-          ? 'LIKE'
-          : '==';
-        const filter = FilterObject
-          .create()
-          .setOperator(operator)
-          .setName(prop)
-          .setValues(value);
-        filters.addFilter(filter);
-      }
-    });
-
-    this.selectPersonService.quickFilters = filters;
-    this.selectPersonService.onRequest();
+    this.selectPersonService.filtersFormData = this.form.data;
+    this.selectPersonService.search();
   }
 }
