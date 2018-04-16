@@ -3,9 +3,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class PledgeCardService {
-  readonly person$ = new BehaviorSubject<number>(0);
+  readonly person$ = new BehaviorSubject<any>(null);
 
-  selectPerson(): void {
-    this.person$.next(this.person$.value + 1);
+  selectPerson(selection: any): void {
+    this.person$.next(selection);
   }
 }

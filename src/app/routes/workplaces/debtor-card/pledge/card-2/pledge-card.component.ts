@@ -287,9 +287,9 @@ export class PledgeCardComponent {
     plugins: [],
   };
 
+  readonly person$ = this.pledgeCardService.person$;
+
   constructor(
     private pledgeCardService: PledgeCardService,
-  ) {
-    this.pledgeCardService.person$.subscribe(console.log);
-  }
+  ) {}
 }

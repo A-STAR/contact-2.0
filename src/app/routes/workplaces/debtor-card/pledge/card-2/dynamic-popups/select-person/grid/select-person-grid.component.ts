@@ -21,8 +21,8 @@ export class SelectPersonGridComponent {
     private selectPersonService: SelectPersonService,
   ) {}
 
-  onSelect(personId: any): void {
-    console.log(personId);
+  get selection(): any {
+    return this.grid.selection;
   }
 
   onRequest(): void {
