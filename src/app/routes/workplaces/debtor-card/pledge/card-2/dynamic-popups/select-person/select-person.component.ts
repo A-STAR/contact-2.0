@@ -11,4 +11,12 @@ import { SelectPersonService } from './select-person.service';
   styleUrls: [ 'select-person.component.scss' ],
   templateUrl: 'select-person.component.html'
 })
-export class SelectPersonComponent {}
+export class SelectPersonComponent {
+  onClose(): void {
+    //
+  }
+
+  onSubmit(): void {
+    //
+  }
+}

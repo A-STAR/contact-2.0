@@ -6,4 +6,5 @@
   [rows]="rows$ | async"
   [rowCount]="rowCount$ | async"
   (request)="onRequest()"
+  (select)="onSelect($event)"
 ></app-action-grid>

@@ -21,6 +21,10 @@ export class SelectPersonGridComponent {
     private selectPersonService: SelectPersonService,
   ) {}
 
+  onSelect(personId: any): void {
+    console.log(personId);
+  }
+
   onRequest(): void {
     this.selectPersonService.filters = this.grid.getFilters();
     this.selectPersonService.params = this.grid.getRequestParams();
