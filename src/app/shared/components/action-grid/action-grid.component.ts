@@ -410,6 +410,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return {
       name: action.metadataAction.action,
       addOptions: action.metadataAction.addOptions,
+      params: action.metadataAction.params,
       payload: this.actionGridService.getPayload(action, {
         selection: this.selection,
         metadataKey: this.metadataKey,
