@@ -1,32 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 
 import { SelectPersonService } from '../select-person.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DateRendererComponent } from '@app/shared/components/grids/renderers';
-
-import { range } from '@app/core/utils';
+import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pledge-card-select-person-grid',
   templateUrl: 'select-person-grid.component.html'
 })
-export class SelectPersonGridComponent implements OnInit {
-  readonly columns: ISimpleGridColumn<any>[] = [
-    { label: 'ID', prop: 'id' },
-    { label: 'Фамилия', prop: 'lastName' },
-    { label: 'Имя', prop: 'firstName' },
-    { label: 'Отчество', prop: 'middleName' },
-    { label: 'Тип должника', prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
-    { label: 'Дата рождения', prop: 'birthDate', renderer: DateRendererComponent },
-    { label: 'Пол', prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
-    { label: 'Серия и номер паспорта', prop: 'passportNumber' },
-    ...range(1, 10).map(i => ({ label: `Строковый атрибут ${i}`, prop: `stringValue${i}` })),
-  ];
+export class SelectPersonGridComponent {
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
 
+  private _rowCount: number;
   private _rows = [];
 
   constructor(
@@ -34,15 +22,23 @@ export class SelectPersonGridComponent implements OnInit {
     private selectPersonService: SelectPersonService,
   ) {}
 
+  get rowCount(): number {
+    return this._rowCount;
+  }
+
   get rows(): any[] {
     return this._rows;
   }
 
-  ngOnInit(): void {
+  onRequest(): void {
+    const filters = this.grid.getFilters();
+    const params = this.grid.getRequestParams();
+
     this.selectPersonService
-      .search()
-      .subscribe(rows => {
-        this._rows = rows;
+      .fetch(filters, params)
+      .subscribe((response: IAGridResponse<any>) => {
+        this._rows = response.data;
+        this._rowCount = response.total;
         this.cdRef.markForCheck();
       });
   }

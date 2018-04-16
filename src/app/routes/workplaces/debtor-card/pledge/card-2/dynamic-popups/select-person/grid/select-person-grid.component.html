@@ -1,4 +1,9 @@
-<app-simple-grid
-  [columns]="columns"
+<app-action-grid
+  metadataKey="personSearch"
+  persistenceKey="personSearch"
+  rowIdKey="id"
+  [fullHeight]="true"
   [rows]="rows"
-></app-simple-grid>
+  [rowCount]="rowCount"
+  (request)="onRequest()"
+></app-action-grid>
