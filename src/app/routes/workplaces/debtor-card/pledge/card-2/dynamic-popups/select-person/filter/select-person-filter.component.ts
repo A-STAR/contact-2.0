@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import {
   IContextConfigItemType,
@@ -14,7 +14,10 @@ import {
   IMetadataFormTextControl,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
+import { SelectPersonService } from '../select-person.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
 import { range } from '@app/core/utils';
 
@@ -24,6 +27,12 @@ import { range } from '@app/core/utils';
   templateUrl: 'select-person-filter.component.html'
 })
 export class SelectPersonFilterComponent {
+  @ViewChild(MetadataFormComponent) form: MetadataFormComponent<any>;
+
+  constructor(
+    private selectPersonService: SelectPersonService,
+  ) {}
+
   readonly filterForm: IMetadataFormConfig = {
     editable: true,
     items: [
@@ -153,4 +162,15 @@ export class SelectPersonFilterComponent {
     ],
     plugins: [],
   };
+
+  onClear(): void {
+    this.form.formGroup.reset();
+    this.selectPersonService.filtersFormData = null;
+    this.selectPersonService.search();
+  }
+
+  onSearch(): void {
+    this.selectPersonService.filtersFormData = this.form.data;
+    this.selectPersonService.search();
+  }
 }
