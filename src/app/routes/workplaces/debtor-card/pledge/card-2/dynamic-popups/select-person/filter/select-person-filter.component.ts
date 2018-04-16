@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import {
   IContextConfigItemType,
@@ -14,7 +14,12 @@ import {
   IMetadataFormTextControl,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
+import { SelectPersonService } from '../select-person.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+
+import { FilterObject, FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
 import { range } from '@app/core/utils';
 
@@ -24,6 +29,12 @@ import { range } from '@app/core/utils';
   templateUrl: 'select-person-filter.component.html'
 })
 export class SelectPersonFilterComponent {
+  @ViewChild(MetadataFormComponent) form: MetadataFormComponent<any>;
+
+  constructor(
+    private selectPersonService: SelectPersonService,
+  ) {}
+
   readonly filterForm: IMetadataFormConfig = {
     editable: true,
     items: [
@@ -153,4 +164,33 @@ export class SelectPersonFilterComponent {
     ],
     plugins: [],
   };
+
+  onClear(): void {
+    this.form.formGroup.reset();
+    this.selectPersonService.quickFilters = null;
+    this.selectPersonService.onRequest();
+  }
+
+  onSearch(): void {
+    const { data } = this.form;
+    const filters = FilterObject.create().and();
+
+    Object.keys(data).forEach(prop => {
+      const value = data[prop];
+      if (value) {
+        const operator: FilterOperatorType = /^\%.+\%$/.test(value)
+          ? 'LIKE'
+          : '==';
+        const filter = FilterObject
+          .create()
+          .setOperator(operator)
+          .setName(prop)
+          .setValues(value);
+        filters.addFilter(filter);
+      }
+    });
+
+    this.selectPersonService.quickFilters = filters;
+    this.selectPersonService.onRequest();
+  }
 }

@@ -3,7 +3,7 @@
   persistenceKey="personSearch"
   rowIdKey="id"
   [fullHeight]="true"
-  [rows]="rows"
-  [rowCount]="rowCount"
+  [rows]="rows$ | async"
+  [rowCount]="rowCount$ | async"
   (request)="onRequest()"
 ></app-action-grid>

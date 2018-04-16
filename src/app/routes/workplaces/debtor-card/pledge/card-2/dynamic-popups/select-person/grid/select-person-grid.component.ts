@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-
-import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 import { SelectPersonService } from '../select-person.service';
 
@@ -14,32 +13,17 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
 export class SelectPersonGridComponent {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
 
-  private _rowCount: number;
-  private _rows = [];
+  readonly rowCount$ = this.selectPersonService.response$.pipe(map(r => r && r.total));
+
+  readonly rows$ = this.selectPersonService.response$.pipe(map(r => r && r.data));
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private selectPersonService: SelectPersonService,
   ) {}
 
-  get rowCount(): number {
-    return this._rowCount;
-  }
-
-  get rows(): any[] {
-    return this._rows;
-  }
-
   onRequest(): void {
-    const filters = this.grid.getFilters();
-    const params = this.grid.getRequestParams();
-
-    this.selectPersonService
-      .fetch(filters, params)
-      .subscribe((response: IAGridResponse<any>) => {
-        this._rows = response.data;
-        this._rowCount = response.total;
-        this.cdRef.markForCheck();
-      });
+    this.selectPersonService.filters = this.grid.getFilters();
+    this.selectPersonService.params = this.grid.getRequestParams();
+    this.selectPersonService.onRequest();
   }
 }
