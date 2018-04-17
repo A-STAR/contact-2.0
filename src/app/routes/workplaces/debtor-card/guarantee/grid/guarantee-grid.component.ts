@@ -165,7 +165,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
 
   private onAddGuarantor(): void {
     const { contractId } = this.selectedContract$.value;
-    this.routingService.navigate([ `guarantee/${contractId}/guarantor/add` ], this.route);
+    this.routingService.navigate([ `guarantee/${contractId}/guarantor/create` ], this.route);
   }
 
   private onEdit(contract: IGuaranteeContract = null): void {

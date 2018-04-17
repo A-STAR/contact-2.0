@@ -24,14 +24,26 @@ const routes: Routes = [
       {
         path: 'guarantee/create',
         loadChildren: './guarantee/card/guarantee-card.module#GuaranteeCardModule',
+        data: {
+          edit: false,
+          showContractForm: true,
+        },
       },
       {
-        path: 'guarantee/:contractId/guarantor/add',
+        path: 'guarantee/:contractId/guarantor/create',
         loadChildren: './guarantee/card/guarantee-card.module#GuaranteeCardModule',
+        data: {
+          edit: false,
+          showContractForm: false,
+        },
       },
       {
         path: 'guarantee/:contractId/guarantor/:guarantorId',
         loadChildren: './guarantee/card/guarantee-card.module#GuaranteeCardModule',
+        data: {
+          edit: true,
+          showContractForm: true,
+        },
       },
       {
         path: 'property/create',
