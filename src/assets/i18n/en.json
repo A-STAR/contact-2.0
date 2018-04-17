@@ -54,6 +54,27 @@
               "stringValue10": "String Attribute 10"
             }
           }
+        },
+        "pledge": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Contract"
+              },
+              "pledgor": {
+                "title": "Pledgor"
+              },
+              "property": {
+                "title": "Property"
+              }
+            },
+            "titles": {
+              "add": "Add Contract",
+              "addPledgor": "Add Pledgor",
+              "addProperty": "Add Property",
+              "edit": "Edit Contract"
+            }
+          }
         }
       },
       "incomingCall": {

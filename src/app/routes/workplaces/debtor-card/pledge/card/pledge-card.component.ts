@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators/map';
 
 import {
@@ -295,18 +295,33 @@ export class PledgeCardComponent {
   };
 
   readonly pledgor$ = this.pledgeCardService.pledgor$;
-  readonly isPledgorFormDisabled$ = this.pledgor$.pipe(map(Boolean));
+
+  readonly isPledgorFormDisabled$ = this.pledgor$.pipe(
+    map(Boolean),
+  );
 
   readonly property$ = this.pledgeCardService.property$;
-  readonly isPropertyFormDisabled$ = this.property$.pipe(map(Boolean));
 
-  readonly edit$ = this.route.data.pipe(map(data => data.edit));
-  readonly showContractForm$ = this.route.data.pipe(map(data => data.showContractForm));
-  readonly showPledgorForm$ = this.route.data.pipe(map(data => data.showPledgorForm));
+  readonly isPropertyFormDisabled$ = this.property$.pipe(
+    map(Boolean),
+  );
+
+  readonly edit$ = this.route.data.pipe(
+    map(data => data.edit),
+  );
+
+  readonly showContractForm$ = this.route.data.pipe(
+    map(data => data.showContractForm),
+  );
+
+  readonly showPledgorForm$ = this.route.data.pipe(
+    map(data => data.showPledgorForm),
+  );
 
   constructor(
     private pledgeCardService: PledgeCardService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   onPledgorFormClear(): void {
@@ -317,5 +332,14 @@ export class PledgeCardComponent {
   onPropertyFormClear(): void {
     this.pledgeCardService.selectProperty(null);
     this.propertyForm.formGroup.reset();
+  }
+
+  onSave(): void {
+    this.onBack();
+  }
+
+  onBack(): void {
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    this.router.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
   }
 }

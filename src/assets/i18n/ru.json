@@ -54,6 +54,27 @@
               "stringValue10": "Строковый атрибут 10"
             }
           }
+        },
+        "pledge": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Договор"
+              },
+              "pledgor": {
+                "title": "Залогодатель"
+              },
+              "property": {
+                "title": "Имущество"
+              }
+            },
+            "titles": {
+              "add": "Добавить договор",
+              "addPledgor": "Добавить залогодателя",
+              "addProperty": "Добавить имущество",
+              "edit": "Редактирование договора"
+            }
+          }
         }
       },
       "incomingCall": {
