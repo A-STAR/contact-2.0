@@ -1,14 +1,84 @@
-<div class="pb-lg">
-  <button class="btn btn-default" (click)="onBack()">
-    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-  </button>
-  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
-</div>
+<div class="flex vertical">
 
-<div class="pb-lg">
-  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="contract"></app-dynamic-form>
-</div>
+  <!-- Titlebar -->
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+    <h1>{{ 'routes.workplaces.debtor-card.guarantee.card.titles.addGuarantor' | translate }}</h1>
+  </div>
 
-<app-guarantor-card></app-guarantor-card>
+  <!-- Forms -->
+  <div class="flex-item grow" style="overflow-y: auto;">
+    <div class="flex horizontal">
+
+      <!-- Contract Form -->
+      <div *ngIf="showContractForm$ | async" class="flex-item grow pr">
+        <h2>
+          {{ 'routes.workplaces.debtor-card.guarantee.card.forms.contract.title' | translate }}
+        </h2>
+        <app-metadata-form [config]="contractFormConfig"></app-metadata-form>
+        <app-button type="clear"></app-button>
+      </div>
+
+      <!-- Guarantor Form -->
+      <div class="flex-item grow ph">
+        <h2 appPopupOutlet="select-person" [disabled]="edit$ | async">
+          {{ 'routes.workplaces.debtor-card.guarantee.card.forms.guarantor.title' | translate }}
+        </h2>
+        <app-metadata-form #guarantorForm [config]="guarantorFormConfig" [data]="guarantor$ | async" [disabled]="isGuarantorFormDisabled$ | async"></app-metadata-form>
+        <app-button type="clear" (click)="onGuarantorFormClear()"></app-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Info -->
+  <div *ngIf="edit$ | async" class="flex-item grow">
+    <app-tabview [fullHeight]="true">
+
+      <!-- Identifications -->
+      <app-tabview-tab title="Удостоверения личности">
+        <app-identity-grid
+          [personId]="4"
+        ></app-identity-grid>
+      </app-tabview-tab>
+
+      <!-- Employment -->
+      <app-tabview-tab title="Трудоустройство">
+        <app-employment-grid
+          [personId]="4"
+        ></app-employment-grid>
+      </app-tabview-tab>
+
+      <!-- Phones -->
+      <app-tabview-tab title="Телефоны">
+        <app-phone-grid
+          [contactType]="1"
+          [debtId]="1"
+          [personId]="4"
+          [personRole]="1"
+        ></app-phone-grid>
+      </app-tabview-tab>
+
+      <!-- Addresses -->
+      <app-tabview-tab title="Адреса">
+        <app-address-grid
+          [debtId]="1"
+          [personId]="4"
+          [personRole]="1"
+        ></app-address-grid>
+      </app-tabview-tab>
+
+      <!-- Documents -->
+      <app-tabview-tab title="Документы">
+        <app-document-grid
+          [entityType]="19"
+          [entityId]="1"
+        ></app-document-grid>
+      </app-tabview-tab>
+    </app-tabview>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex-item">
+    <app-button type="save" (click)="onSave()"></app-button>
+  </div>
+</div>

@@ -29,11 +29,13 @@ const routes: Routes = [
       [
         {
           path: 'select-property',
-          loadChildren: './dynamic-popups/select-property/select-property.module#SelectPropertyModule',
+          // tslint:disable-next-line:max-line-length
+          loadChildren: 'app/routes/workplaces/debtor-card/pledge/card/dynamic-popups/select-property/select-property.module#SelectPropertyModule',
         },
         {
           path: 'select-person',
-          loadChildren: './dynamic-popups/select-person/select-person.module#SelectPersonModule',
+          // tslint:disable-next-line:max-line-length
+          loadChildren: 'app/routes/workplaces/debtor-card/pledge/card/dynamic-popups/select-person/select-person.module#SelectPersonModule',
         },
       ],
     ),

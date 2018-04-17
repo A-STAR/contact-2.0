@@ -1,153 +1,280 @@
-import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
-import { Subscription } from 'rxjs/Subscription';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators/map';
 
-import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract, IGuarantor } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
+import {
+  IContextByEntityMethod,
+  IContextByValueBagMethod,
+  IContextConfigItemType,
+  IContextConfigOperator,
+} from '@app/core/context/context.interface';
 
-import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
-import { GuarantorService } from '@app/routes/workplaces/core/guarantor/guarantor.service';
-import { RoutingService } from '@app/core/routing/routing.service';
+import {
+  IMetadataFormConfig,
+  IMetadataFormControlType,
+  IMetadataFormTextControl,
+  IFormContextConfigOperator,
+} from '@app/shared/components/form/metadata-form/metadata-form.interface';
+
+import { GuaranteeCardService } from './guarantee-card.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { makeKey } from '@app/core/utils';
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
-const label = makeKey('widgets.guaranteeContract.grid');
+import { range } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-debtor-guarantee-card',
-  templateUrl: './guarantee-card.component.html'
+  host: { class: 'full-size' },
+  selector: 'app-guarantee-card',
+  templateUrl: 'guarantee-card.component.html',
 })
-export class DebtorGuaranteeCardComponent implements OnInit, OnDestroy {
+export class GuarantorCardComponent {
+  @ViewChild('guarantorForm') guarantorForm: MetadataFormComponent<any>;
 
-  @ViewChild(DynamicFormComponent) set form(guaranteeForm: DynamicFormComponent) {
-    this._form = guaranteeForm;
-    if (guaranteeForm) {
-      this.onFormInit();
-    }
-  }
+  readonly contractFormConfig: IMetadataFormConfig = {
+    editable: true,
+    items: [
+      {
+        disabled: false,
+        display: true,
+        label: 'Номер договора',
+        name: 'contractNumber',
+        type: IMetadataFormControlType.TEXT,
+        validators: {
+          required: true,
+        },
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'Начало',
+        name: 'contractStartDate',
+        type: IMetadataFormControlType.DATE,
+        validators: {},
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'Окончание',
+        name: 'contractEndDate',
+        type: IMetadataFormControlType.DATE,
+        validators: {},
+        width: 0,
+      },
+      {
+        dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE,
+        disabled: false,
+        display: true,
+        label: 'Тип ответственности',
+        name: 'contractTypeCode',
+        type: IMetadataFormControlType.SELECT,
+        validators: {},
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'Комментарий',
+        name: 'comment',
+        type: IMetadataFormControlType.TEXTAREA,
+        validators: {},
+        width: 0,
+      },
+    ],
+    plugins: [],
+  };
 
-  private _form: DynamicFormComponent;
-  private canEdit: boolean;
-  private routeParams = (<any>this.route.params).value;
-  private debtId = this.routeParams.debtId || null;
-  private contractId = this.routeParams.contractId || null;
-  private personId = this.routeParams.guarantorId || null;
-  private guarantorSelectionSub: Subscription;
+  readonly guarantorFormConfig: IMetadataFormConfig = {
+    editable: true,
+    items: [
+      {
+        dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
+        disabled: false,
+        display: true,
+        label: 'Тип',
+        name: 'typeCode',
+        type: IMetadataFormControlType.SELECT,
+        validators: {
+          required: true,
+        },
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'Фамилия/Название',
+        name: 'lastName',
+        type: IMetadataFormControlType.TEXT,
+        validators: {
+          required: true,
+        },
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Имя',
+        name: 'firstName',
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Отчество',
+        name: 'middleName',
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Дата рождения',
+        name: 'birthDate',
+        type: IMetadataFormControlType.DATE,
+        validators: {},
+        width: 0,
+      },
+      {
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Место рождения',
+        name: 'birthPlace',
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 0,
+      },
+      {
+        dictCode: UserDictionariesService.DICTIONARY_GENDER,
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Пол',
+        name: 'genderCode',
+        type: IMetadataFormControlType.SELECT,
+        validators: {},
+        width: 0,
+      },
+      {
+        dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Семейное положение',
+        name: 'familyStatusCode',
+        type: IMetadataFormControlType.SELECT,
+        validators: {},
+        width: 0,
+      },
+      {
+        dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
+        disabled: false,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
+        label: 'Образование',
+        name: 'educationCode',
+        type: IMetadataFormControlType.SELECT,
+        validators: {},
+        width: 0,
+      },
+      ...range(1, 10).map(i => ({
+        disabled: false,
+        display: {
+          type: IContextConfigItemType.GROUP,
+          operator: IContextConfigOperator.AND,
+          children: [
+            {
+              type: IContextConfigItemType.ENTITY,
+              method: IContextByEntityMethod.IS_USED,
+              value: 363 + i,
+            },
+            {
+              type: IContextConfigItemType.CONSTANT,
+              method: IContextByValueBagMethod.CONTAINS,
+              value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+            }
+          ],
+        },
+        label: `Строковый атрибут ${i}`,
+        name: `stringValue${i}`,
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 0,
+      }) as IMetadataFormTextControl),
+      {
+        disabled: false,
+        display: true,
+        label: 'Комментарий',
+        name: 'comment',
+        type: IMetadataFormControlType.TEXTAREA,
+        validators: {},
+        width: 0,
+      },
+    ],
+    plugins: [],
+  };
 
-  controls: IDynamicFormGroup[] = null;
-  contract: IGuaranteeContract;
+  readonly guarantor$ = this.guaranteeCardService.guarantor$;
+
+  readonly isGuarantorFormDisabled$ = this.guarantor$.pipe(
+    map(Boolean),
+  );
+
+  readonly edit$ = this.route.data.pipe(
+    map(data => data.edit),
+  );
+
+  readonly showContractForm$ = this.route.data.pipe(
+    map(data => data.showContractForm),
+  );
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private guaranteeService: GuaranteeService,
+    private guaranteeCardService: GuaranteeCardService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private router: Router,
   ) {}
 
-  get canSubmit(): boolean {
-    if (this.isAddingGuarantor && !!this.personId) {
-      return true;
-    }
-    return this.form && this.form.canSubmit;
+  onGuarantorFormClear(): void {
+    this.guaranteeCardService.selectGuarantor(null);
+    this.guarantorForm.formGroup.reset();
   }
 
-  get isAddingGuarantor(): boolean {
-    return this.isRoute('guarantor/add');
-  }
-
-  get form(): DynamicFormComponent {
-    return this._form;
-  }
-
-  get contract$(): Observable<IGuaranteeContract> {
-    return this.guaranteeService.fetch(this.debtId, +this.contractId, +this.personId);
-  }
-
-  ngOnInit(): void {
-    combineLatest(
-      this.contract$,
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
-      this.contract$.flatMap(
-        contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
-      )
-    )
-    .pipe(first())
-    .subscribe(([ contract, respTypeOpts, canEdit ]) => {
-      const controls: IDynamicFormGroup[] = [
-        {
-          title: 'widgets.guaranteeContract.title', collapsible: true,
-          children: [
-            { label: label('personId'), controlName: 'personId',  type: 'number', required: true, display: false },
-            { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true, width: 6 },
-            { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', width: 6 },
-            { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', width: 6 },
-            {
-              label: label('contractTypeCode'), controlName: 'contractTypeCode',
-              type: 'select', options: respTypeOpts, required: true, width: 6
-            },
-            { label: label('comment'), controlName: 'comment', type: 'textarea', },
-          ]
-        },
-      ];
-
-      this.personId = this.personId;
-      this.controls = controls;
-      this.contract = contract;
-      this.canEdit = canEdit;
-      this.cdRef.markForCheck();
-    });
-
-    this.guarantorSelectionSub = this.guaranteeService
-      .getPayload<IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
-      .subscribe(guarantor => {
-        const personId = this.form.getControl('personId');
-        personId.setValue(guarantor.id);
-        personId.markAsDirty();
-      });
-  }
-
-  onFormInit(): void {
-    if (this.isAddingGuarantor || !this.canEdit) {
-      this.form.form.disable();
-      this.cdRef.detectChanges();
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.guarantorSelectionSub) {
-      this.guarantorSelectionSub.unsubscribe();
-    }
+  onSave(): void {
+    this.onBack();
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/app/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ]);
-  }
-
-  onSubmit(): void {
-    const data = this.form.serializedUpdates;
-    const action = this.isAddingGuarantor
-      ? this.guaranteeService.addGuarantor(this.debtId, this.contractId, data.personId)
-      : this.isRoute('create')
-        ? this.guaranteeService.create(this.debtId, data)
-        : this.guaranteeService.update(this.debtId, this.contractId, data);
-
-    action.subscribe(() => {
-      this.guaranteeService.dispatchAction(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
-      this.onBack();
-    });
-  }
-
-  private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    this.router.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
   }
 }
