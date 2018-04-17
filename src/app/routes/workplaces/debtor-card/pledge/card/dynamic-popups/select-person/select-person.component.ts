@@ -28,7 +28,7 @@ export class SelectPersonComponent {
   }
 
   onSubmit(): void {
-    this.pledgeCardService.selectPerson(this.grid.selection[0]);
+    this.pledgeCardService.selectPledgor(this.grid.selection[0]);
     this.popupOutletService.close();
   }
 }
