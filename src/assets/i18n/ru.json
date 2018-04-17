@@ -1819,6 +1819,9 @@
             "comment": "Комментарий"
           }
         },
+        "map": {
+          "title": "Адреса"
+        },
         "markConfirm": {
           "title": "Отметка необходимости выезда",
           "confirmMessage": "По данному адресу результат выезда неверный адрес. Установить необходимость выезда снова?"
@@ -2937,6 +2940,15 @@
     }
   },
   "massOperations": {
+    "addressesByPersons": {
+      "title": "Просмотр адресов"
+    },
+    "addressesByContacts": {
+      "title": "Просмотр мест регистрации контактов",
+      "personFullName": "ФИО персоны",
+      "contactType": "Тип контакта",
+      "fullAddress": "Адрес"
+    },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",
       "purposeCode": "Цель выезда",
@@ -3234,6 +3246,7 @@
       "excel": "Выгрузка",
       "filter": "Фильтр",
       "loadFromExcel": "Загрузить из Excel",
+      "map": "Карта",
       "move": "Переместить",
       "next": "Далее",
       "now": "Сейчас",
@@ -3380,6 +3393,8 @@
         "deleteSMS": "Удалить SMS",
         "emailCreate": "Массовое формирование Email",
         "loadDebtResponsible": "Загрузить ответственного по долгу",
+        "mapAddressView": "Просмотр адресов на карте",
+        "mapContactView": "Просмотр места регистрации на карте",
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",

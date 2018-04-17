@@ -18,6 +18,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_EMAIL,
   BUTTON_EXCEL_LOAD,
   BUTTON_INFO,
+  BUTTON_MAP,
   BUTTON_MOVE,
   BUTTON_NEXT,
   BUTTON_OK,

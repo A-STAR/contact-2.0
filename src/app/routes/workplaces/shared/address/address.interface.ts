@@ -21,4 +21,6 @@ export interface IAddress {
   isText: boolean | number;
   isResidence: boolean | number;
   comment: string;
+  latitude?: number;
+  longitude?: number;
 }

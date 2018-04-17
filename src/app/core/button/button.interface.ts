@@ -29,6 +29,7 @@ export type IButtonType =
   'filter' |
   'info' |
   'loadFromExcel' |
+  'map' |
   'move' |
   'next' |
   'ok' |

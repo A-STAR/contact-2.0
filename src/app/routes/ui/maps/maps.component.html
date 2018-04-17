@@ -14,3 +14,8 @@
     </div>
   </div>
 </div>
+<ng-template #tpl let-data="data">
+  <div class="col-xs-12">
+    <span class="text-left">{{ data.name }}</span>&nbsp;<span class="text-right">{{ data.address }}</span>
+  </div>
+</ng-template>

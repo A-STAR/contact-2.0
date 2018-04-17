@@ -1823,6 +1823,9 @@
           "title": "Mark for Visit",
           "confirmMessage": "Invalid address. Are you sure you want to proceed?"
         },
+        "map": {
+          "title": "Addresses"
+        },
         "mark": {
           "title": "Mark for Visit",
           "grid": {
@@ -2937,6 +2940,15 @@
     }
   },
   "massOperations": {
+    "addressesByPersons": {
+      "title": "View addresses"
+    },
+    "addressesByContacts": {
+      "title": "View contact registrations",
+      "personFullName": "Person Full Name",
+      "contactType": "Contact Type",
+      "fullAddress": "Address"
+    },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",
       "purposeCode": "Purpose of visit",
@@ -3234,6 +3246,7 @@
       "excel": "Export",
       "filter": "Filter",
       "loadFromExcel": "Load from Excel",
+      "map": "Map",
       "move": "Move",
       "next": "Next",
       "now": "Now",
@@ -3380,6 +3393,8 @@
         "deleteSMS": "Delete SMS",
         "emailCreate": "Mass Emails",
         "loadDebtResponsible": "Load debt responsible",
+        "mapAddressView": "View addresses on map",
+        "mapContactView": "View contact registrations on map",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",

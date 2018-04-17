@@ -1,4 +1,4 @@
-import { Injectable, ComponentFactoryResolver, Injector, ComponentRef } from '@angular/core';
+import { Injectable, ComponentFactoryResolver, Injector, ComponentRef, TemplateRef } from '@angular/core';
 
 @Injectable()
 export class PopupService {
@@ -8,13 +8,15 @@ export class PopupService {
     private injector: Injector,
   ) { }
 
-  render<T extends { data?: any }>(cmp: any, data: any): { el: HTMLElement, compRef: ComponentRef<T> } {
+  render<T extends { context?: any, tpl?:  TemplateRef<any> }>(cmp: any, data: any, tpl?: TemplateRef<any>)
+    : { el: HTMLElement, compRef: ComponentRef<T> } {
     const compFactory = this.resolver.resolveComponentFactory<T>(cmp);
     const divEl = document.createElement('div');
     // prevent google InfoGroup scrolls
     divEl.style.overflow = 'hidden';
     const compRef = compFactory.create(this.injector, null, divEl);
-    compRef.instance.data = data;
+    compRef.instance.context = { data };
+    compRef.instance.tpl = tpl;
     return { compRef, el: divEl };
   }
 

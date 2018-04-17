@@ -27,6 +27,7 @@ export class ButtonService {
     filter:           { icon: 'co co-filter',               label: 'default.buttons.filter'           },
     info:             { icon: 'co co-info-o',               label: 'default.buttons.info'             },
     loadFromExcel:    { icon: 'co co-data-upload',          label: 'default.buttons.loadFromExcel'    },
+    map:              { icon: 'co co-image',                label: 'default.buttons.map'              },
     move:             { icon: 'co co-move',                 label: 'default.buttons.move'             },
     next:             { icon: 'co co-back fa-rotate-180',   label: 'default.buttons.next'             },
     ok:               { icon: 'co co-confirm',              label: 'default.buttons.ok'               },

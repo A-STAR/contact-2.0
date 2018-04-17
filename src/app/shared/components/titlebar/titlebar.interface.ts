@@ -15,6 +15,7 @@ export enum TitlebarItemTypeEnum {
   BUTTON_EMAIL            = 'email',
   BUTTON_FILTER           = 'filter',
   BUTTON_DOWNLOAD_EXCEL   = 'downloadExcel',
+  BUTTON_MAP              = 'map',
   BUTTON_MASS             = 'mass',
   BUTTON_MOVE             = 'move',
   BUTTON_NEXT             = 'next',

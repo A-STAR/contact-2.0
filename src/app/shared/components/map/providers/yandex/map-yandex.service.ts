@@ -1,15 +1,22 @@
 import { Injectable, ComponentRef, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { Map, TileLayer, Marker, Icon, Popup, LeafletEvent } from 'leaflet';
+import { Map, TileLayer, Marker, Icon, Popup, LeafletEvent, LatLngBounds, LatLngBoundsLiteral } from 'leaflet';
 
-import { IMapOptions, ICreateMarkerResult, IMarker, PopupComponentRefGetter } from '@app/shared/components/map/map.interface';
+import {
+  IMapOptions,
+  ICreateMarkerResult,
+  IMarker,
+  PopupComponentRefGetter,
+  IMarkerIconConfig,
+  IMapService
+} from '@app/shared/components/map/map.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { PopupService } from '../../popups/popup.service';
 
 @Injectable()
-export class MapYandexService {
+export class MapYandexService implements IMapService {
 
   private static OSM_URL = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
 
@@ -45,6 +52,15 @@ export class MapYandexService {
     }
     map.addLayer(marker);
     return { marker, popupRef };
+  }
+
+  getIconConfig(): IMarkerIconConfig {
+    // TODO(i.lobanov): implement;
+    return {};
+  }
+
+  createBounds(latlngs: LatLngBoundsLiteral): any {
+    return new LatLngBounds(latlngs);
   }
 
   private createPopup<T>(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {

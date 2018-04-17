@@ -49,6 +49,7 @@ export type IMetadataActionSetter = (action: IMetadataAction) => IMetadataAction
 export interface IGridAction {
   name: string;
   addOptions: IAddOption[];
+  params?: string[];
   payload: IGridActionPayload;
   // this is initial selection, filtered by params,
   // but it can contain undefined or null values
