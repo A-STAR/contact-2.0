@@ -156,6 +156,30 @@ export function getTranslations(languages: ILookupLanguage[], translations: IEnt
   );
 }
 
+export class IncId {
+  private static _instance: IncId;
+  private _uuid = 0;
+
+  private constructor() {}
+
+  static get(): IncId {
+    return this._instance || (this._instance = new this());
+  }
+
+  is(id: number): boolean {
+    return this._uuid === id;
+  }
+
+  set uuid(to: number) {
+    this._uuid = Math.abs(to);
+  }
+
+  get uuid(): number {
+    return ++this._uuid;
+  }
+
+}
+
 export function deepFilterAndMap<T extends { children?: T[] }, V>(items: T[],
   filterKey: string | Function, mapKey: string | Function): V[] {
     const filterFn = item => (typeof filterKey === 'function' ? filterKey(item) : item[filterKey]);
