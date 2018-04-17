@@ -48,15 +48,52 @@ const routes: Routes = [
       {
         path: 'pledge/create',
         loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: false,
+          showContractForm: true,
+          showPledgorForm: true,
+          showPropertyForm: true,
+        },
       },
       {
         path: 'pledge/:contractId/pledgor/add',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: false,
+          showContractForm: false,
+          showPledgorForm: true,
+        },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/:propertyId',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        path: 'pledge/:contractId/property/add',
+        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: false,
+          showContractForm: false,
+          showPledgorForm: false,
+        },
       },
+      {
+        path: 'pledge/:contractId/edit',
+        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: true,
+          showContractForm: true,
+          showPledgorForm: true,
+        },
+      },
+      // {
+      //   path: 'pledge/create',
+      //   loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+      // },
+      // {
+      //   path: 'pledge/:contractId/pledgor/add',
+      //   loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+      // },
+      // {
+      //   path: 'pledge/:contractId/pledgor/:pledgorId/:propertyId',
+      //   loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+      // },
       {
         path: 'contact/create',
         loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',

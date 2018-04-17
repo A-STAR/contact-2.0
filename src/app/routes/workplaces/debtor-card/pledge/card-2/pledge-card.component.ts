@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators/map';
 
 import {
@@ -299,8 +300,13 @@ export class PledgeCardComponent {
   readonly property$ = this.pledgeCardService.property$;
   readonly isPropertyFormDisabled$ = this.property$.pipe(map(Boolean));
 
+  readonly edit$ = this.route.data.pipe(map(data => data.edit));
+  readonly showContractForm$ = this.route.data.pipe(map(data => data.showContractForm));
+  readonly showPledgorForm$ = this.route.data.pipe(map(data => data.showPledgorForm));
+
   constructor(
     private pledgeCardService: PledgeCardService,
+    private route: ActivatedRoute,
   ) {}
 
   onPledgorFormClear(): void {
