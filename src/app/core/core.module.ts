@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppModulesModule } from './app-modules/app-modules.module';
 import { DebtModule } from './debt/debt.module';
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
+import { MapProvidersModule } from '@app/core/map-providers/map-providers.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
@@ -38,6 +39,7 @@ import { environment } from '../../environments/environment';
     AppModulesModule,
     DebtModule,
     DynamicLoaderModule.forRoot(),
+    MapProvidersModule,
     RoutingModule,
     UserModule,
   ],

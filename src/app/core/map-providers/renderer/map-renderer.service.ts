@@ -6,10 +6,10 @@ import {
   Type,
 } from '@angular/core';
 
-import { IMapComponent, IMapComponentRenderResult } from '@app/shared/components/map/components/map-components.interface';
+import { IMapComponent, IMapComponentRenderResult } from './map-renderer.interface';
 
 @Injectable()
-export class MapComponentsService {
+export class MapRendererService {
 
   constructor(
     private resolver: ComponentFactoryResolver,

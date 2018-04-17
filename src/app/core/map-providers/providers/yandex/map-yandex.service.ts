@@ -1,7 +1,16 @@
 import { Injectable, ComponentRef, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { Map, TileLayer, Marker, Icon, Popup, LeafletEvent, LatLngBounds, LatLngBoundsLiteral } from 'leaflet';
+import {
+  Map,
+  TileLayer,
+  Marker,
+  Icon,
+  Popup,
+  LeafletEvent,
+  LatLngBounds,
+  LatLngBoundsLiteral,
+} from 'leaflet';
 
 import {
   IMapOptions,
@@ -10,12 +19,11 @@ import {
   PopupComponentRefGetter,
   IMarkerIconConfig,
   IMapService,
-  ControlComponentRefGetter,
   IPopupCmp,
-} from '@app/shared/components/map/map.interface';
+} from '../../map-providers.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
-import { MapComponentsService } from '../../components/map-components.service';
+import { MapRendererService } from '../../renderer/map-renderer.service';
 
 @Injectable()
 export class MapYandexService implements IMapService {
@@ -26,7 +34,7 @@ export class MapYandexService implements IMapService {
 
   constructor(
     private configService: ConfigService,
-    private popupService: MapComponentsService,
+    private mapRendererService: MapRendererService,
     private zone: NgZone,
   ) {
     // override Leaflet default icon path
@@ -79,7 +87,7 @@ export class MapYandexService implements IMapService {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.popupService.render<IPopupCmp<T>>(markerDef.popup, markerDef.data);
+        const result = this.mapRendererService.render<IPopupCmp<T>>(markerDef.popup, markerDef.data);
         el = result.el;
         compRef = result.compRef;
         popup.setContent(el);

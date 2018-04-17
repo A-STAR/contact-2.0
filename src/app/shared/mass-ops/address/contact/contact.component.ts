@@ -15,12 +15,13 @@ import {
   IAddressByContact,
 } from '@app/shared/mass-ops/address/address.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IMarker, IMapService, IMapOptions } from '@app/shared/components/map/map.interface';
-import { MAP_SERVICE } from '@app/shared/components/map/map.component';
+import { IMarker, IMapOptions, IMapService } from '@app/core/map-providers/map-providers.interface';
 
 import { AddressService } from '../address.service';
 
-import { PopupComponent } from '@app/shared/components/map/popups/popup.component';
+import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
+
+import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
 @Component({
   selector: 'app-map-contact',

@@ -13,11 +13,12 @@ import {
   ControlComponentRefGetter,
   IControlCmp,
   IPopupCmp,
-} from '../../map.interface';
+} from '../../map-providers.interface';
 import { Libraries } from './maps-google.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
-import { MapComponentsService } from '../../components/map-components.service';
+import { MapRendererService } from '../../renderer/map-renderer.service';
+
 import { IncId } from '@app/core/utils';
 
 @Injectable()
@@ -57,10 +58,11 @@ export class MapGoogleService implements IMapService {
 
   private libraryEl: HTMLScriptElement;
   private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
+  private _map: google.maps.Map;
 
   constructor(
     private configService: ConfigService,
-    private mapComponentsService: MapComponentsService,
+    private mapRendererService: MapRendererService,
     private zone: NgZone,
   ) {}
 
@@ -98,7 +100,7 @@ export class MapGoogleService implements IMapService {
   }
 
   createControl<T>(map: google.maps.Map, controlDef: IControlDef<T>): ControlComponentRefGetter<T> {
-    const { compRef, el } = this.mapComponentsService.render<IControlCmp<T>>(controlDef.cmp, controlDef.data);
+    const { compRef, el } = this.mapRendererService.render<IControlCmp<T>>(controlDef.cmp, controlDef.data);
     const inc = IncId.get();
     const index = inc.uuid;
 
@@ -163,14 +165,14 @@ export class MapGoogleService implements IMapService {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.mapComponentsService.render<IPopupCmp<T>>(
+        const result = this.mapRendererService.render<IPopupCmp<T>>(
           markerDef.popup,
           markerDef.data,
           markerDef.tpl,
         );
+        el = result.el;
         // prevent google InfoGroup scrolls
         el.style.overflow = 'hidden';
-        el = result.el;
         compRef = result.compRef;
         popup.setContent(el);
         popup.open(map, marker);
@@ -216,6 +218,10 @@ export class MapGoogleService implements IMapService {
 
   private initMap(config: IMapOptions): any {
     const { el, ...options } = config;
-    return new google.maps.Map(el, options);
+    if (this._map) {
+      this._map.setOptions(options);
+      return this._map;
+    }
+    return (this._map = new google.maps.Map(el, options));
   }
 }

@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { MapComponentsService } from './map-components.service';
+import { MapRendererService } from './map-renderer.service';
 
 describe('MapComponentsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapComponentsService]
+      providers: [MapRendererService]
     });
   });
 
-  it('should be created', inject([MapComponentsService], (service: MapComponentsService) => {
+  it('should be created', inject([MapRendererService], (service: MapRendererService) => {
     expect(service).toBeTruthy();
   }));
 });

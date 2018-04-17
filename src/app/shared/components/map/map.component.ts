@@ -1,7 +1,6 @@
 import {
   Component,
   Inject,
-  InjectionToken,
   ViewChild,
   ElementRef,
   AfterViewInit,
@@ -19,10 +18,10 @@ import {
   ILatLng,
   IControlDef,
   IMapComponents,
-} from './map.interface';
+} from '@app/core/map-providers/map-providers.interface';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
-export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
+import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
 @Component({
   selector: 'app-map',

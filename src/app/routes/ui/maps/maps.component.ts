@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, ViewChild, TemplateRef } from '@angular/core';
 import { random, name, address } from 'faker';
-import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
-import { IMarker } from '@app/shared/components/map/map.interface';
 
-import { PopupComponent } from '@app/shared/components/map/popups/popup.component';
+import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
+import { IMarker } from '@app/core/map-providers/map-providers.interface';
+
+import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
 
 import { range } from '@app/core/utils';
 
