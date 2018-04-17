@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
+import { PledgeCardService } from './pledge-card.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { PledgeCardComponent } from './pledge-card.component';
-import { PledgeCardService } from '@app/routes/workplaces/debtor-card/pledge/card-2/pledge-card.service';
 
 const routes: Routes = [
   {

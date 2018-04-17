@@ -47,12 +47,11 @@ const routes: Routes = [
       },
       {
         path: 'pledge/create',
-        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
         data: {
           edit: false,
           showContractForm: true,
           showPledgorForm: true,
-          showPropertyForm: true,
         },
       },
       {
