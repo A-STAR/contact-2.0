@@ -55,6 +55,23 @@
             }
           }
         },
+        "guarantee": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Договор"
+              },
+              "guarantor": {
+                "title": "Поручитель"
+              }
+            },
+            "titles": {
+              "add": "Добавить договор",
+              "addGuarantor": "Добавить поручителя",
+              "edit": "Редактирование договора"
+            }
+          }
+        },
         "pledge": {
           "card": {
             "forms": {

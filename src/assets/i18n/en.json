@@ -55,6 +55,23 @@
             }
           }
         },
+        "guarantee": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Contract"
+              },
+              "guarantor": {
+                "title": "Guarantor"
+              }
+            },
+            "titles": {
+              "add": "Add Contract",
+              "addGuarantor": "Add Guarantor",
+              "edit": "Edit Contract"
+            }
+          }
+        },
         "pledge": {
           "card": {
             "forms": {
