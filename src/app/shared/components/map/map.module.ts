@@ -1,23 +1,27 @@
 import { NgModule, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PopupModule } from './popups/popup.module';
-
 import { IMapService, MapProvider } from './map.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { MapGoogleService } from './providers/google/map-google.service';
 import { MapYandexService } from './providers/yandex/map-yandex.service';
-import { PopupService } from './popups/popup.service';
+import { MapComponentsService } from './components/map-components.service';
 
 import { MapComponent, MAP_SERVICE } from './map.component';
+import { MapComponentsModule } from '@app/shared/components/map/components/map-components.module';
 
-export function mapServiceFactory(configService: ConfigService, popupService: PopupService, zone: NgZone): IMapService {
-  switch (configService.config.maps.useProvider) {
+export function mapServiceFactory(
+  configService: ConfigService,
+  mapComponentsService: MapComponentsService,
+  zone: NgZone
+): IMapService {
+  const provider = configService.config && configService.config.maps && configService.config.maps.useProvider;
+  switch (provider) {
     case MapProvider.GOOGLE:
-      return new MapGoogleService(configService, popupService, zone);
+      return new MapGoogleService(configService, mapComponentsService, zone);
     case MapProvider.YANDEX:
-      return new MapYandexService(configService, popupService, zone);
+      return new MapYandexService(configService, mapComponentsService, zone);
     default:
       throw new Error('No map provider was found in config!');
   }
@@ -26,16 +30,16 @@ export function mapServiceFactory(configService: ConfigService, popupService: Po
 @NgModule({
   imports: [
     CommonModule,
-    PopupModule,
+    MapComponentsModule,
   ],
   providers: [
     {
       provide: MAP_SERVICE,
       useFactory: mapServiceFactory,
-      deps: [ ConfigService, PopupService, NgZone ]
+      deps: [ ConfigService, MapComponentsService, NgZone ]
     }
   ],
   declarations: [ MapComponent ],
-  exports: [ MapComponent, PopupModule ],
+  exports: [ MapComponent, MapComponentsModule ],
 })
 export class MapModule {}

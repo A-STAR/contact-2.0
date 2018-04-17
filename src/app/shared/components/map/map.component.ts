@@ -10,7 +10,17 @@ import {
   ChangeDetectorRef,
   DoCheck
 } from '@angular/core';
-import { IMapService, IMarker, PopupComponentRefGetter, IMapOptions, ILatLng } from './map.interface';
+import { empty } from 'rxjs/observable/empty';
+
+import {
+  IMapService,
+  IMarker,
+  IMapOptions,
+  ILatLng,
+  IControlDef,
+  IMapComponents,
+} from './map.interface';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
 
@@ -33,15 +43,18 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
     },
   };
 
+  @Input() controls: IControlDef<T>[];
+
   @Input() styles: CSSStyleDeclaration;
 
   map: any;
-  private popups: PopupComponentRefGetter<T>[];
+  private components: IMapComponents<T> = {};
   private bounds;
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService,
     private cdRef: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
   ) { }
 
   ngAfterViewInit(): void {
@@ -52,32 +65,40 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
           ...this.options,
         }
       )
+      .catch( e => {
+        this.notificationsService.fetchError(e).dispatch();
+        return empty();
+      })
       .subscribe((map: any) => {
-        this.map = map;
-        this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-        this.addMarkers(this.markers);
-        this.fitBounds();
-        this.detectPopupsChanges();
-        this.cdRef.markForCheck();
+        if (map) {
+          this.map = map;
+          this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
+          this.addMarkers(this.markers);
+          this.addControls(this.controls);
+          this.fitBounds();
+          this.detectCmpsChanges(this.components);
+          this.cdRef.markForCheck();
+        }
       });
   }
 
   ngDoCheck(): void {
-    this.detectPopupsChanges();
+    this.detectCmpsChanges(this.components);
   }
 
-  detectPopupsChanges(): void {
-    if (this.popups && this.popups.length) {
-      this.popups
-        .map(cmpRef => cmpRef())
-        .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
-        .forEach(cmp => cmp.changeDetectorRef.detectChanges());
+  detectCmpsChanges(cmps: IMapComponents<T>): void {
+    const componentTypes = Object.keys(cmps);
+    if (componentTypes && componentTypes.length) {
+      componentTypes
+        .map(cmpType => cmps[cmpType].map(cmpRef => cmpRef())
+          .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
+          .forEach(cmp => cmp.changeDetectorRef.detectChanges()));
     }
   }
 
   addMarkers(markers: IMarker<T>[]): void {
     if (markers && markers.length) {
-      this.popups = markers
+      this.components.popups = markers
         .map(marker => this.mapService.createMarker<T>(this.map, marker))
         .map(({ popupRef, marker }) => {
           if (this.options.fitToData) {
@@ -86,6 +107,12 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
           return popupRef;
         })
         .filter(Boolean);
+    }
+  }
+
+  addControls(controls: IControlDef<T>[]): void {
+    if (controls && controls.length) {
+      this.components.controls = controls.map(cDef => this.mapService.createControl(this.map, cDef));
     }
   }
 

@@ -9,11 +9,13 @@ import {
   IMarker,
   PopupComponentRefGetter,
   IMarkerIconConfig,
-  IMapService
+  IMapService,
+  ControlComponentRefGetter,
+  IPopupCmp,
 } from '@app/shared/components/map/map.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
-import { PopupService } from '../../popups/popup.service';
+import { MapComponentsService } from '../../components/map-components.service';
 
 @Injectable()
 export class MapYandexService implements IMapService {
@@ -21,9 +23,10 @@ export class MapYandexService implements IMapService {
   private static OSM_URL = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
 
   readonly apiKey = this.configService.config.maps.providers.yandex.apiKey;
+
   constructor(
     private configService: ConfigService,
-    private popupService: PopupService,
+    private popupService: MapComponentsService,
     private zone: NgZone,
   ) {
     // override Leaflet default icon path
@@ -54,6 +57,11 @@ export class MapYandexService implements IMapService {
     return { marker, popupRef };
   }
 
+  createControl<T>(): any {
+    // TODO(i.lobanov): implement;
+    return _ => ({} as T);
+  }
+
   getIconConfig(): IMarkerIconConfig {
     // TODO(i.lobanov): implement;
     return {};
@@ -64,14 +72,14 @@ export class MapYandexService implements IMapService {
   }
 
   private createPopup<T>(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {
-    let el: HTMLElement, compRef: ComponentRef<IMarker<T>>;
+    let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new Popup({ closeButton: false }, marker);
     marker.on('click', (e: LeafletEvent) => {
       this.zone.run(() => {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.popupService.render<IMarker<T>>(markerDef.popup, markerDef.data);
+        const result = this.popupService.render<IPopupCmp<T>>(markerDef.popup, markerDef.data);
         el = result.el;
         compRef = result.compRef;
         popup.setContent(el);

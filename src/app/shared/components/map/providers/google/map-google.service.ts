@@ -9,11 +9,16 @@ import {
   PopupComponentRefGetter,
   IMarkerIconConfig,
   IMapService,
+  IControlDef,
+  ControlComponentRefGetter,
+  IControlCmp,
+  IPopupCmp,
 } from '../../map.interface';
 import { Libraries } from './maps-google.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
-import { PopupService } from '../../popups/popup.service';
+import { MapComponentsService } from '../../components/map-components.service';
+import { IncId } from '@app/core/utils';
 
 @Injectable()
 export class MapGoogleService implements IMapService {
@@ -55,7 +60,7 @@ export class MapGoogleService implements IMapService {
 
   constructor(
     private configService: ConfigService,
-    private popupService: PopupService,
+    private mapComponentsService: MapComponentsService,
     private zone: NgZone,
   ) {}
 
@@ -92,6 +97,33 @@ export class MapGoogleService implements IMapService {
     return { marker, popupRef };
   }
 
+  createControl<T>(map: google.maps.Map, controlDef: IControlDef<T>): ControlComponentRefGetter<T> {
+    const { compRef, el } = this.mapComponentsService.render<IControlCmp<T>>(controlDef.cmp, controlDef.data);
+    const inc = IncId.get();
+    const index = inc.uuid;
+
+    (el as any).index = index;
+    el.classList.add(controlDef.hostClass || '');
+
+    compRef.instance.context = {
+      ...compRef.instance.context,
+      map,
+      index,
+      position: controlDef.position
+    };
+
+    map.controls[google.maps.ControlPosition[controlDef.position]].push(el);
+
+    return () => compRef;
+  }
+
+  removeControl(map: google.maps.Map, position: google.maps.ControlPosition, index: number): void {
+    const control = map.controls[position].getAt(index);
+    if (control) {
+      control.parentElement.removeChild(control);
+    }
+  }
+
   createMarkerIcon(config: IMarkerIconConfig): string {
     return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${
       config.char
@@ -124,18 +156,20 @@ export class MapGoogleService implements IMapService {
     marker: google.maps.Marker,
     markerDef: IMarker<T>,
   ): PopupComponentRefGetter<T> {
-    let el: HTMLElement, compRef: ComponentRef<IMarker<T>>;
+    let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new google.maps.InfoWindow();
     marker.addListener('click', () => {
       this.zone.run(() => {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.popupService.render<IMarker<T>>(
+        const result = this.mapComponentsService.render<IPopupCmp<T>>(
           markerDef.popup,
           markerDef.data,
           markerDef.tpl,
         );
+        // prevent google InfoGroup scrolls
+        el.style.overflow = 'hidden';
         el = result.el;
         compRef = result.compRef;
         popup.setContent(el);
