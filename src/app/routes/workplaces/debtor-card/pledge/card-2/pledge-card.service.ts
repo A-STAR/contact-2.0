@@ -3,9 +3,20 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class PledgeCardService {
-  readonly person$ = new BehaviorSubject<any>(null);
+  readonly pledgor$ = new BehaviorSubject<any>(null);
+  readonly property$ = new BehaviorSubject<any>(null);
 
-  selectPerson(selection: any): void {
-    this.person$.next(selection);
+  selectPledgor(pledgor: any): void {
+    this.pledgor$.next(pledgor);
+  }
+
+  selectProperty(property: any): void {
+    const nextProperty = property
+      ? {
+          propertyName: property.name,
+          propertyType: property.typeCode || property.type,
+        }
+      : null;
+    this.property$.next(nextProperty);
   }
 }

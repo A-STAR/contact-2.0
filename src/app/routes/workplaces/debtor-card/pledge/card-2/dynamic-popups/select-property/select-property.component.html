@@ -1,10 +1,15 @@
-<h1>Выбор имущества</h1>
+<main class="p-lg">
+  <h1>Выбор имущества</h1>
 
-<div class="mb-lg" style="height: 50vh;">
-  <app-simple-grid
-    [columns]="columns"
-    [rows]="rows"
-  ></app-simple-grid>
-</div>
+  <div class="mb-lg" style="height: 50vh;">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="rows"
+    ></app-simple-grid>
+  </div>
+</main>
 
-<app-button type="ok"></app-button>
+<footer class="p">
+  <app-button type="close" (click)="onClose()"></app-button>
+  <app-button type="ok" (click)="onSubmit()"></app-button>
+</footer>
