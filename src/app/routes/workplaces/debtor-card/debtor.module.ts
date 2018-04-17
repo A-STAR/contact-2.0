@@ -47,15 +47,39 @@ const routes: Routes = [
       },
       {
         path: 'pledge/create',
-        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: false,
+          showContractForm: true,
+          showPledgorForm: true,
+        },
       },
       {
-        path: 'pledge/:contractId/pledgor/add',
+        path: 'pledge/:contractId/pledgor/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: false,
+          showContractForm: false,
+          showPledgorForm: true,
+        },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/:propertyId',
+        path: 'pledge/:contractId/property/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: false,
+          showContractForm: false,
+          showPledgorForm: false,
+        },
+      },
+      {
+        path: 'pledge/:contractId/edit',
+        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        data: {
+          edit: true,
+          showContractForm: true,
+          showPledgorForm: true,
+        },
       },
       {
         path: 'contact/create',

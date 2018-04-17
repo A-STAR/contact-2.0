@@ -10,6 +10,7 @@ import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.servic
 })
 export class PopupOutletDirective {
   @Input() appPopupOutlet: string;
+  @Input() disabled = false;
 
   constructor(
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
@@ -19,6 +20,8 @@ export class PopupOutletDirective {
 
   @HostListener('click')
   onClick(): void {
-    this.popupOutletService.open(this.modules, this.appPopupOutlet, this.injector);
+    if (!this.disabled) {
+      this.popupOutletService.open(this.modules, this.appPopupOutlet, this.injector);
+    }
   }
 }
