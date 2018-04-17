@@ -1,0 +1,9 @@
+<app-action-grid
+  metadataKey="personSearch"
+  persistenceKey="personSearch"
+  rowIdKey="id"
+  [fullHeight]="true"
+  [rows]="rows$ | async"
+  [rowCount]="rowCount$ | async"
+  (request)="onRequest()"
+></app-action-grid>
