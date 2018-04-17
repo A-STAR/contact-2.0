@@ -59,6 +59,7 @@ export class MapGoogleService implements IMapService {
   private libraryEl: HTMLScriptElement;
   private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
   private _map: google.maps.Map;
+  private _listeners: any[] = [];
 
   constructor(
     private configService: ConfigService,
@@ -119,10 +120,16 @@ export class MapGoogleService implements IMapService {
     return () => compRef;
   }
 
-  removeControl(map: google.maps.Map, position: google.maps.ControlPosition, index: number): void {
-    const control = map.controls[position].getAt(index);
-    if (control) {
-      control.parentElement.removeChild(control);
+  removeControl(control: any, index: number): void {
+    control.removeAt(index);
+  }
+
+  removeControls(controls: any[]): void {
+    // TODO(i.lobanov): this probably doesn't work
+    if (controls && controls.length) {
+      controls.forEach((control, index) => {
+        this.removeControl(control, index);
+      });
     }
   }
 
@@ -153,6 +160,21 @@ export class MapGoogleService implements IMapService {
     return new google.maps.LatLngBounds(...(latlngs || []));
   }
 
+  removeMap(map: google.maps.Map, markers?: any[], controls?: any[]): void {
+    this._map = map;
+    this.removeControls(controls);
+    this.removeMarkers(markers);
+    this.removeListeners();
+  }
+
+  private removeMarkers(markers: google.maps.Marker[]): void {
+    markers.forEach(m => m.setMap(null));
+  }
+
+  private removeListeners(): void {
+    this._listeners.forEach(l => google.maps.event.removeListener(l));
+  }
+
   private createPopup<T>(
     map: google.maps.Map,
     marker: google.maps.Marker,
@@ -160,30 +182,34 @@ export class MapGoogleService implements IMapService {
   ): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new google.maps.InfoWindow();
-    marker.addListener('click', () => {
-      this.zone.run(() => {
+    this._listeners.push(
+      marker.addListener('click', () => {
+        this.zone.run(() => {
+          if (compRef) {
+            compRef.destroy();
+          }
+          const result = this.mapRendererService.render<IPopupCmp<T>>(
+            markerDef.popup,
+            markerDef.data,
+            markerDef.tpl,
+          );
+          el = result.el;
+          // prevent google InfoGroup scrolls
+          el.style.overflow = 'hidden';
+          compRef = result.compRef;
+          popup.setContent(el);
+          popup.open(map, marker);
+          compRef.changeDetectorRef.detectChanges();
+        });
+      })
+    );
+    this._listeners.push(
+      popup.addListener('closeclick', _ => {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.mapRendererService.render<IPopupCmp<T>>(
-          markerDef.popup,
-          markerDef.data,
-          markerDef.tpl,
-        );
-        el = result.el;
-        // prevent google InfoGroup scrolls
-        el.style.overflow = 'hidden';
-        compRef = result.compRef;
-        popup.setContent(el);
-        popup.open(map, marker);
-        compRef.changeDetectorRef.detectChanges();
-      });
-    });
-    popup.addListener('closeclick', _ => {
-      if (compRef) {
-        compRef.destroy();
-      }
-    });
+      })
+    );
     return () => compRef;
   }
 
@@ -219,6 +245,9 @@ export class MapGoogleService implements IMapService {
   private initMap(config: IMapOptions): any {
     const { el, ...options } = config;
     if (this._map) {
+      const mapDiv = this._map.getDiv();
+      el.appendChild(mapDiv);
+      google.maps.event.trigger(this._map, 'resize');
       this._map.setOptions(options);
       return this._map;
     }

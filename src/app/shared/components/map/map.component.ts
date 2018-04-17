@@ -7,7 +7,8 @@ import {
   Input,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  DoCheck
+  DoCheck,
+  OnDestroy
 } from '@angular/core';
 import { empty } from 'rxjs/observable/empty';
 
@@ -30,7 +31,7 @@ import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent<T> implements AfterViewInit, DoCheck {
+export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
@@ -49,6 +50,8 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
   map: any;
   private components: IMapComponents<T> = {};
   private bounds;
+  // markers instances
+  private _markers: any[] = [];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService,
@@ -85,6 +88,13 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
     this.detectCmpsChanges(this.components);
   }
 
+  ngOnDestroy(): void {
+    if (this.mapService.removeMap) {
+      this.mapService.removeMap(this.map, this._markers, this.components.controls);
+      this._markers = [];
+    }
+  }
+
   detectCmpsChanges(cmps: IMapComponents<T>): void {
     const componentTypes = Object.keys(cmps);
     if (componentTypes && componentTypes.length) {
@@ -100,9 +110,15 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
       this.components.popups = markers
         .map(marker => this.mapService.createMarker<T>(this.map, marker))
         .map(({ popupRef, marker }) => {
+
           if (this.options.fitToData) {
             this.bounds.extend(this.getLatLng(marker));
           }
+
+          if (marker) {
+            this._markers.push(marker);
+          }
+
           return popupRef;
         })
         .filter(Boolean);

@@ -17,6 +17,7 @@ export interface IMapService {
   createControl<T>(map: any, controlDef: IControlDef<T>): ControlComponentRefGetter<T>;
   getIconConfig<T extends IIconConfigParam>(configKey: string, entity: T): IMarkerIconConfig;
   createBounds(latlngs?: any): any;
+  removeMap?(map: google.maps.Map, markers?: any[], controls?: any[]): void;
 }
 
 export interface IControlDef<T> {
@@ -71,7 +72,7 @@ export type PopupComponentRefGetter<T> = () => ComponentRef<IPopupCmp<T>>;
 export type ControlComponentRefGetter<T> = () => ComponentRef<IControlCmp<T>>;
 
 export interface IMapOptions extends MapOptions, google.maps.MapOptions {
-  el?: Element;
+  el?: HTMLElement;
   zoom?: number;
   center?: { lat: number, lng: number };
   fitToData?: boolean;
