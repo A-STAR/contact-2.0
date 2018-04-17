@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { map } from 'rxjs/operators/map';
 
 import {
   IContextByEntityMethod,
@@ -17,6 +18,8 @@ import {
 import { PledgeCardService } from './pledge-card.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+
 import { range } from '@app/core/utils';
 
 @Component({
@@ -26,7 +29,10 @@ import { range } from '@app/core/utils';
   templateUrl: 'pledge-card.component.html',
 })
 export class PledgeCardComponent {
-  readonly contractForm: IMetadataFormConfig = {
+  @ViewChild('pledgorForm') pledgorForm: MetadataFormComponent<any>;
+  @ViewChild('propertyForm') propertyForm: MetadataFormComponent<any>;
+
+  readonly contractFormConfig: IMetadataFormConfig = {
     editable: true,
     items: [
       {
@@ -71,7 +77,7 @@ export class PledgeCardComponent {
     plugins: [],
   };
 
-  readonly pledgorForm: IMetadataFormConfig = {
+  readonly pledgorFormConfig: IMetadataFormConfig = {
     editable: true,
     items: [
       {
@@ -228,7 +234,7 @@ export class PledgeCardComponent {
     plugins: [],
   };
 
-  readonly propertyForm: IMetadataFormConfig = {
+  readonly propertyFormConfig: IMetadataFormConfig = {
     editable: true,
     items: [
       {
@@ -278,7 +284,7 @@ export class PledgeCardComponent {
         type: IMetadataFormControlType.SELECT,
         validators: {
           // TODO(d.maltsev): add (`and`, `or`) operators to form context
-          // RODO(d.maltsev): add `equals` method to form context
+          // TODO(d.maltsev): add `equals` method to form context
           required: true,
         },
         width: 0,
@@ -287,9 +293,23 @@ export class PledgeCardComponent {
     plugins: [],
   };
 
-  readonly person$ = this.pledgeCardService.person$;
+  readonly pledgor$ = this.pledgeCardService.pledgor$;
+  readonly isPledgorFormDisabled$ = this.pledgor$.pipe(map(Boolean));
+
+  readonly property$ = this.pledgeCardService.property$;
+  readonly isPropertyFormDisabled$ = this.property$.pipe(map(Boolean));
 
   constructor(
     private pledgeCardService: PledgeCardService,
   ) {}
+
+  onPledgorFormClear(): void {
+    this.pledgeCardService.selectPledgor(null);
+    this.pledgorForm.formGroup.reset();
+  }
+
+  onPropertyFormClear(): void {
+    this.pledgeCardService.selectProperty(null);
+    this.propertyForm.formGroup.reset();
+  }
 }

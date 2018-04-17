@@ -23,6 +23,8 @@ import { MetadataFormService } from './metadata-form.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +48,11 @@ export class MetadataFormComponent<T> implements OnInit {
     }
   }
 
+  @Input()
+  set disabled(disabled: boolean) {
+    this.disabled$.next(disabled);
+  }
+
   @Output() submit = new EventEmitter<void>();
 
   flatConfig: IMetadataFormFlatConfig;
@@ -54,6 +61,8 @@ export class MetadataFormComponent<T> implements OnInit {
   private _data: Partial<T>;
 
   private flatControls: IMetadataFormControl[];
+
+  private disabled$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -103,7 +112,7 @@ export class MetadataFormComponent<T> implements OnInit {
 
     const controls = this.flatControls.reduce((acc, item) => {
       const asyncValidators = this.getAsyncValidators(item);
-      const disabled = item.disabled === true;
+      const disabled = item.disabled || this.disabled$.value;
       return {
         ...acc,
         [item.name]: new FormControl({ value: null, disabled }, { asyncValidators })
@@ -118,13 +127,22 @@ export class MetadataFormComponent<T> implements OnInit {
       if (typeof item.disabled === 'object' && item.disabled !== null) {
         if (item.disabled['operator'] === IFormContextConfigOperator.EQUALS) {
           const disabled = item.disabled as IFormContextConfig;
-          this.formGroup.get(disabled.field).valueChanges
-            .subscribe((value: any) => this.disable(item.name, String(value) === String(disabled.value)));
+          combineLatest(
+            this.formGroup.get(disabled.field).valueChanges.pipe(
+              map(d => String(d) === String(disabled.value)),
+            ),
+            this.disabled$,
+          ).subscribe(([ a, b ]) => this.disable(item.name, a || b));
         } else {
-          this.contextService
-            .calculate(item.disabled as IContextConfig)
-            .subscribe((d: boolean) => this.disable(item.name, d));
+          combineLatest(
+            this.contextService.calculate(item.disabled as IContextConfig).pipe(
+              map(Boolean),
+            ),
+            this.disabled$,
+          ).subscribe(([ a, b ]) => this.disable(item.name, a || b));
         }
+      } else {
+        this.disabled$.subscribe(d => this.disable(item.name, d));
       }
     });
 
