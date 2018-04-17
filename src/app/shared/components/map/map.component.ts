@@ -23,6 +23,7 @@ import {
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
+import { tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -71,17 +72,22 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
         this.notificationsService.fetchError(e).dispatch();
         return empty();
       })
-      .subscribe((map: any) => {
-        if (map) {
-          this.map = map;
-          this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-          this.addMarkers(this.markers);
-          this.addControls(this.controls);
-          this.fitBounds();
-          this.detectCmpsChanges(this.components);
-          this.cdRef.markForCheck();
-        }
-      });
+      .pipe(
+        tap((map: any) => {
+          if (map) {
+            this.map = map;
+            this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
+            this.addMarkers(this.markers);
+            this.addControls(this.controls);
+            this.detectCmpsChanges(this.components);
+            this.cdRef.markForCheck();
+          }
+        }),
+        // NOTE: the only way I found to fit bounds properly, is when map already has size (i.lobanov)
+        delay(200)
+      )
+      .subscribe(_ => this.fitBounds());
+
   }
 
   ngDoCheck(): void {
@@ -92,6 +98,7 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
     if (this.mapService.removeMap) {
       this.mapService.removeMap(this.map, this._markers, this.components.controls);
       this._markers = [];
+      this.components = {};
     }
   }
 
