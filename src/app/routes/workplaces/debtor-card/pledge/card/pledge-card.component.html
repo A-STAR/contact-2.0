@@ -2,7 +2,7 @@
 
   <!-- Titlebar -->
   <div class="flex-item">
-    <app-button type="back"></app-button>
+    <app-button type="back" (click)="onBack()"></app-button>
     <h1>Добавление залогодателя</h1>
   </div>
 
@@ -82,6 +82,6 @@
 
   <!-- Toolbar -->
   <div class="flex-item">
-    <app-button type="save"></app-button>
+    <app-button type="save" (click)="onSave()"></app-button>
   </div>
 </div>
