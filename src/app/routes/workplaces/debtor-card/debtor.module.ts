@@ -64,7 +64,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/property/create',
+        path: 'pledge/:contractId/pledgor/:pledgorId/property/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
         data: {
           edit: false,
@@ -73,7 +73,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/edit',
+        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
         data: {
           edit: true,

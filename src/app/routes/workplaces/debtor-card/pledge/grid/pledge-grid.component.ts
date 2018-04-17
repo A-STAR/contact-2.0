@@ -162,13 +162,13 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   private onAddProperty(contract: IPledgeContract): void {
-    const { contractId } = contract;
-    this.routingService.navigate([ `pledge/${contractId}/property/create` ], this.route);
+    const { contractId, personId } = contract;
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/${personId}/property/create` ], this.route);
   }
 
   private onEdit(contract: IPledgeContract): void {
-    const { contractId } = contract;
-    this.routingService.navigate([ `pledge/${contractId}/edit` ], this.route);
+    const { contractId, personId, propertyId } = contract;
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/${personId}/property/${propertyId}` ], this.route);
   }
 
   private fetch(): void {
