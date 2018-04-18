@@ -8,6 +8,7 @@ import {
   Inject,
   ViewChild,
   TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { map } from 'rxjs/operators/map';
 
@@ -41,6 +42,7 @@ export class AddressComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
+    private cdRef: ChangeDetectorRef,
     @Inject(MAP_SERVICE) private mapService: IMapService,
   ) {}
 
@@ -63,6 +65,7 @@ export class AddressComponent implements OnInit {
       .subscribe(markers => {
         this.options.center = { lat: markers[0].lat, lng: markers[0].lng };
         this.markers = markers;
+        this.cdRef.markForCheck();
       });
   }
 
