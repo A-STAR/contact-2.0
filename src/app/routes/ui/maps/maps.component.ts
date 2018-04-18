@@ -2,11 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, Vi
 import { random, name, address } from 'faker';
 
 import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
-import { IMarker } from '@app/core/map-providers/map-providers.interface';
+import { IMarker, IControlDef, IControlCmp, MapControlPosition } from '@app/core/map-providers/map-providers.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
 
 import { range } from '@app/core/utils';
+import { of } from 'rxjs/observable/of';
+import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
 
 @Component({
   selector: 'app-maps',
@@ -17,6 +20,7 @@ import { range } from '@app/core/utils';
 export class MapsComponent implements OnInit {
 
   markers: IMarker<IDebtorAddress>[];
+  controls: IControlDef<IToolbarItem[]>[];
   @ViewChild('tpl')
   tpl: TemplateRef<IDebtorAddress>;
 
@@ -26,6 +30,7 @@ export class MapsComponent implements OnInit {
 
   ngOnInit(): void {
     this.markers = this.generateMarkers();
+    this.controls = this.getControls();
     this.cdRef.markForCheck();
   }
 
@@ -48,6 +53,28 @@ export class MapsComponent implements OnInit {
         address: address.streetAddress()
       }
     }));
+  }
+
+  private getControls(): IControlDef<IToolbarItem[]>[] {
+    return [
+        {
+          position: MapControlPosition.BOTTOM_LEFT,
+          hostClass: 'map-toolbar-placement',
+          cmp: MapToolbarComponent as Type<IControlCmp<IToolbarItem[]>>,
+          data: [
+            {
+              type: ToolbarItemTypeEnum.BUTTON_ADD,
+              action: () => alert('add'),
+              enabled: of(true),
+            },
+            {
+              type: ToolbarItemTypeEnum.BUTTON_EDIT,
+              action: () => alert('edit'),
+              enabled: of(true),
+            }
+          ]
+        }
+    ];
   }
 
 }
