@@ -7,6 +7,8 @@ import { MapFilterComponent } from './map-filter.component';
   imports: [
     CommonModule
   ],
-  declarations: [ MapFilterComponent ]
+  declarations: [ MapFilterComponent ],
+  exports: [ MapFilterComponent ],
+  entryComponents: [ MapFilterComponent ],
 })
 export class MapFilterModule { }
