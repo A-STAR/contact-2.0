@@ -25,7 +25,7 @@ const routes: Routes = [
         loadChildren: './debt-processing/debt-processing.module#DebtProcessingModule',
       },
       {
-        path: 'debtor-card/:debtId',
+        path: 'debtor/:debtorId/debt/:debtId',
         loadChildren: './debtor-card/debtor.module#DebtorCardModule',
       },
       // {

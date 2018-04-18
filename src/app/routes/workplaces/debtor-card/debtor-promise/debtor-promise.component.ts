@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-debtor-promise',
