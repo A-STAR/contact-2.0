@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators';
 
 import { IAddress, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from '@app/core/debt/debt.interface';
 
@@ -132,8 +133,14 @@ export class DebtService {
       .catch(this.notificationsService.deleteError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
-  openByDebtId(debtId: number): Promise<boolean> {
-    return this.routingService.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
+  getDebtorIdByDebtId(debtId: number): Observable<number> {
+    return this.fetch(null, debtId).pipe(
+      map(response => response && response.personId),
+    );
+  }
+
+  openByDebtId(debtId: number, debtorId: number): Promise<boolean> {
+    return this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
   }
 
   openIncomingCall(data: any): Promise<boolean> {

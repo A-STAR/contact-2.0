@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 
-import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
+import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 
 import { PhoneGridComponent } from './phone.component';
 

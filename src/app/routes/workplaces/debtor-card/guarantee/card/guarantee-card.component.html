@@ -3,7 +3,7 @@
   <!-- Titlebar -->
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
-    <h1>{{ 'routes.workplaces.debtor-card.guarantee.card.titles.addGuarantor' | translate }}</h1>
+    <h1>{{ 'routes.workplaces.debtorCard.guarantee.card.titles.addGuarantor' | translate }}</h1>
   </div>
 
   <!-- Forms -->
@@ -13,7 +13,7 @@
       <!-- Contract Form -->
       <div *ngIf="showContractForm$ | async" class="flex-item grow pr">
         <h2>
-          {{ 'routes.workplaces.debtor-card.guarantee.card.forms.contract.title' | translate }}
+          {{ 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title' | translate }}
         </h2>
         <app-metadata-form [config]="contractFormConfig"></app-metadata-form>
         <app-button type="clear"></app-button>
@@ -22,7 +22,7 @@
       <!-- Guarantor Form -->
       <div class="flex-item grow ph">
         <h2 appPopupOutlet="select-person" [disabled]="edit$ | async">
-          {{ 'routes.workplaces.debtor-card.guarantee.card.forms.guarantor.title' | translate }}
+          {{ 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title' | translate }}
         </h2>
         <app-metadata-form #guarantorForm [config]="guarantorFormConfig" [data]="guarantor$ | async" [disabled]="isGuarantorFormDisabled$ | async"></app-metadata-form>
         <app-button type="clear" (click)="onGuarantorFormClear()"></app-button>

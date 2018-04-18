@@ -8,12 +8,10 @@ import { CampaignService } from '../../campaign.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentsComponent {
+  readonly debtExists$ = this.campaignService.campaignDebt$.map(Boolean);
+  readonly debtId$ = this.campaignService.campaignDebt$.map(debt => debt.debtId);
+
   constructor(
     private campaignService: CampaignService,
   ) {}
-
-  readonly debtExists$ = this.campaignService.campaignDebt$.map(Boolean);
-
-  readonly debtId$ = this.campaignService.campaignDebt$.map(debt => debt.debtId);
-
 }

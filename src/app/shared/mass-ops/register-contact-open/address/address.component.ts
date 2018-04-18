@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
+import { AddressService } from '@app/routes/workplaces/core/address/address.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
