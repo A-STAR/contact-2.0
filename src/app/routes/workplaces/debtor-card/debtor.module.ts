@@ -95,15 +95,17 @@ const routes: Routes = [
       },
       {
         path: 'contact/create',
-        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
+        loadChildren: './contact-persons/card/contact-person-card.module#ContactPersonCardModule',
+        data: {
+          edit: false,
+        },
       },
       {
         path: 'contact/:contactId',
-        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
-      },
-      {
-        path: 'contact/create/:contactPersonId',
-        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
+        loadChildren: './contact-persons/card/contact-person-card.module#ContactPersonCardModule',
+        data: {
+          edit: true,
+        },
       },
       {
         path: 'phone/create',
@@ -113,6 +115,7 @@ const routes: Routes = [
         path: 'phone/:phoneId',
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
+      /*
       {
         path: 'contact/create/:contactPersonId/phone/create',
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
@@ -129,6 +132,7 @@ const routes: Routes = [
         path: 'contact/:contactId/:contactPersonId/phone/:phoneId',
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
+      */
       {
         path: 'address/create',
         loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
@@ -137,6 +141,7 @@ const routes: Routes = [
         path: 'address/:addressId',
         loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
       },
+      /*
       {
         path: 'contact/create/:contactPersonId/address/create',
         loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
@@ -185,6 +190,7 @@ const routes: Routes = [
         path: 'contact/:contactId/:contactPersonId/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
+      */
       {
         path: 'document/create',
         loadChildren: './document/document.module#DocumentModule',

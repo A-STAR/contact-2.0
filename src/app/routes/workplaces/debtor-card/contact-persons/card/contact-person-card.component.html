@@ -3,38 +3,20 @@
   <!-- Titlebar -->
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
-    <h1>{{ 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor' | translate }}</h1>
+    <h1>{{ 'routes.workplaces.debtorCard.contactPerson.card.titles.add' | translate }}</h1>
   </div>
 
   <!-- Forms -->
   <div class="flex-item grow" style="overflow-y: auto;">
     <div class="flex horizontal">
 
-      <!-- Contract Form -->
-      <div *ngIf="showContractForm$ | async" class="flex-item grow pr">
-        <h2>
-          {{ 'routes.workplaces.debtorCard.pledge.card.forms.contract.title' | translate }}
-        </h2>
-        <app-metadata-form [config]="contractFormConfig"></app-metadata-form>
-        <app-button type="clear"></app-button>
-      </div>
-
-      <!-- Pledgor Form -->
-      <div *ngIf="showPledgorForm$ | async" class="flex-item grow ph">
+      <!-- Contact Person Form -->
+      <div class="flex-item grow ph">
         <h2 appPopupOutlet="select-person" [disabled]="edit$ | async">
-          {{ 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title' | translate }}
+          {{ 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title' | translate }}
         </h2>
-        <app-metadata-form #pledgorForm [config]="pledgorFormConfig" [data]="pledgor$ | async" [disabled]="isPledgorFormDisabled$ | async"></app-metadata-form>
-        <app-button type="clear" (click)="onPledgorFormClear()"></app-button>
-      </div>
-
-      <!-- Property Form -->
-      <div class="flex-item grow pl">
-        <h2 appPopupOutlet="select-property" [disabled]="edit$ | async">
-          {{ 'routes.workplaces.debtorCard.pledge.card.forms.property.title' | translate }}
-        </h2>
-        <app-metadata-form #propertyForm [config]="propertyFormConfig" [data]="property$ | async" [disabled]="isPropertyFormDisabled$ | async"></app-metadata-form>
-        <app-button type="clear" (click)="onPropertyFormClear()"></app-button>
+        <app-metadata-form #contactPersonForm [config]="contactPersonFormConfig" [data]="contactPerson$ | async" [disabled]="isContactPersonFormDisabled$ | async"></app-metadata-form>
+        <app-button type="clear" (click)="onContactPersonFormClear()"></app-button>
       </div>
     </div>
   </div>

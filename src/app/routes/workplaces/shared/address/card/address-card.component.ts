@@ -40,7 +40,8 @@ export class AddressCardComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.addressId) {
-      this.addressService.fetch(18, this.entityId, this.addressId, this.callCenter)
+      this.addressService
+        .fetch(18, this.entityId, this.addressId, this.callCenter)
         .subscribe(address => this.address$.next(address));
     }
 
