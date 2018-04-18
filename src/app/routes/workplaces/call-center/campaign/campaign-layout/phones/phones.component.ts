@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators/first';
 
-import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
