@@ -31,10 +31,6 @@
               "contactPerson": {
                 "title": "Contact Person"
               }
-            },
-            "titles": {
-              "add": "Add Contact Person",
-              "edit": "Edit Contact Person"
             }
           }
         },

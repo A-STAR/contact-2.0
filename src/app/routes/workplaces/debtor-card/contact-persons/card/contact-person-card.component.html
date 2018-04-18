@@ -3,22 +3,15 @@
   <!-- Titlebar -->
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
-    <h1>{{ 'routes.workplaces.debtorCard.contactPerson.card.titles.add' | translate }}</h1>
   </div>
 
-  <!-- Forms -->
+  <!-- Form -->
   <div class="flex-item grow" style="overflow-y: auto;">
-    <div class="flex horizontal">
-
-      <!-- Contact Person Form -->
-      <div class="flex-item grow ph">
-        <h2 appPopupOutlet="select-person" [disabled]="edit$ | async">
-          {{ 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title' | translate }}
-        </h2>
-        <app-metadata-form #contactPersonForm [config]="contactPersonFormConfig" [data]="contactPerson$ | async" [disabled]="isContactPersonFormDisabled$ | async"></app-metadata-form>
-        <app-button type="clear" (click)="onContactPersonFormClear()"></app-button>
-      </div>
-    </div>
+    <h2 appPopupOutlet="select-person" [disabled]="edit$ | async">
+      {{ 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title' | translate }}
+    </h2>
+    <app-metadata-form #contactPersonForm [config]="contactPersonFormConfig" [data]="contactPerson$ | async" [disabled]="isContactPersonFormDisabled$ | async"></app-metadata-form>
+    <app-button *ngIf="!(edit$ | async)" type="clear" (click)="onContactPersonFormClear()"></app-button>
   </div>
 
   <!-- Additional Info -->
@@ -28,14 +21,14 @@
       <!-- Identifications -->
       <app-tabview-tab title="Удостоверения личности">
         <app-identity-grid
-          [personId]="4"
+          [personId]="contactId"
         ></app-identity-grid>
       </app-tabview-tab>
 
       <!-- Employment -->
       <app-tabview-tab title="Трудоустройство">
         <app-employment-grid
-          [personId]="4"
+          [personId]="contactId"
         ></app-employment-grid>
       </app-tabview-tab>
 
@@ -43,18 +36,18 @@
       <app-tabview-tab title="Телефоны">
         <app-phone-grid
           [contactType]="1"
-          [debtId]="1"
-          [personId]="4"
-          [personRole]="1"
+          [debtId]="debtId"
+          [personId]="contactId"
+          [personRole]="4"
         ></app-phone-grid>
       </app-tabview-tab>
 
       <!-- Addresses -->
       <app-tabview-tab title="Адреса">
         <app-address-grid
-          [debtId]="1"
-          [personId]="4"
-          [personRole]="1"
+          [debtId]="debtId"
+          [personId]="contactId"
+          [personRole]="4"
         ></app-address-grid>
       </app-tabview-tab>
 
@@ -62,7 +55,7 @@
       <app-tabview-tab title="Документы">
         <app-document-grid
           [entityType]="19"
-          [entityId]="1"
+          [entityId]="debtId"
         ></app-document-grid>
       </app-tabview-tab>
     </app-tabview>
