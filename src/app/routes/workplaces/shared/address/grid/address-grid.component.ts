@@ -118,8 +118,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddress$.map(address => address && !address.isInactive)
   ]);
 
-  readonly canViewMap$ = this.selectedAddress$
-    .map(address => Boolean(address && address.longitude && address.latitude));
+  readonly canViewMap$ = combineLatestAnd([
+    this.selectedAddress$.map(address => Boolean(address && address.longitude && address.latitude)),
+    this.userPermissionsService.has('MAP_ADDRESS_VIEW')
+  ]);
 
   toolbarItems: IToolbarItem[] = [
     {

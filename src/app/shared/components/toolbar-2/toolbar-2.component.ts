@@ -9,6 +9,7 @@ import { IToolbarItem } from './toolbar-2.interface';
 })
 export class Toolbar2Component {
   @Input() items: IToolbarItem[] = [];
+  @Input() toolbarClass: any;
   @Output() action = new EventEmitter<IToolbarItem>();
 
   onAction(item: IToolbarItem): void {

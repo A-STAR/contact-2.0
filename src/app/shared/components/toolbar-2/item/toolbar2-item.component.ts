@@ -9,7 +9,7 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
 import { doOnceIf, invert } from '@app/core/utils';
 
 @Component({
-  selector: 'app-toolbar2-item',
+  selector: 'app-toolbar-2-item',
   templateUrl: './toolbar2-item.component.html',
   styleUrls: ['./toolbar2-item.component.scss'],
 })

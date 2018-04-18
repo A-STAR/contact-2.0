@@ -1,8 +1,8 @@
-<div class="toolbar">
+<div class="toolbar" [ngClass]="toolbarClass">
   <ng-container *ngFor="let item of items">
-    <app-toolbar2-item
+    <app-toolbar-2-item
       [item]="item"
       (action)="onAction($event)"
-    ></app-toolbar2-item>
+    ></app-toolbar-2-item>
   </ng-container>
 </div>
