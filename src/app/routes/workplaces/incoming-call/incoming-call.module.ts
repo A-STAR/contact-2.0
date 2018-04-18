@@ -21,13 +21,21 @@ const routes: Routes = [
       },
       {
         path: ':personId/phones/create',
-        loadChildren: './phone-card/phone-card.module#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'personId',
+        },
       },
       {
         path: ':personId/phones/:phoneId',
-        loadChildren: './phone-card/phone-card.module#PhoneCardModule',
-      }
-    ]
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'personId',
+        },
+      },
+    ],
   },
 ];
 

@@ -109,11 +109,19 @@ const routes: Routes = [
       },
       {
         path: 'phone/create',
-        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'personId',
+        },
       },
       {
         path: 'phone/:phoneId',
-        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'personId',
+        },
       },
       /*
       {
@@ -135,11 +143,19 @@ const routes: Routes = [
       */
       {
         path: 'address/create',
-        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module.ts#AddressCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'personId',
+        },
       },
       {
         path: 'address/:addressId',
-        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module.ts#AddressCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'personId',
+        },
       },
       /*
       {
@@ -193,11 +209,11 @@ const routes: Routes = [
       */
       {
         path: 'document/create',
-        loadChildren: './document/document.module#DocumentModule',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
         path: 'document/:documentId',
-        loadChildren: './document/document.module#DocumentModule',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
         path: 'email/create',
@@ -209,19 +225,31 @@ const routes: Routes = [
       },
       {
         path: 'employment/create',
-        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module.ts#EmploymentCardModule',
+        data: {
+          entityKey: 'personId',
+        },
       },
       {
         path: 'employment/:employmentId',
-        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module.ts#EmploymentCardModule',
+        data: {
+          entityKey: 'personId',
+        },
       },
       {
         path: 'identity/create',
-        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module.ts#IdentityCardModule',
+        data: {
+          entityKey: 'personId',
+        },
       },
       {
         path: 'identity/:identityId',
-        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module.ts#IdentityCardModule',
+        data: {
+          entityKey: 'personId',
+        },
       },
       {
         path: 'debt',

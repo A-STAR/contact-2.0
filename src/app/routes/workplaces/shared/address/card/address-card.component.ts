@@ -1,14 +1,15 @@
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form-2/dynamic-form-2.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
+import { AddressService } from '@app/routes/workplaces/core/address/address.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -21,19 +22,23 @@ import { oneOfGroupRequired } from '@app/core/validators';
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent implements OnInit {
-  @Input() addressId: number;
-  @Input() callCenter = false;
-  @Input() entityId: number;
-
-  @Output() close = new EventEmitter<void>();
-
   @ViewChild('form') form: DynamicForm2Component;
 
   address$ = new BehaviorSubject<IAddress>(null);
   group$: Observable<IDynamicFormGroup>;
 
+  private routeParamMap = this.route.snapshot.paramMap;
+  private routeData = this.route.snapshot.data;
+
+  private callCenter = this.routeData.callCenter;
+  private entityKey = this.routeData.entityKey || 'entityId';
+
+  private addressId = Number(this.routeParamMap.get('addressId'));
+  private entityId = Number(this.routeParamMap.get(this.entityKey));
+
   constructor(
     private addressService: AddressService,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -70,7 +75,7 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.close.emit();
+    // this.close.emit();
   }
 
   get canSubmit(): boolean {

@@ -4,8 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IAddress } from './address.interface';
-import { IAddressMarkData } from './grid/mark/mark.interface';
+import { IAddress, IAddressMarkData } from './address.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';

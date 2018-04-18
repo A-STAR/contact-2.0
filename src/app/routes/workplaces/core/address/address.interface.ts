@@ -24,3 +24,10 @@ export interface IAddress {
   latitude?: number;
   longitude?: number;
 }
+
+export interface IAddressMarkData {
+  purposeCode: number;
+  comment: string;
+  debtIds: number[];
+  personRole: number;
+}

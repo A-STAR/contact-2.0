@@ -20,4 +20,4 @@ import { DocumentCardComponent } from './document-card.component';
     DocumentCardComponent,
   ]
 })
-export class DocumentCardModule { }
+export class DocumentCardModule {}

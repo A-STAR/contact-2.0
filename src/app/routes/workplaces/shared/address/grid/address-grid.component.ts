@@ -14,13 +14,12 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IAddress } from '../address.interface';
-import { IAddressMarkData } from './mark/mark.interface';
+import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { AddressService } from '../address.service';
+import { AddressService } from '@app/routes/workplaces/core/address/address.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';

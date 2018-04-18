@@ -1,4 +1,5 @@
-import { Component, ViewChild, OnInit, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -24,18 +25,22 @@ const label = makeKey('debtor.identityDocs.grid');
 export class IdentityCardComponent extends DialogFunctions implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
-  @Input() personId: number;
-  @Input() identityId: number;
-
-  @Output() close = new EventEmitter<void>();
-
   controls: IDynamicFormControl[] = null;
   dialog: string;
   identity: IIdentityDoc;
 
+  private routeParamMap = this.route.snapshot.paramMap;
+  private routeData = this.route.snapshot.data;
+
+  private entityKey = this.routeData.entityKey || 'entityId';
+
+  private identityId = Number(this.routeParamMap.get('identityId'));
+  private entityId = Number(this.routeParamMap.get(this.entityKey));
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {
@@ -48,7 +53,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
       this.identityId
         ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
         : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
-      this.identityId ? this.identityService.fetch(this.personId, this.identityId) : of(null)
+      this.identityId ? this.identityService.fetch(this.entityId, this.identityId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, identity ]) => {
@@ -93,13 +98,13 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    this.close.emit();
+    // this.close.emit();
   }
 
   private onSubmit(data: any): void {
     const action = this.identityId
-      ? this.identityService.update(this.personId, this.identityId, data)
-      : this.identityService.create(this.personId, data);
+      ? this.identityService.update(this.entityId, this.identityId, data)
+      : this.identityService.create(this.entityId, data);
 
     action.subscribe(() => {
       this.identityService.dispatchAction(IdentityService.DEBTOR_IDENTITY_SAVED);

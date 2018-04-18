@@ -11,7 +11,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 
-import { IAddress } from '../../address.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IMapOptions, IMarker, IMapService } from '@app/shared/components/map/map.interface';
 import { MAP_SERVICE } from '@app/shared/components/map/map.component';
 
@@ -61,5 +61,4 @@ export class AddressGridMapComponent implements OnInit {
   onCancel(): void {
     this.cancel.emit();
   }
-
 }
