@@ -1,6 +1,20 @@
-:host ::ng-deep .map-toolbar {
+.map-toolbar {
   user-select: none;
+  width: 100%;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
   border-radius: 2px;
   padding: 0 !important;
+}
+
+.map-toolbar-item {
+  display: inline-block;
+  vertical-align: middle;
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+  &.align-right {
+    float: right;
+    margin-right: 0;
+    padding-left: 8px;
+  }
 }

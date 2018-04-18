@@ -11,7 +11,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 
-import { IAddress } from '../../address.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IMapOptions, IMarker, IMapService } from '@app/core/map-providers/map-providers.interface';
 
 import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';

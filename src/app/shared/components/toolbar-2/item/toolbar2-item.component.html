@@ -4,14 +4,14 @@
       <!-- Button -->
       <div *ngSwitchCase="'button'" #appDropdown appDropdown fitWidthToContent="true">
         <div #dropdownTrigger>
-          <app-button2
+          <app-button
             [disabled]="isDisabled(item) | async"
             [icon]="item.icon"
             [label]="false"
             [title]="item.label"
             [type]="getButtonType(item)"
             (click)="onClick(item)">
-          </app-button2>
+          </app-button>
         </div>
         <div #dropdownContent>
           <ul *ngIf="item.children" class="list-group mb0">

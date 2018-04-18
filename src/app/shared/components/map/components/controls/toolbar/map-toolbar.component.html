@@ -1,5 +1,18 @@
-<app-toolbar-2
-  [toolbarClass]="'map-toolbar'"
-  [items]="context.data"
-  (action)="onAction($event)"
-></app-toolbar-2>
+<div class="map-toolbar">
+  <div
+    *ngFor="let item of context.data"
+    class="map-toolbar-item">
+      <ng-container [ngSwitch]="item.type">
+        <app-map-filter *ngSwitchCase="'filter'" [items]="item"></app-map-filter>
+        <app-button
+          *ngSwitchCase="'button'"
+          [disabled]="isDisabled(item) | async"
+          [icon]="item.icon"
+          [label]="false"
+          [title]="item.label"
+          type="button"
+          (click)="onClick(item)">
+        </app-button>
+      </ng-container>
+  </div>
+</div>

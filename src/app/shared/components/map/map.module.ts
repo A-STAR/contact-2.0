@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MapToolbarModule } from './components/controls/toolbar/map-toolbar.module';
 import { PopupModule } from './components/popups/popup.module';
+import { MapControlsModule } from './components/controls/map-controls.module';
 
 import { MapComponent } from './map.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    MapToolbarModule,
+    MapControlsModule,
     PopupModule,
   ],
   declarations: [ MapComponent ],

@@ -3,13 +3,16 @@ import { random, name, address } from 'faker';
 
 import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
 import { IMarker, IControlDef, IControlCmp, MapControlPosition } from '@app/core/map-providers/map-providers.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
 
 import { range } from '@app/core/utils';
 import { of } from 'rxjs/observable/of';
 import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
+import {
+  MapToolbarItemType,
+  IMapToolbarItem,
+} from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
 
 @Component({
   selector: 'app-maps',
@@ -20,7 +23,7 @@ import { MapToolbarComponent } from '@app/shared/components/map/components/contr
 export class MapsComponent implements OnInit {
 
   markers: IMarker<IDebtorAddress>[];
-  controls: IControlDef<IToolbarItem[]>[];
+  controls: IControlDef<IMapToolbarItem[]>[];
   @ViewChild('tpl')
   tpl: TemplateRef<IDebtorAddress>;
 
@@ -55,22 +58,22 @@ export class MapsComponent implements OnInit {
     }));
   }
 
-  private getControls(): IControlDef<IToolbarItem[]>[] {
+  private getControls(): IControlDef<IMapToolbarItem[]>[] {
     return [
         {
           position: MapControlPosition.BOTTOM_LEFT,
           hostClass: 'map-toolbar-placement',
-          cmp: MapToolbarComponent as Type<IControlCmp<IToolbarItem[]>>,
+          cmp: MapToolbarComponent as Type<IControlCmp<IMapToolbarItem[]>>,
           data: [
             {
-              type: ToolbarItemTypeEnum.BUTTON_ADD,
-              action: () => alert('add'),
+              type: MapToolbarItemType.BUTTON,
+              action: (map: any) => map && alert('button'),
               enabled: of(true),
             },
             {
-              type: ToolbarItemTypeEnum.BUTTON_EDIT,
-              action: () => alert('edit'),
+              type: MapToolbarItemType.FILTER,
               enabled: of(true),
+              children: []
             }
           ]
         }
