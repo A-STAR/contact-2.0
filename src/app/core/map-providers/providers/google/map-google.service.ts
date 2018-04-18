@@ -13,6 +13,7 @@ import {
   ControlComponentRefGetter,
   IControlCmp,
   IPopupCmp,
+  MapControlPosition,
 } from '../../map-providers.interface';
 import { Libraries } from './maps-google.interface';
 
@@ -106,7 +107,10 @@ export class MapGoogleService implements IMapService {
     const index = inc.uuid;
 
     (el as any).index = index;
-    el.classList.add(controlDef.hostClass || '');
+
+    if (controlDef.hostClass) {
+      el.classList.add(controlDef.hostClass);
+    }
 
     compRef.instance.context = {
       ...compRef.instance.context,
@@ -115,20 +119,19 @@ export class MapGoogleService implements IMapService {
       position: controlDef.position
     };
 
-    map.controls[google.maps.ControlPosition[controlDef.position]].push(el);
+    map.controls[this.getControlPositionFromDef(controlDef.position)].push(el);
 
     return () => compRef;
   }
 
-  removeControl(control: any, index: number): void {
-    control.removeAt(index);
+  removeControl(position: any, index: number): void {
+    position.removeAt(index);
   }
 
-  removeControls(controls: any[]): void {
-    // TODO(i.lobanov): this probably doesn't work
-    if (controls && controls.length) {
-      controls.forEach((control, index) => {
-        this.removeControl(control, index);
+  removeControls(): void {
+    if (this._map.controls && this._map.controls.length) {
+      this._map.controls.forEach(position => {
+        position.clear();
       });
     }
   }
@@ -160,11 +163,42 @@ export class MapGoogleService implements IMapService {
     return new google.maps.LatLngBounds(...(latlngs || []));
   }
 
-  removeMap(map: google.maps.Map, markers?: any[], controls?: any[]): void {
+  removeMap(map: google.maps.Map, markers?: any[]): void {
     this._map = map;
-    this.removeControls(controls);
+    this.removeControls();
     this.removeMarkers(markers);
     this.removeListeners();
+  }
+
+  getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition {
+    switch (position) {
+      case MapControlPosition.BOTTOM_CENTER:
+        return google.maps.ControlPosition.BOTTOM_CENTER;
+      case MapControlPosition.BOTTOM_LEFT:
+        return google.maps.ControlPosition.BOTTOM_LEFT;
+      case MapControlPosition.BOTTOM_RIGHT:
+        return google.maps.ControlPosition.BOTTOM_RIGHT;
+      case MapControlPosition.LEFT_BOTTOM:
+        return google.maps.ControlPosition.LEFT_BOTTOM;
+      case MapControlPosition.LEFT_CENTER:
+        return google.maps.ControlPosition.LEFT_CENTER;
+      case MapControlPosition.LEFT_TOP:
+        return google.maps.ControlPosition.LEFT_TOP;
+      case MapControlPosition.TOP_LEFT:
+        return google.maps.ControlPosition.TOP_LEFT;
+      case MapControlPosition.TOP_CENTER:
+        return google.maps.ControlPosition.TOP_CENTER;
+      case MapControlPosition.TOP_RIGHT:
+        return google.maps.ControlPosition.TOP_RIGHT;
+      case MapControlPosition.RIGHT_BOTTOM:
+        return google.maps.ControlPosition.RIGHT_BOTTOM;
+      case MapControlPosition.RIGHT_CENTER:
+        return google.maps.ControlPosition.RIGHT_CENTER;
+      case MapControlPosition.RIGHT_TOP:
+        return google.maps.ControlPosition.RIGHT_TOP;
+      default:
+        return google.maps.ControlPosition.BOTTOM_RIGHT;
+    }
   }
 
   private removeMarkers(markers: google.maps.Marker[]): void {

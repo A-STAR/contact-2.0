@@ -95,11 +95,12 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.removeComponents(this.components);
     if (this.mapService.removeMap) {
-      this.mapService.removeMap(this.map, this._markers, this.components.controls);
-      this._markers = [];
-      this.components = {};
+      this.mapService.removeMap(this.map, this._markers);
     }
+    this._markers = [];
+    this.components = {};
   }
 
   detectCmpsChanges(cmps: IMapComponents<T>): void {
@@ -135,6 +136,16 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
   addControls(controls: IControlDef<T>[]): void {
     if (controls && controls.length) {
       this.components.controls = controls.map(cDef => this.mapService.createControl(this.map, cDef));
+    }
+  }
+
+  removeComponents(cmps: IMapComponents<T>): void {
+    const componentTypes = Object.keys(cmps);
+    if (componentTypes && componentTypes.length) {
+      componentTypes
+        .map(cmpType => cmps[cmpType].map(cmpRef => cmpRef())
+          .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
+          .forEach(cmp => cmp.changeDetectorRef.destroy()));
     }
   }
 

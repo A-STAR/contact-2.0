@@ -10,6 +10,7 @@ import {
   LeafletEvent,
   LatLngBounds,
   LatLngBoundsLiteral,
+  ControlPosition,
 } from 'leaflet';
 
 import {
@@ -20,6 +21,7 @@ import {
   IMarkerIconConfig,
   IMapService,
   IPopupCmp,
+  MapControlPosition,
 } from '../../map-providers.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
@@ -77,6 +79,29 @@ export class MapYandexService implements IMapService {
 
   createBounds(latlngs: LatLngBoundsLiteral): any {
     return new LatLngBounds(latlngs);
+  }
+
+  getControlPositionFromDef(position: MapControlPosition): ControlPosition {
+    switch (position) {
+      case MapControlPosition.BOTTOM_RIGHT:
+      case MapControlPosition.BOTTOM_CENTER:
+      case MapControlPosition.RIGHT_BOTTOM:
+      case MapControlPosition.RIGHT_CENTER:
+        return 'bottomright';
+      case MapControlPosition.BOTTOM_LEFT:
+      case MapControlPosition.LEFT_BOTTOM:
+      case MapControlPosition.LEFT_CENTER:
+        return 'bottomleft';
+      case MapControlPosition.LEFT_TOP:
+      case MapControlPosition.TOP_LEFT:
+        return 'topleft';
+      case MapControlPosition.TOP_CENTER:
+      case MapControlPosition.TOP_RIGHT:
+      case MapControlPosition.RIGHT_TOP:
+        return 'topright';
+      default:
+        return 'bottomright';
+    }
   }
 
   private createPopup<T>(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {

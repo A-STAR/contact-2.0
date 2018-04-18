@@ -18,12 +18,26 @@ export interface IMapService {
   getIconConfig<T extends IIconConfigParam>(configKey: string, entity: T): IMarkerIconConfig;
   createBounds(latlngs?: any): any;
   removeMap?(map: google.maps.Map, markers?: any[], controls?: any[]): void;
+  getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
+}
+
+export enum MapControlPosition {
+   BOTTOM_CENTER,
+   BOTTOM_LEFT,
+   BOTTOM_RIGHT,
+   LEFT_BOTTOM,
+   LEFT_CENTER,
+   LEFT_TOP,
+   RIGHT_BOTTOM,
+   RIGHT_CENTER,
+   RIGHT_TOP,
+   TOP_CENTER,
+   TOP_LEFT,
+   TOP_RIGHT
 }
 
 export interface IControlDef<T> {
-  map: any;
-  position: ControlPosition | google.maps.ControlPosition;
-  index: number;
+  position: MapControlPosition;
   data?: T;
   cmp?: Type<IControlCmp<T>>;
   tpl?: TemplateRef<T>;
@@ -31,19 +45,22 @@ export interface IControlDef<T> {
 }
 
 export interface IControlCmp<T> {
-  context: {
-    data?: T,
-    index: number,
-    map: any;
-    position: ControlPosition | google.maps.ControlPosition;
-  };
+  context: IControlCmpContext<T>;
   tpl?: TemplateRef<T>;
 }
 
+export interface IComponentContext<T> {
+  data?: T;
+}
+
+export interface IControlCmpContext<T> extends IComponentContext<T> {
+  index: number;
+  position: MapControlPosition;
+  map: any;
+}
+
 export interface IPopupCmp<T> {
-  context: {
-    data?: T
-  };
+  context: IComponentContext<T>;
   tpl?: TemplateRef<T>;
 }
 
