@@ -22,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'phone/:personId/create',
-        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: true,
           entityKey: 'personId',
@@ -30,7 +30,7 @@ const routes: Routes = [
       },
       {
         path: 'phone/:personId/:phoneId',
-        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: true,
           entityKey: 'personId',
@@ -38,7 +38,7 @@ const routes: Routes = [
       },
       {
         path: 'address/:personId/create',
-        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module.ts#AddressCardModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: true,
           entityKey: 'personId',
@@ -46,7 +46,7 @@ const routes: Routes = [
       },
       {
         path: 'address/:personId/:addressId',
-        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module.ts#AddressCardModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: true,
           entityKey: 'personId',

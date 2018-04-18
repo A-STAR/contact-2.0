@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 
-import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
+import { AddressService } from '@app/routes/workplaces/core/address/address.service';
 
 import { AddressGridComponent } from './address.component';
 

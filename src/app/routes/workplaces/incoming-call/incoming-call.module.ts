@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: ':personId/phones/create',
-        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
           entityKey: 'personId',
@@ -29,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: ':personId/phones/:phoneId',
-        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
           entityKey: 'personId',

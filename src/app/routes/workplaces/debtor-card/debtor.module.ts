@@ -109,7 +109,7 @@ const routes: Routes = [
       },
       {
         path: 'phone/create',
-        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
           entityKey: 'personId',
@@ -117,7 +117,7 @@ const routes: Routes = [
       },
       {
         path: 'phone/:phoneId',
-        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module.ts#PhoneCardModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
           entityKey: 'personId',
@@ -143,7 +143,7 @@ const routes: Routes = [
       */
       {
         path: 'address/create',
-        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module.ts#AddressCardModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
           entityKey: 'personId',
@@ -151,7 +151,7 @@ const routes: Routes = [
       },
       {
         path: 'address/:addressId',
-        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module.ts#AddressCardModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
           entityKey: 'personId',
@@ -225,28 +225,28 @@ const routes: Routes = [
       },
       {
         path: 'employment/create',
-        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module.ts#EmploymentCardModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'personId',
         },
       },
       {
         path: 'employment/:employmentId',
-        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module.ts#EmploymentCardModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'personId',
         },
       },
       {
         path: 'identity/create',
-        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module.ts#IdentityCardModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'personId',
         },
       },
       {
         path: 'identity/:identityId',
-        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module.ts#IdentityCardModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'personId',
         },
