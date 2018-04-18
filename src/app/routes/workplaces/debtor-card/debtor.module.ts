@@ -112,7 +112,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       {
@@ -120,7 +120,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       /*
@@ -146,7 +146,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       {
@@ -154,7 +154,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       /*
@@ -227,28 +227,28 @@ const routes: Routes = [
         path: 'employment/create',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       {
         path: 'employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       {
         path: 'identity/create',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       {
         path: 'identity/:identityId',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
-          entityKey: 'personId',
+          entityKey: 'debtorId',
         },
       },
       {
