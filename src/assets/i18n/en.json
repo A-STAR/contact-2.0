@@ -24,34 +24,17 @@
       }
     },
     "workplaces": {
-      "debtor-card": {
-        "contact-persons": {
-          "person": {
-            "name": "Person",
-            "fields": {
-              "id": "Id",
-              "lastName": "Last Name",
-              "firstName": "First Name",
-              "middleName": "Middle Name",
-              "personFullName": "Full Name",
-              "typeCode": "Type",
-              "birthDate": "Date of Birth",
-              "birthPlace": "Place of birth",
-              "familyStatusCode": "Family status",
-              "educationCode": "Education",
-              "genderCode": "Gender",
-              "passportNumber": "Passport Number",
-              "comment": "Comment",
-              "stringValue1": "String Attribute 1",
-              "stringValue2": "String Attribute 2",
-              "stringValue3": "String Attribute 3",
-              "stringValue4": "String Attribute 4",
-              "stringValue5": "String Attribute 5",
-              "stringValue6": "String Attribute 6",
-              "stringValue7": "String Attribute 7",
-              "stringValue8": "String Attribute 8",
-              "stringValue9": "String Attribute 9",
-              "stringValue10": "String Attribute 10"
+      "debtorCard": {
+        "contactPerson": {
+          "card": {
+            "forms": {
+              "contactPerson": {
+                "title": "Contact Person"
+              }
+            },
+            "titles": {
+              "add": "Add Contact Person",
+              "edit": "Edit Contact Person"
             }
           }
         },

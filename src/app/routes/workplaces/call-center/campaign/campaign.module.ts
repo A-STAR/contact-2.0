@@ -22,19 +22,35 @@ const routes: Routes = [
       },
       {
         path: 'phone/:personId/create',
-        loadChildren: './phone/phone.module#PhoneModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
+        data: {
+          callCenter: true,
+          entityKey: 'personId',
+        },
       },
       {
         path: 'phone/:personId/:phoneId',
-        loadChildren: './phone/phone.module#PhoneModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
+        data: {
+          callCenter: true,
+          entityKey: 'personId',
+        },
       },
       {
         path: 'address/:personId/create',
-        loadChildren: './address/address.module#AddressModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
+        data: {
+          callCenter: true,
+          entityKey: 'personId',
+        },
       },
       {
         path: 'address/:personId/:addressId',
-        loadChildren: './address/address.module#AddressModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
+        data: {
+          callCenter: true,
+          entityKey: 'personId',
+        },
       },
       {
         path: 'contactLog/:debtId/:contactId/contactLogType/:contactType',

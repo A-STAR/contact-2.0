@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';
-import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
+import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 

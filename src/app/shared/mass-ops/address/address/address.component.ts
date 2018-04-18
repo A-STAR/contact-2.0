@@ -1,20 +1,18 @@
 import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
   Inject,
-  ViewChild,
+  Input,
+  OnInit,
+  Output,
   TemplateRef,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import { map } from 'rxjs/operators/map';
 
-import {
-  IAddressByPerson,
-} from '@app/shared/mass-ops/address/address.interface';
+import { IAddressByPerson } from '@app/shared/mass-ops/address/address.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IMarker, IMapOptions, IMapService } from '@app/core/map-providers/map-providers.interface';
 
@@ -25,10 +23,10 @@ import { PopupComponent } from '@app/shared/components/map/components/popups/pop
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
 @Component({
-  selector: 'app-map-address',
-  templateUrl: './address.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./address.component.scss'],
+  selector: 'app-map-address',
+  styleUrls: [ './address.component.scss' ],
+  templateUrl: './address.component.html',
 })
 export class AddressComponent implements OnInit {
   @Input() actionData: IGridAction;

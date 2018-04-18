@@ -62,5 +62,4 @@ export class AddressGridMapComponent implements OnInit {
   onCancel(): void {
     this.cancel.emit();
   }
-
 }

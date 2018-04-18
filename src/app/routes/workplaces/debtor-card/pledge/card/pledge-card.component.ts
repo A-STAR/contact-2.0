@@ -340,6 +340,9 @@ export class PledgeCardComponent {
 
   onBack(): void {
     const debtId = this.route.snapshot.paramMap.get('debtId');
-    this.router.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
+    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    if (debtId && debtorId) {
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+    }
   }
 }

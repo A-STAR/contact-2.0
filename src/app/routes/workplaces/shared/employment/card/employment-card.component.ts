@@ -1,4 +1,5 @@
-import { Component, ViewChild, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -24,18 +25,22 @@ const label = makeKey('widgets.employment.grid');
 export class EmploymentCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
-  @Input() personId: number;
-  @Input() employmentId: number;
-
-  @Output() close = new EventEmitter<void>();
-
   controls: IDynamicFormControl[] = null;
   employment: IEmployment;
+
+  private routeParamMap = this.route.snapshot.paramMap;
+  private routeData = this.route.snapshot.data;
+
+  private entityKey = this.routeData.entityKey || 'entityId';
+
+  private employmentId = Number(this.routeParamMap.get('employmentId'));
+  private entityId = Number(this.routeParamMap.get(this.entityKey));
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private lookupService: LookupService,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -47,7 +52,7 @@ export class EmploymentCardComponent implements OnInit {
       this.employmentId
         ? this.userPermissionsService.has('EMPLOYMENT_EDIT')
         : this.userPermissionsService.has('EMPLOYMENT_ADD'),
-      this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : of(null)
+      this.employmentId ? this.employmentService.fetch(this.entityId, this.employmentId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
@@ -72,14 +77,14 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.close.emit();
+    // this.close.emit();
   }
 
   onSubmit(): void {
     const data = this.form.serializedUpdates;
     const action = this.employmentId
-      ? this.employmentService.update(this.personId, this.employmentId, data)
-      : this.employmentService.create(this.personId, data);
+      ? this.employmentService.update(this.entityId, this.employmentId, data)
+      : this.employmentService.create(this.entityId, data);
 
     action.subscribe(() => {
       this.employmentService.dispatchAction(EmploymentService.MESSAGE_EMPLOYMENT_SAVED);

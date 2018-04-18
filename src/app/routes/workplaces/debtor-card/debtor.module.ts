@@ -95,24 +95,35 @@ const routes: Routes = [
       },
       {
         path: 'contact/create',
-        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
+        loadChildren: './contact-persons/card/contact-person-card.module#ContactPersonCardModule',
+        data: {
+          edit: false,
+        },
       },
       {
         path: 'contact/:contactId',
-        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
-      },
-      {
-        path: 'contact/create/:contactPersonId',
-        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
+        loadChildren: './contact-persons/card/contact-person-card.module#ContactPersonCardModule',
+        data: {
+          edit: true,
+        },
       },
       {
         path: 'phone/create',
-        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'phone/:phoneId',
-        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
+        loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'debtorId',
+        },
       },
+      /*
       {
         path: 'contact/create/:contactPersonId/phone/create',
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
@@ -129,14 +140,24 @@ const routes: Routes = [
         path: 'contact/:contactId/:contactPersonId/phone/:phoneId',
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
+      */
       {
         path: 'address/create',
-        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'address/:addressId',
-        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
+        loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
+        data: {
+          callCenter: false,
+          entityKey: 'debtorId',
+        },
       },
+      /*
       {
         path: 'contact/create/:contactPersonId/address/create',
         loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
@@ -185,13 +206,14 @@ const routes: Routes = [
         path: 'contact/:contactId/:contactPersonId/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
+      */
       {
         path: 'document/create',
-        loadChildren: './document/document.module#DocumentModule',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
         path: 'document/:documentId',
-        loadChildren: './document/document.module#DocumentModule',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
         path: 'email/create',
@@ -203,19 +225,31 @@ const routes: Routes = [
       },
       {
         path: 'employment/create',
-        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'employment/:employmentId',
-        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'identity/create',
-        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'identity/:identityId',
-        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'debt',
