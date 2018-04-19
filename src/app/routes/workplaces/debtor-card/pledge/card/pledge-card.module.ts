@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { PledgeCardService } from './pledge-card.service';
@@ -8,6 +9,8 @@ import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { PledgeCardComponent } from './pledge-card.component';
+
+import { createMetadataFormReducer } from '@app/shared/components/form/metadata-form/metadata-form.reducer';
 
 const routes: Routes = [
   {
@@ -40,6 +43,10 @@ const routes: Routes = [
       ],
     ),
     RouterModule.forChild(routes),
+    StoreModule.forFeature('pledgeCardContractForm', createMetadataFormReducer('pledgeCardContractForm')),
+    StoreModule.forFeature('pledgeCardPledgorForm', createMetadataFormReducer('pledgeCardPledgorForm')),
+    StoreModule.forFeature('pledgeCardPropertyForm', createMetadataFormReducer('pledgeCardPropertyForm')),
+    StoreModule.forFeature('pledgeCardSelectPersonForm', createMetadataFormReducer('pledgeCardSelectPersonForm')),
     SharedModule,
     WorkplacesSharedModule,
   ],

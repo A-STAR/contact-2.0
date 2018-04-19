@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import {
+  IContextByEntityMethod,
+  IContextByStateMethod,
+  IContextByValueBagMethod,
   IContextConfigItemType,
   IContextConfigOperator,
-  IContextByEntityMethod,
-  IContextByValueBagMethod,
 } from '@app/core/context/context.interface';
 
 import {
   IMetadataFormConfig,
   IMetadataFormControlType,
-  IFormContextConfigOperator,
   IMetadataFormTextControl,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
@@ -34,6 +34,7 @@ export class SelectPersonFilterComponent {
   ) {}
 
   readonly filterForm: IMetadataFormConfig = {
+    id: 'pledgeCardSelectPersonForm',
     editable: true,
     items: [
       {
@@ -57,8 +58,9 @@ export class SelectPersonFilterComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Имя',
@@ -70,8 +72,9 @@ export class SelectPersonFilterComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Отчество',
@@ -93,8 +96,9 @@ export class SelectPersonFilterComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Дата рождения',
@@ -107,8 +111,9 @@ export class SelectPersonFilterComponent {
         dictCode: UserDictionariesService.DICTIONARY_GENDER,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Пол',

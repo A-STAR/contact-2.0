@@ -3,7 +3,11 @@ export enum IContextConfigItemType {
   ENTITY = 'entity',
   GROUP = 'group',
   PERMISSION = 'permission',
+  STATE = 'state,'
 }
+
+
+// Entity:
 
 export enum IContextByEntityMethod {
   IS_USED = 'isUsed',
@@ -15,6 +19,9 @@ export interface IContextByEntityItem {
   method: IContextByEntityMethod;
   value: number;
 }
+
+
+// Value Bag:
 
 export enum IContextByValueBagMethod {
   HAS = 'has',
@@ -46,7 +53,33 @@ export type IContextByValueBagConfigItem =
   IContextByValueBagItemWithArrayValue |
   IContextByValueBagItemWithAnyValue;
 
-export type IContextConfigItem = IContextByEntityItem | IContextByValueBagConfigItem;
+
+// State:
+
+export enum IContextByStateMethod {
+  NOT_EMPTY = 'notEmpty',
+  EQUALS = 'equals',
+}
+
+export interface IContextByStateUnaryItem {
+  type: IContextConfigItemType.STATE;
+  method: IContextByStateMethod.NOT_EMPTY;
+  key: string;
+}
+
+export interface IContextByStateBinaryItem {
+  type: IContextConfigItemType.STATE;
+  method: IContextByStateMethod.EQUALS;
+  key: string;
+  value: any;
+}
+
+export type IContextByStateItem = IContextByStateUnaryItem | IContextByStateBinaryItem;
+
+export type IContextConfigItem = IContextByEntityItem | IContextByValueBagConfigItem | IContextByStateItem;
+
+
+// Group:
 
 export enum IContextConfigOperator {
   AND = 'and',

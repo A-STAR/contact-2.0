@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { map } from 'rxjs/operators/map';
+import { select, Store } from '@ngrx/store';
 
+import { IAppState } from '@app/core/state/state.interface';
 import {
   IContextByValueBagMethod,
   IContextConfig,
@@ -13,6 +15,8 @@ import {
   IContextByEntityMethod,
   IContextByValueBagConfigItem,
   IContextByEntityItem,
+  IContextByStateItem,
+  IContextByStateMethod,
 } from './context.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -29,6 +33,7 @@ type IContextValue = boolean | number | string;
 export class ContextService {
   constructor(
     private entityAttributesService: EntityAttributesService,
+    private store: Store<IAppState>,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -63,6 +68,8 @@ export class ContextService {
         return this.evalEntity(item);
       case IContextConfigItemType.PERMISSION:
         return this.evalPermission(item);
+      case IContextConfigItemType.STATE:
+        return this.evalState(item);
       default:
         return ErrorObservable.create('Invalid item type');
     }
@@ -107,6 +114,27 @@ export class ContextService {
             throw new Error('Invalid item method');
         }
       }),
+    );
+  }
+
+  private evalState(item: IContextByStateItem): Observable<any> {
+    switch (item.method) {
+      case IContextByStateMethod.NOT_EMPTY:
+        return this.getFromStore(item.key).pipe(
+          map(Boolean),
+        );
+      case IContextByStateMethod.EQUALS:
+        return this.getFromStore(item.key).pipe(
+          map(v => v === item.value),
+        );
+      default:
+        throw new Error('Invalid item method');
+    }
+  }
+
+  private getFromStore(key: string): Observable<any> {
+    return this.store.pipe(
+      select(state => key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state)),
     );
   }
 }

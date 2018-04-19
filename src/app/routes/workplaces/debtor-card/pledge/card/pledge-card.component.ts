@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators/map';
 
 import {
   IContextByEntityMethod,
+  IContextByStateMethod,
   IContextByValueBagMethod,
   IContextConfigItemType,
   IContextConfigOperator,
@@ -13,7 +14,6 @@ import {
   IMetadataFormConfig,
   IMetadataFormControlType,
   IMetadataFormTextControl,
-  IFormContextConfigOperator,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
 import { PledgeCardService } from './pledge-card.service';
@@ -34,6 +34,7 @@ export class PledgeCardComponent {
   @ViewChild('propertyForm') propertyForm: MetadataFormComponent<any>;
 
   readonly contractFormConfig: IMetadataFormConfig = {
+    id: 'pledgeCardContractForm',
     editable: true,
     items: [
       {
@@ -79,6 +80,7 @@ export class PledgeCardComponent {
   };
 
   readonly pledgorFormConfig: IMetadataFormConfig = {
+    id: 'pledgeCardPledgorForm',
     editable: true,
     items: [
       {
@@ -107,8 +109,9 @@ export class PledgeCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Имя',
@@ -120,8 +123,9 @@ export class PledgeCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Отчество',
@@ -133,8 +137,9 @@ export class PledgeCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Дата рождения',
@@ -146,8 +151,9 @@ export class PledgeCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Место рождения',
@@ -160,8 +166,9 @@ export class PledgeCardComponent {
         dictCode: UserDictionariesService.DICTIONARY_GENDER,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Пол',
@@ -174,8 +181,9 @@ export class PledgeCardComponent {
         dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Семейное положение',
@@ -188,8 +196,9 @@ export class PledgeCardComponent {
         dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'pledgeCardPledgorForm.value.typeCode',
           value: 1,
         },
         label: 'Образование',
@@ -212,6 +221,17 @@ export class PledgeCardComponent {
             {
               type: IContextConfigItemType.CONSTANT,
               method: IContextByValueBagMethod.CONTAINS,
+              /*
+              value: {
+                operator: IContextConfigOperator.SWITCH,
+                from: 'typeCode',
+                value: {
+                  1: 'Person.Individual.AdditionalAttribute.List',
+                  2: 'Person.LegalEntity.AdditionalAttribute.List',
+                  3: 'Person.SoleProprietorship.AdditionalAttribute.List',
+                }
+              }
+              */
               value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
             }
           ],
@@ -236,6 +256,7 @@ export class PledgeCardComponent {
   };
 
   readonly propertyFormConfig: IMetadataFormConfig = {
+    id: 'pledgeCardPropertyForm',
     editable: true,
     items: [
       {
@@ -286,7 +307,24 @@ export class PledgeCardComponent {
         validators: {
           // TODO(d.maltsev): add (`and`, `or`) operators to form context
           // TODO(d.maltsev): add `equals` method to form context
-          required: true,
+          /*
+          required: {
+            type: IContextConfigItemType.GROUP,
+            operator: IContextConfigOperator.OR,
+            children: [
+              {
+                type: 'form',
+                method: 'notEmpty',
+                value: 'pledgeValue',
+              },
+              {
+                type: 'form',
+                method: 'notEmpty',
+                value: 'marketValue',
+              },
+            ],
+          },
+          */
         },
         width: 0,
       },

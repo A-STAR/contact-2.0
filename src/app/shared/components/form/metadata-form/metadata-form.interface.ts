@@ -5,18 +5,7 @@ import { IDialogMultiSelectFilterType } from '@app/shared/components/form/dialog
 import { IFilterParam } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
-export enum IFormContextConfigOperator {
-  EQUALS = 'equals'
-}
-
-export interface IFormContextConfig {
-  field: string;
-  operator: IFormContextConfigOperator;
-  value: any;
-}
-
-export type IMetadataFormValidator<T> = T | IContextConfig | IFormContextConfig;
-
+export type IMetadataFormValidator<T> = T | IContextConfig;
 
 // Items:
 
@@ -166,6 +155,7 @@ export interface IMetadataFormGridSelectLinkPlugin extends IMetadataFormGenericP
 export type IMetadataFormPlugin = IMetadataFormGridSelectLinkPlugin;
 
 export interface IMetadataFormConfig {
+  id?: string;
   editable: boolean;
   items: IMetadataFormItem[];
   plugins: IMetadataFormPlugin[];
