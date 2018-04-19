@@ -1,9 +1,10 @@
 export enum IContextConfigItemType {
   CONSTANT = 'constant',
   ENTITY = 'entity',
+  EXPRESSION = 'expression',
   GROUP = 'group',
   PERMISSION = 'permission',
-  STATE = 'state,'
+  STATE = 'state',
 }
 
 
@@ -51,11 +52,12 @@ export type IContextByValueBagConfigItem = IContextByValueBagUnaryOperation | IC
 export enum IContextByStateMethod {
   NOT_EMPTY = 'notEmpty',
   EQUALS = 'equals',
+  VALUE = 'value',
 }
 
 export interface IContextByStateUnaryItem {
   type: IContextConfigItemType.STATE;
-  method: IContextByStateMethod.NOT_EMPTY;
+  method: IContextByStateMethod.NOT_EMPTY | IContextByStateMethod.VALUE;
   key: string;
 }
 
@@ -68,7 +70,21 @@ export interface IContextByStateBinaryItem {
 
 export type IContextByStateItem = IContextByStateUnaryItem | IContextByStateBinaryItem;
 
-export type IContextConfigItem = IContextByEntityItem | IContextByValueBagConfigItem | IContextByStateItem;
+
+// Expression:
+
+export enum IContextByExpressionMethod {
+  SWITCH = 'switch',
+}
+
+export interface IContextByExpressionSwitchItem {
+  type: IContextConfigItemType.EXPRESSION;
+  method: IContextByExpressionMethod.SWITCH;
+  key: IContextConfig;
+  value: { [key: string]: string };
+}
+
+export type IContextByExpressionItem = IContextByExpressionSwitchItem;
 
 
 // Group:
@@ -83,5 +99,8 @@ export interface IContextGroup {
   operator: IContextConfigOperator;
   children: IContextConfig[];
 }
+
+// tslint:disable-next-line:max-line-length
+export type IContextConfigItem = IContextByEntityItem | IContextByValueBagConfigItem | IContextByStateItem | IContextByExpressionItem;
 
 export type IContextConfig = IContextGroup | IContextConfigItem;
