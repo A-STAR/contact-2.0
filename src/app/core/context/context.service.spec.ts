@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Store } from '@ngrx/store';
 
 import {
   IContextConfigItemType,
@@ -38,6 +39,10 @@ class MockUserPermissionsService {
   }
 }
 
+class MockStore {
+  //
+}
+
 describe('ContextService', () => {
   let service: ContextService;
   let entityAttributesService: EntityAttributesService;
@@ -59,6 +64,10 @@ describe('ContextService', () => {
         {
           provide: UserPermissionsService,
           useClass: MockUserPermissionsService,
+        },
+        {
+          provide: Store,
+          useClass: MockStore,
         },
       ],
     });
