@@ -1,14 +1,15 @@
 import {
+  IContextByEntityMethod,
+  IContextByExpressionMethod,
+  IContextByStateMethod,
+  IContextByValueBagMethod,
   IContextConfigItemType,
   IContextConfigOperator,
-  IContextByEntityMethod,
-  IContextByValueBagMethod,
 } from '@app/core/context/context.interface';
 
 import {
   IMetadataFormConfig,
   IMetadataFormControlType,
-  IFormContextConfigOperator,
   IMetadataFormTextControl,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
@@ -17,6 +18,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { range } from '@app/core/utils';
 
 export const contactPersonFormConfig: IMetadataFormConfig = {
+  id: 'contactPersonCardPersonForm',
   editable: true,
   items: [
     {
@@ -45,8 +47,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
     {
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Имя',
@@ -58,8 +61,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
     {
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Отчество',
@@ -71,8 +75,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
     {
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Дата рождения',
@@ -84,8 +89,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
     {
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Место рождения',
@@ -98,8 +104,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
       dictCode: UserDictionariesService.DICTIONARY_GENDER,
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Пол',
@@ -112,8 +119,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
       dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Семейное положение',
@@ -126,8 +134,9 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
       dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
       disabled: false,
       display: {
-        field: 'typeCode',
-        operator: IFormContextConfigOperator.EQUALS,
+        type: IContextConfigItemType.STATE,
+        method: IContextByStateMethod.EQUALS,
+        key: 'contactPersonCardPersonForm.value.typeCode',
         value: 1,
       },
       label: 'Образование',
@@ -160,7 +169,21 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
           {
             type: IContextConfigItemType.CONSTANT,
             method: IContextByValueBagMethod.CONTAINS,
-            value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+            name: {
+              type: IContextConfigItemType.EXPRESSION,
+              method: IContextByExpressionMethod.SWITCH,
+              key: {
+                type: IContextConfigItemType.STATE,
+                method: IContextByStateMethod.VALUE,
+                key: 'contactPersonCardPersonForm.value.typeCode',
+              },
+              value: {
+                1: 'Person.Individual.AdditionalAttribute.List',
+                2: 'Person.LegalEntity.AdditionalAttribute.List',
+                3: 'Person.SoleProprietorship.AdditionalAttribute.List',
+              },
+            },
+            value: 363 + i,
           }
         ],
       },

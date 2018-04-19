@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { ContactPersonCardService } from './contact-person-card.service';
@@ -9,12 +10,32 @@ import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.mod
 
 import { ContactPersonCardComponent } from './contact-person-card.component';
 
+import {
+  createMetadataFormReducer,
+  IMetadataFormState,
+  IMetadataFormAction,
+} from '@app/shared/components/form/metadata-form/metadata-form.reducer';
+
 const routes: Routes = [
   {
     path: '',
     component: ContactPersonCardComponent,
   }
 ];
+
+export function contactPersonCardPersonFormReducer(
+  state: IMetadataFormState,
+  action: IMetadataFormAction,
+): IMetadataFormState {
+  return createMetadataFormReducer('contactPersonCardPersonForm')(state, action);
+}
+
+export function contactPersonCardSelectPersonFormReducer(
+  state: IMetadataFormState,
+  action: IMetadataFormAction,
+): IMetadataFormState {
+  return createMetadataFormReducer('contactPersonCardSelectPersonForm')(state, action);
+}
 
 @NgModule({
   declarations: [
@@ -36,6 +57,8 @@ const routes: Routes = [
     ),
     RouterModule.forChild(routes),
     SharedModule,
+    StoreModule.forFeature('contactPersonCardPersonForm', contactPersonCardPersonFormReducer),
+    StoreModule.forFeature('contactPersonCardSelectPersonForm', contactPersonCardSelectPersonFormReducer),
     WorkplacesSharedModule,
   ],
   providers: [
