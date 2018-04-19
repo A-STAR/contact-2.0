@@ -30,28 +30,20 @@ export enum IContextByValueBagMethod {
   VALUE = 'value',
 }
 
-export interface IContextByValueBagItemWithAnyValue {
+export interface IContextByValueBagUnaryOperation {
   type: IContextConfigItemType.CONSTANT | IContextConfigItemType.PERMISSION;
-  method: IContextByValueBagMethod.VALUE;
+  method: IContextByValueBagMethod.HAS | IContextByValueBagMethod.NOT_EMPTY | IContextByValueBagMethod.VALUE;
   value: string;
 }
 
-export interface IContextByValueBagItemWithPlainValue {
-  type: IContextConfigItemType.CONSTANT | IContextConfigItemType.PERMISSION;
-  method: IContextByValueBagMethod.HAS | IContextByValueBagMethod.NOT_EMPTY;
-  value: string;
-}
-
-export interface IContextByValueBagItemWithArrayValue {
+export interface IContextByValueBagBinaryOperation {
   type: IContextConfigItemType.CONSTANT | IContextConfigItemType.PERMISSION;
   method: IContextByValueBagMethod.CONTAINS;
-  value: [string, number];
+  name: string;
+  value: number;
 }
 
-export type IContextByValueBagConfigItem =
-  IContextByValueBagItemWithPlainValue |
-  IContextByValueBagItemWithArrayValue |
-  IContextByValueBagItemWithAnyValue;
+export type IContextByValueBagConfigItem = IContextByValueBagUnaryOperation | IContextByValueBagBinaryOperation;
 
 
 // State:

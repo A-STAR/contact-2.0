@@ -145,7 +145,8 @@ export class SelectPersonFilterComponent {
             {
               type: IContextConfigItemType.CONSTANT,
               method: IContextByValueBagMethod.CONTAINS,
-              value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+              name: 'Person.Individual.AdditionalAttribute.List',
+              value: 363 + i,
             }
           ],
         },

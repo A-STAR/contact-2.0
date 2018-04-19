@@ -232,7 +232,8 @@ export class PledgeCardComponent {
                 }
               }
               */
-              value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+              name: 'Person.Individual.AdditionalAttribute.List',
+              value: 363 + i,
             }
           ],
         },
@@ -305,26 +306,22 @@ export class PledgeCardComponent {
         name: 'currencyId',
         type: IMetadataFormControlType.SELECT,
         validators: {
-          // TODO(d.maltsev): add (`and`, `or`) operators to form context
-          // TODO(d.maltsev): add `equals` method to form context
-          /*
           required: {
             type: IContextConfigItemType.GROUP,
             operator: IContextConfigOperator.OR,
             children: [
               {
-                type: 'form',
-                method: 'notEmpty',
-                value: 'pledgeValue',
+                type: IContextConfigItemType.STATE,
+                method: IContextByStateMethod.NOT_EMPTY,
+                key: 'pledgeCardPledgorForm.value.pledgeValue',
               },
               {
-                type: 'form',
-                method: 'notEmpty',
-                value: 'marketValue',
+                type: IContextConfigItemType.STATE,
+                method: IContextByStateMethod.NOT_EMPTY,
+                key: 'pledgeCardPledgorForm.value.marketValue',
               },
             ],
           },
-          */
         },
         width: 0,
       },

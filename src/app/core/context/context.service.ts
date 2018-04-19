@@ -90,7 +90,7 @@ export class ContextService {
   private evalValueBagItem(bag: ValueBag, item: IContextByValueBagConfigItem): IContextValue {
     switch (item.method) {
       case IContextByValueBagMethod.CONTAINS:
-        return bag.contains(item.value[0], item.value[1]);
+        return bag.contains(item.name, item.value);
       case IContextByValueBagMethod.HAS:
         return bag.has(item.value);
       case IContextByValueBagMethod.NOT_EMPTY:

@@ -353,7 +353,8 @@ describe('ContextService', () => {
       .calculate({
         type: IContextConfigItemType.CONSTANT,
         method: IContextByValueBagMethod.CONTAINS,
-        value: [name, 1],
+        name,
+        value: 1,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -378,7 +379,8 @@ describe('ContextService', () => {
       .calculate({
         type: IContextConfigItemType.CONSTANT,
         method: IContextByValueBagMethod.CONTAINS,
-        value: [name, 1],
+        name,
+        value: 1,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -403,7 +405,8 @@ describe('ContextService', () => {
       .calculate({
         type: IContextConfigItemType.CONSTANT,
         method: IContextByValueBagMethod.CONTAINS,
-        value: [name, 4],
+        name,
+        value: 4,
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
@@ -614,7 +617,8 @@ describe('ContextService', () => {
       .calculate({
         type: IContextConfigItemType.PERMISSION,
         method: IContextByValueBagMethod.CONTAINS,
-        value: [name, 1],
+        name,
+        value: 1,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -639,7 +643,8 @@ describe('ContextService', () => {
       .calculate({
         type: IContextConfigItemType.PERMISSION,
         method: IContextByValueBagMethod.CONTAINS,
-        value: [name, 1],
+        name,
+        value: 1,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -664,7 +669,8 @@ describe('ContextService', () => {
       .calculate({
         type: IContextConfigItemType.PERMISSION,
         method: IContextByValueBagMethod.CONTAINS,
-        value: [name, 4],
+        name,
+        value: 4,
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
