@@ -26,12 +26,12 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
   @Input() dictCode: number;
   @Input() lookupKey: ILookupKey;
   @Input() label: string;
-  @Input() disabled: boolean;
+  @Input() disabled = false;
 
   @Output() action = new EventEmitter<ILabeledValue>();
 
   private optionsSubscription: Subscription;
-  options: ILabeledValue[];
+  options: ILabeledValue[] = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -58,6 +58,18 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
     }
+  }
+
+  get isLeft(): boolean {
+    return false;
+  }
+
+  onSelect(option: ILabeledValue): void {
+    this.action.emit(option);
+  }
+
+  getIconCls(): string {
+    return this.isLeft ? 'menu-left fa-caret-left' : 'menu-right fa-caret-right';
   }
 
   ngOnDestroy(): void {
