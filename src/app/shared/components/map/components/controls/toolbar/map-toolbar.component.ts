@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
@@ -10,13 +10,8 @@ import { IMapToolbarItem } from './map-toolbar.interface';
   templateUrl: './map-toolbar.component.html',
   styleUrls: ['./map-toolbar.component.scss']
 })
-export class MapToolbarComponent implements OnInit, OnDestroy {
+export class MapToolbarComponent implements OnDestroy {
   @Input() context: IControlCmpContext<IMapToolbarItem[]>;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   isDisabled(item: IMapToolbarItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);

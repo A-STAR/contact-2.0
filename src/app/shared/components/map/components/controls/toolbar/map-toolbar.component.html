@@ -4,7 +4,10 @@
     class="map-toolbar-item">
       <ng-container [ngSwitch]="item.type">
         <!-- Filter -->
-        <app-map-filter *ngSwitchCase="'filter'" [config]="item"></app-map-filter>
+        <app-map-filter
+          *ngSwitchCase="'filter'"
+          [config]="item"
+          (action)="onAction($event)"></app-map-filter>
         <!-- Other items -->
       </ng-container>
   </div>

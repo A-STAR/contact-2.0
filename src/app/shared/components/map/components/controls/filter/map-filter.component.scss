@@ -1,5 +1,28 @@
 .separator {
   height: 1px;
-  width: 100%;
-  border-bottom: 1px solid black;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: #d5d5d5 !important;
+}
+
+.filter-btn {
+  text-decoration: none;
+  color: #222;
+}
+
+.dropdown-content {
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  position: relative;
+  line-height: 24px;
+  padding: 4px 12px;
+  text-align: left;
+  &:hover {
+    background-color: #eee;
+  }
 }

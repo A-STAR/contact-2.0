@@ -1,53 +1,50 @@
 <div appDropdown [container]="container" fitWidthToContent="true">
   <div #dropdownTrigger>
     <app-button
-      [disabled]="isDisabled(item) | async"
-      [icon]="item.icon"
+      [disabled]="isDisabled(config) | async"
       [label]="false"
-      [title]="item.label"
-      type="filter"
-      (click)="onClick()">
+      type="search">
     </app-button>
   </div>
-  <div #dropdownContent>
+  <div class="dropdown-content" #dropdownContent>
     <ng-container *ngFor="let child of config.children">
-      <ng-container [ngSwitch]="child.type">
+      <div class="dropdown-item" [ngSwitch]="child.type">
         <!-- Lookup -->
         <app-menu-select
           *ngSwitchCase="'lookup'"
           [label]="child.label"
           [lookupKey]="child.lookupKey"
           [disabled]="isDisabled(child) | async"
-          (action)="onChildClick(child)"
+          (action)="onChildSelect(child)"
         ></app-menu-select>
         <!-- Dict -->
         <app-menu-select
           *ngSwitchCase="'dict'"
           [label]="child.label"
-          [lookupKey]="child.dictCode"
+          [dictCode]="child.dictCode"
           [disabled]="isDisabled(child) | async"
-          (action)="onChildClick(child)"
+          (action)="onChildSelect(child)"
         ></app-menu-select>
         <!-- Separator -->
         <div *ngSwitchCase="'separator'" class="separator"></div>
         <!-- Button -->
         <button
           *ngSwitchCase="'button'"
-          class="btn btn-link"
+          class="btn btn-link filter-btn"
           [disabled]="isDisabled(child) | async"
-          (click)="onChildClick(child)"
+          (click)="onChildSelect(child)"
         >
         {{ child.label | translate }}
         </button>
         <!-- Checkbox -->
-        <app-checkbox
+        <app-tick
           *ngSwitchCase="'checkbox'"
-          [disabled]="isDisabled(item) | async"
           [label]="child.label"
-          [ngModel]="child.state | async"
-          (change)="onChildClick(child)"
-        ></app-checkbox>
-      </ng-container>
+          [disabled]="isDisabled(child) | async"
+          [ngModel]="child.checked"
+          (ngModelChange)="onChildSelect($event)"
+        ></app-tick>
+      </div>
     </ng-container>
 
   </div>

@@ -12,6 +12,7 @@ import { MapToolbarComponent } from '@app/shared/components/map/components/contr
 import {
   MapToolbarItemType,
   IMapToolbarItem,
+  MapToolbarFilterItemType,
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
 
 @Component({
@@ -66,15 +67,54 @@ export class MapsComponent implements OnInit {
           cmp: MapToolbarComponent as Type<IControlCmp<IMapToolbarItem[]>>,
           data: [
             {
-              type: MapToolbarItemType.BUTTON,
-              action: (map: any) => map && alert('button'),
-              enabled: of(true),
-            },
-            {
               type: MapToolbarItemType.FILTER,
               enabled: of(true),
-              children: []
-            }
+              children: [
+                {
+                  type: MapToolbarFilterItemType.CHECKBOX,
+                  action: (map: any) => map && alert('checkbox view addresses'),
+                  label: 'Отображать все адреса',
+                  enabled: of(true),
+                  checked: true
+                },
+                {
+                  type: MapToolbarFilterItemType.SEPARATOR,
+                },
+                {
+                  type: MapToolbarFilterItemType.DICTIONARY,
+                  action: (map: any) => map && alert('address type'),
+                  label: 'Фильтр по типу адреса',
+                  dictCode: 21,
+                  enabled: of(true),
+                },
+                {
+                  type: MapToolbarFilterItemType.DICTIONARY,
+                  action: (map: any) => map && alert('visit status'),
+                  label: 'Фильтр по типу выезда',
+                  dictCode: 21,
+                  enabled: of(true),
+                },
+                {
+                  type: MapToolbarFilterItemType.SEPARATOR,
+                },
+                {
+                  type: MapToolbarFilterItemType.CHECKBOX,
+                  action: (map: any) => map && alert('checkbox view blocked addresses'),
+                  label: 'Отображать все заблокированные адреса',
+                  enabled: of(true),
+                  checked: true
+                },
+                {
+                  type: MapToolbarFilterItemType.SEPARATOR,
+                },
+                {
+                  type: MapToolbarFilterItemType.BUTTON,
+                  action: (map: any) => map && alert('reset filter'),
+                  label: 'Сбросить фильтр',
+                  enabled: of(true),
+                },
+              ]
+            },
           ]
         }
     ];

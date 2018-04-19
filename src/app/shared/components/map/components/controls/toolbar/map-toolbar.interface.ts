@@ -38,6 +38,9 @@ export interface IMapToolbarFilterItem {
   type: MapToolbarFilterItemType;
   action?: IMapToolbarAction | Action;
   enabled?: Observable<boolean>;
+  dictCode?: number;
+  lookupKey?: string;
+  checked?: boolean;
   label?: string;
   icon?: string;
 }
