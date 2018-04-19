@@ -1,4 +1,4 @@
-<div appDropdown>
+<div appDropdown [container]="container" fitWidthToContent="true">
   <div #dropdownTrigger>
     <app-button
       [disabled]="isDisabled(item) | async"

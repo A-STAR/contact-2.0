@@ -34,6 +34,8 @@ export class MapYandexService implements IMapService {
 
   readonly apiKey = this.configService.config.maps.providers.yandex.apiKey;
 
+  container: HTMLElement;
+
   constructor(
     private configService: ConfigService,
     private mapRendererService: MapRendererService,
@@ -45,6 +47,7 @@ export class MapYandexService implements IMapService {
 
   init(mapConfig: IMapOptions): Observable<any> {
     const { el, ...config } = mapConfig;
+    this.container = el;
     return of(this.initMap(new Map(el as HTMLElement, config)));
   }
 

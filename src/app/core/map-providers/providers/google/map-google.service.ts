@@ -62,6 +62,8 @@ export class MapGoogleService implements IMapService {
   private _map: google.maps.Map;
   private _listeners: any[] = [];
 
+  container: HTMLElement;
+
   constructor(
     private configService: ConfigService,
     private mapRendererService: MapRendererService,
@@ -278,6 +280,7 @@ export class MapGoogleService implements IMapService {
 
   private initMap(config: IMapOptions): any {
     const { el, ...options } = config;
+    this.container = el;
     if (this._map) {
       const mapDiv = this._map.getDiv();
       el.appendChild(mapDiv);

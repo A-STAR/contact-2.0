@@ -17,8 +17,9 @@ export interface IMapService {
   createControl<T>(map: any, controlDef: IControlDef<T>): ControlComponentRefGetter<T>;
   getIconConfig<T extends IIconConfigParam>(configKey: string, entity: T): IMarkerIconConfig;
   createBounds(latlngs?: any): any;
-  removeMap?(map: google.maps.Map, markers?: any[], controls?: any[]): void;
   getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
+  removeMap?(map: google.maps.Map, markers?: any[], controls?: any[]): void;
+  container: HTMLElement;
 }
 
 export enum MapControlPosition {
