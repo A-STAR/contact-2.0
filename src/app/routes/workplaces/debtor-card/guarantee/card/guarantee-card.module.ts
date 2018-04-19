@@ -10,7 +10,11 @@ import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.mod
 
 import { GuarantorCardComponent } from './guarantee-card.component';
 
-import { createMetadataFormReducer } from '@app/shared/components/form/metadata-form/metadata-form.reducer';
+import {
+  createMetadataFormReducer,
+  IMetadataFormState,
+  IMetadataFormAction,
+} from '@app/shared/components/form/metadata-form/metadata-form.reducer';
 
 const routes: Routes = [
   {
@@ -19,19 +23,15 @@ const routes: Routes = [
   }
 ];
 
-// export const guaranteeCardContractFormReducer = createMetadataFormReducer('guaranteeCardContractForm');
-// export const guaranteeCardGuarantorFormReducer = createMetadataFormReducer('guaranteeCardGuarantorForm');
-// export const guaranteeCardSelectPersonFormReducer = createMetadataFormReducer('guaranteeCardSelectPersonForm');
-
-export function guaranteeCardContractFormReducer(state: any, action: any): any {
+export function guaranteeCardContractFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('guaranteeCardContractForm')(state, action);
 }
 
-export function guaranteeCardGuarantorFormReducer(state: any, action: any): any {
+export function guaranteeCardGuarantorFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('guaranteeCardGuarantorForm')(state, action);
 }
 
-export function guaranteeCardSelectPersonFormReducer(state: any, action: any): any {
+export function guaranteeCardSelectPersonFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('guaranteeCardSelectPersonForm')(state, action);
 }
 

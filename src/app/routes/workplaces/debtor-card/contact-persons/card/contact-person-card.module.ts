@@ -10,7 +10,11 @@ import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.mod
 
 import { ContactPersonCardComponent } from './contact-person-card.component';
 
-import { createMetadataFormReducer } from '@app/shared/components/form/metadata-form/metadata-form.reducer';
+import {
+  createMetadataFormReducer,
+  IMetadataFormState,
+  IMetadataFormAction,
+} from '@app/shared/components/form/metadata-form/metadata-form.reducer';
 
 const routes: Routes = [
   {
@@ -19,16 +23,19 @@ const routes: Routes = [
   }
 ];
 
-export function contactPersonCardPersonFormReducer(state: any, action: any): any {
+export function contactPersonCardPersonFormReducer(
+  state: IMetadataFormState,
+  action: IMetadataFormAction,
+): IMetadataFormState {
   return createMetadataFormReducer('contactPersonCardPersonForm')(state, action);
 }
 
-export function contactPersonCardSelectPersonFormReducer(state: any, action: any): any {
+export function contactPersonCardSelectPersonFormReducer(
+  state: IMetadataFormState,
+  action: IMetadataFormAction,
+): IMetadataFormState {
   return createMetadataFormReducer('contactPersonCardSelectPersonForm')(state, action);
 }
-
-// export const contactPersonCardPersonFormReducer = createMetadataFormReducer('contactPersonCardPersonForm');
-// export const contactPersonCardSelectPersonFormReducer = createMetadataFormReducer('contactPersonCardSelectPersonForm');
 
 @NgModule({
   declarations: [

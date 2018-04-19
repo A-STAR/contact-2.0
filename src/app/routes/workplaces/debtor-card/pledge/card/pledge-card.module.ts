@@ -10,7 +10,11 @@ import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.mod
 
 import { PledgeCardComponent } from './pledge-card.component';
 
-import { createMetadataFormReducer } from '@app/shared/components/form/metadata-form/metadata-form.reducer';
+import {
+  createMetadataFormReducer,
+  IMetadataFormState,
+  IMetadataFormAction,
+} from '@app/shared/components/form/metadata-form/metadata-form.reducer';
 
 const routes: Routes = [
   {
@@ -19,24 +23,19 @@ const routes: Routes = [
   }
 ];
 
-// export const pledgeCardContractFormReducer = createMetadataFormReducer('pledgeCardContractForm');
-// export const pledgeCardPledgorFormReducer = createMetadataFormReducer('pledgeCardPledgorForm');
-// export const pledgeCardPropertyFormReducer = createMetadataFormReducer('pledgeCardPropertyForm');
-// export const pledgeCardSelectPersonFormReducer = createMetadataFormReducer('pledgeCardSelectPersonForm');
-
-export function pledgeCardContractFormReducer(state: any, action: any): any {
+export function pledgeCardContractFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('pledgeCardContractForm')(state, action);
 }
 
-export function pledgeCardPledgorFormReducer(state: any, action: any): any {
+export function pledgeCardPledgorFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('pledgeCardPledgorForm')(state, action);
 }
 
-export function pledgeCardPropertyFormReducer(state: any, action: any): any {
+export function pledgeCardPropertyFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('pledgeCardPropertyForm')(state, action);
 }
 
-export function pledgeCardSelectPersonFormReducer(state: any, action: any): any {
+export function pledgeCardSelectPersonFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
   return createMetadataFormReducer('pledgeCardSelectPersonForm')(state, action);
 }
 
