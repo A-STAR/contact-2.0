@@ -19,6 +19,9 @@ const routes: Routes = [
   }
 ];
 
+const contactPersonCardPersonFormReducer = createMetadataFormReducer('contactPersonCardPersonForm');
+const contactPersonCardSelectPersonFormReducer = createMetadataFormReducer('contactPersonCardSelectPersonForm');
+
 @NgModule({
   declarations: [
     ContactPersonCardComponent,
@@ -39,8 +42,8 @@ const routes: Routes = [
     ),
     RouterModule.forChild(routes),
     SharedModule,
-    StoreModule.forFeature('contactPersonCardPersonForm', createMetadataFormReducer('contactPersonCardPersonForm')),
-    StoreModule.forFeature('contactPersonCardSelectPersonForm', createMetadataFormReducer('contactPersonCardSelectPersonForm')),
+    StoreModule.forFeature('contactPersonCardPersonForm', contactPersonCardPersonFormReducer),
+    StoreModule.forFeature('contactPersonCardSelectPersonForm', contactPersonCardSelectPersonFormReducer),
     WorkplacesSharedModule,
   ],
   providers: [

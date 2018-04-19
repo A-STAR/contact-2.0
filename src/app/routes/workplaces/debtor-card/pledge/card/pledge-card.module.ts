@@ -19,6 +19,11 @@ const routes: Routes = [
   }
 ];
 
+const pledgeCardContractFormReducer = createMetadataFormReducer('pledgeCardContractForm');
+const pledgeCardPledgorFormReducer = createMetadataFormReducer('pledgeCardPledgorForm');
+const pledgeCardPropertyFormReducer = createMetadataFormReducer('pledgeCardPropertyForm');
+const pledgeCardSelectPersonFormReducer = createMetadataFormReducer('pledgeCardSelectPersonForm');
+
 @NgModule({
   declarations: [
     PledgeCardComponent,
@@ -43,10 +48,10 @@ const routes: Routes = [
       ],
     ),
     RouterModule.forChild(routes),
-    StoreModule.forFeature('pledgeCardContractForm', createMetadataFormReducer('pledgeCardContractForm')),
-    StoreModule.forFeature('pledgeCardPledgorForm', createMetadataFormReducer('pledgeCardPledgorForm')),
-    StoreModule.forFeature('pledgeCardPropertyForm', createMetadataFormReducer('pledgeCardPropertyForm')),
-    StoreModule.forFeature('pledgeCardSelectPersonForm', createMetadataFormReducer('pledgeCardSelectPersonForm')),
+    StoreModule.forFeature('pledgeCardContractForm', pledgeCardContractFormReducer),
+    StoreModule.forFeature('pledgeCardPledgorForm', pledgeCardPledgorFormReducer),
+    StoreModule.forFeature('pledgeCardPropertyForm', pledgeCardPropertyFormReducer),
+    StoreModule.forFeature('pledgeCardSelectPersonForm', pledgeCardSelectPersonFormReducer),
     SharedModule,
     WorkplacesSharedModule,
   ],
