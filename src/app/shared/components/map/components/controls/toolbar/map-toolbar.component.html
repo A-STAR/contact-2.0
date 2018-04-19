@@ -3,16 +3,9 @@
     *ngFor="let item of context.data"
     class="map-toolbar-item">
       <ng-container [ngSwitch]="item.type">
-        <app-map-filter *ngSwitchCase="'filter'" [items]="item"></app-map-filter>
-        <app-button
-          *ngSwitchCase="'button'"
-          [disabled]="isDisabled(item) | async"
-          [icon]="item.icon"
-          [label]="false"
-          [title]="item.label"
-          type="button"
-          (click)="onClick(item)">
-        </app-button>
+        <!-- Filter -->
+        <app-map-filter *ngSwitchCase="'filter'" [config]="item"></app-map-filter>
+        <!-- Other items -->
       </ng-container>
   </div>
 </div>

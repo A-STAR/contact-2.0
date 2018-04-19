@@ -2,7 +2,6 @@ import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 export enum MapToolbarItemType {
-  BUTTON = 'button',
   FILTER = 'filter'
 }
 

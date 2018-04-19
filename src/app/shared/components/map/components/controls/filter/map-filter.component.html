@@ -1,1 +1,54 @@
-<ng-container *ngFor="let item of items"><span> {{ item | json }} </span></ng-container>
+<div appDropdown>
+  <div #dropdownTrigger>
+    <app-button
+      [disabled]="isDisabled(item) | async"
+      [icon]="item.icon"
+      [label]="false"
+      [title]="item.label"
+      type="filter"
+      (click)="onClick()">
+    </app-button>
+  </div>
+  <div #dropdownContent>
+    <ng-container *ngFor="let child of config.children">
+      <ng-container [ngSwitch]="child.type">
+        <!-- Lookup -->
+        <app-menu-select
+          *ngSwitchCase="'lookup'"
+          [label]="child.label"
+          [lookupKey]="child.lookupKey"
+          [disabled]="isDisabled(child) | async"
+          (action)="onChildClick(child)"
+        ></app-menu-select>
+        <!-- Dict -->
+        <app-menu-select
+          *ngSwitchCase="'dict'"
+          [label]="child.label"
+          [lookupKey]="child.dictCode"
+          [disabled]="isDisabled(child) | async"
+          (action)="onChildClick(child)"
+        ></app-menu-select>
+        <!-- Separator -->
+        <div *ngSwitchCase="'separator'" class="separator"></div>
+        <!-- Button -->
+        <button
+          *ngSwitchCase="'button'"
+          class="btn btn-link"
+          [disabled]="isDisabled(child) | async"
+          (click)="onChildClick(child)"
+        >
+        {{ child.label | translate }}
+        </button>
+        <!-- Checkbox -->
+        <app-checkbox
+          *ngSwitchCase="'checkbox'"
+          [disabled]="isDisabled(item) | async"
+          [label]="child.label"
+          [ngModel]="child.state | async"
+          (change)="onChildClick(child)"
+        ></app-checkbox>
+      </ng-container>
+    </ng-container>
+
+  </div>
+</div>

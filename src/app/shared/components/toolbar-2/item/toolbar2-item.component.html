@@ -2,7 +2,7 @@
 
     <ng-container [ngSwitch]="getItemType(item)">
       <!-- Button -->
-      <div *ngSwitchCase="'button'" #appDropdown appDropdown fitWidthToContent="true">
+      <div *ngSwitchCase="'button'" appDropdown fitWidthToContent="true">
         <div #dropdownTrigger>
           <app-button
             [disabled]="isDisabled(item) | async"

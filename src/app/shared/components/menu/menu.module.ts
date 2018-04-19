@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MapFilterComponent } from './map-filter.component';
 import { TranslateModule } from '@ngx-translate/core';
+
+import { MenuComponent } from './menu.component';
 
 @NgModule({
   imports: [
     CommonModule,
     TranslateModule,
   ],
-  declarations: [ MapFilterComponent ],
-  exports: [ MapFilterComponent ],
-  entryComponents: [ MapFilterComponent ],
+  declarations: [MenuComponent],
+  exports: [MenuComponent]
 })
-export class MapFilterModule { }
+export class MenuModule { }
