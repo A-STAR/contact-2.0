@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators/map';
+import { of } from 'rxjs/observable/of';
+import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
 import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
+import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
@@ -22,6 +24,8 @@ export class ContactPersonCardComponent implements OnInit {
   readonly debtId = Number(this.paramMap.get('debtId'));
   readonly debtorId = Number(this.paramMap.get('debtorId'));
   readonly contactId = Number(this.paramMap.get('contactId'));
+
+  readonly editing = Boolean(this.contactId);
 
   readonly contactPersonFormConfig = contactPersonFormConfig;
 
@@ -42,14 +46,17 @@ export class ContactPersonCardComponent implements OnInit {
   constructor(
     private contactPersonCardService: ContactPersonCardService,
     private contactPersonsService: ContactPersonsService,
+    private personService: PersonService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.contactPersonsService
-      .fetch(this.debtorId, this.contactId)
-      .subscribe(person => this.contactPersonForm.formGroup.patchValue(person));
+    if (this.editing) {
+      this.contactPersonsService
+        .fetch(this.debtorId, this.contactId)
+        .subscribe(person => this.contactPersonForm.formGroup.patchValue(person));
+    }
   }
 
   onContactPersonFormClear(): void {
@@ -58,16 +65,30 @@ export class ContactPersonCardComponent implements OnInit {
   }
 
   onSave(): void {
-    // if (this.contactId) {
-    //   this.contactPersonsService
-    //     .update(null, null, null)
-    //     .subscribe(() => this.onBack());
-    // } else {
-    //   this.contactPersonsService
-    //     .create(null, null)
-    //     .subscribe(() => this.onBack());
-    // }
-    this.onBack();
+    const { linkTypeCode, ...person } = this.contactPersonForm.data;
+    this.contactPerson$
+      .pipe(
+        first(),
+        mergeMap(selectedPerson => {
+          if (selectedPerson) {
+            return of(selectedPerson.id);
+          }
+          return this.editing
+            ? this.personService.update(this.contactId, person).pipe(mapTo(this.contactId))
+            : this.personService.create(person);
+        }),
+      )
+      .subscribe(() => {
+        // if (this.editing) {
+        //   this.contactPersonsService
+        //     .update(null, null, null)
+        //     .subscribe(() => this.onBack());
+        // } else {
+        //   this.contactPersonsService
+        //     .create(null, null)
+        //     .subscribe(() => this.onBack());
+        // }
+      });
   }
 
   onBack(): void {
