@@ -21,7 +21,7 @@ const initialState: IMetadataFormState = {
 };
 
 export function createMetadataFormReducer(key: string): any {
-  return (state = initialState, action: IMetadataFormAction): IMetadataFormState => {
+  return function(state: IMetadataFormState = initialState, action: IMetadataFormAction): IMetadataFormState {
     if (action.key === key) {
       switch (action.type) {
         case MetadataFormAction.UPDATE_VALUE:
