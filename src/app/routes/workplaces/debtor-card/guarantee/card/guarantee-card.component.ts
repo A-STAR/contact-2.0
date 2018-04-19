@@ -4,6 +4,8 @@ import { map } from 'rxjs/operators/map';
 
 import {
   IContextByEntityMethod,
+  IContextByExpressionMethod,
+  IContextByStateMethod,
   IContextByValueBagMethod,
   IContextConfigItemType,
   IContextConfigOperator,
@@ -13,7 +15,6 @@ import {
   IMetadataFormConfig,
   IMetadataFormControlType,
   IMetadataFormTextControl,
-  IFormContextConfigOperator,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
 import { GuaranteeCardService } from './guarantee-card.service';
@@ -33,6 +34,7 @@ export class GuarantorCardComponent {
   @ViewChild('guarantorForm') guarantorForm: MetadataFormComponent<any>;
 
   readonly contractFormConfig: IMetadataFormConfig = {
+    id: 'guaranteeCardContractForm',
     editable: true,
     items: [
       {
@@ -88,6 +90,7 @@ export class GuarantorCardComponent {
   };
 
   readonly guarantorFormConfig: IMetadataFormConfig = {
+    id: 'guaranteeCardGuarantorForm',
     editable: true,
     items: [
       {
@@ -116,8 +119,9 @@ export class GuarantorCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Имя',
@@ -129,8 +133,9 @@ export class GuarantorCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Отчество',
@@ -142,8 +147,9 @@ export class GuarantorCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Дата рождения',
@@ -155,8 +161,9 @@ export class GuarantorCardComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Место рождения',
@@ -169,8 +176,9 @@ export class GuarantorCardComponent {
         dictCode: UserDictionariesService.DICTIONARY_GENDER,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Пол',
@@ -183,8 +191,9 @@ export class GuarantorCardComponent {
         dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Семейное положение',
@@ -197,8 +206,9 @@ export class GuarantorCardComponent {
         dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'guaranteeCardGuarantorForm.value.typeCode',
           value: 1,
         },
         label: 'Образование',
@@ -221,7 +231,21 @@ export class GuarantorCardComponent {
             {
               type: IContextConfigItemType.CONSTANT,
               method: IContextByValueBagMethod.CONTAINS,
-              value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+              name: {
+                type: IContextConfigItemType.EXPRESSION,
+                method: IContextByExpressionMethod.SWITCH,
+                key: {
+                  type: IContextConfigItemType.STATE,
+                  method: IContextByStateMethod.VALUE,
+                  key: 'guaranteeCardGuarantorForm.value.typeCode',
+                },
+                value: {
+                  1: 'Person.Individual.AdditionalAttribute.List',
+                  2: 'Person.LegalEntity.AdditionalAttribute.List',
+                  3: 'Person.SoleProprietorship.AdditionalAttribute.List',
+                },
+              },
+              value: 363 + i,
             }
           ],
         },

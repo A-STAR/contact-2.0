@@ -1,18 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { map } from 'rxjs/operators/map';
+import { map, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { select, Store } from '@ngrx/store';
 
+import { IAppState } from '@app/core/state/state.interface';
 import {
+  IContextByEntityItem,
+  IContextByEntityMethod,
+  IContextByExpressionMethod,
+  IContextByStateItem,
+  IContextByStateMethod,
+  IContextByValueBagConfigItem,
   IContextByValueBagMethod,
   IContextConfig,
   IContextConfigItem,
   IContextConfigItemType,
   IContextConfigOperator,
   IContextGroup,
-  IContextByEntityMethod,
-  IContextByValueBagConfigItem,
-  IContextByEntityItem,
+  IContextByExpressionItem,
 } from './context.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -29,6 +36,7 @@ type IContextValue = boolean | number | string;
 export class ContextService {
   constructor(
     private entityAttributesService: EntityAttributesService,
+    private store: Store<IAppState>,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -63,6 +71,10 @@ export class ContextService {
         return this.evalEntity(item);
       case IContextConfigItemType.PERMISSION:
         return this.evalPermission(item);
+      case IContextConfigItemType.STATE:
+        return this.evalState(item);
+      case IContextConfigItemType.EXPRESSION:
+        return this.evalExpression(item);
       default:
         return ErrorObservable.create('Invalid item type');
     }
@@ -70,26 +82,34 @@ export class ContextService {
 
   private evalConstant(item: IContextByValueBagConfigItem): Observable<IContextValue> {
     return this.userConstantsService.bag().pipe(
-      map(bag => this.evalValueBagItem(bag, item)),
+      mergeMap(bag => this.evalValueBagItem(bag, item)),
     );
   }
 
   private evalPermission(item: IContextByValueBagConfigItem): Observable<IContextValue> {
     return this.userPermissionsService.bag().pipe(
-      map(bag => this.evalValueBagItem(bag, item)),
+      mergeMap(bag => this.evalValueBagItem(bag, item)),
     );
   }
 
-  private evalValueBagItem(bag: ValueBag, item: IContextByValueBagConfigItem): IContextValue {
+  private evalValueBagItem(bag: ValueBag, item: IContextByValueBagConfigItem): Observable<IContextValue> {
     switch (item.method) {
       case IContextByValueBagMethod.CONTAINS:
-        return bag.contains(item.value[0], item.value[1]);
+        // TODO(d.maltsev):
+        // this is ugly and inconsistent
+        // we need a way to allow expressions as any operand
+        return typeof item.name === 'object'
+          ? this.eval(item.name).pipe(
+              map(String),
+              map(n => bag.contains(n, item.value)),
+            )
+          : of(bag.contains(item.name, item.value));
       case IContextByValueBagMethod.HAS:
-        return bag.has(item.value);
+        return of(bag.has(item.value));
       case IContextByValueBagMethod.NOT_EMPTY:
-        return bag.notEmpty(item.value);
+        return of(bag.notEmpty(item.value));
       case IContextByValueBagMethod.VALUE:
-        return bag.get(item.value);
+        return of(bag.get(item.value));
       default:
         throw new Error('Invalid item method');
     }
@@ -108,5 +128,40 @@ export class ContextService {
         }
       }),
     );
+  }
+
+  private evalState(item: IContextByStateItem): Observable<any> {
+    switch (item.method) {
+      case IContextByStateMethod.VALUE:
+        return this.getFromStore(item.key);
+      case IContextByStateMethod.NOT_EMPTY:
+        return this.getFromStore(item.key).pipe(
+          map(Boolean),
+        );
+      case IContextByStateMethod.EQUALS:
+        return this.getFromStore(item.key).pipe(
+          map(v => v === item.value),
+        );
+      default:
+        throw new Error('Invalid item method');
+    }
+  }
+
+  private getFromStore(key: string): Observable<any> {
+    return this.store.pipe(
+      select(state => key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state)),
+    );
+  }
+
+  private evalExpression(item: IContextByExpressionItem): Observable<any> {
+    switch (item.method) {
+      case IContextByExpressionMethod.SWITCH:
+        return this.eval(item.key).pipe(
+          map(String),
+          map(k => item.value[k]),
+        );
+      default:
+        throw new Error('Invalid item method');
+    }
   }
 }

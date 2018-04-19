@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import {
+  IContextByEntityMethod,
+  IContextByExpressionMethod,
+  IContextByStateMethod,
+  IContextByValueBagMethod,
   IContextConfigItemType,
   IContextConfigOperator,
-  IContextByEntityMethod,
-  IContextByValueBagMethod,
 } from '@app/core/context/context.interface';
 
 import {
   IMetadataFormConfig,
   IMetadataFormControlType,
-  IFormContextConfigOperator,
   IMetadataFormTextControl,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
@@ -34,6 +35,7 @@ export class SelectPersonFilterComponent {
   ) {}
 
   readonly filterForm: IMetadataFormConfig = {
+    id: 'contactPersonCardSelectPersonForm',
     editable: true,
     items: [
       {
@@ -57,8 +59,9 @@ export class SelectPersonFilterComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'contactPersonCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Имя',
@@ -70,8 +73,9 @@ export class SelectPersonFilterComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'contactPersonCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Отчество',
@@ -93,8 +97,9 @@ export class SelectPersonFilterComponent {
       {
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'contactPersonCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Дата рождения',
@@ -107,8 +112,9 @@ export class SelectPersonFilterComponent {
         dictCode: UserDictionariesService.DICTIONARY_GENDER,
         disabled: false,
         display: {
-          field: 'typeCode',
-          operator: IFormContextConfigOperator.EQUALS,
+          type: IContextConfigItemType.STATE,
+          method: IContextByStateMethod.EQUALS,
+          key: 'contactPersonCardSelectPersonForm.value.typeCode',
           value: 1,
         },
         label: 'Пол',
@@ -140,7 +146,21 @@ export class SelectPersonFilterComponent {
             {
               type: IContextConfigItemType.CONSTANT,
               method: IContextByValueBagMethod.CONTAINS,
-              value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+              name: {
+                type: IContextConfigItemType.EXPRESSION,
+                method: IContextByExpressionMethod.SWITCH,
+                key: {
+                  type: IContextConfigItemType.STATE,
+                  method: IContextByStateMethod.VALUE,
+                  key: 'contactPersonCardSelectPersonForm.value.typeCode',
+                },
+                value: {
+                  1: 'Person.Individual.AdditionalAttribute.List',
+                  2: 'Person.LegalEntity.AdditionalAttribute.List',
+                  3: 'Person.SoleProprietorship.AdditionalAttribute.List',
+                },
+              },
+              value: 363 + i,
             }
           ],
         },
