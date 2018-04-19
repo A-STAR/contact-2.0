@@ -19,9 +19,9 @@ const routes: Routes = [
   }
 ];
 
-const guaranteeCardContractFormReducer = createMetadataFormReducer('guaranteeCardContractForm');
-const guaranteeCardGuarantorFormReducer = createMetadataFormReducer('guaranteeCardGuarantorForm');
-const guaranteeCardSelectPersonFormReducer = createMetadataFormReducer('guaranteeCardSelectPersonForm');
+export const guaranteeCardContractFormReducer = createMetadataFormReducer('guaranteeCardContractForm');
+export const guaranteeCardGuarantorFormReducer = createMetadataFormReducer('guaranteeCardGuarantorForm');
+export const guaranteeCardSelectPersonFormReducer = createMetadataFormReducer('guaranteeCardSelectPersonForm');
 
 @NgModule({
   declarations: [

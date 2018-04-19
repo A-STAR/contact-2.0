@@ -19,8 +19,8 @@ const routes: Routes = [
   }
 ];
 
-const contactPersonCardPersonFormReducer = createMetadataFormReducer('contactPersonCardPersonForm');
-const contactPersonCardSelectPersonFormReducer = createMetadataFormReducer('contactPersonCardSelectPersonForm');
+export const contactPersonCardPersonFormReducer = createMetadataFormReducer('contactPersonCardPersonForm');
+export const contactPersonCardSelectPersonFormReducer = createMetadataFormReducer('contactPersonCardSelectPersonForm');
 
 @NgModule({
   declarations: [

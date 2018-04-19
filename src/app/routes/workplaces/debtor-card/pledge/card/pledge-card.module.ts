@@ -19,10 +19,10 @@ const routes: Routes = [
   }
 ];
 
-const pledgeCardContractFormReducer = createMetadataFormReducer('pledgeCardContractForm');
-const pledgeCardPledgorFormReducer = createMetadataFormReducer('pledgeCardPledgorForm');
-const pledgeCardPropertyFormReducer = createMetadataFormReducer('pledgeCardPropertyForm');
-const pledgeCardSelectPersonFormReducer = createMetadataFormReducer('pledgeCardSelectPersonForm');
+export const pledgeCardContractFormReducer = createMetadataFormReducer('pledgeCardContractForm');
+export const pledgeCardPledgorFormReducer = createMetadataFormReducer('pledgeCardPledgorForm');
+export const pledgeCardPropertyFormReducer = createMetadataFormReducer('pledgeCardPropertyForm');
+export const pledgeCardSelectPersonFormReducer = createMetadataFormReducer('pledgeCardSelectPersonForm');
 
 @NgModule({
   declarations: [
