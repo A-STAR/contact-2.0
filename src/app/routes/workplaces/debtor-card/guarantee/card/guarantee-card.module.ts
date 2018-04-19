@@ -19,6 +19,10 @@ const routes: Routes = [
   }
 ];
 
+const guaranteeCardContractFormReducer = createMetadataFormReducer('guaranteeCardContractForm');
+const guaranteeCardGuarantorFormReducer = createMetadataFormReducer('guaranteeCardGuarantorForm');
+const guaranteeCardSelectPersonFormReducer = createMetadataFormReducer('guaranteeCardSelectPersonForm');
+
 @NgModule({
   declarations: [
     GuarantorCardComponent,
@@ -38,9 +42,9 @@ const routes: Routes = [
       ],
     ),
     RouterModule.forChild(routes),
-    StoreModule.forFeature('guaranteeCardContractForm', createMetadataFormReducer('guaranteeCardContractForm')),
-    StoreModule.forFeature('guaranteeCardGuarantorForm', createMetadataFormReducer('guaranteeCardGuarantorForm')),
-    StoreModule.forFeature('guaranteeCardSelectPersonForm', createMetadataFormReducer('guaranteeCardSelectPersonForm')),
+    StoreModule.forFeature('guaranteeCardContractForm', guaranteeCardContractFormReducer),
+    StoreModule.forFeature('guaranteeCardGuarantorForm', guaranteeCardGuarantorFormReducer),
+    StoreModule.forFeature('guaranteeCardSelectPersonForm', guaranteeCardSelectPersonFormReducer),
     SharedModule,
     WorkplacesSharedModule,
   ],
