@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import {
   IContextByEntityMethod,
+  IContextByExpressionMethod,
   IContextByStateMethod,
   IContextByValueBagMethod,
   IContextConfigItemType,
@@ -145,7 +146,20 @@ export class SelectPersonFilterComponent {
             {
               type: IContextConfigItemType.CONSTANT,
               method: IContextByValueBagMethod.CONTAINS,
-              name: 'Person.Individual.AdditionalAttribute.List',
+              name: {
+                type: IContextConfigItemType.EXPRESSION,
+                method: IContextByExpressionMethod.SWITCH,
+                key: {
+                  type: IContextConfigItemType.STATE,
+                  method: IContextByStateMethod.VALUE,
+                  key: 'pledgeCardSelectPersonForm.value.typeCode',
+                },
+                value: {
+                  1: 'Person.Individual.AdditionalAttribute.List',
+                  2: 'Person.LegalEntity.AdditionalAttribute.List',
+                  3: 'Person.SoleProprietorship.AdditionalAttribute.List',
+                },
+              },
               value: 363 + i,
             }
           ],

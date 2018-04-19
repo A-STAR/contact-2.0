@@ -174,14 +174,14 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
               method: IContextByExpressionMethod.SWITCH,
               key: {
                 type: IContextConfigItemType.STATE,
-                method: 'value',
+                method: IContextByStateMethod.VALUE,
                 key: 'contactPersonCardPersonForm.value.typeCode',
               },
               value: {
                 1: 'Person.Individual.AdditionalAttribute.List',
                 2: 'Person.LegalEntity.AdditionalAttribute.List',
                 3: 'Person.SoleProprietorship.AdditionalAttribute.List',
-              }
+              },
             },
             value: 363 + i,
           }

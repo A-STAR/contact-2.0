@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators/map';
 
 import {
   IContextByEntityMethod,
+  IContextByExpressionMethod,
   IContextByStateMethod,
   IContextByValueBagMethod,
   IContextConfigItemType,
@@ -221,18 +222,20 @@ export class PledgeCardComponent {
             {
               type: IContextConfigItemType.CONSTANT,
               method: IContextByValueBagMethod.CONTAINS,
-              /*
-              value: {
-                operator: IContextConfigOperator.SWITCH,
-                from: 'typeCode',
+              name: {
+                type: IContextConfigItemType.EXPRESSION,
+                method: IContextByExpressionMethod.SWITCH,
+                key: {
+                  type: IContextConfigItemType.STATE,
+                  method: IContextByStateMethod.VALUE,
+                  key: 'pledgeCardPledgorForm.value.typeCode',
+                },
                 value: {
                   1: 'Person.Individual.AdditionalAttribute.List',
                   2: 'Person.LegalEntity.AdditionalAttribute.List',
                   3: 'Person.SoleProprietorship.AdditionalAttribute.List',
-                }
-              }
-              */
-              name: 'Person.Individual.AdditionalAttribute.List',
+                },
+              },
               value: 363 + i,
             }
           ],
