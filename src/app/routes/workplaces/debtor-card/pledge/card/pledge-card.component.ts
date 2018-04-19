@@ -313,12 +313,12 @@ export class PledgeCardComponent {
               {
                 type: IContextConfigItemType.STATE,
                 method: IContextByStateMethod.NOT_EMPTY,
-                key: 'pledgeCardPledgorForm.value.pledgeValue',
+                key: 'pledgeCardPropertyForm.value.pledgeValue',
               },
               {
                 type: IContextConfigItemType.STATE,
                 method: IContextByStateMethod.NOT_EMPTY,
-                key: 'pledgeCardPledgorForm.value.marketValue',
+                key: 'pledgeCardPropertyForm.value.marketValue',
               },
             ],
           },
