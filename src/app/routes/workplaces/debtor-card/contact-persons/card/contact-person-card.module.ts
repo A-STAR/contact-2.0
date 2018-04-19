@@ -19,8 +19,16 @@ const routes: Routes = [
   }
 ];
 
-export const contactPersonCardPersonFormReducer = createMetadataFormReducer('contactPersonCardPersonForm');
-export const contactPersonCardSelectPersonFormReducer = createMetadataFormReducer('contactPersonCardSelectPersonForm');
+export function contactPersonCardPersonFormReducer(state: any, action: any): any {
+  return createMetadataFormReducer('contactPersonCardPersonForm')(state, action);
+}
+
+export function contactPersonCardSelectPersonFormReducer(state: any, action: any): any {
+  return createMetadataFormReducer('contactPersonCardSelectPersonForm')(state, action);
+}
+
+// export const contactPersonCardPersonFormReducer = createMetadataFormReducer('contactPersonCardPersonForm');
+// export const contactPersonCardSelectPersonFormReducer = createMetadataFormReducer('contactPersonCardSelectPersonForm');
 
 @NgModule({
   declarations: [
