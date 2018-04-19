@@ -20,7 +20,7 @@ const initialState: IMetadataFormState = {
   value: {},
 };
 
-export const createMetadataFormReducer = (key: string) => {
+export function createMetadataFormReducer(key: string): any {
   return (state = initialState, action: IMetadataFormAction): IMetadataFormState => {
     if (action.key === key) {
       switch (action.type) {
@@ -33,4 +33,4 @@ export const createMetadataFormReducer = (key: string) => {
     }
     return state;
   };
-};
+}
