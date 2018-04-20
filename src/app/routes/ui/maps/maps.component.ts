@@ -1,19 +1,21 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
 import { random, name, address } from 'faker';
+import { of } from 'rxjs/observable/of';
 
 import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
-import { IMarker, IControlDef, IControlCmp, MapControlPosition } from '@app/core/map-providers/map-providers.interface';
-
-import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
-
-import { range } from '@app/core/utils';
-import { of } from 'rxjs/observable/of';
-import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
+import { IMarker, IControlDef, MapControlPosition } from '@app/core/map-providers/map-providers.interface';
 import {
   MapToolbarItemType,
   IMapToolbarItem,
   MapToolbarFilterItemType,
+  IMapToolbarActionData,
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
+import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+
+import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
+import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
+
+import { range } from '@app/core/utils';
 
 @Component({
   selector: 'app-maps',
@@ -50,7 +52,7 @@ export class MapsComponent implements OnInit {
     return range(1, count).map(_ => ({
       lat: 55 + random.number({ min: 0, max: 1, precision: 0.0001 }),
       lng: 37 + random.number({ min: 0, max: 1, precision: 0.0001 }),
-      popup: PopupComponent as Type< { context: { data: IDebtorAddress } } >,
+      popup: PopupComponent,
       tpl: this.tpl,
       data: {
         name: name.findName(),
@@ -64,7 +66,7 @@ export class MapsComponent implements OnInit {
         {
           position: MapControlPosition.BOTTOM_LEFT,
           hostClass: 'map-toolbar-placement',
-          cmp: MapToolbarComponent as Type<IControlCmp<IMapToolbarItem[]>>,
+          cmp: MapToolbarComponent,
           data: [
             {
               type: MapToolbarItemType.FILTER,
@@ -72,7 +74,8 @@ export class MapsComponent implements OnInit {
               children: [
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
-                  action: (map: any) => map && alert('checkbox view addresses'),
+                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
+                  filter: MapFilters.ALL,
                   label: 'Отображать все адреса',
                   enabled: of(true),
                   checked: true
@@ -82,14 +85,24 @@ export class MapsComponent implements OnInit {
                 },
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
-                  action: (map: any) => map && alert('address type'),
+                  filter: MapFilters.ADDRESS_TYPE,
+                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Фильтр по типу адреса',
                   dictCode: 21,
                   enabled: of(true),
                 },
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
-                  action: (map: any) => map && alert('visit status'),
+                  filter: MapFilters.ADDRESS_STATUS,
+                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
+                  label: 'Фильтр по статусу адреса',
+                  dictCode: 21,
+                  enabled: of(true),
+                },
+                {
+                  type: MapToolbarFilterItemType.DICTIONARY,
+                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
+                  filter: MapFilters.VISIT_STATUS,
                   label: 'Фильтр по типу выезда',
                   dictCode: 21,
                   enabled: of(true),
@@ -99,8 +112,10 @@ export class MapsComponent implements OnInit {
                 },
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
-                  action: (map: any) => map && alert('checkbox view blocked addresses'),
+                  filter: MapFilters.INACTIVE,
+                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Отображать все заблокированные адреса',
+                  // enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
                   enabled: of(true),
                   checked: true
                 },
@@ -109,7 +124,8 @@ export class MapsComponent implements OnInit {
                 },
                 {
                   type: MapToolbarFilterItemType.BUTTON,
-                  action: (map: any) => map && alert('reset filter'),
+                  filter: MapFilters.RESET,
+                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Сбросить фильтр',
                   enabled: of(true),
                 },

@@ -9,13 +9,13 @@ import { MapGoogleService } from './providers/google/map-google.service';
 import { MapRendererService } from './renderer/map-renderer.service';
 import { MapYandexService } from './providers/yandex/map-yandex.service';
 
-export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
+export const MAP_SERVICE = new InjectionToken<IMapService<any>>('MAP_SERVICE');
 
 export function mapServiceFactory(
   configService: ConfigService,
   mapRendererService: MapRendererService,
   zone: NgZone
-): IMapService {
+): IMapService<any> {
   const provider = configService.config && configService.config.maps && configService.config.maps.useProvider;
   switch (provider) {
     case MapProvider.GOOGLE:

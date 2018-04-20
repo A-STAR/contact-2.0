@@ -1,5 +1,6 @@
 export enum MapFilters {
-  ALL,
+  ALL = 1,
+  RESET,
   INACTIVE,
   ADDRESS_TYPE,
   VISIT_STATUS,

@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+import { Map } from 'leaflet';
 
 export enum MapToolbarItemType {
   FILTER = 'filter'
@@ -18,7 +19,7 @@ export enum MapToolbarFilterItemType {
 export interface IMapToolbarActionData {
   item: IMapToolbarElement;
   value: any;
-  map: any;
+  map: google.maps.Map | Map;
 }
 
 export type IMapToolbarAction = (data: IMapToolbarActionData) => void;
