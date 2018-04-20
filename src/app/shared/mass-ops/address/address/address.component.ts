@@ -41,7 +41,7 @@ export class AddressComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<IAddressByPerson>,
   ) {}
 
   ngOnInit(): void {

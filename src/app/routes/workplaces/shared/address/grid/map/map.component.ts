@@ -33,7 +33,7 @@ export class AddressGridMapComponent implements OnInit {
   markers: IMarker<IAddress>[];
 
   constructor(
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<IAddress>,
     private cdRef: ChangeDetectorRef
   ) { }
 

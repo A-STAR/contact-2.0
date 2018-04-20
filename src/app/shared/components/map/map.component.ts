@@ -7,7 +7,6 @@ import {
   Input,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  DoCheck,
   OnDestroy
 } from '@angular/core';
 import { empty } from 'rxjs/observable/empty';
@@ -32,7 +31,7 @@ import { tap, delay } from 'rxjs/operators';
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
+export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
@@ -51,11 +50,9 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
   map: any;
   private components: IMapComponents<T> = {};
   private bounds;
-  // markers instances
-  private _markers: any[] = [];
 
   constructor(
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<T>,
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
   ) { }
@@ -79,7 +76,6 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
             this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
             this.addMarkers(this.markers);
             this.addControls(this.controls);
-            this.detectCmpsChanges(this.components);
             this.cdRef.markForCheck();
           }
         }),
@@ -90,41 +86,20 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
 
   }
 
-  ngDoCheck(): void {
-    this.detectCmpsChanges(this.components);
-  }
-
   ngOnDestroy(): void {
     this.removeComponents(this.components);
-    if (this.mapService.removeMap) {
-      this.mapService.removeMap(this.map, this._markers);
-    }
-    this._markers = [];
+    this.mapService.removeMap();
     this.components = {};
-  }
-
-  detectCmpsChanges(cmps: IMapComponents<T>): void {
-    const componentTypes = Object.keys(cmps);
-    if (componentTypes && componentTypes.length) {
-      componentTypes
-        .map(cmpType => cmps[cmpType].map(cmpRef => cmpRef())
-          .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
-          .forEach(cmp => cmp.changeDetectorRef.detectChanges()));
-    }
   }
 
   addMarkers(markers: IMarker<T>[]): void {
     if (markers && markers.length) {
       this.components.popups = markers
-        .map(marker => this.mapService.createMarker<T>(this.map, marker))
-        .map(({ popupRef, marker }) => {
+        .map(marker => this.mapService.createMarker(marker))
+        .map(({ popupRef, entity }) => {
 
           if (this.options.fitToData) {
-            this.bounds.extend(this.getLatLng(marker));
-          }
-
-          if (marker) {
-            this._markers.push(marker);
+            this.bounds.extend(this.getLatLng(entity.marker));
           }
 
           return popupRef;
@@ -135,7 +110,7 @@ export class MapComponent<T> implements AfterViewInit, DoCheck, OnDestroy {
 
   addControls(controls: IControlDef<T>[]): void {
     if (controls && controls.length) {
-      this.components.controls = controls.map(cDef => this.mapService.createControl(this.map, cDef));
+      this.components.controls = controls.map(cDef => this.mapService.createControl(cDef));
     }
   }
 

@@ -1,6 +1,8 @@
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
+import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+
 export enum MapToolbarItemType {
   FILTER = 'filter'
 }
@@ -13,16 +15,22 @@ export enum MapToolbarFilterItemType {
   LOOKUP = 'lookup'
 }
 
-export type IMapToolbarAction = (map: any) => void;
+export interface IMapToolbarActionData {
+  item: IMapToolbarElement;
+  value: any;
+  map: any;
+}
+
+export type IMapToolbarAction = (data: IMapToolbarActionData) => void;
 
 export interface IMapToolbarElement {
+  type: MapToolbarItemType | MapToolbarFilterItemType;
   action?: IMapToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
 }
 
 export interface IMapToolbarButton extends IMapToolbarElement {
-  type: MapToolbarItemType;
   icon?: string;
   children?: Array<IMapToolbarElement>;
 }
@@ -34,13 +42,17 @@ export interface IMapToolbarFilter {
   children?: Array<IMapToolbarFilterItem>;
 }
 
+export type IMapFilterFn = (entity: any, params?: any) => boolean;
+
 export interface IMapToolbarFilterItem {
   type: MapToolbarFilterItemType;
+  filter?: IMapFilterFn | MapFilters;
   action?: IMapToolbarAction | Action;
   enabled?: Observable<boolean>;
   dictCode?: number;
   lookupKey?: string;
   checked?: boolean;
+  preserveOnClick?: boolean;
   label?: string;
   icon?: string;
 }

@@ -1,0 +1,7 @@
+export enum MapFilters {
+  ALL,
+  INACTIVE,
+  ADDRESS_TYPE,
+  VISIT_STATUS,
+  ADDRESS_STATUS
+}

@@ -19,22 +19,25 @@ import {
   IMarker,
   PopupComponentRefGetter,
   IMarkerIconConfig,
-  IMapService,
   IPopupCmp,
   MapControlPosition,
+  IMapEntity,
+  IMapService,
 } from '../../map-providers.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { MapRendererService } from '../../renderer/map-renderer.service';
 
 @Injectable()
-export class MapYandexService implements IMapService {
+export class MapYandexService<T> implements IMapService<T> {
 
   private static OSM_URL = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
 
   readonly apiKey = this.configService.config.maps.providers.yandex.apiKey;
 
   container: HTMLElement;
+  private _map: Map;
+  private _entities: IMapEntity<T>[] = [];
 
   constructor(
     private configService: ConfigService,
@@ -57,20 +60,23 @@ export class MapYandexService implements IMapService {
       maxZoom: 18
     });
     map.addLayer(osm);
+    this._map = map;
     return map;
   }
 
-  createMarker<T>(map: Map, markerDef: IMarker<T>): ICreateMarkerResult<T> {
+  createMarker(markerDef: IMarker<T>): ICreateMarkerResult<T> {
     let popupRef;
     const marker = new Marker({ lat: markerDef.lat, lng: markerDef.lng });
     if (markerDef.popup) {
-      popupRef = this.createPopup<T>(map, marker, markerDef);
+      popupRef = this.createPopup(this._map, marker, markerDef);
     }
-    map.addLayer(marker);
-    return { marker, popupRef };
+    this._map.addLayer(marker);
+    const entity = { marker, data: markerDef.data };
+    this._entities.push(entity);
+    return { entity, popupRef };
   }
 
-  createControl<T>(): any {
+  createControl(): any {
     // TODO(i.lobanov): implement;
     return _ => ({} as T);
   }
@@ -80,8 +86,33 @@ export class MapYandexService implements IMapService {
     return {};
   }
 
-  createBounds(latlngs: LatLngBoundsLiteral): any {
+  getMap(): Map {
+    return this._map;
+  }
+
+  removeMap(): void {
+    // TODO(i.lobanov): implement
+    this._entities = [];
+  }
+
+  addToMap(entity: IMapEntity<T>): void {
+    if (entity && entity.marker && !this._map.hasLayer((entity.marker as Marker))) {
+      (entity.marker as Marker).addTo(this._map);
+    }
+  }
+
+  removeFromMap(entity: IMapEntity<T>): void {
+    if (entity && entity.marker && this._map.hasLayer((entity.marker as Marker))) {
+      (entity.marker as Marker).removeFrom(this._map);
+    }
+  }
+
+  createBounds(latlngs: LatLngBoundsLiteral): LatLngBounds {
     return new LatLngBounds(latlngs);
+  }
+
+  getEntities(): IMapEntity<T>[] {
+    return this._entities;
   }
 
   getControlPositionFromDef(position: MapControlPosition): ControlPosition {
@@ -107,7 +138,7 @@ export class MapYandexService implements IMapService {
     }
   }
 
-  private createPopup<T>(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {
+  private createPopup(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new Popup({ closeButton: false }, marker);
     marker.on('click', (e: LeafletEvent) => {

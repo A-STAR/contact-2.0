@@ -43,7 +43,7 @@ export class ContactComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<IAddressByContact>,
   ) {}
 
   ngOnInit(): void {

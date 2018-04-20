@@ -14,8 +14,14 @@ import { of } from 'rxjs/observable/of';
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
 import { IMapService } from '@app/core/map-providers/map-providers.interface';
-import { IMapToolbarFilter, IMapToolbarFilterItem } from '../toolbar/map-toolbar.interface';
+import {
+  IMapToolbarFilter,
+  IMapToolbarFilterItem,
+  MapToolbarFilterItemType,
+  IMapToolbarActionData,
+} from '../toolbar/map-toolbar.interface';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
+import { MapFilterService } from '@app/shared/components/map/components/controls/filter/map-filter.service';
 
 @Component({
   selector: 'app-map-filter',
@@ -23,28 +29,41 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
   styleUrls: ['./map-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapFilterComponent implements OnInit {
+export class MapFilterComponent<T> implements OnInit {
   @Input() config: IMapToolbarFilter;
+  @Output() action = new EventEmitter<IMapToolbarActionData>();
+
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
-  @Output() action = new EventEmitter<any>();
 
   container: HTMLElement;
+  private map: any;
 
   constructor(
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<T>,
+    private mapFilterService: MapFilterService<T>,
   ) { }
 
   ngOnInit(): void {
     this.container = this.mapService.container;
+    this.map = this.mapService.getMap();
   }
 
   isDisabled(item: IMapToolbarFilterItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
-  onChildSelect(child: IMapToolbarFilterItem): void {
-    this.dropdown.close();
-    this.action.emit(child);
+  onChildSelect($event: any, child: IMapToolbarFilterItem): void {
+    if (this.shouldCloseDropdown(child)) {
+      this.dropdown.close();
+    }
+    if (child.filter) {
+      this.mapFilterService.applyFilter(child, $event);
+    }
+    this.action.emit({ item: child, value: $event, map: this.map });
+  }
+
+  private shouldCloseDropdown(child: IMapToolbarFilterItem): boolean {
+    return !(child.preserveOnClick || child.type === MapToolbarFilterItemType.CHECKBOX);
   }
 
 }

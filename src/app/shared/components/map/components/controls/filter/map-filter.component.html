@@ -15,7 +15,7 @@
           [label]="child.label"
           [lookupKey]="child.lookupKey"
           [disabled]="isDisabled(child) | async"
-          (action)="onChildSelect(child)"
+          (action)="onChildSelect($event, child)"
         ></app-menu-select>
         <!-- Dict -->
         <app-menu-select
@@ -32,7 +32,7 @@
           *ngSwitchCase="'button'"
           class="btn btn-link filter-btn"
           [disabled]="isDisabled(child) | async"
-          (click)="onChildSelect(child)"
+          (click)="onChildSelect($event, child)"
         >
         {{ child.label | translate }}
         </button>
@@ -42,7 +42,7 @@
           [label]="child.label"
           [disabled]="isDisabled(child) | async"
           [ngModel]="child.checked"
-          (ngModelChange)="onChildSelect($event)"
+          (ngModelChange)="onChildSelect($event, child)"
         ></app-tick>
       </div>
     </ng-container>

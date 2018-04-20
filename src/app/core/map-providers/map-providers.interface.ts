@@ -1,6 +1,14 @@
 import { Provider, ComponentRef, Type, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { LatLngLiteral, MapOptions, ControlPosition } from 'leaflet';
+import {
+  LatLngLiteral,
+  MapOptions,
+  ControlPosition,
+  Marker,
+  Map,
+  LatLngBounds,
+  LatLngBoundsLiteral,
+} from 'leaflet';
 
 export interface IMapModuleOptions {
   mapServiceProvider?: Provider;
@@ -11,15 +19,24 @@ export interface IMapConfig {
   apiKey: string;
 }
 
-export interface IMapService {
-  init(mapConfig: IMapOptions): Observable<any>;
-  createMarker<T>(map: any, markerDef: IMarker<T>): ICreateMarkerResult<T>;
-  createControl<T>(map: any, controlDef: IControlDef<T>): ControlComponentRefGetter<T>;
-  getIconConfig<T extends IIconConfigParam>(configKey: string, entity: T): IMarkerIconConfig;
-  createBounds(latlngs?: any): any;
-  getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
-  removeMap?(map: google.maps.Map, markers?: any[], controls?: any[]): void;
+export interface IMapService<T> {
   container: HTMLElement;
+  getEntities(): IMapEntity<T>[];
+  createBounds(latlngs?: LatLngBoundsLiteral | google.maps.LatLngLiteral[]): LatLngBounds | google.maps.LatLngBounds;
+  createControl(controlDef: IControlDef<T>): ControlComponentRefGetter<T>;
+  createMarker(markerDef: IMarker<T>): ICreateMarkerResult<T>;
+  getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
+  getIconConfig(configKey: string, entity: T): IMarkerIconConfig;
+  getMap(): google.maps.Map | Map;
+  addToMap(entity: IMapEntity<T>): void;
+  removeFromMap(entity: IMapEntity<T>): void;
+  init(mapConfig: IMapOptions): Observable<any>;
+  removeMap(): void;
+}
+
+export interface IMapEntity<T> {
+  marker: Marker | google.maps.Marker;
+  data?: T;
 }
 
 export enum MapControlPosition {
@@ -82,7 +99,7 @@ export interface IMarkerIconConfig {
 }
 
 export interface ICreateMarkerResult<T> {
-  marker: any;
+  entity: IMapEntity<T>;
   popupRef?: PopupComponentRefGetter<T>;
 }
 

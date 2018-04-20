@@ -8,12 +8,13 @@ import {
   ICreateMarkerResult,
   PopupComponentRefGetter,
   IMarkerIconConfig,
-  IMapService,
   IControlDef,
   ControlComponentRefGetter,
   IControlCmp,
   IPopupCmp,
   MapControlPosition,
+  IMapEntity,
+  IMapService,
 } from '../../map-providers.interface';
 import { Libraries } from './maps-google.interface';
 
@@ -23,7 +24,7 @@ import { MapRendererService } from '../../renderer/map-renderer.service';
 import { IncId } from '@app/core/utils';
 
 @Injectable()
-export class MapGoogleService implements IMapService {
+export class MapGoogleService<T> implements IMapService<T> {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
 
   private static ICON_CONFIGS = {
@@ -54,12 +55,13 @@ export class MapGoogleService implements IMapService {
       { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
       { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
       { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
-    ]
+    ],
   };
 
   private libraryEl: HTMLScriptElement;
   private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
   private _map: google.maps.Map;
+  private _entities: IMapEntity<T>[] = [];
   private _listeners: any[] = [];
 
   container: HTMLElement;
@@ -85,26 +87,30 @@ export class MapGoogleService implements IMapService {
     );
   }
 
-  createMarker<T>(
-    map: google.maps.Map,
-    markerDef: IMarker<T>,
+  createMarker(markerDef: IMarker<T>,
   ): ICreateMarkerResult<T> {
     let popupRef;
     const marker = new google.maps.Marker({
       position: { lat: markerDef.lat, lng: markerDef.lng },
-      map,
+      map: this._map,
       icon: markerDef.iconConfig
         ? this.createMarkerIcon(markerDef.iconConfig)
         : undefined,
     });
     if (markerDef.popup) {
-      popupRef = this.createPopup<T>(map, marker, markerDef);
+      popupRef = this.createPopup(this._map, marker, markerDef);
     }
-    return { marker, popupRef };
+    const entity = { marker, data: markerDef.data };
+    this._entities.push(entity);
+
+    return { entity, popupRef };
   }
 
-  createControl<T>(map: google.maps.Map, controlDef: IControlDef<T>): ControlComponentRefGetter<T> {
-    const { compRef, el } = this.mapRendererService.render<IControlCmp<T>>(controlDef.cmp, controlDef.data);
+  createControl(controlDef: IControlDef<T>): ControlComponentRefGetter<T> {
+    const { compRef, el } = this.mapRendererService.render<IControlCmp<T>>(
+      controlDef.cmp,
+      controlDef.data,
+    );
     const inc = IncId.get();
     const index = inc.uuid;
 
@@ -116,12 +122,12 @@ export class MapGoogleService implements IMapService {
 
     compRef.instance.context = {
       ...compRef.instance.context,
-      map,
+      map: this._map,
       index,
-      position: controlDef.position
+      position: controlDef.position,
     };
 
-    map.controls[this.getControlPositionFromDef(controlDef.position)].push(el);
+    this._map.controls[this.getControlPositionFromDef(controlDef.position)].push(el);
 
     return () => compRef;
   }
@@ -138,41 +144,51 @@ export class MapGoogleService implements IMapService {
     }
   }
 
+  getEntities(): IMapEntity<T>[] {
+    return this._entities;
+  }
+
   createMarkerIcon(config: IMarkerIconConfig): string {
     return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${
       config.char
     }%7C${config.fillColor}%7C${config.textColor}`;
   }
 
-  getIconConfig<T extends { typeCode: number; isInactive: number | boolean }>(configKey: string,
+  getIconConfig(
+    configKey: string,
     entity: T,
+    typeProp: string = 'typeCode',
+    inactiveProp: string = 'isInactive',
   ): IMarkerIconConfig {
     if (MapGoogleService.ICON_CONFIGS[configKey]) {
-      return entity.isInactive
-      ? {
-          ...MapGoogleService.ICON_CONFIGS[configKey][entity.typeCode],
-          ...MapGoogleService.ICON_CONFIGS[configKey][0],
-        }
-      : {
-          ...MapGoogleService.ICON_CONFIGS[configKey][entity.typeCode],
-        };
+      return entity[inactiveProp]
+        ? {
+            ...MapGoogleService.ICON_CONFIGS[configKey][entity[typeProp]],
+            ...MapGoogleService.ICON_CONFIGS[configKey][0],
+          }
+        : {
+            ...MapGoogleService.ICON_CONFIGS[configKey][entity[typeProp]],
+          };
     } else {
       throw new Error(`No icon config for <${configKey}> was found!`);
     }
   }
 
-  createBounds(latlngs?: any[]): any {
+  createBounds(
+    latlngs?: google.maps.LatLngLiteral[],
+  ): google.maps.LatLngBounds {
     return new google.maps.LatLngBounds(...(latlngs || []));
   }
 
-  removeMap(map: google.maps.Map, markers?: any[]): void {
-    this._map = map;
+  removeMap(): void {
     this.removeControls();
-    this.removeMarkers(markers);
+    this.removeMarkers();
     this.removeListeners();
   }
 
-  getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition {
+  getControlPositionFromDef(
+    position: MapControlPosition,
+  ): google.maps.ControlPosition {
     switch (position) {
       case MapControlPosition.BOTTOM_CENTER:
         return google.maps.ControlPosition.BOTTOM_CENTER;
@@ -203,15 +219,32 @@ export class MapGoogleService implements IMapService {
     }
   }
 
-  private removeMarkers(markers: google.maps.Marker[]): void {
-    markers.forEach(m => m.setMap(null));
+  getMap(): google.maps.Map {
+    return this._map;
+  }
+
+  removeFromMap(entity: IMapEntity<T>): void {
+    if (entity && entity.marker) {
+      (entity.marker as google.maps.Marker).setMap(null);
+    }
+  }
+
+  addToMap(entity: IMapEntity<T>): void {
+    if (entity && entity.marker && !(entity.marker as google.maps.Marker).getMap()) {
+      (entity.marker as google.maps.Marker).setMap(this._map);
+    }
+  }
+
+  private removeMarkers(): void {
+    this._entities.forEach(entity => (entity.marker as google.maps.Marker).setMap(null));
+    this._entities = [];
   }
 
   private removeListeners(): void {
     this._listeners.forEach(l => google.maps.event.removeListener(l));
   }
 
-  private createPopup<T>(
+  private createPopup(
     map: google.maps.Map,
     marker: google.maps.Marker,
     markerDef: IMarker<T>,
@@ -237,14 +270,14 @@ export class MapGoogleService implements IMapService {
           popup.open(map, marker);
           compRef.changeDetectorRef.detectChanges();
         });
-      })
+      }),
     );
     this._listeners.push(
       popup.addListener('closeclick', _ => {
         if (compRef) {
           compRef.destroy();
         }
-      })
+      }),
     );
     return () => compRef;
   }

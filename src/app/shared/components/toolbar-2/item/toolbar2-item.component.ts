@@ -1,11 +1,14 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+
 import { IAppState } from '@app/core/state/state.interface';
 import { IButtonType } from '@app/shared/components/button/button.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
+
 import { doOnceIf, invert } from '@app/core/utils';
 
 @Component({
