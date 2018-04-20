@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { IPerson, IPersonCreateResponse } from './person.interface';
 
@@ -16,7 +16,9 @@ export class PersonService {
 
   create(person: Partial<IPerson>): Observable<IPersonCreateResponse> {
     return this.dataService.create('/persons', {}, person).pipe(
-      map(response => response[0] && response[0].id),
+      tap(console.log),
+      map(response => response.data[0] && response.data[0].id),
+      tap(console.log),
       catchError(this.notificationsService.createError().entity('entities.persons.gen.singular').dispatchCallback()),
     );
   }

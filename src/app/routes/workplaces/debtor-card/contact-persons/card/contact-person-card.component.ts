@@ -21,9 +21,26 @@ export class ContactPersonCardComponent implements OnInit {
   @ViewChild('contactPersonForm') contactPersonForm: MetadataFormComponent<any>;
 
   readonly paramMap = this.route.snapshot.paramMap;
-  readonly debtId = Number(this.paramMap.get('debtId'));
-  readonly debtorId = Number(this.paramMap.get('debtorId'));
+
+  /**
+   * Contact person link ID in pivot table
+   */
   readonly contactId = Number(this.paramMap.get('contactId'));
+
+  /**
+   * Debt ID
+   */
+  readonly debtId = Number(this.paramMap.get('debtId'));
+
+  /**
+   * ID of person who is a debtor (displayed in debtor card)
+   */
+  readonly debtorId = Number(this.paramMap.get('debtorId'));
+
+  /**
+   * ID of person who is linked to the debtor as contact person via contactId
+   */
+  readonly personId = Number(this.paramMap.get('personId'));
 
   readonly editing = Boolean(this.contactId);
 
@@ -74,20 +91,24 @@ export class ContactPersonCardComponent implements OnInit {
             return of(selectedPerson.id);
           }
           return this.editing
-            ? this.personService.update(this.contactId, person).pipe(mapTo(this.contactId))
+            ? this.personService.update(this.personId, person).pipe(mapTo(this.personId))
             : this.personService.create(person);
         }),
       )
-      .subscribe(() => {
-        // if (this.editing) {
-        //   this.contactPersonsService
-        //     .update(null, null, null)
-        //     .subscribe(() => this.onBack());
-        // } else {
-        //   this.contactPersonsService
-        //     .create(null, null)
-        //     .subscribe(() => this.onBack());
-        // }
+      .subscribe(personId => {
+        if (linkTypeCode) {
+          if (this.editing) {
+            this.contactPersonsService
+              .update(this.debtorId, this.contactId, { linkTypeCode })
+              .subscribe(() => this.onBack());
+          } else {
+            this.contactPersonsService
+              .create(this.debtorId, { contactId: personId, linkTypeCode })
+              .subscribe(() => this.onBack());
+          }
+        } else {
+          this.onBack();
+        }
       });
   }
 
