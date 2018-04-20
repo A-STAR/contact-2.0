@@ -1,19 +1,10 @@
-export interface IContactPerson {
+export interface IPerson {
   birthDate: string;
   birthPlace: string;
   comment: string;
-  /**
-   * Linked person ID
-   */
-  contactId: number;
-  /**
-   * Link ID in pivot table
-   */
-  contactPersonId: number;
   educationCode: number;
   familyStatusCode: number;
   firstName: string;
-  fullName: string;
   genderCode: number;
   lastName: string;
   middleName: string;
@@ -31,7 +22,6 @@ export interface IContactPerson {
   typeCode: number;
 }
 
-export interface IContactLink {
-  contactId: number;
-  linkTypeCode: number;
+export interface IPersonCreateResponse {
+  id: number;
 }
