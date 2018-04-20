@@ -1,26 +1,29 @@
-.menu-select {
+:host {
   cursor: pointer;
   &:hover {
     .menu-select-body {
       display: block;
     }
     .menu-select-arrow {
-      display: inline-block;
+      display: flex;
     }
   }
-  &.disabled {
-    color: #d6d6d6a8;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+}
+
+.menu-select.disabled {
+  color: #d6d6d6a8;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .menu-select-arrow {
   display: none;
+  align-items: center;
 }
 
 .menu-select-body {
   position: absolute;
+  width: 100%;
   top: 50%;
   display: none;
   transform: translateY(-50%);
@@ -29,7 +32,7 @@
   background-color: #ffffff;
   text-align: left;
   white-space: nowrap;
-  line-height: 1.4em;
+  box-shadow: 1px 1px 8px 2px rgba(0, 0, 0, 0.15);
   &:hover {
     display: block !important;
   }
@@ -38,15 +41,11 @@
 
 .menu-select-body-item {
   text-align: left;
-  white-space: nowrap;
-  line-height: 1.4em;
+  line-height: 24px;
+  padding: 4px 12px;
   &:hover {
     background-color: #e8e8e8;
   }
-}
-
-.menu-select-body-item {
-  padding: 2px 5px;
 }
 
 .menu-right {
@@ -56,6 +55,14 @@
 .menu-left {
   left: 0;
 };
+
+.menu-arrow-left {
+  order: 0;
+}
+
+.menu-arrow-right {
+  order: 3;
+}
 
 .menu-select-left {
   transform: translateX(-100%);

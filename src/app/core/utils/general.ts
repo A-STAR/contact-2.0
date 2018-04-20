@@ -128,6 +128,8 @@ export const floor = (value: number, precision: number) => {
 
 export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
 
+export const random = (min: number, max: number): number => min + Math.round(Math.random() * (max - min));
+
 /**
  * Allows to check is the current route matches the segment
  * i.e. `isRoute('create')`

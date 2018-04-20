@@ -1,12 +1,10 @@
 .separator {
   height: 1px;
-  position: absolute;
-  left: 0;
-  right: 0;
+  width: 100%;
   background-color: #d5d5d5 !important;
 }
 
-.filter-btn {
+.dropdown-control-btn {
   text-decoration: none;
   color: #222;
 }
@@ -19,9 +17,15 @@
 
 .dropdown-item {
   position: relative;
-  line-height: 24px;
-  padding: 4px 12px;
+}
+
+.dropdown-item-control {
+  line-height: 24px !important;
+  padding: 4px 12px !important;
+  display: block;
   text-align: left;
+  width: 100%;
+  cursor: pointer;
   &:hover {
     background-color: #eee;
   }

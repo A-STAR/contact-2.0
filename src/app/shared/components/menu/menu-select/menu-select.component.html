@@ -1,16 +1,17 @@
 
-<div class="flex menu-select" [ngClass]="{ 'disabled': disabled }">
+<div class="flex justify-between menu-select" [ngClass]="{ 'disabled': disabled }">
   <span *ngIf="options.length" class="flex-item menu-select-arrow fa" [ngClass]="getIconCls()"></span>
-  <span class="flex-item">{{ label }}</span>
+  <span class="flex-item">{{ label | translate }}</span>
   <div class="menu-select-body menu-right" [ngClass]="{ 'menu-left': isLeft }">
     <ng-container *ngFor="let option of options; trackBy: trackByFn">
-      <app-tick
-        class="menu-select-body-item"
-        [label]="option.label"
-        [ngModel]="option.checked"
-        (ngModelChange)="onSelect($event, option)"
-      >
-      </app-tick>
+      <div class="menu-select-body-item">
+        <app-tick
+          [label]="option.label"
+          [ngModel]="option.checked"
+          (ngModelChange)="onSelect($event, option)"
+        >
+        </app-tick>
+      </div>
     </ng-container>
   </div>
 </div>

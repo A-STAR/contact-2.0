@@ -19,9 +19,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   selector: 'app-tick',
   styleUrls: ['./tick.component.scss'],
   template: `
-  <div class="tick-wrapper">
+  <div class="tick-wrapper" (click)="onChange()">
     <i *ngIf="value" class="tick-icon icon co-checkbox-mark"></i>
-    <span class="tick-label" (click)="onChange()"> {{ label | translate }}</span>
+    <span class="tick-label"> {{ label | translate }}</span>
   </div>
   `
 })

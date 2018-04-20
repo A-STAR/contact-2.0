@@ -8,14 +8,13 @@ import {
   MapToolbarItemType,
   IMapToolbarItem,
   MapToolbarFilterItemType,
-  IMapToolbarActionData,
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
 import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
 
 import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
 import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
 
-import { range } from '@app/core/utils';
+import { range, random as randomInt } from '@app/core/utils';
 
 @Component({
   selector: 'app-maps',
@@ -56,7 +55,11 @@ export class MapsComponent implements OnInit {
       tpl: this.tpl,
       data: {
         name: name.findName(),
-        address: address.streetAddress()
+        address: address.streetAddress(),
+        statusType: randomInt(1, 3),
+        typeCode: randomInt(1, 3),
+        visitType: randomInt(1, 3),
+        isInactive: randomInt(0, 1)
       }
     }));
   }

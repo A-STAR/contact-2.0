@@ -34,7 +34,6 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
 
   private optionsSubscription: Subscription;
   private value: number[] = [];
-  private tempValue: number[] = [];
   private _options: IMultiSelectOption[];
 
   constructor(
@@ -83,14 +82,14 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
 
   onSelect(checked: boolean, option: IMultiSelectOption): void {
     option.checked = checked;
-    this.tempValue = checked
-      ? Array.from(new Set([...this.tempValue, option.value ]))
-      : this.tempValue.filter(o => o !== option.value);
+    this.value = checked
+      ? Array.from(new Set([...this.value, option.value ]))
+      : this.value.filter(o => o !== option.value);
     this.action.emit(this.value);
   }
 
   getIconCls(): string {
-    return this.isLeft ? 'menu-left fa-caret-left' : 'menu-right fa-caret-right';
+    return this.isLeft ? 'menu-arrow-left fa-caret-left' : 'menu-arrow-right fa-caret-right';
   }
 
   ngOnDestroy(): void {
