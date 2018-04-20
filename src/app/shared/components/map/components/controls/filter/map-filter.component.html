@@ -23,7 +23,7 @@
           [label]="child.label"
           [dictCode]="child.dictCode"
           [disabled]="isDisabled(child) | async"
-          (action)="onChildSelect(child)"
+          (action)="onChildSelect($event, child)"
         ></app-menu-select>
         <!-- Separator -->
         <div *ngSwitchCase="'separator'" class="separator"></div>

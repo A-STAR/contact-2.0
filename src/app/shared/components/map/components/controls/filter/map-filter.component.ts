@@ -59,7 +59,9 @@ export class MapFilterComponent<T> implements OnInit {
     if (child.filter) {
       this.mapFilterService.applyFilter(child, $event);
     }
-    this.action.emit({ item: child, value: $event, map: this.map });
+    if (child.action) {
+      this.action.emit({ item: child, value: $event, map: this.map });
+    }
   }
 
   private shouldCloseDropdown(child: IMapToolbarFilterItem): boolean {

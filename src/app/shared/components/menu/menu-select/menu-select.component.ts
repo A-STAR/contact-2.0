@@ -10,11 +10,12 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ILabeledValue } from '@app/shared/components/form/select/select.interface';
+import { IMultiSelectOption } from '@app/shared/components/form/select/select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { SortOptionsPipe } from '@app/shared/components/form/select/select.pipe';
 
 @Component({
   selector: 'app-menu-select',
@@ -27,16 +28,20 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
   @Input() lookupKey: ILookupKey;
   @Input() label: string;
   @Input() disabled = false;
+  @Input() multi = true;
 
-  @Output() action = new EventEmitter<ILabeledValue>();
+  @Output() action = new EventEmitter<number[]>();
 
   private optionsSubscription: Subscription;
-  options: ILabeledValue[] = [];
+  private value: number[] = [];
+  private tempValue: number[] = [];
+  private _options: IMultiSelectOption[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private lookupService: LookupService,
+    private sortOptionsPipe: SortOptionsPipe,
     private userDictionariesService: UserDictionariesService,
-    private lookupService: LookupService
   ) { }
 
   ngOnInit(): void {
@@ -46,17 +51,11 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
 
     if (this.dictCode) {
       this.optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
-      .subscribe(options => {
-        this.options = options;
-        this.cdRef.markForCheck();
-      });
+      .subscribe(this.onOptionsFetch);
     }
     if (this.lookupKey) {
       this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
-      .subscribe(options => {
-        this.options = options;
-        this.cdRef.markForCheck();
-      });
+      .subscribe(this.onOptionsFetch);
     }
   }
 
@@ -64,8 +63,30 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  onSelect(option: ILabeledValue): void {
-    this.action.emit(option);
+  get hasSelection(): boolean {
+    return !!this.value.length;
+  }
+
+  get options(): IMultiSelectOption[] {
+    return this._options || [];
+  }
+
+  set options(options: IMultiSelectOption[]) {
+    this._options = <IMultiSelectOption[]>this.sortOptionsPipe
+      .transform(<IMultiSelectOption[]>options)
+      .map(o => ({ ...o, checked: this.value.includes(o.value) }));
+
+    // Filter out value not found in options
+    this.value = this.value.filter(v => this.options.some(o => o.value === v));
+    this.cdRef.markForCheck();
+  }
+
+  onSelect(checked: boolean, option: IMultiSelectOption): void {
+    option.checked = checked;
+    this.tempValue = checked
+      ? Array.from(new Set([...this.tempValue, option.value ]))
+      : this.tempValue.filter(o => o !== option.value);
+    this.action.emit(this.value);
   }
 
   getIconCls(): string {
@@ -76,6 +97,14 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     if (this.optionsSubscription) {
       this.optionsSubscription.unsubscribe();
     }
+  }
+
+  trackByFn(option: IMultiSelectOption): number {
+    return option.value;
+  }
+
+  private onOptionsFetch = (options: IMultiSelectOption[]) => {
+    this.options = options;
   }
 
 }

@@ -74,7 +74,6 @@ export class MapsComponent implements OnInit {
               children: [
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
-                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   filter: MapFilters.ALL,
                   label: 'Отображать все адреса',
                   enabled: of(true),
@@ -86,26 +85,26 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
                   filter: MapFilters.ADDRESS_TYPE,
-                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Фильтр по типу адреса',
                   dictCode: 21,
                   enabled: of(true),
+                  preserveOnClick: true,
                 },
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
                   filter: MapFilters.ADDRESS_STATUS,
-                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Фильтр по статусу адреса',
                   dictCode: 21,
                   enabled: of(true),
+                  preserveOnClick: true,
                 },
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
-                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   filter: MapFilters.VISIT_STATUS,
                   label: 'Фильтр по типу выезда',
                   dictCode: 21,
                   enabled: of(true),
+                  preserveOnClick: true,
                 },
                 {
                   type: MapToolbarFilterItemType.SEPARATOR,
@@ -113,7 +112,6 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
                   filter: MapFilters.INACTIVE,
-                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Отображать все заблокированные адреса',
                   // enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
                   enabled: of(true),
@@ -125,7 +123,6 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.BUTTON,
                   filter: MapFilters.RESET,
-                  action: (actionData: IMapToolbarActionData) => console.log(`value: ${actionData}`),
                   label: 'Сбросить фильтр',
                   enabled: of(true),
                 },

@@ -56,6 +56,7 @@ export interface IMapToolbarFilterItem {
   preserveOnClick?: boolean;
   label?: string;
   icon?: string;
+  multi?: boolean;
 }
 
 export type IMapToolbarItem = IMapToolbarButton | IMapToolbarFilter;
