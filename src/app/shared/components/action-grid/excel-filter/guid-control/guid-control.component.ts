@@ -10,32 +10,27 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { ExcelFilterService } from '../excel-filter.service';
 
-enum IGuidControlState {
+export enum GuidControlState {
   NO_FILE            = 'no-file',
   HAS_FILE_TO_UPLOAD = 'has-file-to-upload',
   READY              = 'ready',
 }
 
-interface IGuidControlValue {
+export interface IGuidControlValue {
   columnId: string;
   fileName: string;
   guid: string;
-  state: IGuidControlState;
+  state: GuidControlState;
   total: number;
 }
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => GuidControlComponent),
-      multi: true,
-    },
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
@@ -45,7 +40,7 @@ interface IGuidControlValue {
   selector: 'app-action-grid-excel-filter-guid-control',
   templateUrl: 'guid-control.component.html'
 })
-export class GuidControlComponent implements OnInit, ControlValueAccessor, Validator {
+export class GuidControlComponent implements OnInit, ControlValueAccessor {
   @Input() columns: any[] = [];
 
   @Output() remove = new EventEmitter<void>();
@@ -58,7 +53,7 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
     columnId: null,
     fileName: null,
     guid: null,
-    state: IGuidControlState.NO_FILE,
+    state: GuidControlState.NO_FILE,
     total: null,
   };
 
@@ -72,15 +67,15 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   get hasNoFile(): boolean {
-    return this.value.state === IGuidControlState.NO_FILE;
+    return this.value.state === GuidControlState.NO_FILE;
   }
 
   get hasFileToUpload(): boolean {
-    return this.value.state === IGuidControlState.HAS_FILE_TO_UPLOAD;
+    return this.value.state === GuidControlState.HAS_FILE_TO_UPLOAD;
   }
 
   get isReady(): boolean {
-    return this.value.state === IGuidControlState.READY;
+    return this.value.state === GuidControlState.READY;
   }
 
   get selectedColumn(): string {
@@ -96,12 +91,6 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
       label: column.label,
       value: column.colId,
     }));
-  }
-
-  validate(): any {
-    return this.isReady
-      ? null
-      : { required: true };
   }
 
   writeValue(value: IGuidControlValue): void {
@@ -123,7 +112,7 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   onFileChange(): void {
     this.updateValue({
       fileName: this.file.name,
-      state: IGuidControlState.HAS_FILE_TO_UPLOAD,
+      state: GuidControlState.HAS_FILE_TO_UPLOAD,
     });
     this.upload();
   }
@@ -145,7 +134,7 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
         this.updateValue({
           guid,
           total,
-          state: IGuidControlState.READY,
+          state: GuidControlState.READY,
         });
       });
   }

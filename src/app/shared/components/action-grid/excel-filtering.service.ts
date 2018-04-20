@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 
 import { IGridControl } from './excel-filter/excel-filter.interface';
+import { GuidControlState } from './excel-filter/guid-control/guid-control.component';
+
+const validator: ValidatorFn = control => {
+  return control.value && control.value.state === GuidControlState.READY
+    ? null
+    : { required: true };
+};
 
 @Injectable()
 export class ExcelFilteringService {
@@ -42,7 +49,7 @@ export class ExcelFilteringService {
 
   private initFilter(): FormGroup {
     return this.formBuilder.group({
-      control: this.formBuilder.control(null),
+      control: this.formBuilder.control(null, validator),
     });
   }
 }
