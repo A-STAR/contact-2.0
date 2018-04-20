@@ -1,18 +1,25 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
 import { contractFormConfig } from './config/contract-form-config';
 import { guarantorFormConfig } from './config/guarantor-form-config';
+
+import { invert } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,12 +72,30 @@ export class GuarantorCardComponent implements AfterViewInit {
     map(data => data.showContractForm),
   );
 
+  readonly contractTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title',
+  };
+
+  readonly guarantorTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: this.edit$.pipe(map(invert)),
+      },
+    ]
+  };
+
   constructor(
     private guaranteeCardService: GuaranteeCardService,
     private guaranteeService: GuaranteeService,
+    private injector: Injector,
     private personService: PersonService,
+    private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
   ngAfterViewInit(): void {
@@ -133,5 +158,9 @@ export class GuarantorCardComponent implements AfterViewInit {
     return this.guarantorId
       ? this.personService.update(this.guarantorId, data).pipe(mapTo(this.guarantorId))
       : this.personService.create(data);
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
   }
 }
