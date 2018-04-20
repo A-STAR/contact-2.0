@@ -5,8 +5,6 @@ import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
-import { IPersonCreateResponse } from '@app/routes/workplaces/core/person/person.interface';
-
 import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
