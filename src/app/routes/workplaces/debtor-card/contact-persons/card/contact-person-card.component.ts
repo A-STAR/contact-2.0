@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { contactPersonFormConfig } from './config/contact-person-form';
   selector: 'app-contact-person-card',
   templateUrl: 'contact-person-card.component.html',
 })
-export class ContactPersonCardComponent implements OnInit {
+export class ContactPersonCardComponent implements AfterViewInit {
   @ViewChild('contactPersonForm') contactPersonForm: MetadataFormComponent<any>;
 
   readonly paramMap = this.route.snapshot.paramMap;
@@ -68,7 +68,7 @@ export class ContactPersonCardComponent implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     if (this.editing) {
       this.contactPersonsService
         .fetch(this.debtorId, this.contactId)
