@@ -15,6 +15,7 @@ export type FilterOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<'
 export class FilterObject {
   condition?: FilterConditionType;
   filters?: FilterObject[];
+  list?: string;
   name?: string;
   operator?: FilterOperatorType;
   values?: Array<any>;
@@ -23,6 +24,7 @@ export class FilterObject {
     const filter: FilterObject = new FilterObject();
     if (source) {
       filter
+        .setList(source.list)
         .setName(source.name)
         .setCondition(source.condition)
         .setOperator(source.operator)
@@ -51,6 +53,13 @@ export class FilterObject {
     return this;
   }
 
+  setList(list: string): FilterObject {
+    if (list != null) {
+      this.list = list;
+    }
+    return this;
+  }
+
   setName(name: string): FilterObject {
     if (name != null) {
       this.name = name;
@@ -72,7 +81,7 @@ export class FilterObject {
   }
 
   addFilter(filter: FilterObject): FilterObject {
-    if (filter && (filter.hasValues() || filter.hasFilter())) {
+    if (filter && (filter.hasValues() || filter.hasFilter() || filter.hasList())) {
       if (!this.condition) {
         throw new Error('You must set a condition prior to adding a filter');
       }
@@ -108,6 +117,10 @@ export class FilterObject {
 
   hasFilter(): boolean {
     return this.filters && this.filters.length > 0;
+  }
+
+  hasList(): boolean {
+    return !!this.list;
   }
 
   get(name: string): any {

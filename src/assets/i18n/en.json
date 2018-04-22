@@ -24,34 +24,51 @@
       }
     },
     "workplaces": {
-      "debtor-card": {
-        "contact-persons": {
-          "person": {
-            "name": "Person",
-            "fields": {
-              "id": "Id",
-              "lastName": "Last Name",
-              "firstName": "First Name",
-              "middleName": "Middle Name",
-              "personFullName": "Full Name",
-              "typeCode": "Type",
-              "birthDate": "Date of Birth",
-              "birthPlace": "Place of birth",
-              "familyStatusCode": "Family status",
-              "educationCode": "Education",
-              "genderCode": "Gender",
-              "passportNumber": "Passport Number",
-              "comment": "Comment",
-              "stringValue1": "String Attribute 1",
-              "stringValue2": "String Attribute 2",
-              "stringValue3": "String Attribute 3",
-              "stringValue4": "String Attribute 4",
-              "stringValue5": "String Attribute 5",
-              "stringValue6": "String Attribute 6",
-              "stringValue7": "String Attribute 7",
-              "stringValue8": "String Attribute 8",
-              "stringValue9": "String Attribute 9",
-              "stringValue10": "String Attribute 10"
+      "debtorCard": {
+        "contactPerson": {
+          "card": {
+            "forms": {
+              "contactPerson": {
+                "title": "Contact Person"
+              }
+            }
+          }
+        },
+        "guarantee": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Contract"
+              },
+              "guarantor": {
+                "title": "Guarantor"
+              }
+            },
+            "titles": {
+              "add": "Add Contract",
+              "addGuarantor": "Add Guarantor",
+              "edit": "Edit Contract"
+            }
+          }
+        },
+        "pledge": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Contract"
+              },
+              "pledgor": {
+                "title": "Pledgor"
+              },
+              "property": {
+                "title": "Property"
+              }
+            },
+            "titles": {
+              "add": "Add Contract",
+              "addPledgor": "Add Pledgor",
+              "addProperty": "Add Property",
+              "edit": "Edit Contract"
             }
           }
         }
@@ -331,6 +348,14 @@
   },
   "shared": {
     "components": {
+      "actionGrid": {
+        "excelFilter": {
+          "chooseFile": "Choose File",
+          "title": "Excel Filtering",
+          "total": "(processed: {{ n }})",
+          "uploadError": "Could not upload file"
+        }
+      },
       "grids": {
         "overlays": {
           "empty": "No Data"
@@ -345,11 +370,14 @@
   "system": {
     "notifications": {
       "tasks": {
+        "created": "created {{ n }}",
+        "processed": "processed {{ n }}",
+        "total": "total {{ n }}",
         "start": {
           "success": "Task sent for processing"
         },
         "finish": {
-          "success": "Completed: {{ message }} от {{ createDateTime }}: created {{ created }}, processed: {{ processed }}, total {{ total }}",
+          "success": "Completed: {{ message }} от {{ createDateTime }}: {{ info }}",
           "error": "Error: {{ message }} от {{ createDateTime }}"
         }
       }
@@ -1812,6 +1840,9 @@
           "title": "Mark for Visit",
           "confirmMessage": "Invalid address. Are you sure you want to proceed?"
         },
+        "map": {
+          "title": "Addresses"
+        },
         "mark": {
           "title": "Mark for Visit",
           "grid": {
@@ -2926,6 +2957,15 @@
     }
   },
   "massOperations": {
+    "addressesByPersons": {
+      "title": "View addresses"
+    },
+    "addressesByContacts": {
+      "title": "View contact registrations",
+      "personFullName": "Person Full Name",
+      "contactType": "Contact Type",
+      "fullAddress": "Address"
+    },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",
       "purposeCode": "Purpose of visit",
@@ -3221,7 +3261,9 @@
       "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
+      "filter": "Filter",
       "loadFromExcel": "Load from Excel",
+      "map": "Map",
       "move": "Move",
       "next": "Next",
       "now": "Now",
@@ -3368,6 +3410,8 @@
         "deleteSMS": "Delete SMS",
         "emailCreate": "Mass Emails",
         "loadDebtResponsible": "Load debt responsible",
+        "mapAddressView": "View addresses on map",
+        "mapContactView": "View contact registrations on map",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",

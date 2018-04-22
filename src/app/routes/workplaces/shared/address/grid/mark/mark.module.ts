@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '@app/shared/shared.module';
 
@@ -9,7 +8,6 @@ import { AddressGridMarkComponent } from './mark.component';
 
 @NgModule({
   imports: [
-    CommonModule,
     SharedModule,
   ],
   exports: [

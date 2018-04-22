@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ISMSSchedule } from '../../phone.interface';
+import { ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 

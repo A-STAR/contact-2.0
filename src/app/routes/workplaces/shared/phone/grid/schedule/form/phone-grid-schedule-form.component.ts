@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { INamedValue, IOption } from '@app/core/converter/value-converter.interface';
-import { ISMSSchedule } from '../../../phone.interface';
+import { ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';

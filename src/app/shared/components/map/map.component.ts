@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
   DoCheck
 } from '@angular/core';
-import { IMapService, IMarker, PopupComponentRefGetter } from './map.interface';
+import { IMapService, IMarker, PopupComponentRefGetter, IMapOptions, ILatLng } from './map.interface';
 
 export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
 
@@ -25,11 +25,19 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
+  @Input() options: IMapOptions = {
+    zoom: 6,
+    center: {
+      lat: 55.724303,
+      lng: 37.609522
+    },
+  };
 
   @Input() styles: CSSStyleDeclaration;
 
   map: any;
   private popups: PopupComponentRefGetter<T>[];
+  private bounds;
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService,
@@ -41,16 +49,14 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
       .init(
         {
           el: this.mapEl.nativeElement,
-          zoom: 6,
-          center: {
-            lat: 55.724303,
-            lng: 37.609522
-          }
+          ...this.options,
         }
       )
       .subscribe((map: any) => {
         this.map = map;
+        this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
         this.addMarkers(this.markers);
+        this.fitBounds();
         this.detectPopupsChanges();
         this.cdRef.markForCheck();
       });
@@ -72,9 +78,25 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
   addMarkers(markers: IMarker<T>[]): void {
     if (markers && markers.length) {
       this.popups = markers
-        .map(marker => this.mapService.createMarker<T>(this.map, marker).popupRef)
+        .map(marker => this.mapService.createMarker<T>(this.map, marker))
+        .map(({ popupRef, marker }) => {
+          if (this.options.fitToData) {
+            this.bounds.extend(this.getLatLng(marker));
+          }
+          return popupRef;
+        })
         .filter(Boolean);
     }
+  }
+
+  private fitBounds(): void {
+    if (this.options.fitToData && this.map) {
+      this.map.fitBounds(this.bounds);
+    }
+  }
+
+  private getLatLng(marker: any): ILatLng {
+    return typeof marker.getPosition === 'function' ? marker.getPosition() : marker.getLatLng();
   }
 
 }

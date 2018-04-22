@@ -32,6 +32,7 @@ export interface IGuaranteeContract {
   contractTypeCode?: number;
   comment?: string;
   personId?: number;
+  personIds?: number[];
 }
 
 export interface IEmployment {

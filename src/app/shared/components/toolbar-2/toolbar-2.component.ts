@@ -38,6 +38,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_EMAIL]: 'email',
     [ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD]: 'loadFromExcel',
     [ToolbarItemTypeEnum.BUTTON_INFO]: 'info',
+    [ToolbarItemTypeEnum.BUTTON_MAP]: 'map',
     [ToolbarItemTypeEnum.BUTTON_MOVE]: 'move',
     [ToolbarItemTypeEnum.BUTTON_NEXT]: 'next',
     [ToolbarItemTypeEnum.BUTTON_OK]: 'ok',

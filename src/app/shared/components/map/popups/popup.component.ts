@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-map-popup',
@@ -6,5 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./popup.component.scss'],
 })
 export class PopupComponent<T> {
-  @Input() data: T;
+  @Input() context: any;
+  @Input() tpl: TemplateRef<T>;
 }

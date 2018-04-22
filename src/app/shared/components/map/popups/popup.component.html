@@ -1,6 +1,4 @@
 <div class="row popup-container"
 >
-  <div class="col-xs-12">
-    <span class="text-left">{{ data.name }}</span>&nbsp;<span class="text-right">{{ data.address }}</span>
-  </div>
+  <ng-container *ngTemplateOutlet="tpl;context:context" ></ng-container>
 </div>

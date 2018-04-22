@@ -57,6 +57,12 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-mark>
 
+<app-address-grid-map
+  *ngIf="isDialog('map')"
+  [address]="selectedAddress$ | async"
+  (cancel)="onCloseDialog()"
+></app-address-grid-map>
+
 <app-letter-generation-dialog
   *ngIf="isDialog('letterGeneration')"
   [addressId]="selectedAddressId$ | async"

@@ -1,26 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '@app/core/state/state.interface';
 import { IContextConfig } from '@app/core/context/context.interface';
 import {
-  IFormContextConfig,
   IMetadataFormConfig,
   IMetadataFormControl,
   IMetadataFormControlType,
   IMetadataFormFlatConfig,
   IMetadataFormItem,
   IMetadataFormValidator,
-  IFormContextConfigOperator,
 } from './metadata-form.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from '@app/core/context/context.service';
 import { MetadataFormService } from './metadata-form.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
+
+import { MetadataFormAction } from '@app/shared/components/form/metadata-form/metadata-form.reducer';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
@@ -46,6 +50,11 @@ export class MetadataFormComponent<T> implements OnInit {
     }
   }
 
+  @Input()
+  set disabled(disabled: boolean) {
+    this.disabled$.next(disabled);
+  }
+
   @Output() submit = new EventEmitter<void>();
 
   flatConfig: IMetadataFormFlatConfig;
@@ -55,12 +64,15 @@ export class MetadataFormComponent<T> implements OnInit {
 
   private flatControls: IMetadataFormControl[];
 
+  private disabled$ = new BehaviorSubject<boolean>(false);
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private configService: ConfigService,
     private contextService: ContextService,
     private httpClient: HttpClient,
     private metadataFormService: MetadataFormService,
+    private store: Store<IAppState>,
     private valueConverterService: ValueConverterService,
   ) {}
 
@@ -103,7 +115,7 @@ export class MetadataFormComponent<T> implements OnInit {
 
     const controls = this.flatControls.reduce((acc, item) => {
       const asyncValidators = this.getAsyncValidators(item);
-      const disabled = item.disabled === true;
+      const disabled = item.disabled || this.disabled$.value;
       return {
         ...acc,
         [item.name]: new FormControl({ value: null, disabled }, { asyncValidators })
@@ -116,15 +128,14 @@ export class MetadataFormComponent<T> implements OnInit {
 
     this.flatControls.forEach(item => {
       if (typeof item.disabled === 'object' && item.disabled !== null) {
-        if (item.disabled['operator'] === IFormContextConfigOperator.EQUALS) {
-          const disabled = item.disabled as IFormContextConfig;
-          this.formGroup.get(disabled.field).valueChanges
-            .subscribe((value: any) => this.disable(item.name, String(value) === String(disabled.value)));
-        } else {
-          this.contextService
-            .calculate(item.disabled as IContextConfig)
-            .subscribe((d: boolean) => this.disable(item.name, d));
-        }
+          combineLatest(
+            this.contextService.calculate(item.disabled as IContextConfig).pipe(
+              map(Boolean),
+            ),
+            this.disabled$,
+          ).subscribe(([ a, b ]) => this.disable(item.name, a || b));
+      } else {
+        this.disabled$.subscribe(d => this.disable(item.name, d));
       }
     });
 
@@ -140,29 +151,26 @@ export class MetadataFormComponent<T> implements OnInit {
 
     this.initialized = true;
     this.cdRef.markForCheck();
+
+    if (this._config.id) {
+      this.formGroup.valueChanges.subscribe(value => this.store.dispatch({
+        type: MetadataFormAction.UPDATE_VALUE,
+        key: this._config.id,
+        payload: { value },
+      }));
+    }
   }
 
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
     return Object.keys(control.validators || {}).map(key => {
       const value = control.validators[key];
-      if (typeof value === 'object' && value !== null) {
-        if (value['operator'] === IFormContextConfigOperator.EQUALS) {
-          return c => this.formGroup.get(value.field).valueChanges.pipe(
-            map(v => String(v) === String(value)),
+      return typeof value === 'object' && value !== null
+        ? c => this.contextService.calculate(value).pipe(
             map(v => this.getValidator(key, v)),
             map(v => v ? v(c) : null),
             first(),
-          );
-        } else {
-          return c => this.contextService.calculate(value).pipe(
-            map(v => this.getValidator(key, v)),
-            map(v => v ? v(c) : null),
-            first(),
-          );
-        }
-      } else {
-        return c => of(this.getValidator(key, value)(c));
-      }
+          )
+      : c => of(this.getValidator(key, value)(c));
     });
   }
 
@@ -249,19 +257,10 @@ export class MetadataFormComponent<T> implements OnInit {
   // }
 
   private calculateContextValue(validator: IMetadataFormValidator<any>): Observable<boolean> {
-    if (typeof validator === 'object' && validator !== null) {
-      if (validator['operator'] === IFormContextConfigOperator.EQUALS) {
-        return this.formGroup.get(validator.field).valueChanges.pipe(
-          map(v => String(v) === String(validator.value)),
+    return typeof validator === 'object' && validator !== null
+      ? this.contextService.calculate(validator).pipe(
           map(Boolean),
-        );
-      } else {
-        return this.contextService.calculate(validator).pipe(
-          map(Boolean),
-        );
-      }
-    } else {
-      return of(validator);
-    }
+        )
+      : of(validator);
   }
 }

@@ -26,6 +26,7 @@ export type IButtonType =
   'exportToExcel' |
   'info' |
   'loadFromExcel' |
+  'map' |
   'move' |
   'next' |
   'ok' |

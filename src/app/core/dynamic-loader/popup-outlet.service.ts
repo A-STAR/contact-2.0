@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IPopup } from './popup-outlet.interface';
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 
 @Injectable()
 export class PopupOutletService {
-  readonly popup = new BehaviorSubject<IPopup>(null);
+  readonly data = new BehaviorSubject(null);
 
-  open(id: string, outlet: string = 'main'): void {
-    this.popup.next({ id, outlet });
+  open(modules: IDynamicModule[][], id: string, injector: Injector): void {
+    this.data.next({ modules, id, injector });
   }
 
   close(): void {
-    this.popup.next(null);
+    this.data.next(null);
   }
 }

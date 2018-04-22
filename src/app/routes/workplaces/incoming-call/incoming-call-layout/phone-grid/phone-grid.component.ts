@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '../../../shared/contact-registration/contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
