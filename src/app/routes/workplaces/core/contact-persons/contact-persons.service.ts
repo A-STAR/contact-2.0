@@ -12,7 +12,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 @Injectable()
 export class ContactPersonsService extends AbstractActionService {
-  static MESSAGE_CONTACT_SAVED = 'MESSAGE_CONTACT_SAVED';
+  static MESSAGE_CONTACT_PERSON_SAVED = 'MESSAGE_CONTACT_PERSON_SAVED';
 
   private baseUrl = '/persons/{personId}/contactpersons';
   private extUrl = `${this.baseUrl}/{contactPersonId}`;
@@ -24,6 +24,10 @@ export class ContactPersonsService extends AbstractActionService {
     protected store: Store<IAppState>,
   ) {
     super();
+  }
+
+  dispatchContactPersonSavedMessage(): void {
+    this.dispatchAction(ContactPersonsService.MESSAGE_CONTACT_PERSON_SAVED);
   }
 
   fetchAll(personId: number): Observable<IContactPerson[]> {
