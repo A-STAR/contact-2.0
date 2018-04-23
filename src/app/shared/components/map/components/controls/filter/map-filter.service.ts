@@ -20,6 +20,8 @@ export class MapFilterService<T> {
     [MapFilters.ADDRESS_TYPE]: (entity, params: number[]) => params.includes(entity.data.typeCode),
     [MapFilters.VISIT_STATUS]: (entity, params: number[]) => params.includes(entity.data.visitStatus),
     [MapFilters.CONTACT_TYPE]: (entity, params: number[]) => params.includes(entity.data.contactType),
+    [MapFilters.HIDE_ADDRESSES]: (entity, params: boolean) => !params &&
+      !entity.data.addressLatitude || !entity.data.addressLongitude,
   };
 
   constructor(

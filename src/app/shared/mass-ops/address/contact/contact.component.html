@@ -9,35 +9,35 @@
 
 <ng-template #tpl let-data="data">
   <div class="description">
-    <div class="description-entry">
+    <div *ngIf="data.personFullName" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.personFullName' | translate }}:</span>
       <span class="description-info">{{ data.personFullName }} (ID: {{ data.personId }}) </span>
     </div>
-    <div class="description-entry">
+    <div *ngIf="data.contract" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.contract' | translate }}:</span>
       <span class="description-info">{{ data.contract }} (ID: {{ data.debtId }})</span>
     </div>
-    <div class="description-entry">
+    <div *ngIf="data.userFullName" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.userFullName' | translate }}:</span>
       <span class="description-info">{{ data.userFullName }} (ID: {{ data.userId }})</span>
     </div>
-    <div class="description-entry">
+    <div *ngIf="data.contactDateTime" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.contactDateTime' | translate }}:</span>
       <span class="description-info">{{ data.contactDateTime | momentFormat:'L LTS' }}</span>
     </div>
-    <div class="description-entry">
+    <div *ngIf="data.contactType" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
       <span class="description-info">{{ data.contactType | dict:50 }}, {{ 'massOperations.addressesByContacts.resultName' | translate }}: {{ data.resultName }}</span>
     </div>
-    <div class="description-entry">
+    <div *ngIf="data.comment" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.commentary' | translate }}:</span>
       <span class="description-info">{{ data.comment }}</span>
     </div>
-    <div *ng-If="data.fullAddress" class="description-entry">
+    <div *ngIf="data.fullAddress" class="description-entry">
         <span class="description-title">{{ 'massOperations.addressesByContacts.fullAddress' | translate }}:</span>
         <span class="description-info">{{ data.fullAddress }}</span>
     </div>
-    <div class="description-entry">
+    <div *ngIf="data.typeCode" class="description-entry">
         <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
         <span class="description-info">{{ data.typeCode | dict:21 }}</span>
     </div>

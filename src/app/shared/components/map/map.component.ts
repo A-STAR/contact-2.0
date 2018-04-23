@@ -47,6 +47,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
 
   @Input() styles: CSSStyleDeclaration;
 
+  static MAX_MAP_ZOOM: 8;
   map: any;
   private components: IMapComponents<T> = {};
   private bounds;
@@ -127,6 +128,9 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
   private fitBounds(): void {
     if (this.options.fitToData && this.map) {
       this.map.fitBounds(this.bounds);
+      if (this.map.getZoom() > MapComponent.MAX_MAP_ZOOM) {
+        this.map.setZoom(MapComponent.MAX_MAP_ZOOM);
+      }
     }
   }
 

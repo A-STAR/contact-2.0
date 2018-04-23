@@ -118,6 +118,12 @@ export class ContactComponent implements OnInit {
               checked: true
             },
             {
+              type: MapToolbarFilterItemType.CHECKBOX,
+              filter: MapFilters.HIDE_ADDRESSES,
+              label: 'massOperations.addressesByContacts.filter.hideAddresses',
+              checked: false
+            },
+            {
               type: MapToolbarFilterItemType.SEPARATOR,
             },
             {
@@ -144,18 +150,38 @@ export class ContactComponent implements OnInit {
       .getAddressesByContacts(this.actionData.payload)
       .pipe(
         map(response =>
-          response.map(address => ({
-            lat: address.contactLatitude,
-            lng: address.contactLongitude,
-            iconConfig: this.mapService.getIconConfig('addressByContact', {
-              ...address,
-              typeCode: (address as IAddressByContact).contactType,
-              isInactive: false
-            }),
-            data: address,
-            popup: PopupComponent,
-            tpl: this.tpl,
-          })),
+          response.reduce((acc: IMarker<IAddressByContact>[], address) => {
+            const addressMarker = [{
+              lat: address.contactLatitude,
+              lng: address.contactLongitude,
+              iconConfig: this.mapService.getIconConfig('addressByContact', {
+                ...address,
+                typeCode: (address as IAddressByContact).contactType,
+                isInactive: false
+              }),
+              data: address,
+              popup: PopupComponent,
+              tpl: this.tpl,
+            }];
+            if (address.addressLatitude && address.addressLongitude) {
+              addressMarker.push(
+                {
+                  lat: address.addressLatitude,
+                  lng: address.addressLongitude,
+                  iconConfig: this.mapService.getIconConfig('addressByContact', {
+                    ...address,
+                    typeCode: (address as IAddressByContact).addressTypeCode,
+                    isInactive: false
+                  }),
+                  data: address,
+                  popup: PopupComponent,
+                  tpl: this.tpl,
+                }
+              );
+            }
+            acc.push(...addressMarker);
+            return acc;
+          }, []),
         ),
       )
       .filter(markers => Boolean(markers && markers.length))

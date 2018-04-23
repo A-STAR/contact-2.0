@@ -2965,7 +2965,7 @@
       "personFullName": "ФИО персоны",
       "contactType": "Тип",
       "fullAddress": "Адрес",
-      "commentary": "Commentary",
+      "commentary": "Комментарий",
       "userFullName": "Оператор",
       "contactDateTime": "Дата контакта",
       "resultName": "Результат",
@@ -2975,6 +2975,7 @@
         "filterByStatusType": "Фильтр по типу статуса",
         "filterByContactType": "Фильтр по типу контакта",
         "filterByVisitType": "Фильтр по типу выезда",
+        "hideAddresses": "Скрыть адреса",
         "showAllAdresses": "Отображать все адреса",
         "showInactives": "Отображать все заблокированные адреса",
         "resetFilter": "Сбросить фильтр"

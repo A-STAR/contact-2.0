@@ -1,8 +1,29 @@
+@import "../../../styles/app/variables.scss";
+
 .contact-map-container {
   height: 600px;
   width: 100%;
 }
 
-:host ::ng-deep .map-toolbar-placement {
+::ng-deep .map-toolbar-placement {
   margin-bottom: 5px;
+}
+
+.description {
+  padding: 5px;
+}
+
+.description-entry {
+  margin-bottom: 5px;
+  color: $text;
+  font-size: 13px;
+}
+
+.description-title {
+  font-weight: bold;
+}
+
+.desription-info {
+  color: $text-light;
+  font-size: 12px;
 }
