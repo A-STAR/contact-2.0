@@ -3,7 +3,12 @@
     <h3>{{ 'massOperations.addressesByContacts.title' | translate }}</h3>
   </div>
   <div class="contact-map-container" *ngIf="markers && options">
-    <app-map [markers]="markers" [options]="options" [styles]="{ height: '600px' }" [controls]="controls"></app-map>
+    <app-map
+      [markers]="markers"
+      [options]="options"
+      [styles]="{ height: '500px' }"
+      [controls]="controls">
+    </app-map>
   </div>
 </app-dialog>
 
