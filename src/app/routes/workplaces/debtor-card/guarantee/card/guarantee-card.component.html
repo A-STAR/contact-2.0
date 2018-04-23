@@ -83,6 +83,6 @@
 
   <!-- Toolbar -->
   <div class="flex-item">
-    <app-button type="save" (click)="onSave()"></app-button>
+    <app-button type="save" [disabled]="!canSubmit" (click)="onSave()"></app-button>
   </div>
 </div>

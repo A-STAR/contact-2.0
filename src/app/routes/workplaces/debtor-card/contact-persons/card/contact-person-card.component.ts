@@ -16,6 +16,7 @@ import { MetadataFormComponent } from '@app/shared/components/form/metadata-form
 
 import { invert } from '@app/core/utils';
 
+import { linkFormConfig } from './config/link-form';
 import { contactPersonFormConfig } from './config/contact-person-form';
 
 @Component({
@@ -25,6 +26,7 @@ import { contactPersonFormConfig } from './config/contact-person-form';
   templateUrl: 'contact-person-card.component.html',
 })
 export class ContactPersonCardComponent implements AfterViewInit {
+  @ViewChild('linkForm') linkForm: MetadataFormComponent<any>;
   @ViewChild('contactPersonForm') contactPersonForm: MetadataFormComponent<any>;
 
   readonly paramMap = this.route.snapshot.paramMap;
@@ -52,6 +54,7 @@ export class ContactPersonCardComponent implements AfterViewInit {
   readonly editing = Boolean(this.contactId);
 
   readonly contactPersonFormConfig = contactPersonFormConfig;
+  readonly linkFormConfig = linkFormConfig;
 
   readonly contactPerson$ = this.contactPersonCardService.contactPerson$;
 
@@ -89,11 +92,19 @@ export class ContactPersonCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
+  get canSubmit(): boolean {
+    return this.linkForm.formGroup.valid && (this.contactPersonForm.formGroup.valid || this.contactPersonForm.formGroup.disabled);
+  }
+
   ngAfterViewInit(): void {
     if (this.editing) {
       this.contactPersonsService
-        .fetch(this.debtorId, this.contactId)
-        .subscribe(person => this.contactPersonForm.formGroup.patchValue(person));
+        .fetch(this.debtorId, this.personId)
+        .subscribe(person => {
+          const { linkTypeCode, ...rest } = person;
+          this.linkForm.formGroup.patchValue({ linkTypeCode });
+          this.contactPersonForm.formGroup.patchValue(rest);
+        });
     }
   }
 
@@ -103,7 +114,6 @@ export class ContactPersonCardComponent implements AfterViewInit {
   }
 
   onSave(): void {
-    const { linkTypeCode, ...person } = this.contactPersonForm.data;
     this.contactPerson$
       .pipe(
         first(),
@@ -111,16 +121,18 @@ export class ContactPersonCardComponent implements AfterViewInit {
           if (selectedPerson) {
             return of(selectedPerson.id);
           }
+          const person = this.contactPersonForm.data;
           return this.editing
             ? this.personService.update(this.personId, person).pipe(mapTo(this.personId))
             : this.personService.create(person);
         }),
       )
       .subscribe(personId => {
+        const linkTypeCode = this.linkForm.data.linkTypeCode;
         if (linkTypeCode) {
           if (this.editing) {
             this.contactPersonsService
-              .update(this.debtorId, this.contactId, { linkTypeCode })
+              .update(this.debtorId, this.personId, { linkTypeCode })
               .subscribe(() => this.onBack());
           } else {
             this.contactPersonsService
@@ -135,7 +147,7 @@ export class ContactPersonCardComponent implements AfterViewInit {
 
   onBack(): void {
     const debtId = this.route.snapshot.paramMap.get('debtId');
-    const debtorId = this.route.snapshot.paramMap.get('debtId');
+    const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
       this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
     }

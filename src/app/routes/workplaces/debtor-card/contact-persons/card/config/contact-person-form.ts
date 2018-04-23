@@ -145,16 +145,6 @@ export const contactPersonFormConfig: IMetadataFormConfig = {
       validators: {},
       width: 0,
     },
-    {
-      dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
-      disabled: false,
-      display: true,
-      label: 'Тип связи',
-      name: 'linkTypeCode',
-      type: IMetadataFormControlType.SELECT,
-      validators: {},
-      width: 0,
-    },
     ...range(1, 10).map(i => ({
       disabled: false,
       display: {

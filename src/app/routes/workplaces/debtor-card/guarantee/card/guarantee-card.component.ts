@@ -98,6 +98,10 @@ export class GuarantorCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
+  get canSubmit(): boolean {
+    return this.contractForm.formGroup.valid && (this.guarantorForm.formGroup.valid || this.guarantorForm.formGroup.disabled);
+  }
+
   ngAfterViewInit(): void {
     if (this.editing) {
       this.guaranteeService

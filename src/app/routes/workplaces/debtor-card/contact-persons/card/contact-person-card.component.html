@@ -9,6 +9,11 @@
   <div class="flex-item grow" style="overflow-y: auto;">
     <app-titlebar [titlebar]="contactPersonTitlebar"></app-titlebar>
     <app-metadata-form
+      #linkForm
+      [config]="linkFormConfig"
+      [data]="contactPerson$ | async"
+    ></app-metadata-form>
+    <app-metadata-form
       #contactPersonForm
       [config]="contactPersonFormConfig"
       [data]="contactPerson$ | async"
@@ -66,6 +71,6 @@
 
   <!-- Toolbar -->
   <div class="flex-item">
-    <app-button type="save" (click)="onSave()"></app-button>
+    <app-button type="save" [disabled]="!canSubmit" (click)="onSave()"></app-button>
   </div>
 </div>
