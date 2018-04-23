@@ -35,6 +35,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
+  @Input() polylines: any[];
   @Input() options: IMapOptions = {
     zoom: 6,
     center: {
@@ -76,6 +77,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
             this.map = map;
             this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
             this.addMarkers(this.markers);
+            this.addPolylines(this.polylines);
             this.addControls(this.controls);
             this.cdRef.markForCheck();
           }
@@ -106,6 +108,14 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
           return popupRef;
         })
         .filter(Boolean);
+    }
+  }
+
+  addPolylines(polylines: [ILatLng, ILatLng][]): void {
+    if (polylines && polylines.length) {
+      polylines.map(polyline => {
+        this.mapService.createPolyline(polyline);
+      });
     }
   }
 

@@ -52,6 +52,7 @@ export class ContactComponent implements OnInit {
 
   dialog: string;
   markers: IMarker<IAddressByContact>[];
+  polylines: any[];
   options: IMapOptions = { fitToData: true, zoom: 8 };
 
   controls: IControlDef<IMapToolbarItem[]>[] = [
@@ -124,8 +125,10 @@ export class ContactComponent implements OnInit {
     this.addressService
       .getAddressesByContacts(this.actionData.payload)
       .pipe(
-        map(response =>
-          response.reduce((acc: IMarker<IAddressByContact>[], address) => {
+        map(response => {
+          // TODO(i.lobanov): refactor
+          const polylines = [];
+          const markers = response.reduce((acc: IMarker<IAddressByContact>[], address) => {
             const addressMarker = [{
               lat: address.contactLatitude,
               lng: address.contactLongitude,
@@ -153,16 +156,22 @@ export class ContactComponent implements OnInit {
                   tpl: this.tpl,
                 }
               );
+              polylines.push([
+                  { lat: address.contactLatitude, lng: address.contactLongitude },
+                  { lat: address.addressLatitude, lng: address.addressLongitude }
+              ]);
             }
             acc.push(...addressMarker);
             return acc;
-          }, []),
-        ),
+          }, []);
+          return [ markers, polylines ];
+        }),
       )
-      .filter(markers => Boolean(markers && markers.length))
-      .subscribe(markers => {
+      .filter(([markers, polylines]) => Boolean(markers && markers.length) || Boolean(polylines && polylines.length))
+      .subscribe(([markers, polylines]) => {
         this.options.center = { lat: markers[0].lat, lng: markers[0].lng };
         this.markers = markers;
+        this.polylines = polylines;
         this.cdRef.markForCheck();
       });
   }

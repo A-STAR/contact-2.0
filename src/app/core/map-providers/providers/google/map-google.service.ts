@@ -199,6 +199,38 @@ export class MapGoogleService<T> implements IMapService<T> {
     }
   }
 
+  createPolyline(latlngs: [google.maps.LatLng, google.maps.LatLng]): google.maps.Polyline {
+    const lineSymbol = {
+      path: 'M 0,-1 0,1',
+      strokeOpacity: 1,
+      scale: 4
+    };
+    const polyline = new google.maps.Polyline({
+      path: latlngs,
+      map: this._map,
+      icons: [
+        {
+          icon: lineSymbol,
+          offset: '0',
+          repeat: '20px'
+        }
+      ],
+    });
+    const popup = new google.maps.InfoWindow({
+      content: 'Test'
+    });
+    this._listeners.push(
+      polyline.addListener('mouseover', _ => {
+        popup.setPosition( this.getPolylineMiddlePoint(polyline));
+        popup.open(this._map);
+      }),
+      polyline.addListener('mouseout', _ => {
+        popup.close();
+      })
+    );
+    return polyline;
+  }
+
   createBounds(
     latlngs?: google.maps.LatLngLiteral[],
   ): google.maps.LatLngBounds {
@@ -258,6 +290,18 @@ export class MapGoogleService<T> implements IMapService<T> {
     if (entity && entity.marker && !(entity.marker as google.maps.Marker).getMap()) {
       (entity.marker as google.maps.Marker).setMap(this._map);
     }
+  }
+
+  private getPolylineMiddlePoint(poly: google.maps.Polyline): google.maps.LatLng {
+    const [ startLatLng, endLatLng ] = poly.getPath().getArray();
+    const projection = this._map.getProjection();
+    const startPoint = projection.fromLatLngToPoint(startLatLng);
+    const endPoint = projection.fromLatLngToPoint(endLatLng);
+    const midPoint = new google.maps.Point(
+      (startPoint.x + endPoint.x) / 2,
+      (startPoint.y + endPoint.y) / 2
+    );
+    return projection.fromPointToLatLng(midPoint);
   }
 
   private removeMarkers(): void {
