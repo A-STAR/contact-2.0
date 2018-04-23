@@ -2963,8 +2963,13 @@
     "addressesByContacts": {
       "title": "Просмотр мест регистрации контактов",
       "personFullName": "ФИО персоны",
-      "contactType": "Тип контакта",
-      "fullAddress": "Адрес"
+      "contactType": "Тип",
+      "fullAddress": "Адрес",
+      "commentary": "Commentary",
+      "userFullName": "Оператор",
+      "contactDateTime": "Дата контакта",
+      "resultName": "Результат",
+      "contract": "Договор"
     },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",

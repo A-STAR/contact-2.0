@@ -2963,8 +2963,13 @@
     "addressesByContacts": {
       "title": "View contact registrations",
       "personFullName": "Person Full Name",
-      "contactType": "Contact Type",
-      "fullAddress": "Address"
+      "contactType": "Type",
+      "fullAddress": "Address",
+      "commentary": "Commentary",
+      "userFullName": "Operator",
+      "contactDateTime": "Contact date",
+      "resultName": "Result",
+      "contract": "Contract"
     },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",

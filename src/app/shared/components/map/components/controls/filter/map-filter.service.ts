@@ -19,6 +19,7 @@ export class MapFilterService<T> {
     [MapFilters.ADDRESS_STATUS]: (entity, params: number[]) => params.includes(entity.data.statusCode),
     [MapFilters.ADDRESS_TYPE]: (entity, params: number[]) => params.includes(entity.data.typeCode),
     [MapFilters.VISIT_STATUS]: (entity, params: number[]) => params.includes(entity.data.visitStatus),
+    [MapFilters.CONTACT_TYPE]: (entity, params: number[]) => params.includes(entity.data.contactType),
   };
 
   constructor(

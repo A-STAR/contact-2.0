@@ -26,6 +26,8 @@ import { IncId } from '@app/core/utils';
 @Injectable()
 export class MapGoogleService<T> implements IMapService<T> {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
+  // TODO(i.lobanov): pass from client code
+  static MY_MAGIC_CONSTANT = 100;
 
   private static ICON_CONFIGS = {
     singleAddress: [
@@ -51,11 +53,34 @@ export class MapGoogleService<T> implements IMapService<T> {
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
-      { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+      { fillColor: '37bc9b', char: 'CR', textColor: 'd8d5e2' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'CA', textColor: 'd8d5e2' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'CW', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'CE', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
+  };
+
+  static ICON_CONFIG_GETTERS = {
+    singleAddress: (config: IMarkerIconConfig[], entity) => {
+      return entity.isInactive ?  {
+        ...config[entity.typeCode],
+        ...config[0],
+      } : {
+        ...config[entity.typeCode]
+      };
+    },
+    addressByPerson: MapGoogleService.ICON_CONFIG_GETTERS.singleAddress,
+    addressByContact: (config: IMarkerIconConfig[], entity) => {
+      if (entity.addressLatitude && entity.addressLongitude) {
+        const result = { ...config[entity.addressType] };
+        result.fillColor = entity.distance >= MapGoogleService.MY_MAGIC_CONSTANT ? '37bc9b' : 'fad732';
+        return result;
+      }
+      return {
+        ...config[config.length - 1],
+        char: 'C'
+      };
+    },
   };
 
   private libraryEl: HTMLScriptElement;
@@ -154,21 +179,12 @@ export class MapGoogleService<T> implements IMapService<T> {
     }%7C${config.fillColor}%7C${config.textColor}`;
   }
 
-  getIconConfig(
-    configKey: string,
-    entity: T,
-    typeProp: string = 'typeCode',
-    inactiveProp: string = 'isInactive',
-  ): IMarkerIconConfig {
+  getIconConfig(configKey: string, entity: T): IMarkerIconConfig {
     if (MapGoogleService.ICON_CONFIGS[configKey]) {
-      return entity[inactiveProp]
-        ? {
-            ...MapGoogleService.ICON_CONFIGS[configKey][entity[typeProp]],
-            ...MapGoogleService.ICON_CONFIGS[configKey][0],
-          }
-        : {
-            ...MapGoogleService.ICON_CONFIGS[configKey][entity[typeProp]],
-          };
+      return MapGoogleService.ICON_CONFIG_GETTERS[configKey] ?
+        MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity)
+          // no config getter found, return first config entry
+          : MapGoogleService.ICON_CONFIGS[configKey][0];
     } else {
       throw new Error(`No icon config for <${configKey}> was found!`);
     }
