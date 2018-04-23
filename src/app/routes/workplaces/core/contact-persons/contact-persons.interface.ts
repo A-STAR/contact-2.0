@@ -16,6 +16,7 @@ export interface IContactPerson {
   fullName: string;
   genderCode: number;
   lastName: string;
+  linkTypeCode: number;
   middleName: string;
   stageCode: number;
   stringValue10: string;

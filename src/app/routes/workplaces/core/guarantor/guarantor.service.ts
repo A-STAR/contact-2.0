@@ -13,11 +13,6 @@ import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class GuarantorService {
-  static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
-  static MESSAGE_GUARANTOR_SELECTED = 'MESSAGE_GUARANTOR_SELECTED';
-  static MESSAGE_GUARANTOR_SELECTION_CHANGED = 'MESSAGE_GUARANTOR_SELECTION_CHANGED';
-  static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
-
   private url = '/persons/search';
   private errSingular = 'entities.guarantors.gen.singular';
   private attrListConstants: { [key: string]: string } = {

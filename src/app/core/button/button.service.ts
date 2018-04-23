@@ -6,7 +6,7 @@ import { IButtonStyle, IButtonStylesConfig, IButtonType, IButtonTypesConfig } fr
 export class ButtonService {
   private defaultIcons: IButtonTypesConfig = {
     add:              { icon: 'co co-add',                  label: 'default.buttons.add'              },
-    addUser:          { icon: 'co co-add',                  label: 'default.buttons.addUser'          },
+    addUser:          { icon: 'co co-add-person',           label: 'default.buttons.addUser'          },
     back:             { icon: 'co co-back',                 label: 'default.buttons.back'             },
     block:            { icon: 'co co-lock',                 label: 'default.buttons.block'            },
     call:             { icon: 'co co-call-incoming',        label: 'default.buttons.call'             },

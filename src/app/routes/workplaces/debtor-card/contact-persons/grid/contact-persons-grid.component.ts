@@ -97,7 +97,7 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
       });
 
     this.busSubscription = this.contactPersonsService
-      .getAction(ContactPersonsService.MESSAGE_CONTACT_SAVED)
+      .getAction(ContactPersonsService.MESSAGE_CONTACT_PERSON_SAVED)
       .subscribe(() => this.fetch());
   }
 

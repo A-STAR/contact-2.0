@@ -98,6 +98,18 @@ export class GuarantorCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
+  get canSubmit(): boolean {
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const guarantorFormGroup = this.guarantorForm
+      ? this.guarantorForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
+    return contractFormValid && guarantorFormValid;
+  }
+
   ngAfterViewInit(): void {
     if (this.editing) {
       this.guaranteeService
@@ -129,7 +141,12 @@ export class GuarantorCardComponent implements AfterViewInit {
             : this.saveGuarantor();
         }),
         mergeMap(guarantorId => this.saveContract(guarantorId))
-      ).subscribe(() => this.onBack());
+      ).subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.guaranteeService.dispatchGuarantorSavedMessage();
+    this.onBack();
   }
 
   onBack(): void {
@@ -141,6 +158,9 @@ export class GuarantorCardComponent implements AfterViewInit {
   }
 
   private saveContract(guarantorId: number): Observable<void> {
+    if (!this.contractForm) {
+      return this.guaranteeService.addGuarantor(this.debtId, this.contractId, guarantorId);
+    }
     const { data } = this.contractForm;
     if (isEmpty(data)) {
       return of(null);

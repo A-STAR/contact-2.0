@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -40,6 +40,7 @@ export class PhoneCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -77,7 +78,8 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
-    // this.close.emit();
+    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
+    this.router.navigate([ url ]);
   }
 
   get canSubmit(): boolean {
