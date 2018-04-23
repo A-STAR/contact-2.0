@@ -141,16 +141,21 @@ export class ContactPersonCardComponent implements AfterViewInit {
           if (this.editing) {
             this.contactPersonsService
               .update(this.debtorId, this.personId, { linkTypeCode })
-              .subscribe(() => this.onBack());
+              .subscribe(() => this.onSuccess());
           } else {
             this.contactPersonsService
               .create(this.debtorId, { contactId: personId, linkTypeCode })
-              .subscribe(() => this.onBack());
+              .subscribe(() => this.onSuccess());
           }
         } else {
-          this.onBack();
+          this.onSuccess();
         }
       });
+  }
+
+  onSuccess(): void {
+    this.contactPersonsService.dispatchContactPersonSavedMessage();
+    this.onBack();
   }
 
   onBack(): void {

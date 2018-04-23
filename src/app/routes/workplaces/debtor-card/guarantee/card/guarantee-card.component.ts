@@ -141,7 +141,12 @@ export class GuarantorCardComponent implements AfterViewInit {
             : this.saveGuarantor();
         }),
         mergeMap(guarantorId => this.saveContract(guarantorId))
-      ).subscribe(() => this.onBack());
+      ).subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.guaranteeService.dispatchGuarantorSavedMessage();
+    this.onBack();
   }
 
   onBack(): void {
