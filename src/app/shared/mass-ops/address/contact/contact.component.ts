@@ -31,7 +31,6 @@ import {
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
 
 import { AddressService } from '../address.service';
-import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
 import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
@@ -119,7 +118,6 @@ export class ContactComponent implements OnInit {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     @Inject(MAP_SERVICE) private mapService: IMapService<IAddressByContact>,
-    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
