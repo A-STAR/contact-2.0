@@ -13,18 +13,18 @@
 </app-dialog>
 
 <ng-template #tpl let-data="data">
-    <div class="description">
-        <div *ngIf="data.personFullName" class="description-entry">
-          <span class="description-title">{{ 'massOperations.addressesByContacts.personFullName' | translate }}:</span>
-          <span class="description-info">{{ data.personFullName }} (ID: {{ data.personId }}) </span>
-        </div>
-        <div *ngIf="data.fullAddress" class="description-entry">
-            <span class="description-title">{{ 'massOperations.addressesByContacts.fullAddress' | translate }}:</span>
-            <span class="description-info">{{ data.fullAddress }}</span>
-        </div>
-        <div *ngIf="data.typeCode" class="description-entry">
-            <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
-            <span class="description-info">{{ data.typeCode | dict:21 }}</span>
-        </div>
+  <div class="description">
+      <div *ngIf="data.personFullName" class="description-entry">
+        <span class="description-title">{{ 'massOperations.addressesByContacts.personFullName' | translate }}:</span>
+        <span class="description-info">{{ data.personFullName }} (ID: {{ data.personId }}) </span>
       </div>
+      <div *ngIf="data.fullAddress" class="description-entry">
+          <span class="description-title">{{ 'massOperations.addressesByContacts.fullAddress' | translate }}:</span>
+          <span class="description-info">{{ data.fullAddress }}</span>
+      </div>
+      <div *ngIf="data.typeCode" class="description-entry">
+          <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
+          <span class="description-info">{{ data.typeCode | dict:21 }}</span>
+      </div>
+  </div>
 </ng-template>
