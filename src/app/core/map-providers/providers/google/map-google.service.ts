@@ -69,7 +69,14 @@ export class MapGoogleService<T> implements IMapService<T> {
         ...config[entity.typeCode]
       };
     },
-    addressByPerson: MapGoogleService.ICON_CONFIG_GETTERS.singleAddress,
+    addressByPerson: (config: IMarkerIconConfig[], entity) => {
+      return entity.isInactive ?  {
+        ...config[entity.typeCode],
+        ...config[0],
+      } : {
+        ...config[entity.typeCode]
+      };
+    },
     addressByContact: (config: IMarkerIconConfig[], entity) => {
       if (entity.addressLatitude && entity.addressLongitude) {
         const result = { ...config[entity.addressType] };
