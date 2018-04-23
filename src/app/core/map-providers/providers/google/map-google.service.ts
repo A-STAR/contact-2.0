@@ -161,6 +161,8 @@ export class MapGoogleService<T> implements IMapService<T> {
 
     this._map.controls[this.getControlPositionFromDef(controlDef.position)].push(el);
 
+    compRef.changeDetectorRef.detectChanges();
+
     return () => compRef;
   }
 
