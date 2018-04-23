@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -41,6 +41,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {
@@ -98,7 +99,8 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    // this.close.emit();
+    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
+    this.router.navigate([ url ]);
   }
 
   private onSubmit(data: any): void {
