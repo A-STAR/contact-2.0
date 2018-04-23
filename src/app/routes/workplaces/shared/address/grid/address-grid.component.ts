@@ -11,7 +11,7 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
@@ -71,6 +71,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   readonly canViewBlock$ = this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW');
 
   readonly canAdd$ = this.userPermissionsService.has('ADDRESS_ADD');
+
+  readonly selectedAddressId$ = this.selectedAddress$.pipe(
+    map(address => address ? address.id : null),
+  );
 
   readonly canEdit$ = combineLatestAnd([
     this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]),
