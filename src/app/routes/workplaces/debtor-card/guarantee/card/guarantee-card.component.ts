@@ -154,7 +154,7 @@ export class GuarantorCardComponent implements AfterViewInit {
 
   private saveContract(guarantorId: number): Observable<void> {
     if (!this.contractForm) {
-      return of(null);
+      return this.guaranteeService.addGuarantor(this.debtId, this.contractId, guarantorId);
     }
     const { data } = this.contractForm;
     if (isEmpty(data)) {
