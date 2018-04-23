@@ -19,6 +19,7 @@ import {
   IMapToolbarFilterItem,
   MapToolbarFilterItemType,
   IMapToolbarActionData,
+  IMapToolbarItem,
 } from '../toolbar/map-toolbar.interface';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 import { MapFilterService } from '@app/shared/components/map/components/controls/filter/map-filter.service';
@@ -48,7 +49,7 @@ export class MapFilterComponent<T> implements OnInit {
     this.map = this.mapService.getMap();
   }
 
-  isDisabled(item: IMapToolbarFilterItem): Observable<boolean> {
+  isDisabled(item: IMapToolbarFilterItem | IMapToolbarItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
