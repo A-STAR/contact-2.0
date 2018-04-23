@@ -50,7 +50,7 @@ export class ButtonService {
   };
 
   private styles: IButtonStylesConfig = {
-    none: 'btn-link',
+    none: 'btn-link ph0',
     default: 'btn-default',
     primary: 'btn-success',
     secondary: 'btn-primary',
@@ -66,7 +66,7 @@ export class ButtonService {
     return this.defaultIcons[type] ? this.defaultIcons[type].label : null;
   }
 
-  getClass(style: IButtonStyle): string {
-    return this.styles[style];
+  getClass(style: IButtonStyle, withBtnClass: boolean = true): string {
+    return (withBtnClass ? 'btn ' : '') + this.styles[style];
   }
 }
