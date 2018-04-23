@@ -8,6 +8,7 @@ import { MapFilters } from './map-filter.interface';
 import { IMapService } from '@app/core/map-providers/map-providers.interface';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
+import { isEmpty } from '@app/core/utils';
 
 @Injectable()
 export class MapFilterService<T> {
@@ -16,10 +17,11 @@ export class MapFilterService<T> {
     [MapFilters.ALL]: (_, params: boolean) => params,
     [MapFilters.RESET]: (_, __) => true,
     [MapFilters.INACTIVE]: (entity, _) => Boolean(entity.data.isInactive),
-    [MapFilters.ADDRESS_STATUS]: (entity, params: number[]) => params.includes(entity.data.statusCode),
-    [MapFilters.ADDRESS_TYPE]: (entity, params: number[]) => params.includes(entity.data.typeCode),
-    [MapFilters.VISIT_STATUS]: (entity, params: number[]) => params.includes(entity.data.visitStatus),
-    [MapFilters.CONTACT_TYPE]: (entity, params: number[]) => params.includes(entity.data.contactType),
+    [MapFilters.ADDRESS_STATUS]: (entity, params: number[]) => isEmpty(params) || params.includes(entity.data.statusCode),
+    [MapFilters.ADDRESS_TYPE]: (entity, params: number[]) => isEmpty(params) ||
+      params.includes(entity.data.addressTypeCode || entity.data.typeCode),
+    [MapFilters.VISIT_STATUS]: (entity, params: number[]) => isEmpty(params) || params.includes(entity.data.visitStatus),
+    [MapFilters.CONTACT_TYPE]: (entity, params: number[]) => isEmpty(params) || params.includes(entity.data.contactType),
     [MapFilters.HIDE_ADDRESSES]: (entity, params: boolean) => !params &&
       !entity.data.addressLatitude || !entity.data.addressLongitude,
   };

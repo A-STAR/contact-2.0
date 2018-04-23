@@ -85,7 +85,7 @@ export class AddressComponent implements OnInit {
               type: MapToolbarFilterItemType.DICTIONARY,
               filter: MapFilters.ADDRESS_STATUS,
               label: 'massOperations.addressesByContacts.filter.filterByStatusType',
-              dictCode: 21,
+              dictCode: 22,
               enabled: of(true),
               preserveOnClick: true,
             },

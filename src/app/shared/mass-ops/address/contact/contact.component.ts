@@ -85,14 +85,6 @@ export class ContactComponent implements OnInit {
             },
             {
               type: MapToolbarFilterItemType.DICTIONARY,
-              filter: MapFilters.ADDRESS_STATUS,
-              label: 'massOperations.addressesByContacts.filter.filterByStatusType',
-              dictCode: 21,
-              enabled: of(true),
-              preserveOnClick: true,
-            },
-            {
-              type: MapToolbarFilterItemType.DICTIONARY,
               filter: MapFilters.CONTACT_TYPE,
               label: 'massOperations.addressesByContacts.filter.filterByContactType',
               dictCode: 50,
@@ -100,22 +92,7 @@ export class ContactComponent implements OnInit {
               preserveOnClick: true,
             },
             {
-              type: MapToolbarFilterItemType.DICTIONARY,
-              filter: MapFilters.VISIT_STATUS,
-              label: 'massOperations.addressesByContacts.filter.filterByVisitType',
-              dictCode: 21,
-              enabled: of(true),
-              preserveOnClick: true,
-            },
-            {
               type: MapToolbarFilterItemType.SEPARATOR,
-            },
-            {
-              type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.INACTIVE,
-              label: 'massOperations.addressesByContacts.filter.showInactives',
-              enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
-              checked: true
             },
             {
               type: MapToolbarFilterItemType.CHECKBOX,
