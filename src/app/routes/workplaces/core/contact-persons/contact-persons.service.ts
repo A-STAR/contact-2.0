@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContact, IContactLink } from './contact-persons.interface';
+import { IContactPerson, IContactLink } from './contact-persons.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -15,7 +15,7 @@ export class ContactPersonsService extends AbstractActionService {
   static MESSAGE_CONTACT_SAVED = 'MESSAGE_CONTACT_SAVED';
 
   private baseUrl = '/persons/{personId}/contactpersons';
-  private extUrl = `${this.baseUrl}/{contactId}`;
+  private extUrl = `${this.baseUrl}/{contactPersonId}`;
 
   constructor(
     protected actions: Actions,
@@ -26,33 +26,45 @@ export class ContactPersonsService extends AbstractActionService {
     super();
   }
 
-  fetchAll(personId: number): Observable<IContact[]> {
+  fetchAll(personId: number): Observable<IContactPerson[]> {
     return this.dataService
       .readAll(this.baseUrl, { personId })
       .catch(this.notificationsService.fetchError().entity('entities.contacts.gen.plural').dispatchCallback());
   }
 
-  fetch(personId: number, contactId: number): Observable<IContact> {
+  /**
+   * @param personId        ID of person
+   * @param contactPersonId ID of link in contact_person pivot table
+   */
+  fetch(personId: number, contactPersonId: number): Observable<IContactPerson> {
     return this.dataService
-      .read(this.extUrl, { personId, contactId })
+      .read(this.extUrl, { personId, contactPersonId })
       .catch(this.notificationsService.fetchError().entity('entities.contacts.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, contact: IContactLink): Observable<any> {
+  create(personId: number, contact: Partial<IContactLink>): Observable<any> {
     return this.dataService
       .create(this.baseUrl, { personId }, contact)
       .catch(this.notificationsService.createError().entity('entities.contacts.gen.singular').dispatchCallback());
   }
 
-  update(personId: number, contactId: number, contact: IContactLink): Observable<any> {
+  /**
+   * @param personId        ID of person
+   * @param contactPersonId ID of link in contact_person pivot table
+   */
+  update(personId: number, contactPersonId: number, contact: Partial<IContactLink>): Observable<any> {
     return this.dataService
-      .update(this.extUrl, { personId, contactId }, contact)
+      .update(this.extUrl, { personId, contactPersonId }, contact)
       .catch(this.notificationsService.updateError().entity('entities.contacts.gen.singular').dispatchCallback());
   }
 
-  delete(personId: number, contactId: number): Observable<any> {
+  /**
+   * @param personId        ID of person
+   * @param contactPersonId ID of link in contact_person pivot table
+   */
+  delete(personId: number, contactPersonId: number): Observable<any> {
     return this.dataService
-      .delete(this.extUrl, { personId, contactId })
+      .delete(this.extUrl, { personId, contactPersonId })
       .catch(this.notificationsService.deleteError().entity('entities.contacts.gen.singular').dispatchCallback());
   }
 }
