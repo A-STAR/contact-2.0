@@ -99,7 +99,15 @@ export class GuarantorCardComponent implements AfterViewInit {
   ) {}
 
   get canSubmit(): boolean {
-    return this.contractForm.formGroup.valid && (this.guarantorForm.formGroup.valid || this.guarantorForm.formGroup.disabled);
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const guarantorFormGroup = this.guarantorForm
+      ? this.guarantorForm.formGroup
+      : null;
+    const contractFormValid = contractFormGroup && contractFormGroup.valid;
+    const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
+    return contractFormValid && guarantorFormValid;
   }
 
   ngAfterViewInit(): void {

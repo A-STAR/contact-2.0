@@ -93,7 +93,15 @@ export class ContactPersonCardComponent implements AfterViewInit {
   ) {}
 
   get canSubmit(): boolean {
-    return this.linkForm.formGroup.valid && (this.contactPersonForm.formGroup.valid || this.contactPersonForm.formGroup.disabled);
+    const linkFormGroup = this.linkForm
+      ? this.linkForm.formGroup
+      : null;
+    const personFormGroup = this.contactPersonForm
+      ? this.contactPersonForm.formGroup
+      : null;
+    const linkFormValid = linkFormGroup && linkFormGroup.valid;
+    const personFormValid = personFormGroup && (personFormGroup.valid || personFormGroup.disabled);
+    return linkFormValid && personFormValid;
   }
 
   ngAfterViewInit(): void {
