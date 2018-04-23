@@ -6,7 +6,7 @@
   </div>
 
   <!-- Form -->
-  <div class="flex-item grow" style="overflow-y: auto;">
+  <div class="flex-item grow mb-lg" style="overflow-y: auto;">
     <app-titlebar [titlebar]="contactPersonTitlebar"></app-titlebar>
     <app-metadata-form
       #linkForm
@@ -23,7 +23,7 @@
   </div>
 
   <!-- Additional Info -->
-  <div *ngIf="edit$ | async" class="flex-item grow">
+  <div *ngIf="edit$ | async" class="flex-item grow mb-lg">
     <app-tabview [fullHeight]="true">
 
       <!-- Identifications -->
