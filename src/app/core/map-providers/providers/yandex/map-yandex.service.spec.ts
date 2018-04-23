@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { MapYandexService } from './map-yandex.service';
 import { ConfigService } from '@app/core/config/config.service';
-import { PopupService } from '../../popups/popup.service';
+import { MapRendererService } from '../../renderer/map-renderer.service';
+import { MapYandexService } from './map-yandex.service';
 
 
 class MockConfigService {
@@ -17,7 +17,7 @@ class MockConfigService {
    };
 }
 
-class MockPopupService {
+class MockMapRendererService {
   render(): any {
     return { compRef: {}, el: {} };
   }
@@ -33,8 +33,8 @@ describe('MapYandexService', () => {
           useClass: MockConfigService
         },
         {
-          provide: PopupService,
-          useClass: MockPopupService
+          provide: MapRendererService,
+          useClass: MockMapRendererService
         }
       ]
     });

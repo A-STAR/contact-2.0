@@ -20,10 +20,13 @@ export interface IAddressByContact extends IAddressResponce, IContact {
   contactLongitude: number;
   accuracy: number;
   addressTypeCode: number;
+  visitStatus?: number;
   distance: number;
   comment: string;
   userId: number;
   typeCode?: number;
   isInactive?: boolean;
+  addressLatitude?: number;
+  addressLongitude?: number;
 }
 

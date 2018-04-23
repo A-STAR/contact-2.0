@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { DictionaryModule } from '@app/shared/pipes/dictionary/dictionary.module';
 import { MapModule } from '@app/shared/components/map/map.module';
+import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 
 import { AddressService } from './address.service';
 
@@ -17,6 +18,7 @@ import { ContactComponent } from './contact/contact.component';
     DialogModule,
     DictionaryModule,
     MapModule,
+    MomentModule,
     TranslateModule,
   ],
   providers: [

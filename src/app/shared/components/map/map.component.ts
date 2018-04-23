@@ -1,18 +1,28 @@
 import {
   Component,
   Inject,
-  InjectionToken,
   ViewChild,
   ElementRef,
   AfterViewInit,
   Input,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  DoCheck
+  OnDestroy
 } from '@angular/core';
-import { IMapService, IMarker, PopupComponentRefGetter, IMapOptions, ILatLng } from './map.interface';
+import { empty } from 'rxjs/observable/empty';
 
-export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
+import {
+  IMapService,
+  IMarker,
+  IMapOptions,
+  ILatLng,
+  IControlDef,
+  IMapComponents,
+} from '@app/core/map-providers/map-providers.interface';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+
+import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
+import { tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -21,7 +31,7 @@ export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent<T> implements AfterViewInit, DoCheck {
+export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
@@ -33,15 +43,19 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
     },
   };
 
+  @Input() controls: IControlDef<T>[];
+
   @Input() styles: CSSStyleDeclaration;
 
+  static MAX_MAP_ZOOM: 8;
   map: any;
-  private popups: PopupComponentRefGetter<T>[];
+  private components: IMapComponents<T> = {};
   private bounds;
 
   constructor(
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<T>,
     private cdRef: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
   ) { }
 
   ngAfterViewInit(): void {
@@ -52,46 +66,71 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
           ...this.options,
         }
       )
-      .subscribe((map: any) => {
-        this.map = map;
-        this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-        this.addMarkers(this.markers);
-        this.fitBounds();
-        this.detectPopupsChanges();
-        this.cdRef.markForCheck();
-      });
+      .catch( e => {
+        this.notificationsService.fetchError(e).dispatch();
+        return empty();
+      })
+      .pipe(
+        tap((map: any) => {
+          if (map) {
+            this.map = map;
+            this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
+            this.addMarkers(this.markers);
+            this.addControls(this.controls);
+            this.cdRef.markForCheck();
+          }
+        }),
+        // NOTE: the only way I found to fit bounds properly, is when map already has size (i.lobanov)
+        delay(200)
+      )
+      .subscribe(_ => this.fitBounds());
+
   }
 
-  ngDoCheck(): void {
-    this.detectPopupsChanges();
-  }
-
-  detectPopupsChanges(): void {
-    if (this.popups && this.popups.length) {
-      this.popups
-        .map(cmpRef => cmpRef())
-        .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
-        .forEach(cmp => cmp.changeDetectorRef.detectChanges());
-    }
+  ngOnDestroy(): void {
+    this.removeComponents(this.components);
+    this.mapService.removeMap();
+    this.components = {};
   }
 
   addMarkers(markers: IMarker<T>[]): void {
     if (markers && markers.length) {
-      this.popups = markers
-        .map(marker => this.mapService.createMarker<T>(this.map, marker))
-        .map(({ popupRef, marker }) => {
+      this.components.popups = markers
+        .map(marker => this.mapService.createMarker(marker))
+        .map(({ popupRef, entity }) => {
+
           if (this.options.fitToData) {
-            this.bounds.extend(this.getLatLng(marker));
+            this.bounds.extend(this.getLatLng(entity.marker));
           }
+
           return popupRef;
         })
         .filter(Boolean);
     }
   }
 
+  addControls(controls: IControlDef<T>[]): void {
+    if (controls && controls.length) {
+      this.components.controls = controls.map(cDef => this.mapService.createControl(cDef));
+    }
+  }
+
+  removeComponents(cmps: IMapComponents<T>): void {
+    const componentTypes = Object.keys(cmps);
+    if (componentTypes && componentTypes.length) {
+      componentTypes
+        .map(cmpType => cmps[cmpType].map(cmpRef => cmpRef())
+          .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
+          .forEach(cmp => cmp.changeDetectorRef.destroy()));
+    }
+  }
+
   private fitBounds(): void {
     if (this.options.fitToData && this.map) {
       this.map.fitBounds(this.bounds);
+      if (this.map.getZoom() > MapComponent.MAX_MAP_ZOOM) {
+        this.map.setZoom(MapComponent.MAX_MAP_ZOOM);
+      }
     }
   }
 

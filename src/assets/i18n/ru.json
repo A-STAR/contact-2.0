@@ -2963,8 +2963,23 @@
     "addressesByContacts": {
       "title": "Просмотр мест регистрации контактов",
       "personFullName": "ФИО персоны",
-      "contactType": "Тип контакта",
-      "fullAddress": "Адрес"
+      "contactType": "Тип",
+      "fullAddress": "Адрес",
+      "commentary": "Комментарий",
+      "userFullName": "Оператор",
+      "contactDateTime": "Дата контакта",
+      "resultName": "Результат",
+      "contract": "Договор",
+      "filter": {
+        "filterByAddressType": "Фильтр по типу адреса",
+        "filterByStatusType": "Фильтр по типу статуса",
+        "filterByContactType": "Фильтр по типу контакта",
+        "filterByVisitType": "Фильтр по типу выезда",
+        "hideAddresses": "Скрыть адреса",
+        "showAllAdresses": "Отображать все адреса",
+        "showInactives": "Отображать все заблокированные адреса",
+        "resetFilter": "Сбросить фильтр"
+      }
     },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",

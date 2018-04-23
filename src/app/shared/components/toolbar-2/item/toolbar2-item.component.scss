@@ -1,11 +1,32 @@
 @import '../../../../shared/styles/app/variables.scss';
+$checkbox-size: 15px;
+
+.toolbar-item {
+  display: inline-block;
+  vertical-align: middle;
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+  &.align-right {
+    float: right;
+    margin-right: 0;
+    padding-left: 8px;
+  }
+}
+
+.checkbox {
+  display: inline-block;
+  label {
+    padding-left: $checkbox-size;
+  }
+  input[type="checkbox"] {
+    margin-left: -$checkbox-size;
+  }
+}
 
 $toolbar-button-size: 32px;
 
-// NOTE: too messy because of the .btn-default bootstrap styles
-// TODO(a.tymchuk): refactor & remove .btn-default
-
-button {
+::ng-deep .toolbar2-button {
   display: inline-block;
   width: $toolbar-button-size;
   height: $toolbar-button-size;
@@ -16,6 +37,7 @@ button {
   line-height: $toolbar-button-size + 4px;
   &.btn-default {
     color: $form-toolbar-icon-color;
+    border-color: transparent;
     &:hover {
       color: $form-toolbar-icon-color;
       border-color: transparent;

@@ -1,4 +1,8 @@
-<app-map [markers]="markers" [styles]="{ height: '500px' }"></app-map>
+<app-map
+  [markers]="markers"
+  [styles]="{ height: '500px' }"
+  [controls]="controls"
+></app-map>
 <br>
 <h2> Dynamic popup content </h2>
 <div class="flex maps-markers-popup-inputs" *ngIf="markers && markers.length">
