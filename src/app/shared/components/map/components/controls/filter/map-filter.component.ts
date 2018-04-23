@@ -21,8 +21,8 @@ import {
   IMapToolbarActionData,
   IMapToolbarItem,
 } from '../toolbar/map-toolbar.interface';
-import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 import { MapFilterService } from '@app/shared/components/map/components/controls/filter/map-filter.service';
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
   selector: 'app-map-filter',
