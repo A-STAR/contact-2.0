@@ -78,7 +78,7 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
                   filter: MapFilters.ALL,
-                  label: 'Отображать все адреса',
+                  label: 'massOperations.addressesByContacts.filter.showAllAdresses',
                   enabled: of(true),
                   checked: true
                 },
@@ -88,7 +88,7 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
                   filter: MapFilters.ADDRESS_TYPE,
-                  label: 'Фильтр по типу адреса',
+                  label: 'massOperations.addressesByContacts.filter.filterByAddressType',
                   dictCode: 21,
                   enabled: of(true),
                   preserveOnClick: true,
@@ -96,15 +96,23 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
                   filter: MapFilters.ADDRESS_STATUS,
-                  label: 'Фильтр по статусу адреса',
+                  label: 'massOperations.addressesByContacts.filter.filterByStatusType',
                   dictCode: 21,
                   enabled: of(true),
                   preserveOnClick: true,
                 },
                 {
                   type: MapToolbarFilterItemType.DICTIONARY,
+                  filter: MapFilters.CONTACT_TYPE,
+                  label: 'massOperations.addressesByContacts.filter.filterByContactType',
+                  dictCode: 50,
+                  enabled: of(true),
+                  preserveOnClick: true,
+                },
+                {
+                  type: MapToolbarFilterItemType.DICTIONARY,
                   filter: MapFilters.VISIT_STATUS,
-                  label: 'Фильтр по типу выезда',
+                  label: 'massOperations.addressesByContacts.filter.filterByVisitType',
                   dictCode: 21,
                   enabled: of(true),
                   preserveOnClick: true,
@@ -115,7 +123,7 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
                   filter: MapFilters.INACTIVE,
-                  label: 'Отображать все заблокированные адреса',
+                  label: 'massOperations.addressesByContacts.filter.showInactives',
                   // enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
                   enabled: of(true),
                   checked: true
@@ -126,7 +134,7 @@ export class MapsComponent implements OnInit {
                 {
                   type: MapToolbarFilterItemType.BUTTON,
                   filter: MapFilters.RESET,
-                  label: 'Сбросить фильтр',
+                  label: 'massOperations.addressesByContacts.filter.resetFilter',
                   enabled: of(true),
                 },
               ]

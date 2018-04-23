@@ -2969,7 +2969,16 @@
       "userFullName": "Оператор",
       "contactDateTime": "Дата контакта",
       "resultName": "Результат",
-      "contract": "Договор"
+      "contract": "Договор",
+      "filter": {
+        "filterByAddressType": "Фильтр по типу адреса",
+        "filterByStatusType": "Фильтр по типу статуса",
+        "filterByContactType": "Фильтр по типу контакта",
+        "filterByVisitType": "Фильтр по типу выезда",
+        "showAllAdresses": "Отображать все адреса",
+        "showInactives": "Отображать все заблокированные адреса",
+        "resetFilter": "Сбросить фильтр"
+      }
     },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",

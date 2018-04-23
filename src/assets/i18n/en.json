@@ -2969,7 +2969,16 @@
       "userFullName": "Operator",
       "contactDateTime": "Contact date",
       "resultName": "Result",
-      "contract": "Contract"
+      "contract": "Contract",
+      "filter": {
+        "filterByAddressType": "Filter by address type",
+        "filterByStatusType": "Filter by status type",
+        "filterByContactType": "Filter by contact type",
+        "filterByVisitType": "Filter by visit type",
+        "showAllAdresses": "Show all addresses",
+        "showInactives": "Show inactive addresses",
+        "resetFilter": "Reset filter"
+      }
     },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",

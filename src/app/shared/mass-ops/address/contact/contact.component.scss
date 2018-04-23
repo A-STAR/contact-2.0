@@ -2,3 +2,7 @@
   height: 600px;
   width: 100%;
 }
+
+:host ::ng-deep .map-toolbar-placement {
+  margin-bottom: 5px;
+}
