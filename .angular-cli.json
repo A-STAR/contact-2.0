@@ -10,9 +10,16 @@
       "assets": [
         "assets",
         "favicon.ico",
-        "ext-tern.js",
-        "worker-tern.js",
-        "worker-javascript.js"
+        {
+          "glob": "ext-tern.js",
+          "input": "../node_modules/ng-ace-tern/ace-builds/src-noconflict/",
+          "output": "./"
+        },
+        {
+          "glob": "worker-tern.js",
+          "input": "../node_modules/ng-ace-tern/ace-builds/src-noconflict/",
+          "output": "./"
+        }
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -34,10 +41,9 @@
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "../node_modules/summernote/dist/summernote.js",
         "../node_modules/ng-ace-tern/ace-builds/src-noconflict/ace.js",
-        "../node_modules/ng-ace-tern/ace-builds/src-noconflict/worker-tern.js",
         "../node_modules/ng-ace-tern/ace-builds/src-noconflict/snippets/javascript.js",
         "../node_modules/ng-ace-tern/ace-builds/src-noconflict/theme-eclipse.js",
-        "../node_modules/ng-ace-tern/ace-builds/src-noconflict/mode-javascript.js"
+        "./app/shared/components/form/script-editor/mode-javascript.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
