@@ -105,7 +105,7 @@ export class GuarantorCardComponent implements AfterViewInit {
     const guarantorFormGroup = this.guarantorForm
       ? this.guarantorForm.formGroup
       : null;
-    const contractFormValid = contractFormGroup && contractFormGroup.valid;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
     const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
     return contractFormValid && guarantorFormValid;
   }
@@ -153,6 +153,9 @@ export class GuarantorCardComponent implements AfterViewInit {
   }
 
   private saveContract(guarantorId: number): Observable<void> {
+    if (!this.contractForm) {
+      return of(null);
+    }
     const { data } = this.contractForm;
     if (isEmpty(data)) {
       return of(null);
