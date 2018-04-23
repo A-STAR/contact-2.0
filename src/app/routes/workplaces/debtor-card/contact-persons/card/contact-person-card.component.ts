@@ -1,13 +1,20 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+
 import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+
+import { invert } from '@app/core/utils';
 
 import { contactPersonFormConfig } from './config/contact-person-form';
 
@@ -60,12 +67,26 @@ export class ContactPersonCardComponent implements AfterViewInit {
     map(data => data.showContractForm),
   );
 
+  readonly contactPersonTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: this.edit$.pipe(map(invert)),
+      },
+    ]
+  };
+
   constructor(
     private contactPersonCardService: ContactPersonCardService,
     private contactPersonsService: ContactPersonsService,
+    private injector: Injector,
     private personService: PersonService,
+    private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
   ngAfterViewInit(): void {
@@ -118,5 +139,9 @@ export class ContactPersonCardComponent implements AfterViewInit {
     if (debtId && debtorId) {
       this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
     }
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
   }
 }
