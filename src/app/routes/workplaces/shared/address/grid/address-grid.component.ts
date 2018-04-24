@@ -51,7 +51,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this._personId$.next(personId);
     this.cdRef.markForCheck();
   }
-  @Input() personRole: number;
+
+  @Input('personRole')
+  set personRole(personRole: number) {
+    this._personRole$.next(personRole);
+    this.cdRef.markForCheck();
+  }
 
   @Output() add = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<IAddress>();
@@ -60,6 +65,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _debtId$ = new BehaviorSubject<number>(null);
   private _personId$ = new BehaviorSubject<number>(null);
+  private _personRole$ = new BehaviorSubject<number>(null);
 
   readonly selectedAddress$ = new BehaviorSubject<IAddress>(null);
   readonly debtId$ = this._debtId$;
@@ -117,7 +123,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ]);
 
   readonly canGenerateLetter$ = combineLatestAnd([
-    this.userPermissionsService.contains('LETTER_FORM_PERSON_ROLE_LIST', this.personRole),
+    this._personRole$.flatMap(personRole => this.userPermissionsService.contains('LETTER_FORM_PERSON_ROLE_LIST', personRole)),
     this.selectedAddress$.map(address => address && !address.isInactive)
   ]);
 
