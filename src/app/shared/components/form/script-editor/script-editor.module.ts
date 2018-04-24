@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { ScriptEditorComponent } from './script-editor.component';
 
-import { AceEditorDirective } from './ng-ace.directive';
+import { ScriptEditorDirective } from './script-editor.directive';
+
+import { ScriptEditorService } from './script-editor.service';
 
 @NgModule({
   imports: [
@@ -14,7 +16,10 @@ import { AceEditorDirective } from './ng-ace.directive';
   ],
   declarations: [
     ScriptEditorComponent,
-    AceEditorDirective,
+    ScriptEditorDirective,
   ],
+  providers: [
+    ScriptEditorService
+  ]
 })
 export class ScriptEditorModule {}

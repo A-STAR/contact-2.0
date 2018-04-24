@@ -6,8 +6,12 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { AceEditorDirective } from './ng-ace.directive';
+import { ScriptEditorDirective } from './script-editor.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
+
+import { ScriptEditorService } from '@app/shared/components/form/script-editor/script-editor.service';
 
 @Component({
   selector: 'app-script-editor',
@@ -23,8 +27,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScriptEditorComponent implements ControlValueAccessor, AfterViewInit {
-  @ViewChild(AceEditorDirective) editor: AceEditorDirective;
+  @ViewChild(ScriptEditorDirective) editor: ScriptEditorDirective;
 
+  @Input() metadata: IScriptEditorMetadata[];
   @Input() options: any = {};
   @Input() isDisabled = false;
 
@@ -33,10 +38,25 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
 
   value: string;
 
+  constructor(private scriptEditorService: ScriptEditorService) {
+  }
+
   ngAfterViewInit(): void {
     this.editor.options = {
+      enableTern: {
+        defs: this.scriptEditorService.createScriptEditorDefs(this.metadata),
+        plugins: {
+          doc_comment: {
+            fullDocs: true
+          }
+        },
+        useWorker: this.editor.getEditor().getSession().getUseWorker(),
+        ...this.options
+      },
+      enableSnippets: true,
+      enableBasicAutocompletion: true,
     };
-    this.editor.editor.on('focus', () => this.propagateTouch());
+    this.editor.getEditor().on('focus', () => this.propagateTouch());
   }
 
   writeValue(value: string): void {
