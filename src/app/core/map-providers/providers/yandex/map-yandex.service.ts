@@ -81,6 +81,11 @@ export class MapYandexService<T> implements IMapService<T> {
     return _ => ({} as T);
   }
 
+  createPolyline(): any {
+    // TODO(i.lobanov): implement;
+    return {};
+  }
+
   getIconConfig(): IMarkerIconConfig {
     // TODO(i.lobanov): implement;
     return {};

@@ -5,6 +5,7 @@
   <div class="contact-map-container" *ngIf="markers && options">
     <app-map
       [markers]="markers"
+      [polylines]="polylines"
       [options]="options"
       [styles]="{ height: '500px' }"
       [controls]="controls">
@@ -32,7 +33,11 @@
     </div>
     <div *ngIf="data.contactType" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
-      <span class="description-info">{{ data.contactType | dict:50 }}, {{ 'massOperations.addressesByContacts.resultName' | translate }}: {{ data.resultName }}</span>
+      <span class="description-info">{{ data.contactType | dict:50 }}</span>
+    </div>
+    <div *ngIf="data.resultName" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.resultName' | translate }}:</span>
+      <span class="description-info">{{ data.resultName }}</span>
     </div>
     <div *ngIf="data.comment" class="description-entry">
       <span class="description-title">{{ 'massOperations.addressesByContacts.commentary' | translate }}:</span>

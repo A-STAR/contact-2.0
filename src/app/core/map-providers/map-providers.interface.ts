@@ -8,6 +8,7 @@ import {
   Map,
   LatLngBounds,
   LatLngBoundsLiteral,
+  Polyline,
 } from 'leaflet';
 
 export interface IMapModuleOptions {
@@ -25,6 +26,7 @@ export interface IMapService<T> {
   createBounds(latlngs?: LatLngBoundsLiteral | google.maps.LatLngLiteral[]): LatLngBounds | google.maps.LatLngBounds;
   createControl(controlDef: IControlDef<T>): ControlComponentRefGetter<T>;
   createMarker(markerDef: IMarker<T>): ICreateMarkerResult<T>;
+  createPolyline(latlngs: ILatLng[]): google.maps.Polyline | Polyline;
   getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
   getIconConfig(configKey: string, entity: T): IMarkerIconConfig;
   getMap(): google.maps.Map | Map;
