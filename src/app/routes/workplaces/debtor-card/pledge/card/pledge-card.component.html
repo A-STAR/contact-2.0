@@ -24,7 +24,7 @@
 
       <!-- Pledgor Form -->
       <div *ngIf="showPledgorForm" class="flex-item grow ph">
-        <h2 appPopupOutlet="select-person" [disabled]="edit">
+        <h2 appPopupOutlet="select-person" [disabled]="editMode">
           {{ 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title' | translate }}
         </h2>
         <app-metadata-form
@@ -38,7 +38,7 @@
 
       <!-- Property Form -->
       <div class="flex-item grow pl">
-        <h2 appPopupOutlet="select-property" [disabled]="edit">
+        <h2 appPopupOutlet="select-property" [disabled]="editMode">
           {{ 'routes.workplaces.debtorCard.pledge.card.forms.property.title' | translate }}
         </h2>
         <app-metadata-form
@@ -53,7 +53,7 @@
   </div>
 
   <!-- Additional Info -->
-  <div *ngIf="edit" class="flex-item grow">
+  <div *ngIf="editMode" class="flex-item grow">
     <app-tabview [fullHeight]="true">
 
       <!-- Identifications -->

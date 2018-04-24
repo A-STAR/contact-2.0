@@ -9,7 +9,6 @@ import {
   IPledgeContract,
   IPledgeContractInformation,
   IContractInformation,
-  IContractProperty,
   IContractPledgor,
 } from './pledge.interface';
 
@@ -41,6 +40,10 @@ export class PledgeService extends AbstractActionService {
   readonly canEdit$ = this.userPermissionsService.has('PLEDGE_EDIT');
   readonly canDelete$ = this.userPermissionsService.has('PLEDGE_DELETE');
 
+  dispatchPledgeSavedMessage(): void {
+    this.dispatchAction(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
+  }
+
   fetchAll(debtId: number): Observable<Array<IPledgeContract>> {
     return this.dataService
       .readAll(this.baseUrl, { debtId })
@@ -61,45 +64,21 @@ export class PledgeService extends AbstractActionService {
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
-  updateProperty(
-    debtId: number,
-    contractId: number,
-    pledgorId: number,
-    propertyId: number,
-    property: IContractProperty,
-  ): Observable<any> {
-    return this.dataService
-      .update(
-        `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
-        { debtId, contractId, pledgorId, propertyId },
-        property
-      ).catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
-  }
-
   create(debtId: number, contract: IPledgeContractInformation): Observable<any> {
     return this.dataService
       .create(this.baseUrl, { debtId }, contract)
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
-  update(
-    debtId: number,
-    contractId: number,
-    pledgorId: number,
-    propertyId: number,
-    contract: IContractInformation,
-    property: IContractProperty,
-  ): Observable<any> {
-    return this.dataService.update(`${this.baseUrl}/{contractId}`, { debtId, contractId }, contract).concatMap(
-      () => this.updateProperty(debtId, contractId, pledgorId, propertyId, property)
-    ).catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
+  update(debtId: number, contractId: number, contract: IContractInformation): Observable<any> {
+    return this.dataService.update(`${this.baseUrl}/{contractId}`, { debtId, contractId }, contract)
+      .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 
   delete(debtId: number, contractId: number, pledgorId: number, propertyId: number): Observable<any> {
+    const url = `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`;
     return this.dataService
-      .delete(
-        `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
-        { debtId, contractId, pledgorId, propertyId }
-      ).catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
+      .delete(url, { debtId, contractId, pledgorId, propertyId })
+        .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 }
