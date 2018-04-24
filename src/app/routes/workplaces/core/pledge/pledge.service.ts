@@ -2,7 +2,7 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs/Subject';
+import { catchError } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
 import {
@@ -26,8 +26,6 @@ export class PledgeService extends AbstractActionService {
   private baseUrl = '/debts/{debtId}/pledgeContract';
   private errSingular = 'entities.pledgeContract.gen.singular';
 
-  private contracts$ = new Subject<IPledgeContract[]>();
-
   constructor(
     protected actions: Actions,
     private dataService: DataService,
@@ -38,63 +36,23 @@ export class PledgeService extends AbstractActionService {
     super();
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PLEDGE_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PLEDGE_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('PLEDGE_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PLEDGE_DELETE');
-  }
+  readonly canView$ = this.userPermissionsService.has('PLEDGE_VIEW');
+  readonly canAdd$ = this.userPermissionsService.has('PLEDGE_ADD');
+  readonly canEdit$ = this.userPermissionsService.has('PLEDGE_EDIT');
+  readonly canDelete$ = this.userPermissionsService.has('PLEDGE_DELETE');
 
   fetchAll(debtId: number): Observable<Array<IPledgeContract>> {
     return this.dataService
       .readAll(this.baseUrl, { debtId })
-      .do(contracts => this.contracts$.next(contracts))
       .catch(this.notificationsService.fetchError().entity('entities.pledgeContract.gen.plural').dispatchCallback());
   }
 
-  // TODO: fetch one item form server
-  fetch(_: number, contractId: number, personId: number = null, propertyId: number = null): Observable<IPledgeContract> {
-    return this.contracts$.map(contracts => contracts.find(contract => contract.contractId === contractId
-      && (!personId || contract.personId === personId) && (!propertyId || contract.propertyId === propertyId)));
-  }
-
-  createPledgeContractInformation(contract: IPledgeContract): IPledgeContractInformation {
-    return {
-      contractNumber: contract.contractNumber,
-      contractStartDate: contract.contractStartDate,
-      contractEndDate: contract.contractEndDate,
-      comment: contract.comment,
-      pledgors: [{
-        personId: contract.personId,
-        properties: [{
-          propertyId: contract.propertyId,
-          pledgeValue: contract.pledgeValue,
-          marketValue: contract.marketValue,
-          currencyId: contract.currencyId
-        }]
-      }]
-    };
-  }
-
-  createContractPledgor(pledgorId: number, property: IContractProperty): IContractPledgor {
-    return {
-      personId: pledgorId,
-      properties: [{
-        propertyId: property.propertyId,
-        pledgeValue: property.pledgeValue,
-        marketValue: property.marketValue,
-        currencyId: property.currencyId
-      }]
-    };
+  fetch(debtId: number, contractId: number): Observable<IPledgeContract> {
+    return this.dataService
+      .read(`${this.baseUrl}/{contractId}`, { contractId, debtId })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.pledgeContract.gen.singular').dispatchCallback()),
+      );
   }
 
   addPledgor(debtId: number, contractId: number, pledgor: IContractPledgor): Observable<any> {
@@ -103,8 +61,13 @@ export class PledgeService extends AbstractActionService {
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
-  updateProperty(debtId: number, contractId: number, pledgorId: number,
-    propertyId: number, property: IContractProperty): Observable<any> {
+  updateProperty(
+    debtId: number,
+    contractId: number,
+    pledgorId: number,
+    propertyId: number,
+    property: IContractProperty,
+  ): Observable<any> {
     return this.dataService
       .update(
         `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
@@ -119,8 +82,14 @@ export class PledgeService extends AbstractActionService {
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
-  update(debtId: number, contractId: number, pledgorId: number, propertyId: number,
-    contract: IContractInformation, property: IContractProperty): Observable<any> {
+  update(
+    debtId: number,
+    contractId: number,
+    pledgorId: number,
+    propertyId: number,
+    contract: IContractInformation,
+    property: IContractProperty,
+  ): Observable<any> {
     return this.dataService.update(`${this.baseUrl}/{contractId}`, { debtId, contractId }, contract).concatMap(
       () => this.updateProperty(debtId, contractId, pledgorId, propertyId, property)
     ).catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
