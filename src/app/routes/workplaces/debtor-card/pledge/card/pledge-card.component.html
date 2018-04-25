@@ -3,7 +3,7 @@
   <!-- Titlebar -->
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
-    <h1>{{ 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor' | translate }}</h1>
+    <h1>{{ title | translate }}</h1>
   </div>
 
   <!-- Forms -->
@@ -12,9 +12,7 @@
 
       <!-- Contract Form -->
       <div *ngIf="showContractForm" class="flex-item grow pr">
-        <h2>
-          {{ 'routes.workplaces.debtorCard.pledge.card.forms.contract.title' | translate }}
-        </h2>
+        <app-titlebar [titlebar]="contractTitlebar"></app-titlebar>
         <app-metadata-form
           #contractForm
           [config]="contractFormConfig"
@@ -24,9 +22,7 @@
 
       <!-- Pledgor Form -->
       <div *ngIf="showPledgorForm" class="flex-item grow ph">
-        <h2 appPopupOutlet="select-person" [disabled]="editMode">
-          {{ 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title' | translate }}
-        </h2>
+        <app-titlebar [titlebar]="pledgorTitlebar"></app-titlebar>
         <app-metadata-form
           #pledgorForm
           [config]="pledgorFormConfig"
@@ -38,9 +34,7 @@
 
       <!-- Property Form -->
       <div class="flex-item grow pl">
-        <h2 appPopupOutlet="select-property" [disabled]="editMode">
-          {{ 'routes.workplaces.debtorCard.pledge.card.forms.property.title' | translate }}
-        </h2>
+        <app-titlebar [titlebar]="propertyTitlebar"></app-titlebar>
         <app-metadata-form
           #propertyForm
           [config]="propertyFormConfig"
@@ -59,14 +53,14 @@
       <!-- Identifications -->
       <app-tabview-tab title="Удостоверения личности">
         <app-identity-grid
-          [personId]="4"
+          [personId]="pledgorId"
         ></app-identity-grid>
       </app-tabview-tab>
 
       <!-- Employment -->
       <app-tabview-tab title="Трудоустройство">
         <app-employment-grid
-          [personId]="4"
+          [personId]="pledgorId"
         ></app-employment-grid>
       </app-tabview-tab>
 
@@ -74,26 +68,27 @@
       <app-tabview-tab title="Телефоны">
         <app-phone-grid
           [contactType]="1"
-          [debtId]="1"
-          [personId]="4"
-          [personRole]="1"
+          [debtId]="debtId"
+          [personId]="pledgorId"
+          [personRole]="pledgorRole"
         ></app-phone-grid>
       </app-tabview-tab>
 
       <!-- Addresses -->
       <app-tabview-tab title="Адреса">
         <app-address-grid
-          [debtId]="1"
-          [personId]="4"
-          [personRole]="1"
+          [debtId]="debtId"
+          [personId]="pledgorId"
+          [personRole]="pledgorRole"
         ></app-address-grid>
       </app-tabview-tab>
 
       <!-- Documents -->
       <app-tabview-tab title="Документы">
+        <!-- Documents for debt (term 19 in dictionary 55) -->
         <app-document-grid
           [entityType]="19"
-          [entityId]="1"
+          [entityId]="debtId"
         ></app-document-grid>
       </app-tabview-tab>
     </app-tabview>
@@ -101,6 +96,6 @@
 
   <!-- Toolbar -->
   <div class="flex-item">
-    <app-button type="save" (click)="onSave()"></app-button>
+    <app-button type="save" [disabled]="!canSubmit" (click)="onSave()"></app-button>
   </div>
 </div>

@@ -1,38 +1,15 @@
-/**
- * See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=129368072
- *
- * A. Создание
- * pledge/create
- *    - договор
- *    - залогодатель (+поиск)
- *    - имущество: (+поиск)
- *
- * B. Добавление залогодателя
- * pledge/:contractId/pledgor/create
- *    - залогодатель: (+поиск)
- *    - имущество: (+поиск)
- *
- * C. Добавление имущества
- * pledge/:contractId/pledgor/:pledgorId/property/create
- *    - имущество: (+поиск)
- *
- * D. Редактирование
- * pledge/:contractId/pledgor/:pledgorId/property/:propertyId
- *    - договор
- *    - залогодатель
- *    - имущество
- */
-
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { map, mapTo, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
@@ -40,6 +17,7 @@ import { MetadataFormComponent } from '@app/shared/components/form/metadata-form
 import { contractFormConfig } from './config/contract-form.config';
 import { pledgorFormConfig } from './config/pledgor-form.config';
 import { propertyFormConfig } from './config/property-form.config';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,6 +67,11 @@ export class PledgeCardComponent implements AfterViewInit {
   readonly pledgorId = Number(this.paramMap.get('pledgorId'));
 
   /**
+   * Pledgor role (according to dictionary 44)
+   */
+  readonly pledgorRole = 3;
+
+  /**
    * ID of property that is linked via contractId
    */
   readonly propertyId = Number(this.paramMap.get('propertyId'));
@@ -101,14 +84,72 @@ export class PledgeCardComponent implements AfterViewInit {
   readonly showContractForm = this.createMode || this.editMode;
   readonly showPledgorForm = this.createMode || this.addPledgorMode || this.editMode;
 
+  readonly contractTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+  };
+
+  readonly pledgorTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
+
+  readonly propertyTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPropertySearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
+
   constructor(
+    private injector: Injector,
     private personService: PersonService,
     private pledgeCardService: PledgeCardService,
     private pledgeService: PledgeService,
+    private popupOutletService: PopupOutletService,
     private propertyService: PropertyService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
+
+  get canSubmit(): boolean {
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const pledgorFormGroup = this.pledgorForm
+      ? this.pledgorForm.formGroup
+      : null;
+    const propertyFormGroup = this.propertyForm
+      ? this.propertyForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const pledgorFormValid = !pledgorFormGroup || pledgorFormGroup.valid;
+    const propertyFormValid = !propertyFormGroup || propertyFormGroup.valid;
+    return contractFormValid && pledgorFormValid && propertyFormValid;
+  }
+
+  get title(): string {
+    switch (true) {
+      case this.createMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.add';
+      case this.addPledgorMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor';
+      case this.addPropertyMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addProperty';
+      default:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.edit';
+    }
+  }
 
   ngAfterViewInit(): void {
     if (this.contractId) {
@@ -134,16 +175,30 @@ export class PledgeCardComponent implements AfterViewInit {
 
   onSave(): void {
     if (this.createMode) {
-      this.createPledge();
+      const contractData = this.contractForm.data;
+      const pledgorData = this.pledgorForm.data;
+      const propertyData = this.propertyForm.data;
+      this.pledgeCardService
+        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .subscribe(() => this.onSuccess());
     }
     if (this.addPledgorMode) {
-      this.addPledgor();
+      this.pledgeCardService
+        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.pledgorForm.data, this.propertyForm.data)
+        .subscribe(() => this.onSuccess());
     }
     if (this.addPropertyMode) {
-      this.addProperty();
+      this.pledgeCardService
+        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.propertyForm.data)
+        .subscribe(() => this.onSuccess());
     }
     if (this.editMode) {
-      this.updatePledge();
+      const contractData = this.contractForm.data;
+      const pledgorData = this.pledgorForm.data;
+      const propertyData = this.propertyForm.data;
+      this.pledgeCardService
+        .updatePledge(this.debtId, this.contractId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .subscribe(() => this.onSuccess());
     }
   }
 
@@ -173,179 +228,16 @@ export class PledgeCardComponent implements AfterViewInit {
       .subscribe(property => this.propertyForm.formGroup.patchValue(property));
   }
 
-  /**
-   *  1. Создание персоны (если форма заполнена вручную, а не через поиск персоны)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Persons#Persons-POST/persons
-   *  2. Создание имущества (если форма заполнена вручную, а не через поиск имущества)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Person+Property#PersonProperty-POST/persons/{personsId}/property
-   *     - форма имущества
-   *  3. Создание договора
-   *     http://confluence.luxbase.int:8090/display/WEB20/Pledge+Contract#PledgeContract-POSTdebts/{debtsId}/pledgeContract
-   *     - форма договора
-   *     - ID залогодателя
-   *     - ID имущества
-   *     - стоимость имущества в договоре
-   */
-  private createPledge(): void {
-    const propertyData = this.propertyForm.data;
-    const { pledgeValue, marketValue, currencyId } = propertyData;
-    combineLatest([
-      this.savePledgor(),
-      this.saveProperty(),
-    ])
-    .pipe(
-      mergeMap(([ personId, propertyId ]) => {
-        const contract = {
-          ...this.contractForm.data as any,
-          pledgors: [
-            {
-              personId,
-              properties: [
-                {
-                  propertyId,
-                  pledgeValue,
-                  marketValue,
-                  currencyId,
-                },
-              ],
-            },
-          ],
-        };
-        return this.pledgeService.create(this.debtId, contract);
-      }),
-    )
-    .subscribe(() => this.onSuccess());
-  }
-
-  // tslint:disable:max-line-length
-  /**
-   *  1. Создание персоны (если форма заполнена вручную, а не через поиск персоны)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Persons#Persons-POST/persons
-   *  2. Создание имущества (если форма заполнена вручную, а не через поиск имущества)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Person+Property#PersonProperty-POST/persons/{personsId}/property
-   *     - форма имущества
-   *  3. Создание связи с договором
-   *     http://confluence.luxbase.int:8090/display/WEB20/Pledge+Contract#PledgeContract-POSTdebts/{debtsId}/pledgeContract/{pledgeContractId}/pledgor
-   *     - ID залогодателя
-   *     - ID имущества
-   *     - стоимость имущества в договоре
-   */
-  // tslint:enable:max-line-length
-  private addPledgor(): void {
-    const propertyData = this.propertyForm.data;
-    const { pledgeValue, marketValue, currencyId } = propertyData;
-    combineLatest([
-      this.savePledgor(),
-      this.saveProperty(),
-    ])
-    .pipe(
-      mergeMap(([ personId, propertyId ]) => {
-        const pledgor = {
-          personId,
-          properties: [
-            {
-              propertyId,
-              pledgeValue,
-              marketValue,
-              currencyId,
-            },
-          ],
-        };
-        return this.pledgeService.addPledgor(this.debtId, this.contractId, pledgor);
-      }),
-    )
-    .subscribe(() => this.onSuccess());
-  }
-
-  // tslint:disable:max-line-length
-  /**
-   *  1. Создание имущества (если форма заполнена вручную, а не через поиск имущества)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Person+Property#PersonProperty-POST/persons/{personsId}/property
-   *     - форма имущества
-   *  2. Создание связи с договором
-   *     http://confluence.luxbase.int:8090/display/WEB20/Pledge+Contract#PledgeContract-POSTdebts/{debtsId}/pledgeContract/{pledgeContractId}/pledgor
-   *     - ID залогодателя
-   *     - ID имущества
-   *     - стоимость имущества в договоре
-   */
-  // tslint:enable:max-line-length
-  private addProperty(): void {
-    const propertyData = this.propertyForm.data;
-    const { pledgeValue, marketValue, currencyId } = propertyData;
-    this.saveProperty().pipe(
-      mergeMap((propertyId) => {
-        const pledgor = {
-          personId: this.pledgorId,
-          properties: [
-            {
-              propertyId,
-              pledgeValue,
-              marketValue,
-              currencyId,
-            },
-          ],
-        };
-        return this.pledgeService.addPledgor(this.debtId, this.contractId, pledgor);
-      }),
-    )
-    .subscribe(() => this.onSuccess());
-  }
-
-  // tslint:disable:max-line-length
-  /**
-   *  1. Изменение персоны (если форма dirty)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Persons#Persons-PUT/persons/{personsId}
-   *  2. Изменение имущества (если форма dirty)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Pledge+Contract#PledgeContract-PUTdebts/{debtsId}/pledgeContract/{pledgeContractId}/pledgor/{pledgorId}/property/{propertyId}
-   *     - форма имущества
-   *     - стоимость имущества в договоре
-   *  3. Изменение договора (если форма dirty)
-   *     http://confluence.luxbase.int:8090/display/WEB20/Pledge+Contract#PledgeContract-PUTdebts/{debtsId}/pledgeContract/{pledgeContractId}
-   *     - форма договора
-   */
-  // tslint:enable:max-line-length
-  private updatePledge(): void {
-    const contract = this.contractForm.data as any;
-    combineLatest([
-      this.savePledgor(),
-      this.saveProperty(),
-      this.pledgeService.update(this.debtId, this.contractId, contract),
-    ])
-    .subscribe(() => this.onSuccess());
-  }
-
-  private savePledgor(): Observable<number> {
-    return this.pledgor$.pipe(
-      mergeMap(pledgor => {
-        if (pledgor) {
-          return of(pledgor.id);
-        } else {
-          const data = this.pledgorForm.data;
-          return this.pledgorId
-            ? this.personService.update(this.pledgorId, data).pipe(mapTo(this.pledgorId))
-            : this.personService.create(data);
-        }
-      }),
-    );
-  }
-
-  private saveProperty(): Observable<number> {
-    return this.property$.pipe(
-      mergeMap(property => {
-        if (property) {
-          return of(property.id);
-        } else {
-          const data = this.propertyForm.data as any;
-          return this.propertyId
-            ? this.propertyService.update(this.pledgorId, this.propertyId, data).pipe(mapTo(this.propertyId))
-            : this.propertyService.create(this.pledgorId, data);
-        }
-      }),
-    );
-  }
-
   private onSuccess(): void {
     this.pledgeService.dispatchPledgeSavedMessage();
     this.onBack();
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
+  }
+
+  private openPropertySearch(): void {
+    this.popupOutletService.open(this.modules, 'select-property', this.injector);
   }
 }
