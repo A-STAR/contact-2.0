@@ -5,7 +5,9 @@ import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
@@ -160,6 +162,22 @@ export class GuarantorCardComponent implements AfterViewInit {
     if (debtId && debtorId) {
       this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
     }
+  }
+
+  onPhoneAdd(): void {
+    this.router.navigate([ 'phone/create' ], { relativeTo: this.route });
+  }
+
+  onPhoneEdit(phone: IPhone): void {
+    this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressAdd(): void {
+    this.router.navigate([ 'address/create' ], { relativeTo: this.route });
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
   }
 
   private saveContract(guarantorId: number): Observable<void> {
