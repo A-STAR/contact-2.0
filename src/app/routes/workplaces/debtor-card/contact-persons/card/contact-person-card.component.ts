@@ -51,6 +51,11 @@ export class ContactPersonCardComponent implements AfterViewInit {
    */
   readonly personId = Number(this.paramMap.get('personId'));
 
+  /**
+   * Contact Person role (according to dictionary 44)
+   */
+  readonly contactPersonRole = 4;
+
   readonly editing = Boolean(this.contactId);
 
   readonly contactPersonFormConfig = contactPersonFormConfig;

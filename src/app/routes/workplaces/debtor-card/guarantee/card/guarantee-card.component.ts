@@ -56,6 +56,11 @@ export class GuarantorCardComponent implements AfterViewInit {
    */
   readonly guarantorId = Number(this.paramMap.get('guarantorId'));
 
+  /**
+   * Guarantor role (according to dictionary 44)
+   */
+  readonly guaarantorRole = 2;
+
   readonly editing = Boolean(this.guarantorId);
 
   readonly guarantor$ = this.guaranteeCardService.guarantor$;

@@ -23,16 +23,20 @@
  *    - имущество
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { map, mapTo, mergeMap } from 'rxjs/operators';
 
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
@@ -40,6 +44,7 @@ import { MetadataFormComponent } from '@app/shared/components/form/metadata-form
 import { contractFormConfig } from './config/contract-form.config';
 import { pledgorFormConfig } from './config/pledgor-form.config';
 import { propertyFormConfig } from './config/property-form.config';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,6 +94,11 @@ export class PledgeCardComponent implements AfterViewInit {
   readonly pledgorId = Number(this.paramMap.get('pledgorId'));
 
   /**
+   * Pledgor role (according to dictionary 44)
+   */
+  readonly pledgorRole = 3;
+
+  /**
    * ID of property that is linked via contractId
    */
   readonly propertyId = Number(this.paramMap.get('propertyId'));
@@ -101,14 +111,72 @@ export class PledgeCardComponent implements AfterViewInit {
   readonly showContractForm = this.createMode || this.editMode;
   readonly showPledgorForm = this.createMode || this.addPledgorMode || this.editMode;
 
+  readonly contractTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+  };
+
+  readonly pledgorTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
+
+  readonly propertyTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPropertySearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
+
   constructor(
+    private injector: Injector,
     private personService: PersonService,
     private pledgeCardService: PledgeCardService,
     private pledgeService: PledgeService,
+    private popupOutletService: PopupOutletService,
     private propertyService: PropertyService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
+
+  get canSubmit(): boolean {
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const pledgorFormGroup = this.pledgorForm
+      ? this.pledgorForm.formGroup
+      : null;
+    const propertyFormGroup = this.propertyForm
+      ? this.propertyForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const pledgorFormValid = !pledgorFormGroup || pledgorFormGroup.valid;
+    const propertyFormValid = !propertyFormGroup || propertyFormGroup.valid;
+    return contractFormValid && pledgorFormValid && propertyFormValid;
+  }
+
+  get title(): string {
+    switch (true) {
+      case this.createMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.add';
+      case this.addPledgorMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor';
+      case this.addPropertyMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addProperty';
+      default:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.edit';
+    }
+  }
 
   ngAfterViewInit(): void {
     if (this.contractId) {
@@ -347,5 +415,13 @@ export class PledgeCardComponent implements AfterViewInit {
   private onSuccess(): void {
     this.pledgeService.dispatchPledgeSavedMessage();
     this.onBack();
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
+  }
+
+  private openPropertySearch(): void {
+    this.popupOutletService.open(this.modules, 'select-property', this.injector);
   }
 }

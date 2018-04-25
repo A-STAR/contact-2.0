@@ -46,7 +46,7 @@
           [contactType]="1"
           [debtId]="debtId"
           [personId]="contactId"
-          [personRole]="4"
+          [personRole]="contactPersonRole"
         ></app-phone-grid>
       </app-tabview-tab>
 
@@ -55,12 +55,13 @@
         <app-address-grid
           [debtId]="debtId"
           [personId]="contactId"
-          [personRole]="4"
+          [personRole]="contactPersonRole"
         ></app-address-grid>
       </app-tabview-tab>
 
       <!-- Documents -->
       <app-tabview-tab title="Документы">
+        <!-- Documents for debt (term 19 in dictionary 55) -->
         <app-document-grid
           [entityType]="19"
           [entityId]="debtId"
