@@ -17,6 +17,7 @@ export class UIComponent {
     { link: 'datetime', title: 'Date/Time' },
     { link: 'grids', title: 'Grids' },
     { link: 'forms', title: 'Forms' },
+    { link: 'layout', title: 'Layout' },
     { link: 'areas', title: 'Areas' },
     { link: 'icons', title: 'Icons' },
     { link: 'ws', title: 'WebSockets' },
