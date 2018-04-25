@@ -1,8 +1,9 @@
-<ace-editor
-  class="form-control"
-  [(text)]="value"
+<div appScriptEditor
+  [options]="options"
+  [text]="value"
   [readOnly]="isDisabled"
   [theme]="theme"
   [mode]="mode"
   (textChanged)="onChange()"
-></ace-editor>
+  style="display:block; height: 80vh; width:100%"
+></div>
