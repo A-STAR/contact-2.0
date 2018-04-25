@@ -1,17 +1,22 @@
 
-import { OnInit, Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 
 @Directive({
   selector: '[appScriptEditor]'
 })
-export class ScriptEditorDirective implements OnInit {
+export class ScriptEditorDirective {
 
   private editor: any;
   private value: string;
 
   @Output() textChanged = new EventEmitter<any>();
 
-  @Input() options: any;
+  @Input()
+  set options(value: any) {
+    if (value) {
+      this.initTern(value);
+    }
+  }
 
   @Input()
   set readOnly(value: boolean) {
@@ -42,10 +47,6 @@ export class ScriptEditorDirective implements OnInit {
     this.editor = this.createEditor();
   }
 
-  ngOnInit(): void {
-    this.initTern(this.editor);
-  }
-
   getEditor(): any {
     return this.editor;
   }
@@ -61,9 +62,9 @@ export class ScriptEditorDirective implements OnInit {
     return editor;
   }
 
-  private initTern(editor: any): void {
+  private initTern(options: any): void {
     (<any>window).ace.config.loadModule('ace/ext/tern', () => {
-      editor.setOptions(this.options);
+      this.editor.setOptions(options);
     });
   }
 

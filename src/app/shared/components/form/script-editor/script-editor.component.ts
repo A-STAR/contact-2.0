@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ScriptEditorDirective } from './script-editor.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { first } from 'rxjs/operators/first';
 
 import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
 
@@ -42,21 +43,25 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-    this.editor.options = {
-      enableTern: {
-        defs: this.scriptEditorService.createScriptEditorDefs(this.metadata),
-        plugins: {
-          doc_comment: {
-            fullDocs: true
-          }
-        },
-        useWorker: this.editor.getEditor().getSession().getUseWorker(),
-        ...this.options
-      },
-      enableSnippets: true,
-      enableBasicAutocompletion: true,
-    };
-    this.editor.getEditor().on('focus', () => this.propagateTouch());
+    this.scriptEditorService.createScriptEditorDefs(this.metadata)
+      .pipe(first())
+      .subscribe(defs => {
+        this.editor.options = {
+          enableTern: {
+            defs,
+            plugins: {
+              doc_comment: {
+                fullDocs: true
+              }
+            },
+            useWorker: this.editor.getEditor().getSession().getUseWorker(),
+            ...this.options
+          },
+          enableSnippets: true,
+          enableBasicAutocompletion: true,
+        };
+        this.editor.getEditor().on('focus', () => this.propagateTouch());
+      });
   }
 
   writeValue(value: string): void {
