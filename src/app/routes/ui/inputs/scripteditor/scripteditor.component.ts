@@ -3,8 +3,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { ContextAutocomplete } from './autocomplete';
 
-import 'brace/ext/language_tools';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-route-ui-scripteditor',
