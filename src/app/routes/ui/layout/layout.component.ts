@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import {
+  ContextOperator,
   DynamicLayoutControlType,
   DynamicLayoutItemType,
   IDynamicLayoutConfig,
@@ -21,6 +22,19 @@ export class LayoutComponent {
           {
             type: DynamicLayoutItemType.CONTROL,
             controlType: DynamicLayoutControlType.TEXT,
+            display: {
+              operator: ContextOperator.AND,
+              value: [
+                {
+                  operator: ContextOperator.EVAL,
+                  value: 'userPermissions.permissions.CONST_VALUE_VIEW.valueB',
+                },
+                {
+                  operator: ContextOperator.EVAL,
+                  value: 'userPermissions.permissions.CONST_VALUE_EDIT.valueB',
+                },
+              ],
+            },
           },
         ],
       },
