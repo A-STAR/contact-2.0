@@ -1,0 +1,22 @@
+<div *ngFor="let item of items">
+  <ng-container [ngSwitch]="item.type">
+
+    <!-- Group -->
+    <app-dynamic-layout-group
+      *ngSwitchCase="'group'"
+      [group]="item"
+    ></app-dynamic-layout-group>
+
+    <!-- Item -->
+    <app-dynamic-layout-control
+      *ngSwitchCase="'control'"
+      [control]="item"
+    ></app-dynamic-layout-control>
+
+    <!-- Template -->
+    <app-dynamic-layout-template
+      *ngSwitchCase="'template'"
+      [template]="item"
+    ></app-dynamic-layout-template>
+  </ng-container>
+</div>

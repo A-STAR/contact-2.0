@@ -7,6 +7,6 @@ export enum DynamicLayoutItemType {
 }
 
 export interface IDynamicLayoutGenericItem {
-  display: IContext;
   type: DynamicLayoutItemType;
+  display?: IContext;
 }
