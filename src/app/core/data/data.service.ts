@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { empty } from 'rxjs/observable/empty';
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize, catchError, map, distinctUntilChanged } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
@@ -37,11 +37,10 @@ export class DataService {
     private http: HttpClient
   ) {}
 
-  get isLoading$(): Observable<boolean> {
-    return this.nRequests$
-      .map(n => n > 0)
-      .distinctUntilChanged();
-  }
+  readonly isLoading$ = this.nRequests$.pipe(
+    map(n => n > 0),
+    distinctUntilChanged(),
+  );
 
   readLocal(url: string): Observable<any> {
     return this.http.get(url);

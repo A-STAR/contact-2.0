@@ -17,12 +17,13 @@
       <app-number
         formControlName="amount"
         label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.amount"
-        [disabled]="isPaymentAmountDisabled$ | async"
+        [isReadonly]="fullPaymentMode$ | async"
+        [ngModel]="paymentAmount$ | async"
         [min]="paymentMinAmount$ | async"
         [max]="paymentMaxAmount$ | async"
         [positive]="true"
         [required]="true"
-        (input)="onPaymentAmountInput($event)"
+        [precision]="2"
       ></app-number>
     </div>
 
@@ -31,12 +32,13 @@
       <app-number
         formControlName="percentage"
         label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.percentage"
-        [disabled]="isPaymentAmountDisabled$ | async"
+        [isReadonly]="fullPaymentMode$ | async"
+        [ngModel]="paymentPercentage$ | async"
         [min]="paymentMinPercentage$ | async"
         [max]="100"
         [positive]="true"
         [required]="true"
-        (input)="onPaymentPercentageInput($event)"
+        [precision]="5"
       ></app-number>
     </div>
 
@@ -46,7 +48,7 @@
         formControlName="currencyId"
         label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.currency"
         lookupKey="currencies"
-        [required]="true"
+        [isRequired]="true"
       ></app-select>
     </div>
 

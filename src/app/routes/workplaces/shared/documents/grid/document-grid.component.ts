@@ -122,17 +122,12 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this._dialog;
   }
 
-  get selectedDocumentFileName$(): Observable<string> {
-    return this.selectedDocument$.map(document => document && document.fileName);
-  }
+  readonly selectedDocumentFileName$ = this.selectedDocument$.map(document => document && document.fileName);
 
-  get selectedDocumentMessageParams$(): Observable<Partial<IDocument>> {
-    return this.selectedDocument$.map(document => ({ docName: document && document.docName || document.fileName }));
-  }
+  readonly selectedDocumentMessageParams$ = this.selectedDocument$
+    .map(document => ({ docName: document && document.docName || document.fileName }));
 
-  get selectedDocumentURL$(): Observable<string> {
-    return this.selectedDocumentId$.map(documentId => `/api/fileattachments/${documentId}`);
-  }
+  readonly selectedDocumentURL$ = this.selectedDocumentId$.map(documentId => `/api/fileattachments/${documentId}`);
 
   onDoubleClick(document: IDocument): void {
     this.selectedDocumentId$.next(document.id);

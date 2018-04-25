@@ -94,9 +94,7 @@ export class DebtorEmailCardComponent implements OnInit {
 
   onBack(): void {
     this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
+      `/app/workplaces/debtor-card${this.route.snapshot.paramMap.get('debtId')}`
     ]);
   }
 

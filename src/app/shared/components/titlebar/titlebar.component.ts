@@ -8,13 +8,13 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { defaultTo } from 'ramda';
 import { of } from 'rxjs/observable/of';
-import { Observable } from 'rxjs/Observable';
 
 import { IButtonType } from '../button/button.interface';
 import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
 
-import { doOnceIf, invert } from '@app/core/utils';
+import { doOnceIf } from '@app/core/utils';
 
 @Component({
   selector: 'app-titlebar',
@@ -35,9 +35,12 @@ export class TitlebarComponent implements OnChanges, OnInit {
     [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
     [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-debt-list', title: 'Карточка должника' },
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
+    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
+    [TitlebarItemTypeEnum.BUTTON_FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
+    //  TODO(i.lobanov): replace when icon is ready
+    [TitlebarItemTypeEnum.BUTTON_MAP]: { iconCls: 'co-image', title: 'default.buttons.map' },
     [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'co-move', title: 'Переместить' },
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
     [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
@@ -58,8 +61,14 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
+    const classesDefault = defaultTo(of(''));
+    const enabledDefault = defaultTo(of(true));
     this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
-    this.items = this.titlebar.items || this.items;
+    this.items = (this.titlebar.items || this.items).map(item => ({
+      ...item,
+      classes: classesDefault(item.classes),
+      enabled: enabledDefault(item.enabled),
+    }));
     this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
     this.title = this.titlebar.title;
   }
@@ -77,16 +86,12 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   onClick(item: ITitlebarItem): void {
-    doOnceIf(this.isDisabled(item).map(invert), () => {
+    doOnceIf(item.enabled, () => {
       if (typeof item.action === 'function') {
         item.action();
       }
       this.action.emit(item);
     });
-  }
-
-  isDisabled(item: ITitlebarItem): Observable<boolean> {
-    return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
   /**

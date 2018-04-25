@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -23,13 +23,16 @@ import { maxFileSize } from '@app/core/validators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocumentCardComponent implements OnInit {
-  @Input() callCenter = false;
-  @Input() readOnly = false;
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private documentId = Number(this.route.snapshot.paramMap.get('documentId'));
-  private entityTypeCode = Number(this.route.snapshot.queryParamMap.get('entityType')) || 18;
+  private routeParamMap = this.route.snapshot.paramMap;
+  private routeData = this.route.snapshot.data;
+
+  private callCenter = this.routeData.callCenter;
+  private readOnly = this.routeData.readOnly;
+
+  private documentId = Number(this.routeParamMap.get('documentId'));
+  private entityTypeCode = Number(this.routeParamMap.get('entityType')) || 18;
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
@@ -93,11 +96,11 @@ export class DocumentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
-    ]);
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    if (debtId && debtorId) {
+      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+    }
   }
 
   get canSubmit(): boolean {

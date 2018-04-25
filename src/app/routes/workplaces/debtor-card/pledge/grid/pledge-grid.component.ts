@@ -64,6 +64,15 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      action: () => this.onAddProperty(this.selectedContract$.value),
+      label: 'widgets.pledgeContract.toolbar.add',
+      enabled: combineLatestAnd([
+        this.pledgeService.canEdit$,
+        this.selectedContract$.map(selectedContract => !!selectedContract)
+      ])
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removePledge'),
       enabled: combineLatestAnd([
@@ -149,12 +158,17 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   private onAddPledgor(contract: IPledgeContract): void {
     const { contractId } = contract;
-    this.routingService.navigate([ `pledge/${contractId}/pledgor/add` ], this.route);
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/create` ], this.route);
+  }
+
+  private onAddProperty(contract: IPledgeContract): void {
+    const { contractId, personId } = contract;
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/${personId}/property/create` ], this.route);
   }
 
   private onEdit(contract: IPledgeContract): void {
     const { contractId, personId, propertyId } = contract;
-    this.routingService.navigate([ `pledge/${contractId}/pledgor/${personId}/${propertyId}` ], this.route);
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/${personId}/property/${propertyId}` ], this.route);
   }
 
   private fetch(): void {

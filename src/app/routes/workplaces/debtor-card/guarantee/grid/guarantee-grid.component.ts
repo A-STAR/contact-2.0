@@ -109,7 +109,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
       });
 
     this.actionSubscription = this.guaranteeService
-      .getAction(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
+      .getAction(GuaranteeService.MESSAGE_GUARANTOR_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -160,12 +160,12 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'guarantee', 'create' ], this.route);
+    this.routingService.navigate([ 'guarantee/create' ], this.route);
   }
 
   private onAddGuarantor(): void {
     const { contractId } = this.selectedContract$.value;
-    this.routingService.navigate([ `guarantee/${contractId}/guarantor/add` ], this.route);
+    this.routingService.navigate([ `guarantee/${contractId}/guarantor/create` ], this.route);
   }
 
   private onEdit(contract: IGuaranteeContract = null): void {

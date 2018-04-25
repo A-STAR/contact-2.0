@@ -3,9 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import {
-  IGridActionPayload
-} from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 
@@ -26,13 +24,6 @@ export class  NextCallDateSetService {
         actionData: { nextCallDateTime }
       }
     )
-      .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
-        } else {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
-        }
-      })
-      .catch(this.notificationsService.updateError().entity('entities.nextCallDate.gen.plural').dispatchCallback());
+    .catch(this.notificationsService.updateError().entity('entities.nextCallDate.gen.plural').dispatchCallback());
   }
 }

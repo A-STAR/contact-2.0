@@ -96,11 +96,11 @@ export class DebtorPropertyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
-    ]);
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    if (debtId && debtorId) {
+      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+    }
   }
 
   private initControls(canEdit: boolean, propertyTypeOptions: IOption[]): Array<IDynamicFormItem> {

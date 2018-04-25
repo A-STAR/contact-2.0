@@ -17,15 +17,15 @@ import { of } from 'rxjs/observable/of';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
-import { IPhone } from '../phone.interface';
-import { ISMSSchedule } from '../phone.interface';
+import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CallService } from '@app/core/calls/call.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PhoneService } from '../phone.service';
+import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -130,6 +130,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private activeCallPhoneId: number;
 
   private canViewSubscription: Subscription;
+  private contactDetailsChangeSub: Subscription;
   private debtSubscription: Subscription;
   private busSubscription: Subscription;
   private callSubscription: Subscription;
@@ -148,6 +149,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
+    private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
@@ -209,6 +211,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.phones = [ ...this.phones ];
         this.cdRef.markForCheck();
       });
+
+    this.contactDetailsChangeSub = this.contactRegistrationService
+      .contactPersonChange$
+      .filter(Boolean)
+      .subscribe(_ => this.fetch());
   }
 
   ngOnDestroy(): void {
@@ -217,6 +224,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.busSubscription.unsubscribe();
     this.callSubscription.unsubscribe();
     this.activeCallSubscription.unsubscribe();
+    if (this.contactDetailsChangeSub) {
+      this.contactDetailsChangeSub.unsubscribe();
+    }
   }
 
   get debtId$(): Observable<number> {

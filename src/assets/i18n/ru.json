@@ -24,34 +24,51 @@
       }
     },
     "workplaces": {
-      "debtor-card": {
-        "contact-persons": {
-          "person": {
-            "name": "Персона",
-            "fields": {
-              "id": "ID",
-              "lastName": "Фамилия",
-              "firstName": "Имя",
-              "middleName": "Отчество",
-              "personFullName": "ФИО",
-              "typeCode": "Тип",
-              "birthDate": "Дата рождения",
-              "birthPlace": "Место рождения",
-              "familyStatusCode": "Семейное положение",
-              "educationCode": "Образование",
-              "genderCode": "Пол",
-              "passportNumber": "Серия и номер паспорта",
-              "comment": "Комментарий",
-              "stringValue1": "Строковый атрибут 1",
-              "stringValue2": "Строковый атрибут 2",
-              "stringValue3": "Строковый атрибут 3",
-              "stringValue4": "Строковый атрибут 4",
-              "stringValue5": "Строковый атрибут 5",
-              "stringValue6": "Строковый атрибут 6",
-              "stringValue7": "Строковый атрибут 7",
-              "stringValue8": "Строковый атрибут 8",
-              "stringValue9": "Строковый атрибут 9",
-              "stringValue10": "Строковый атрибут 10"
+      "debtorCard": {
+        "contactPerson": {
+          "card": {
+            "forms": {
+              "contactPerson": {
+                "title": "Контактное лицо"
+              }
+            }
+          }
+        },
+        "guarantee": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Договор"
+              },
+              "guarantor": {
+                "title": "Поручитель"
+              }
+            },
+            "titles": {
+              "add": "Добавить договор",
+              "addGuarantor": "Добавить поручителя",
+              "edit": "Редактирование договора"
+            }
+          }
+        },
+        "pledge": {
+          "card": {
+            "forms": {
+              "contract": {
+                "title": "Договор"
+              },
+              "pledgor": {
+                "title": "Залогодатель"
+              },
+              "property": {
+                "title": "Имущество"
+              }
+            },
+            "titles": {
+              "add": "Добавить договор",
+              "addPledgor": "Добавить залогодателя",
+              "addProperty": "Добавить имущество",
+              "edit": "Редактирование договора"
             }
           }
         }
@@ -164,7 +181,7 @@
                   "docName": "Название",
                   "docNumber": "Номер документа",
                   "docTypeCode": "Тип документа",
-                  "file": "Файл"
+                  "fileName": "Файл"
                 },
                 "title": "Прикрепленные файлы"
               },
@@ -299,10 +316,8 @@
           "title": "Проверка",
           "debtId": "ID долга",
           "userId": "ID пользователя",
-          "grid": {
-            "type": "Тип",
-            "value": "Результат"
-          }
+          "type": "Тип",
+          "value": "Результат"
         }
       },
       "letters": {
@@ -333,6 +348,14 @@
   },
   "shared": {
     "components": {
+      "actionGrid": {
+        "excelFilter": {
+          "chooseFile": "Выберите файл",
+          "title": "Фильтрация по Excel-файлу",
+          "total": "(обработано: {{ n }})",
+          "uploadError": "При загрузке файла произошла ошибка"
+        }
+      },
       "grids": {
         "overlays": {
           "empty": "Нет данных"
@@ -345,8 +368,24 @@
     }
   },
   "system": {
-
+    "notifications": {
+      "tasks": {
+        "created": "создано {{ n }}",
+        "processed": "обработано {{ n }}",
+        "total": "всего {{ n }}",
+        "start": {
+          "success": "Задача отправлена на обработку"
+        },
+        "finish": {
+          "success": "Выполнено: {{ message }} от {{ createDateTime }}: {{ info }}",
+          "error": "Ошибка выполнения: {{ message }} от {{ createDateTime }}"
+        }
+      }
+    }
   },
+
+
+
   "header": {
     "language": "Язык",
     "notifications": "Сообщения",
@@ -1146,13 +1185,9 @@
     "roles": {
       "title": "Роли",
       "copy": {
-        "title": "Копировать роль",
-        "originalRoleName": "Название оригинальной роли",
-        "roleName": "Название",
-        "roleComment": "Комментарий",
-        "select": {
-          "title": "Выберите роль"
-        }
+        "title": "Копировать роль {{ name }}",
+        "name": "Название",
+        "comment": "Комментарий"
       },
       "edit": {
         "title": "Редактирование роли: {{ id }} ",
@@ -1477,7 +1512,7 @@
         "name": "Имя",
         "position": "Должность",
         "fullName": "ФИО",
-        "roleCode": "Код роли",
+        "roleCode": "Роль",
         "isInactive": "Блокирован"
       },
       "errors": {
@@ -1801,6 +1836,9 @@
             "comment": "Комментарий"
           }
         },
+        "map": {
+          "title": "Адреса"
+        },
         "markConfirm": {
           "title": "Отметка необходимости выезда",
           "confirmMessage": "По данному адресу результат выезда неверный адрес. Установить необходимость выезда снова?"
@@ -2105,11 +2143,11 @@
           }
         },
         "exclude": {
-          "message": "Вы действительно хотите исключить из аутсорсинга выбранные платежи?",
+          "message": "Вы действительно хотите исключить из аутсорсинга выбранные долги?",
           "title": "Исключить из аутсорсинга"
         },
         "return": {
-          "message": "Вы действительно хотите отозвать из аутсорсинга выбранные платежи?",
+          "message": "Вы действительно хотите отозвать из аутсорсинга выбранные долги?",
           "title": "Отозвать из аутсорсинга"
         }
       }
@@ -2919,6 +2957,30 @@
     }
   },
   "massOperations": {
+    "addressesByPersons": {
+      "title": "Просмотр адресов"
+    },
+    "addressesByContacts": {
+      "title": "Просмотр мест регистрации контактов",
+      "personFullName": "ФИО персоны",
+      "contactType": "Тип",
+      "fullAddress": "Адрес",
+      "commentary": "Комментарий",
+      "userFullName": "Оператор",
+      "contactDateTime": "Дата контакта",
+      "resultName": "Результат",
+      "contract": "Договор",
+      "filter": {
+        "filterByAddressType": "Фильтр по типу адреса",
+        "filterByStatusType": "Фильтр по типу статуса",
+        "filterByContactType": "Фильтр по типу контакта",
+        "filterByVisitType": "Фильтр по типу выезда",
+        "hideAddresses": "Скрыть адреса",
+        "showAllAdresses": "Отображать все адреса",
+        "showInactives": "Отображать все заблокированные адреса",
+        "resetFilter": "Сбросить фильтр"
+      }
+    },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",
       "purposeCode": "Цель выезда",
@@ -3214,7 +3276,9 @@
       "email": "Email",
       "exportToExcel": "Выгрузка",
       "excel": "Выгрузка",
+      "filter": "Фильтр",
       "loadFromExcel": "Загрузить из Excel",
+      "map": "Карта",
       "move": "Переместить",
       "next": "Далее",
       "now": "Сейчас",
@@ -3361,6 +3425,8 @@
         "deleteSMS": "Удалить SMS",
         "emailCreate": "Массовое формирование Email",
         "loadDebtResponsible": "Загрузить ответственного по долгу",
+        "mapAddressView": "Просмотр адресов на карте",
+        "mapContactView": "Просмотр места регистрации на карте",
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",

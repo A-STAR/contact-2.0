@@ -47,21 +47,12 @@ export class VersionsComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
+    const { paramMap } = this.route.snapshot;
+    const contractorId = paramMap.get('contractorId');
+    const portfolioId = paramMap.get('portfolioId');
     const url = this.entityTypeId === VersionsComponent.ENTITY_TYPE_PORTFOLIO
-      ? [
-        '/admin',
-        'contractors',
-        this.route.snapshot.paramMap.get('contractorId'),
-        'portfolios',
-        this.route.snapshot.paramMap.get('portfolioId'),
-        'attributes'
-      ]
-      : [
-        '/admin',
-        'contractors',
-        this.route.snapshot.paramMap.get('contractorId'),
-        'attributes'
-      ];
+      ? [ `/app/admin/contractors/${contractorId}/portfolios/${portfolioId}/attributes` ]
+      : [ `/app/admin/contractors/${contractorId}/attributes` ];
     this.routingService.navigate(url);
   }
 }

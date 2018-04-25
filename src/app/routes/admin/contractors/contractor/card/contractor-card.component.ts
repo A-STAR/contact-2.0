@@ -105,7 +105,7 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/admin', 'contractors' ]);
+    this.routingService.navigate([ '/app/admin/contractors' ]);
   }
 
   onManagersClick(): void {

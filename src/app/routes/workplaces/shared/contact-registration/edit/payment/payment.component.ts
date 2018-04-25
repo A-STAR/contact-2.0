@@ -1,18 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, switchMap, } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { isNumber } from 'util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-payment',
   templateUrl: 'payment.component.html'
 })
-export class ContactRegistrationPaymentComponent {
+export class ContactRegistrationPaymentComponent implements AfterViewInit, OnDestroy {
   @Input() formGroup: FormGroup;
 
   private limitInfo$ = combineLatest(
@@ -20,64 +22,105 @@ export class ContactRegistrationPaymentComponent {
     this.contactRegistrationService.limit$.pipe(filter(Boolean)),
     this.contactRegistrationService.canSetInsufficientPromiseAmount$,
   );
+  private isFullPaymentModeSub: Subscription;
+  private amountControl: AbstractControl;
+  private amountControlChangesSub: Subscription;
+  private percentageControl: AbstractControl;
+  private percentageControlChangesSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.paymentMode))
-    );
+  ngAfterViewInit(): void {
+    this.amountControl = this.formGroup.get('payment.amount');
+    this.percentageControl = this.formGroup.get('payment.percentage');
+
+    this.isFullPaymentModeSub = this.fullPaymentMode$
+      .subscribe(_ => {
+        this.amountControl.markAsDirty();
+        this.percentageControl.markAsDirty();
+      });
+
+      this.amountControlChangesSub = this.amountControl
+        .valueChanges
+        .distinctUntilChanged()
+        .pipe(filter(v => isNumber(v)))
+        .subscribe(value => this.onPaymentAmountChange(value));
+
+    this.percentageControlChangesSub = this.percentageControl
+        .valueChanges
+        .distinctUntilChanged()
+        .pipe(filter(v => isNumber(v)))
+        .subscribe(value => this.onPaymentPercentageChange(value));
   }
+
+  ngOnDestroy(): void {
+    if (this.isFullPaymentModeSub) {
+      this.isFullPaymentModeSub.unsubscribe();
+    }
+    if (this.amountControlChangesSub) {
+      this.amountControlChangesSub.unsubscribe();
+    }
+    if (this.percentageControlChangesSub) {
+      this.percentageControlChangesSub.unsubscribe();
+    }
+  }
+
+  readonly canDisplayForm$ = this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && [2, 3].includes(outcome.paymentMode)),
+  );
 
   get today(): Date {
     return moment().toDate();
   }
 
-  get paymentMinAmount$(): Observable<number> {
-    return this.limitInfo$.pipe(
+  readonly fullPaymentMode$ = this.contactRegistrationService.outcome$.pipe(
+    filter(outcome => outcome && outcome.paymentMode === 3),
+    map(Boolean)
+  );
+
+  readonly paymentAmount$ = this.fullPaymentMode$.pipe(
+    switchMap(_ => this.paymentMaxAmount$)
+  );
+
+  readonly paymentPercentage$ = this.fullPaymentMode$.pipe(
+    switchMap(_ => of(100))
+  );
+
+  readonly paymentMinAmount$ = this.limitInfo$.pipe(
       map(([ debt, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
-    );
-  }
+  );
 
-  get paymentMaxAmount$(): Observable<number> {
-    return this.limitInfo$.pipe(
+  readonly paymentMaxAmount$ = this.limitInfo$.pipe(
       map(([ debt ]) => debt.debtAmount),
-    );
-  }
+  );
 
-  get paymentMinPercentage$(): Observable<number> {
-    return this.limitInfo$.pipe(
+  readonly paymentMinPercentage$ = this.limitInfo$.pipe(
       map(([ _, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent),
-    );
-  }
+  );
 
-  get isPaymentAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => !outcome || outcome.paymentMode !== 3),
-    );
-  }
-
-  onPaymentAmountInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const amount = Number(value);
+  onPaymentAmountChange(amount: number): void {
     this.contactRegistrationService.debt$
       .pipe(first())
-      .subscribe(debt => debt && this.setPaymentAmount(amount, 100.0 * amount / debt.debtAmount));
+      .subscribe(debt => debt && this.setPaymentAmount(null, 100.0 * amount / debt.debtAmount));
   }
 
-  onPaymentPercentageInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const percentage = Number(value);
+  onPaymentPercentageChange(percentage: number): void {
     this.contactRegistrationService.debt$
       .pipe(first())
-      .subscribe(debt => debt && this.setPaymentAmount(debt.debtAmount * percentage / 100.0, percentage));
+      .subscribe(debt => debt && this.setPaymentAmount(debt.debtAmount * percentage / 100.0, null));
   }
 
   private setPaymentAmount(amount: number, percentage: number): void {
-    this.formGroup.patchValue({ payment: { amount, percentage } });
+    const data = { promise: { } as any };
+    if (isNumber(amount)) {
+      data.promise.amount = amount;
+    } else if (isNumber(percentage)) {
+      data.promise.percentage = percentage;
+    }
+    this.formGroup.patchValue(data, { emitEvent: false });
     this.cdRef.markForCheck();
   }
 }

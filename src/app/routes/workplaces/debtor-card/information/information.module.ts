@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CompanyModule } from './company/company.module';
 import { EmailModule } from './email/email.module';
 import { PersonModule } from './person/person.module';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { DebtorInformationComponent } from './information.component';

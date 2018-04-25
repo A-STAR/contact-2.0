@@ -55,6 +55,7 @@ import { FilterObject } from './filter/grid-filter';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { ValueBag } from '@app/core/value-bag/value-bag';
+import { differenceWith } from 'ramda';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -219,9 +220,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
     if (rowCount) {
       if (this.page > this.getPageCount()) {
-        this.page = this.getPageCount() || 1;
+        this.page = this.getPageCount();
         this.onPage.emit(this.page);
-      } else {
+      }
+
+      if (rowCount.currentValue !== rowCount.previousValue && !rowCount.isFirstChange()) {
+        this.deselectOnRowCountChange();
         this.refreshRowCount();
         if (this.rowCount) {
           this.gridOptions.api.hideOverlay();
@@ -528,6 +532,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     ];
   }
 
+  private deselectOnRowCountChange(): void {
+    const predicate = (node, row) => node.data[this.rowIdKey] === row[this.rowIdKey];
+    differenceWith<RowNode>(predicate, this.selectedNodes, this.rows).forEach(node => node.setSelected(false));
+  }
+
   private refreshRowCount(): void {
     const countText = this.translate.instant(
       'default.grid.selectedCounts',
@@ -599,7 +608,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getPageCount(): number {
-    return Math.ceil(this.rowCount / this.pageSize);
+    return Math.max(1, Math.ceil(this.rowCount / this.pageSize));
   }
 
   private getCustomFilter(column: IAGridColumn): any {
@@ -710,7 +719,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     return this.columns
       .filter(column => !this.columnIds || this.columnIds.includes(column.colId))
-      .filter(column => !!column.label)
+      .map(column => ({...column, label: column.label || column.colId }))
       .map(mapColumns)
       // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
       .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)

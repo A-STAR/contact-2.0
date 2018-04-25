@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, forwardRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
@@ -20,10 +29,13 @@ import { GridSelectService } from './grid-select.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
-
-  @Input() filterType: IGridSelectFilterType;
-  @Input() filterParams: any = {};
   @Input() controlDisabled: boolean;
+  @Input() filterParams: any = {};
+  @Input() filterType: IGridSelectFilterType;
+  @Input() label: string;
+  @Input() required: boolean;
+
+  @Output() select = new EventEmitter<T>();
 
   rows: T[];
   selection: number;
@@ -37,7 +49,6 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit(): void {
-
     this.labelGetter = this.gridSelectService.getLabelGetter(this.filterType);
     this.valueGetter = this.gridSelectService.getValueGetter(this.filterType);
     this.gridColumns = this.gridSelectService.getGridColumns(this.filterType);
@@ -62,13 +73,19 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  onSelect(value: number): void {
+  registerOnTouched(fn: Function): void {
+    this.propagateTouch = fn;
+  }
+
+  onChange(value: number): void {
     this.propagateChange(value);
   }
 
-  registerOnTouched(): void {
+  onSelect(row: T): void {
+    this.select.emit(row);
+    this.propagateTouch();
   }
 
   private propagateChange: Function = () => {};
-
+  private propagateTouch: Function = () => {};
 }

@@ -27,6 +27,8 @@
     *ngSwitchCase="'number'"
     [formControlName]="control.controlName"
     [label]="control.label"
+    [isDisabled]="control.disabled"
+    [isReadonly]="control.readonly"
     [min]="control.min"
     [max]="control.max"
     [positive]="control.positive"
@@ -68,7 +70,6 @@
     [required]="control.required"
   ></app-timepicker>
 
-
   <ng-container *ngSwitchCase="'select'">
     <app-select
       [dictCode]="control.dictCode"
@@ -95,29 +96,40 @@
     ></app-multi-select>
   </ng-container>
 
-  <!--
-  <ng-container *ngSwitchCase="'multilanguage'">
-    <app-multilanguage-input
-      [formControlName]="control.controlName"
-      [isDisabled]="control.disabled"
-      [isRequired]="control.required"
-      [label]="control.label"
-      [langOptions]="control.langOptions"
-      [placeholder]="control.placeholder"
-    ></app-multilanguage-input>
-  </ng-container>
-  -->
+  <app-multilanguage
+    *ngSwitchCase="'multilanguage'"
+    [formControlName]="control.controlName"
+    [isDisabled]="control.disabled"
+    [isRequired]="control.required"
+    [label]="control.label"
+    [langConfig]="control.langConfig"
+    [createMode]="control.createMode"
+  ></app-multilanguage>
 
-  <ng-container *ngSwitchCase="'multilanguage'">
-    <app-multilanguage
-      [formControlName]="control.controlName"
-      [isDisabled]="control.disabled"
-      [isRequired]="control.required"
-      [label]="control.label"
-      [langConfig]="control.langConfig"
-      [createMode]="control.createMode"
-    ></app-multilanguage>
-  </ng-container>
+  <app-grid-dropdown
+    *ngSwitchCase="'gridselect'"
+    [columns]="control.gridColumns"
+    [controlDisabled]="control.disabled"
+    [formControlName]="control.controlName"
+    [labelGetter]="control.gridLabelGetter"
+    [label]="control.label"
+    [required]="control.required"
+    [rows]="control.gridRows"
+    [valueGetter]="control.gridValueGetter"
+    (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
+  </app-grid-dropdown>
+
+  <app-grid-select
+    *ngSwitchCase="'gridselectwrapper'"
+    [controlDisabled]="control.disabled"
+    [filterParams]="control.filterParams"
+    [filterType]="control.filterType"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [required]="control.required"
+  ></app-grid-select>
+
+
 
   <!--
     Below are old controls.
@@ -185,24 +197,6 @@
     </label>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'gridselect'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-grid-dropdown
-      [columns]="control.gridColumns"
-      [formControlName]="control.controlName"
-      [controlDisabled]="control.disabled"
-      [rows]="control.gridRows"
-      [labelGetter]="control.gridLabelGetter"
-      [valueGetter]="control.gridValueGetter"
-      (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
-    </app-grid-dropdown>
-  </ng-container>
-
   <ng-container *ngSwitchCase="'dialogmultiselect'">
     <label>
       <span class="form-label">
@@ -215,21 +209,6 @@
       [filterParams]="control.filterParams"
       [formControlName]="control.controlName"
     ></app-dialog-multi-select>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'gridselectwrapper'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-grid-select
-      [filterType]="control.filterType"
-      [filterParams]="control.filterParams"
-      [formControlName]="control.controlName"
-      [controlDisabled]="control.disabled"
-    ></app-grid-select>
   </ng-container>
 
   <ng-container *ngSwitchCase="'password'">

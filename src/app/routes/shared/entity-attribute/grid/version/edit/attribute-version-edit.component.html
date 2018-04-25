@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.attribute.dialogs.version.title' | translate }}</h3>
   </div>
   <div>
-    <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>
+    <app-dynamic-form *ngIf="controls" [config]="config" [controls]="controls" [data]="formData"></app-dynamic-form>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">

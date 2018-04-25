@@ -5,192 +5,228 @@ export const menuConfig: IMenuConfig = {
   // Компоненты:
   menuItemHome: {
     text: 'sidebar.nav.menu.HOME',
-    link: '/home',
-    icon: 'co-m-home'
+    link: '/app/home',
+    icon: 'co-m-home',
+    docs: '',
   },
 
   // Администрирование:
   administration: {
     text: 'sidebar.nav.menu.ADMIN_PANEL',
-    link: '/admin',
-    icon: ''
+    link: '/app/admin',
+    icon: '',
+    docs: 'admin',
   },
   roles: {
     text: 'sidebar.nav.menu.ROLES_AND_PERMISSIONS',
-    link: '/admin/roles',
-    icon: 'co-m-roles'
+    link: '/app/admin/roles',
+    icon: 'co-m-roles',
+    docs: 'role_permit',
   },
   users: {
     text: 'sidebar.nav.menu.USERS',
-    link: '/admin/users',
-    icon: 'co-m-users'
+    link: '/app/admin/users',
+    icon: 'co-m-users',
+    docs: 'users',
   },
   actionLog: {
     text: 'sidebar.nav.menu.ACTIONS_LOG',
-    link: '/admin/action-log',
-    icon: 'co-m-action-log'
+    link: '/app/admin/action-log',
+    icon: 'co-m-action-log',
+    docs: 'action_log',
   },
   constants: {
     text: 'sidebar.nav.menu.CONSTANTS',
-    link: '/admin/constants',
-    icon: 'co-m-constants'
+    link: '/app/admin/constants',
+    icon: 'co-m-constants',
+    docs: 'const_value',
   },
   dictionary: {
     text: 'sidebar.nav.menu.DICTIONARIES',
-    link: '/admin/dictionaries',
-    icon: 'co-m-dictionaries'
+    link: '/app/admin/dictionaries',
+    icon: 'co-m-dictionaries',
+    docs: 'dict',
   },
   clients: {
     text: 'sidebar.nav.menu.PORTFOLIOS_CONTRACTORS',
-    link: '/admin/contractors',
-    icon: 'co-m-portfolios'
+    link: '/app/admin/contractors',
+    icon: 'co-m-portfolios',
+    docs: 'bank_portfolio',
   },
   structure: {
     text: 'sidebar.nav.menu.DEPARTMENTS',
-    link: '/admin/organizations',
-    icon: 'co-m-org-structure'
+    link: '/app/admin/organizations',
+    icon: 'co-m-org-structure',
+    docs: 'department',
   },
 
   // Утилиты:
   utilities: {
     text: 'sidebar.nav.menu.UTILITIES',
-    link: '/utilities',
-    icon: ''
+    link: '/app/utilities',
+    icon: '',
+    docs: 'utils',
   },
   loadTemplates: {
     text: 'sidebar.nav.menu.UPLOAD_TEMPLATES',
-    link: '/utilities/upload-templates',
-    icon: 'co-m-load-templates'
+    link: '/app/utilities/upload-templates',
+    icon: 'co-m-load-templates',
+    docs: null,
   },
   currencyRates: {
     text: 'sidebar.nav.menu.CURRENCIES',
-    link: '/utilities/currencies',
-    icon: 'co-m-currencies'
+    link: '/app/utilities/currencies',
+    icon: 'co-m-currencies',
+    docs: 'cur_exchange',
   },
   dataLoad: {
     text: 'sidebar.nav.menu.DATA_UPLOAD',
-    link: '/utilities/data-upload',
-    icon: 'co-m-data-upload'
+    link: '/app/utilities/data-upload',
+    icon: 'co-m-data-upload',
+    docs: 'load_data',
   },
   attributes: {
     text: 'sidebar.nav.menu.ARBITRARY_VALUES',
-    link: '/utilities/arbitrary-values',
-    icon: 'co-m-attributes'
+    link: '/app/utilities/arbitrary-values',
+    icon: 'co-m-attributes',
+    docs: null,
   },
   contacts: {
     text: 'sidebar.nav.menu.CONTACT_TREES',
-    link: '/utilities/contact-properties',
-    icon: 'co-m-contact-tree'
+    link: '/app/utilities/contact-properties',
+    icon: 'co-m-contact-tree',
+    docs: 'contact_tree_set',
   },
   messages: {
     text: 'sidebar.nav.menu.MESSAGE_SCENARIOS',
-    link: '/utilities/message-templates',
-    icon: 'co-m-message-scenarios'
+    link: '/app/utilities/message-templates',
+    icon: 'co-m-message-scenarios',
+    docs: 'debt_msg',
   },
   schedule: {
     text: 'sidebar.nav.menu.SCHEDULE',
-    link: '/utilities/schedule',
-    icon: 'co-m-schedule'
+    link: '/app/utilities/schedule',
+    icon: 'co-m-schedule',
+    docs: 'schedule',
   },
   callCampaign: {
     text: 'sidebar.nav.menu.CAMPAIGNS',
-    link: '/utilities/campaigns',
-    icon: 'co-m-call-campaigns'
+    link: '/app/utilities/campaigns',
+    icon: 'co-m-call-campaigns',
+    docs: 'campaign',
   },
   formulas: {
     text: 'sidebar.nav.menu.FORMULAS',
-    link: '/utilities/formulas',
-    icon: 'co-m-formulae'
+    link: '/app/utilities/formulas',
+    icon: 'co-m-formulae',
+    docs: 'formula',
   },
   courts: {
     text: 'sidebar.nav.menu.COURTS',
-    link: '/utilities/courts',
-    icon: 'co-m-courts'
+    link: '/app/utilities/courts',
+    icon: 'co-m-courts',
+    docs: null,
   },
   letters: {
     text: 'sidebar.nav.menu.LETTERS',
-    link: '/utilities/letters',
-    icon: 'co-mail'
+    link: '/app/utilities/letters',
+    icon: 'co-mail',
+    docs: 'letter_designer',
   },
 
   // Рабочие места:
   workplaces: {
     text: 'sidebar.nav.menu.WORKPLACES',
-    link: '/workplaces',
-    icon: ''
+    link: '/app/workplaces',
+    icon: '',
+    docs: 'workplaces',
   },
   debtList: {
     text: 'sidebar.nav.menu.DEBT_LIST',
-    link: '/workplaces/debts',
-    icon: 'co-m-debt-list'
+    link: '/app/workplaces/debts',
+    icon: 'co-m-debt-list',
+    docs: null,
   },
   tasks: {
     text: 'sidebar.nav.menu.TASKS',
-    link: '/workplaces/tasks',
-    icon: 'co-m-tasks'
+    link: '/app/workplaces/tasks',
+    icon: 'co-m-tasks',
+    docs: 'work_task',
   },
   debts: {
     text: 'sidebar.nav.menu.DEBTS',
-    link: '/workplaces/debt-processing',
-    icon: 'co-m-debt-processing'
+    link: '/app/workplaces/debt-processing',
+    icon: 'co-m-debt-processing',
+    docs: 'ring_up',
   },
   contactProtocol: {
     text: 'sidebar.nav.menu.CONTACT_LOG',
-    link: '/workplaces/contact-log',
-    icon: 'co-m-contact-log'
+    link: '/app/workplaces/contact-log',
+    icon: 'co-m-contact-log',
+    docs: 'contact_log',
   },
   callcenter: {
     text: 'sidebar.nav.menu.CALL_CENTER',
-    link: '/workplaces/call-center',
-    icon: 'co-m-call-center'
+    link: '/app/workplaces/call-center',
+    icon: 'co-m-call-center',
+    docs: 'call_center',
   },
   payments: {
     text: 'sidebar.nav.menu.PAYMENTS',
-    link: '/workplaces/payments',
-    icon: 'co-m-payments'
+    link: '/app/workplaces/payments',
+    icon: 'co-m-payments',
+    docs: 'payments',
   },
   courts2: {
     text: 'sidebar.nav.menu.COURTS_2',
-    link: '/workplaces/courts',
-    icon: 'co-m-courts'
+    link: '/app/workplaces/courts',
+    icon: 'co-m-courts',
+    docs: null,
   },
   outgoingInformation: {
     text: 'sidebar.nav.menu.OUTGOING_INFORMATION',
-    link: '/workplaces/outgoing-information',
-    icon: 'co-m-communication-out'
+    link: '/app/workplaces/outgoing-information',
+    icon: 'co-m-communication-out',
+    docs: 'info_debt',
   },
   searchGroups: {
     text: 'sidebar.nav.menu.SEARCH_GROUPS',
-    link: '/workplaces/search-groups',
-    icon: 'co-search-groups'
+    link: '/app/workplaces/search-groups',
+    icon: 'co-search-groups',
+    docs: null,
   },
   mail: {
     text: 'sidebar.nav.menu.MAIL',
-    link: '/workplaces/mail',
-    icon: 'co-m-mail'
+    link: '/app/workplaces/mail',
+    icon: 'co-m-mail',
+    docs: null,
   },
   incomingCall: {
     text: 'sidebar.nav.menu.INCOMING_CALL',
-    link: '/workplaces/incoming-call',
-    icon: 'co-m-call-incoming'
+    link: '/app/workplaces/incoming-call',
+    icon: 'co-m-call-incoming',
+    docs: 'inner_call',
   },
 
   // Отчеты
   reports: {
     text: 'sidebar.nav.menu.REPORTS',
-    link: '/reports',
-    icon: ''
+    link: '/app/reports',
+    icon: '',
+    docs: null,
   },
   anyReports: {
     text: 'sidebar.nav.menu.REPORTS',
-    link: '/reports',
-    icon: 'co-m-action-log'
+    link: '/app/reports',
+    icon: 'co-m-action-log',
+    docs: null,
   },
 
   // Справка
   help: {
     text: 'sidebar.nav.menu.HELP',
-    link: '/help',
-    icon: 'co-m-help'
+    link: '/app/help',
+    icon: 'co-m-help',
+    docs: null,
   }
 };

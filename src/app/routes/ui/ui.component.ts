@@ -11,6 +11,7 @@ import { ITab } from '@app/shared/components/layout/tabview/header/header.interf
 })
 export class UIComponent {
   tabs: ITab[] = [
+    { link: 'buttons', title: 'Buttons' },
     { link: 'inputs', title: 'Inputs' },
     { link: 'select', title: 'Select' },
     { link: 'datetime', title: 'Date/Time' },
@@ -19,5 +20,6 @@ export class UIComponent {
     { link: 'areas', title: 'Areas' },
     { link: 'icons', title: 'Icons' },
     { link: 'ws', title: 'WebSockets' },
+    { link: 'maps', title: 'Maps' },
   ];
 }

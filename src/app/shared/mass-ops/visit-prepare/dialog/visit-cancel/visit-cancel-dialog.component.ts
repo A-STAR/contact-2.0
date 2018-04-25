@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IOperationResult, IConfirmOperation } from '../../visit-prepare.interface';
+import { IConfirmOperation } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
 
@@ -48,12 +48,12 @@ export class VisitCancelDialogComponent extends DialogFunctions implements OnIni
 
   onConfirm(): void {
     this.visitPrepareService.cancel(this.actionData.payload)
-      .subscribe(result => this.onOperationResult(result), () => this.onCloseDialog());
+      .subscribe(() => this.onOperationResult(), () => this.onCloseDialog());
   }
 
-  onOperationResult(result: IOperationResult): void {
-    this.visitPrepareService.showOperationNotification(result);
-    this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+  onOperationResult(): void {
+    // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    this.close.emit({ refresh: false });
   }
 
   onCloseDialog(): void {

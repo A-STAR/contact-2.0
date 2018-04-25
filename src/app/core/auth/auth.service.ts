@@ -1,15 +1,14 @@
 import { Actions } from '@ngrx/effects';
 import { Injectable, NgZone } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
-import { IUser, IUserParams } from './auth.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
@@ -40,6 +39,10 @@ export class AuthService implements CanActivate {
 
   private tokenTimer = null;
 
+  private readonly token$ = this.store.pipe(
+    select(state => state.auth.token),
+  );
+
   constructor(
     private actions: Actions,
     private jwtHelper: JwtHelperService,
@@ -61,15 +64,18 @@ export class AuthService implements CanActivate {
     .subscribe(() => this.refreshUserParamsAction());
   }
 
-  get currentUser$(): Observable<IUser> {
-    return this.token$
-      .map(token => token && this.jwtHelper.decodeToken(token))
-      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId, userName: tokenInfo.username });
-  }
+  readonly currentUser$ = this.token$.pipe(
+    map(token => token && this.jwtHelper.decodeToken(token)),
+    map(tokenInfo => tokenInfo && { userId: tokenInfo.userId, userName: tokenInfo.username }),
+  );
 
-  get userParams$(): Observable<IUserParams> {
-    return this.store.select(store => store.auth.params);
-  }
+  readonly userParams$ = this.store.pipe(
+    select(store => store.auth.params),
+  );
+
+  readonly validToken$ = this.token$.pipe(
+    map(token => this.isTokenValid(token) ? token : null),
+  );
 
   canActivate(): Observable<boolean> {
     return this.token$.map(token => this.isTokenValid(token) || this.isRetrievedTokenValid());
@@ -163,9 +169,5 @@ export class AuthService implements CanActivate {
 
   private isTokenValid(token: string): boolean {
     return !!token && !this.jwtHelper.isTokenExpired(token);
-  }
-
-  private get token$(): Observable<string> {
-    return this.store.select(state => state.auth.token);
   }
 }

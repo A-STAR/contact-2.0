@@ -8,6 +8,7 @@ export interface IMenuItem {
   text: string;
   link: string;
   icon: string;
+  docs: string;
   children: Array<IMenuItem>;
   isActive?: boolean;
 }

@@ -52,13 +52,6 @@ export class EntityGroupService extends AbstractActionService {
           idData: this.actionGridService.buildRequest(actionParams.payload)
         }
       )
-      .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
-        } else {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
-        }
-      })
       .catch(this.notificationsService.updateError().entity('entities.entityGroup.gen.singular').dispatchCallback());
   }
 

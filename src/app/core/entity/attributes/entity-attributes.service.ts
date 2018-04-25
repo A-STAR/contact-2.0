@@ -7,7 +7,6 @@ import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import {
   EntityAttributesStatusEnum,
   IEntityAttributes,
-  IEntityAttributesState,
   IEntityAttribute,
 } from './entity-attributes.interface';
 import { IAppState } from '@app/core/state/state.interface';
@@ -27,6 +26,10 @@ export class EntityAttributesService extends AbstractActionService {
 
   private hash = {};
   private statuses = [EntityAttributesStatusEnum.PENDING, EntityAttributesStatusEnum.LOADED];
+
+  private readonly state$ = this.store.pipe(
+    select(state => state.entityAttributes),
+  );
 
   constructor(
     protected actions: Actions,
@@ -95,9 +98,5 @@ export class EntityAttributesService extends AbstractActionService {
   private refresh(ids: number[]): void {
     const action = { type: EntityAttributesService.ENTITY_ATTRIBUTE_FETCH, payload: { ids } };
     this.store.dispatch(action);
-  }
-
-  private get state$(): Observable<IEntityAttributesState> {
-    return this.store.select(state => state.entityAttributes);
   }
 }

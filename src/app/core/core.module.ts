@@ -4,6 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AppModulesModule } from './app-modules/app-modules.module';
 import { DebtModule } from './debt/debt.module';
+import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
+import { MapProvidersModule } from '@app/core/map-providers/map-providers.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
@@ -18,6 +20,7 @@ import { EntityTranslationsService } from './entity/translations/entity-translat
 import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
+import { HelpService } from './help/help.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
@@ -35,6 +38,8 @@ import { environment } from '../../environments/environment';
   imports: [
     AppModulesModule,
     DebtModule,
+    DynamicLoaderModule.forRoot(),
+    MapProvidersModule,
     RoutingModule,
     UserModule,
   ],
@@ -52,6 +57,7 @@ import { environment } from '../../environments/environment';
     LookupService,
     GridFiltersService,
     GuiObjectsService,
+    HelpService,
     MetadataService,
     NotificationsService,
     PersistenceService,

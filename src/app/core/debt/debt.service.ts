@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators';
 
 import { IAddress, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from '@app/core/debt/debt.interface';
 
@@ -33,36 +34,30 @@ export class DebtService {
     private userPermissionsService: UserPermissionsService
   ) {}
 
-  get canRegisterIncomingCalls$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_INCOMING_CALL);
-  }
+  readonly canRegisterIncomingCalls$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_INCOMING_CALL);
 
   canRegisterIncomingCall$(phone: IPhone): Observable<boolean> {
     return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : of(false);
   }
 
-  get canRegisterAddressVisits$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_ADDRESS_VISIT);
-  }
+  readonly canRegisterAddressVisits$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_ADDRESS_VISIT);
 
   canRegisterAddressVisit$(address: IAddress): Observable<boolean> {
     return address && !address.isInactive ? this.canRegisterAddressVisits$ : of(false);
   }
 
-  get canRegisterSpecialOrOfficeVisit$(): Observable<boolean> {
-    return this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
-      DebtService.CONTACT_TYPE_SPECIAL,
-      DebtService.CONTACT_TYPE_OFFICE_VISIT
-    ]);
-  }
+  readonly canRegisterSpecialOrOfficeVisit$ = this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
+    DebtService.CONTACT_TYPE_SPECIAL,
+    DebtService.CONTACT_TYPE_OFFICE_VISIT
+  ]);
 
-  get canRegisterSpecial$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_SPECIAL);
-  }
+  readonly canRegisterSpecial$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_SPECIAL);
 
-  get canRegisterOfficeVisit$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
-  }
+  readonly canRegisterOfficeVisit$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
 
   get incomingCallSearchParams(): any {
     return this._incomingCallSearchParams$;
@@ -108,13 +103,13 @@ export class DebtService {
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, debt: IDebt): Observable<void> {
+  create(personId: number, debt: Partial<IDebt>): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { personId }, debt)
       .catch(this.notificationsService.createError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  update(personId: number, debtId: number, debt: IDebt): Observable<void> {
+  update(personId: number, debtId: number, debt: Partial<IDebt>): Observable<void> {
     return this.dataService
       .update(this.extUrl, { debtId, personId }, debt)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
@@ -138,12 +133,18 @@ export class DebtService {
       .catch(this.notificationsService.deleteError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
-  openByDebtId(debtId: number): Promise<boolean> {
-    return this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
+  getDebtorIdByDebtId(debtId: number): Observable<number> {
+    return this.fetch(null, debtId).pipe(
+      map(response => response && response.personId),
+    );
+  }
+
+  openByDebtId(debtId: number, debtorId: number): Promise<boolean> {
+    return this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
   }
 
   openIncomingCall(data: any): Promise<boolean> {
-    return this.routingService.navigate(['workplaces/incoming-call'])
+    return this.routingService.navigate([ '/app/workplaces/incoming-call' ])
       .then(success => success ? (this.incomingCallSearchParams = data) : null);
   }
 }

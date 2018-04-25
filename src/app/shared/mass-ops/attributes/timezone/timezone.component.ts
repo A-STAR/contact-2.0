@@ -46,9 +46,10 @@ export class TimezoneComponent implements OnInit {
   submit(): void {
     this.attributesService
       .change(this.actionData.payload, { timeZoneId: this.selectedTimeZone.id })
-      .subscribe((res) => {
-        const refresh = res.massInfo && !!res.massInfo.processed;
-        this.close.emit({ refresh });
+      .subscribe(() => {
+        // const refresh = res.massInfo && !!res.massInfo.processed;
+        // this.close.emit({ refresh });
+        this.close.emit({ refresh: false });
       });
   }
 

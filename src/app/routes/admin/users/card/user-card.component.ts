@@ -123,7 +123,7 @@ export class UserCardComponent extends DialogFunctions {
   }
 
   onClose(): void {
-    this.routingService.navigate([ '/admin', 'users' ]);
+    this.routingService.navigate([ '/app/admin/users' ]);
   }
 
   private getFormControls(

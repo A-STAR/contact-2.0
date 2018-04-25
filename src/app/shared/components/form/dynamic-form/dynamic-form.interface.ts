@@ -75,6 +75,7 @@ export interface IDynamicFormBaseControl {
   markAsDirty?: boolean;
   onChange?: (value: any) => void;
   required?: boolean;
+  readonly?: boolean;
   validators?: ValidatorFn[];
   validationMessages?: IValidationMessages;
   // the width can take a number from 1 to 12 (we are using the bootstrap grid)

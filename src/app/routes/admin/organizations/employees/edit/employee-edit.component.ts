@@ -1,18 +1,19 @@
 import { Input, Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployee } from '../../organizations.interface';
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-employee-edit',
   templateUrl: './employee-edit.component.html'
 })
 export class EmployeeEditComponent implements OnInit {
-  @Input() employeeRoleOptions: Array<any> = [];
   // angular-cli/issues/2034
   @Input() editedEntity: IEmployee = null;
   @Output() submit = new EventEmitter<any>();
@@ -29,7 +30,6 @@ export class EmployeeEditComponent implements OnInit {
 
     this.formData = {
       ...this.editedEntity,
-      roleCode: [ this.employeeRoleOptions.find(roleOption => roleOption.value === this.editedEntity.roleCode) ],
     };
 
     this.userPermissionsService.has('ORGANIZATION_EDIT')
@@ -57,7 +57,7 @@ export class EmployeeEditComponent implements OnInit {
           { label: 'users.edit.position', controlName: 'position', type: 'text', disabled: true },
           {
             label: 'users.edit.role', controlName: 'roleCode', type: 'select', required: true, disabled: !canEdit,
-            options: this.employeeRoleOptions
+            dictCode: UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE
           },
           { label: 'organizations.employees.edit.isMain', controlName: 'isMain', type: 'checkbox', disabled: false },
         ]

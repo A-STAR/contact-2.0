@@ -9,7 +9,10 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  OnInit,
 } from '@angular/core';
+import { filter } from 'rxjs/operators';
+import { Router, ActivatedRoute, ActivationEnd } from '@angular/router';
 
 import {
   ColDef,
@@ -19,15 +22,19 @@ import {
   RowDoubleClickedEvent,
   CellValueChangedEvent,
 } from 'ag-grid';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
+import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IGridSelectionType, IGridTreePath } from '../grids.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from './grid.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContextMenuService } from '../context-menu/context-menu.service';
+import { GridsDefaultsService } from '@app/shared/components/grids/grids-defaults.service';
 import { GridsService } from '../grids.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 
 import { EmptyOverlayComponent } from '../overlays/empty/empty.component';
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
@@ -39,9 +46,12 @@ import { isEmpty } from '@app/core/utils/index';
   host: { class: 'full-size' },
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
-  templateUrl: './grid.component.html'
+  templateUrl: './grid.component.html',
+  providers: [
+    GridsDefaultsService
+  ],
 })
-export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
+export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
   @ViewChild(GridToolbarComponent) gridToolbar: GridToolbarComponent;
 
   @Input() actions: IMetadataAction[] = [];
@@ -80,6 +90,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() cellValueChanged = new EventEmitter<CellValueChangedEvent>();
 
+  private persistenceClearSub: Subscription;
+  private routeChangeSub: Subscription;
+  private settingsReseted = false;
+
   gridOptions: GridOptions = {
     defaultColDef: {
       filterParams: {
@@ -112,6 +126,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
     noRowsOverlayComponentFramework: EmptyOverlayComponent,
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
+    onColumnVisible: () => this.saveSettings(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
     onCellValueChanged: event => this.onCellValueChanged(event),
     onSelectionChanged: () => this.onSelectionChanged(),
@@ -138,7 +153,11 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contextMenuService: ContextMenuService,
+    private gridsDefaultsService: GridsDefaultsService,
     private gridsService: GridsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private settingsService: SettingsService,
   ) {}
 
   get rowClassCallback(): any {
@@ -153,10 +172,27 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
       : [];
   }
 
+  ngOnInit(): void {
+    this.persistenceClearSub = this.settingsService.onClear$
+    .subscribe( _ => this.resetGridSettings());
+
+    this.routeChangeSub = this.router.events
+      .pipe(
+        filter(event => event instanceof ActivationEnd),
+        filter(event => (event as ActivationEnd).snapshot === this.route.snapshot),
+      )
+      .subscribe(_ => {
+        if (this.settingsReseted) {
+          this.gridApi.doLayout();
+          this.settingsReseted = false;
+        }
+      });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.columns) {
       this.autoGroupColumnDef = this.gridsService.getRowGrouping(this.columns);
-      this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
+      this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey, this.gridsDefaultsService);
       this.cdRef.markForCheck();
     }
   }
@@ -167,6 +203,8 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveSettings();
+    this.persistenceClearSub.unsubscribe();
+    this.routeChangeSub.unsubscribe();
   }
 
   onGridReady(params: any): void {
@@ -196,14 +234,24 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
     }
   }
 
-  private getContextMenuSimpleItems(): string[] {
+  private getContextMenuSimpleItems(): IContextMenuSimpleOptions {
     return [
       'copy',
       'copyWithHeaders',
+      {
+        name: 'default.grid.localeText.resetColumns',
+        action: () => this.resetGridSettings(),
+        // shortcut: 'Alt+R'
+      },
     ];
   }
 
   private saveSettings(): void {
     this.gridsService.saveSettings(this.persistenceKey, this.gridApi, this.columnApi);
+  }
+
+  private resetGridSettings(): void {
+    this.gridsDefaultsService.reset(this.gridApi, this.columnApi);
+    this.settingsReseted = true;
   }
 }

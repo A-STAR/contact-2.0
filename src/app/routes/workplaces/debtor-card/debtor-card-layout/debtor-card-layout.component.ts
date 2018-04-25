@@ -37,7 +37,7 @@ import { invert } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: 'full-size' },
-  selector: 'app-debtor',
+  selector: 'app-debtor-card-layout',
   templateUrl: './debtor-card-layout.component.html',
 })
 export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
@@ -64,7 +64,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   ];
 
   private personSubscription: Subscription;
-  private routeIdSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -87,14 +86,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         this.cdRef.markForCheck();
       });
 
-    this.routeIdSubscription = this.route.paramMap
-      .subscribe(paramMap => {
-        const debtId = paramMap.get('debtId');
-        if (debtId) {
-          this.debtorCardService.initByDebtId(Number(debtId));
-        }
-    });
-
     this.personSubscription = combineLatest(
       this.debtorCardService.person$.filter(Boolean),
       this.debtorCardService.selectedDebt$.filter(Boolean),
@@ -115,7 +106,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
 
   ngOnDestroy(): void {
     this.personSubscription.unsubscribe();
-    this.routeIdSubscription.unsubscribe();
   }
 
   get debtId$(): Observable<number> {

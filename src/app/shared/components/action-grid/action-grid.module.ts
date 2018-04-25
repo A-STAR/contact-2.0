@@ -8,6 +8,7 @@ import { DebtResponsibleModule } from '@app/shared/mass-ops/debt-responsible/deb
 import { DebtStatusModule } from '@app/shared/mass-ops/debt-status/debt-status.module';
 import { DownloaderModule } from '@app/shared/components/downloader/downloader.module';
 import { EntityGroupModule } from '@app/shared/mass-ops/entity-group/entity-group.module';
+import { ExcelFilterModule } from './excel-filter/excel-filter.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 import { Grid2Module } from '../grid2/grid2.module';
 import { MassOpsModule } from '@app/shared/mass-ops/mass-ops.module';
@@ -35,6 +36,7 @@ import { ActionGridComponent } from './action-grid.component';
     DebtResponsibleModule,
     DownloaderModule,
     EntityGroupModule,
+    ExcelFilterModule,
     GridsModule,
     Grid2Module,
     MassOpsModule,
@@ -50,12 +52,14 @@ import { ActionGridComponent } from './action-grid.component';
     VisitPrepareModule,
     RegisterContactOpenModule,
   ],
-  providers: [ ActionGridService ],
+  providers: [
+    ActionGridService,
+  ],
   exports: [
     ActionGridComponent,
   ],
   declarations: [
     ActionGridComponent,
-  ]
+  ],
 })
 export class ActionGridModule {}

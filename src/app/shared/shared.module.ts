@@ -30,6 +30,7 @@ import { DebtAmountModule } from './components/form/debt-amount/debt-amount.modu
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
+import { DictionaryModule } from './pipes/dictionary/dictionary.module';
 import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DropdownInputModule } from './components/form/dropdown/dropdown-input.module';
@@ -47,6 +48,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
+import { MapModule } from './components/map/map.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MenuModule } from './components/form/menu/menu.module';
 import { MetadataFormModule } from './components/form/metadata-form/metadata-form.module';
@@ -54,6 +56,7 @@ import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multilanguage/multilanguage.module';
 import { OperatorModule } from './components/operator/operator.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
+import { PopupOutletModule } from './components/popup-outlet/popup-outlet.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
@@ -101,6 +104,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
+    DictionaryModule,
     DownloaderModule,
     DropdownModule,
     DropdownInputModule,
@@ -118,6 +122,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
+    MapModule,
     MassOpsModule,
     MenuModule,
     MetadataFormModule,
@@ -125,6 +130,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MultiLanguageModule,
     OperatorModule,
     PopupInputModule,
+    PopupOutletModule,
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
@@ -178,6 +184,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
+    DictionaryModule,
     DownloaderModule,
     DropdownModule,
     DropdownInputModule,
@@ -196,6 +203,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
+    MapModule,
     MassOpsModule,
     MenuModule,
     MetadataFormModule,
@@ -204,12 +212,14 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NumericInputComponent,
     OperatorModule,
     PopupInputModule,
+    PopupOutletModule,
     ProgressbarModule,
     QBuilderComponent,
     QBuilder2Module,
     RadioGroupModule,
     SelectModule,
     SpinnerModule,
+    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
     Toolbar2Module,

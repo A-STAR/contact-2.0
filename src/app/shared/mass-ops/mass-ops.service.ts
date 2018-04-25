@@ -18,24 +18,34 @@ export class MassOperationsService {
   ) { }
 
   openDebtCardByDebtor(actionData: any, onClose?: Function): void {
+    const { debtorId } = actionData;
     this.debtService.getFirstDebtsByUserId(actionData)
       .subscribe( debtId => {
         if (!debtId) {
           this.notificationsService.warning('header.noDebt.title').dispatch();
           return;
         }
-        this.openDebtCard({ debtId, ...actionData }, onClose);
+        this.openCard(debtorId, debtId, onClose);
       });
   }
 
   openDebtCard(actionData: any, onClose?: Function): Promise<void> {
-    const { debtId } = actionData;
-    return this.debtService.openByDebtId(debtId)
-      .then(success => success && onClose ? onClose() : null);
+    const { debtId, debtorId } = actionData;
+    return debtorId
+      ? this.openCard(debtorId, debtId, onClose)
+      : this.debtService
+          .getDebtorIdByDebtId(debtId)
+          .toPromise()
+          .then(id => this.openCard(id, debtId, onClose));
   }
 
   openIncomingCall(actionData: any): Promise<boolean> {
     return this.debtService.openIncomingCall(actionData);
   }
 
+  private openCard(debtorId: number, debtId: number, onClose: Function = null): Promise<void> {
+    return this.debtService
+      .openByDebtId(debtId, debtorId)
+      .then(success => success && onClose ? onClose() : null);
+  }
 }

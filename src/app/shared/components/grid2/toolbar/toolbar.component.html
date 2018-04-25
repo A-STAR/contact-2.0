@@ -12,7 +12,6 @@
 
       <ng-container *ngSwitchCase="ToolbarControlEnum.SELECT">
         <app-select
-          [autoAlign]="true"
           [isDisabled]="!!action.disabled"
           [isRequired]="true"
           [ngModel]="action.activeValue"

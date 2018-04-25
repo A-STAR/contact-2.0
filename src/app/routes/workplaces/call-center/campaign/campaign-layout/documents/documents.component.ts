@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { CampaignService } from '../../campaign.service';
 
@@ -9,15 +8,10 @@ import { CampaignService } from '../../campaign.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentsComponent {
+  readonly debtExists$ = this.campaignService.campaignDebt$.map(Boolean);
+  readonly debtId$ = this.campaignService.campaignDebt$.map(debt => debt.debtId);
+
   constructor(
     private campaignService: CampaignService,
   ) {}
-
-  get debtExists$(): Observable<boolean> {
-    return this.campaignService.campaignDebt$.map(Boolean);
-  }
-
-  get debtId$(): Observable<number> {
-    return this.campaignService.campaignDebt$.map(debt => debt.debtId);
-  }
 }

@@ -57,14 +57,6 @@ export class VisitPrepareService extends AbstractActionService {
       .catch(this.notificationsService.deleteError().entity('entities.visit.gen.singular').dispatchCallback());
   }
 
-  showOperationNotification(result: IOperationResult): void {
-    if (!result.success) {
-      this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(result).dispatch();
-    } else {
-      this.notificationsService.info().entity('default.dialog.result.message').response(result).dispatch();
-    }
-  }
-
   getVisitsCount(idData: IGridActionPayload): number {
     return this.actionGridService.getSelectionCount(idData) || 0;
   }

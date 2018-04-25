@@ -13,7 +13,11 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'inputs',
+        redirectTo: 'buttons',
+      },
+      {
+        path: 'buttons',
+        loadChildren: './buttons/buttons.module#ButtonsModule',
       },
       {
         path: 'inputs',
@@ -46,6 +50,10 @@ const routes: Routes = [
       {
         path: 'ws',
         loadChildren: './ws/ws.module#WSModule',
+      },
+      {
+        path: 'maps',
+        loadChildren: './maps/maps.module#MapsModule',
       },
     ]
   },

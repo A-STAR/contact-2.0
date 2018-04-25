@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
-
-import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
 
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 
@@ -12,15 +9,11 @@ import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainMenuComponent {
-  private _menuItems$ = this.guiObjectsService.menuItems;
+  readonly menuItems$ = this.guiObjectsService.menuItems.pipe(
+    map(items => items.filter(item => item.text)),
+  );
 
   constructor(
     private guiObjectsService: GuiObjectsService
   ) {}
-
-  get menuItems$(): Observable<IMenuItem[]> {
-    return this._menuItems$.pipe(
-      map(items => items.filter(item => item.text)),
-    );
-  }
 }

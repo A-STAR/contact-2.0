@@ -1,3 +1,10 @@
+<h3>
+  {{ 'routes.workplaces.shared.contactRegistration.edit.form.attachments.title' | translate }}
+  <span class="form-label">
+    <b *ngIf="isRequired$ | async" class="text-danger">*</b>
+  </span>
+</h3>
+
 <app-contact-registration-attachment-edit
   *ngIf="isDialog('edit')"
   (submit)="onEditDialogSubmit($event)"
@@ -15,11 +22,12 @@
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
-<app-simple-grid
-  persistenceKey="workplaces/shared/contact-registration/attachments"
-  [columns]="columns"
-  [rows]="documents"
-  [toolbar]="toolbarItems"
-  (dblClick)="onDoubleClick($event)"
-  (select)="onSelect($event)"
-></app-simple-grid>
+<div class="attachment-grid">
+  <app-simple-grid
+    persistenceKey="workplaces/shared/contact-registration/attachments"
+    [columns]="columns"
+    [rows]="documents"
+    [toolbar]="toolbarItems"
+    (select)="onSelect($event)"
+  ></app-simple-grid>
+</div>

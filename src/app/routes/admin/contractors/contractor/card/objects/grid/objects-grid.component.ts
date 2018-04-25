@@ -126,11 +126,7 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId)
-    ]);
+    this.routingService.navigate([ `/app/admin/contractors/${String(this.contractorId)}` ]);
   }
 
   private fetch(): void {

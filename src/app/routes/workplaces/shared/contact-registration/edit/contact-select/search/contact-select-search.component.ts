@@ -14,8 +14,6 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
 import { makeKey, range, addLabelForEntity } from '@app/core/utils';
 
-import { isNil } from 'ramda';
-
 const labelKey = makeKey('routes.workplaces.shared.contactRegistration.contactGrid.tabs.add.form');
 
 @Component({
@@ -55,7 +53,7 @@ export class ContactSelectSearchComponent {
   ) {}
 
   get isValid(): boolean {
-    return !isNil(this.selectedPersonId);
+    return !!this.selectedPersonId;
   }
 
   get person(): IContactPerson {

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   IMetadataFormConfig,
   IMetadataFormControlType,
+  IMetadataFormGroupType,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 import { IContextConfigItemType, IContextByValueBagMethod } from '@app/core/context/context.interface';
 
@@ -25,6 +26,7 @@ export class FormsComponent {
         validators: {
           required: true,
         },
+        width: 1,
       },
       {
         disabled: false,
@@ -45,6 +47,7 @@ export class FormsComponent {
           },
           required: true,
         },
+        width: 1,
       },
       {
         children: [
@@ -57,24 +60,46 @@ export class FormsComponent {
             validators: {
               maxLength: 10,
             },
+            width: 0,
           },
           {
             children: [
               {
                 disabled: true,
                 display: true,
-                label: 'Deeply Nested Text Input',
-                name: 'deeplyNestedText',
+                label: 'Deeply Nested Text Input 1',
+                name: 'deeplyNestedText1',
                 type: IMetadataFormControlType.TEXT,
                 validators: {},
+                width: 1,
+              },
+              {
+                disabled: true,
+                display: true,
+                label: 'Deeply Nested Text Input 2',
+                name: 'deeplyNestedText2',
+                type: IMetadataFormControlType.TEXT,
+                validators: {},
+                width: 1,
               },
             ],
+            border: false,
+            display: true,
+            groupType: IMetadataFormGroupType.TABS,
+            label: 'Group 2',
             type: IMetadataFormControlType.GROUP,
+            width: 0,
           },
         ],
+        border: true,
+        display: true,
         type: IMetadataFormControlType.GROUP,
+        label: 'Group 1',
+        groupType: IMetadataFormGroupType.PLAIN,
+        width: 0,
       },
     ],
+    plugins: [],
   };
 
   readonly data = {

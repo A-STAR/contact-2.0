@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
-import { IMetadataFormControl, IMetadataFormItem } from '../metadata-form.interface';
+import {
+  IMetadataFormFlatConfig,
+  IMetadataFormGroupType,
+  IMetadataFormItem,
+  IMetadataFormControlType,
+} from '../metadata-form.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,21 +32,27 @@ export class MetadataFormGroupComponent {
     timepicker: 'validation.timepicker'
   };
 
-  @Input() editable: boolean;
-  @Input() formGroup: FormGroup;
-  @Input() items: IMetadataFormItem[];
+  @HostBinding('class.bordered')
+  @Input()
+  border: boolean;
 
-  getErrorMessage(control: IMetadataFormControl): any {
-    const c = this.formGroup.get(control.name);
-    return c.errors && (c.touched || c.dirty)
-      ? this.getErrorMessageForControl(c)
-      : { message: null, data: null };
+  @Input() editable: boolean;
+  @Input() flatConfig: IMetadataFormFlatConfig;
+  @Input() formGroup: FormGroup;
+  @Input() groupType: IMetadataFormGroupType;
+  @Input() items: IMetadataFormItem[];
+  @Input() label: string;
+  @Input() suppressLabel = false;
+
+  isDisplayed(item: IMetadataFormItem): Observable<boolean> {
+    return item.type === IMetadataFormControlType.GROUP
+      ? of(true)
+      : this.flatConfig[item.name].display;
   }
 
-  private getErrorMessageForControl(c: AbstractControl): any {
-    const keys = Object.keys(c.errors);
-    return keys.length
-      ? { message: MetadataFormGroupComponent.DEFAULT_MESSAGES[keys[0]] || keys[0], data: c.errors[keys[0]] }
-      : { message: null, data: null };
+  getItemStyle(width: number): Partial<CSSStyleDeclaration> {
+    return width
+      ? { flex: width.toString() }
+      : { flexBasis: '100%' };
   }
 }

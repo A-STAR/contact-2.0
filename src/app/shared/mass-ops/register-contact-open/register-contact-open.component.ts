@@ -1,10 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IGridAction, ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { RegisterContactOpenService } from './register-contact-open.service';
 
 import { AddressGridComponent } from './address/address.component';
@@ -32,7 +30,6 @@ export class RegisterContactOpenComponent implements OnInit {
 
   constructor(
     private actionGridService: ActionGridService,
-    private debtService: DebtService,
     private registerContactOpenService: RegisterContactOpenService
   ) { }
 
@@ -44,18 +41,6 @@ export class RegisterContactOpenComponent implements OnInit {
 
     this.entityTypeId = Number(this.actionGridService.getAddOption(this.actionData, 'entityTypeId', 0));
     this.campaignId = Number(this.actionGridService.getAddOption(this.actionData, 'campaignId', 0));
-  }
-
-  get canRegisterPhones$(): Observable<boolean> {
-    return this.debtService.canRegisterIncomingCalls$;
-  }
-
-  get canRegisterAddresses$(): Observable<boolean> {
-    return this.debtService.canRegisterAddressVisits$;
-  }
-
-  get canRegisterMisc$(): Observable<boolean> {
-    return this.debtService.canRegisterSpecialOrOfficeVisit$;
   }
 
   onAddressAction(contactId: number): void {
@@ -74,7 +59,7 @@ export class RegisterContactOpenComponent implements OnInit {
   onPhoneAction(contactId: any): void {
     this.registerContactOpenService.registerContactAction$.next(
       {
-        contactType: 2,
+        contactType: 1,
         contactId,
         debtId: this.debtId,
         personId: this.entityId,
@@ -88,19 +73,6 @@ export class RegisterContactOpenComponent implements OnInit {
     this.registerContactOpenService.registerContactAction$.next(
       {
         contactType: 7,
-        contactId: 0,
-        debtId: this.debtId,
-        personId: this.entityId,
-        campaignId: this.campaignId
-      }
-    );
-    this.close.emit();
-  }
-
-  onOfficeVisitAction(): void {
-    this.registerContactOpenService.registerContactAction$.next(
-      {
-        contactType: 8,
         contactId: 0,
         debtId: this.debtId,
         personId: this.entityId,

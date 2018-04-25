@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioButtonComponent } from './radiobutton/radiobutton.component';
+import { TickComponent } from './tick/tick.component';
 
 @NgModule({
   imports: [
@@ -15,10 +16,12 @@ import { RadioButtonComponent } from './radiobutton/radiobutton.component';
   exports: [
     CheckboxComponent,
     RadioButtonComponent,
+    TickComponent,
   ],
   declarations: [
     CheckboxComponent,
     RadioButtonComponent,
+    TickComponent,
   ],
 })
 export class CheckModule {}

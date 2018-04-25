@@ -1,0 +1,55 @@
+<div appDropdown [container]="container" fitWidthToContent="true">
+  <div #dropdownTrigger>
+    <app-button
+      [disabled]="isDisabled(config) | async"
+      [label]="false"
+      [withBtnClass]="false"
+      [btnClass]="'map-filter-btn'"
+      type="search">
+    </app-button>
+  </div>
+  <div class="dropdown-content" #dropdownContent>
+    <ng-container *ngFor="let child of config.children">
+      <div class="dropdown-item" [ngSwitch]="child.type">
+        <!-- Lookup -->
+        <app-menu-select
+          *ngSwitchCase="'lookup'"
+          class="dropdown-item-control"
+          [label]="child.label"
+          [lookupKey]="child.lookupKey"
+          [disabled]="isDisabled(child) | async"
+          (action)="onChildSelect($event, child)"
+        ></app-menu-select>
+        <!-- Dict -->
+        <app-menu-select
+          *ngSwitchCase="'dict'"
+          class="dropdown-item-control"
+          [label]="child.label"
+          [dictCode]="child.dictCode"
+          [disabled]="isDisabled(child) | async"
+          (action)="onChildSelect($event, child)"
+        ></app-menu-select>
+        <!-- Button -->
+        <button
+          *ngSwitchCase="'button'"
+          class="btn btn-link dropdown-control-btn dropdown-item-control"
+          [disabled]="isDisabled(child) | async"
+          (click)="onChildSelect($event, child)"
+        >
+        {{ child.label | translate }}
+        </button>
+        <!-- Checkbox -->
+        <app-tick
+          *ngSwitchCase="'checkbox'"
+          [label]="child.label"
+          class="dropdown-item-control"
+          [disabled]="isDisabled(child) | async"
+          [ngModel]="child.checked"
+          (ngModelChange)="onChildSelect($event, child)">
+        </app-tick>
+        <!-- Separator -->
+        <div *ngSwitchCase="'separator'" class="separator"></div>
+      </div>
+    </ng-container>
+  </div>
+</div>

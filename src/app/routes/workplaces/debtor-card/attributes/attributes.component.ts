@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
-import { IActionType } from '../../../../core/app-modules/debtor-card/debtor-card.interface';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { IActionType } from '@app/core/app-modules/debtor-card/debtor-card.interface';
 
 @Component({
   selector: 'app-debtor-attributes',

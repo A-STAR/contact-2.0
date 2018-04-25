@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { IGridColumn, IGridFilterType, IGridLocalSettings, IGridTreePath } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
+import { GridsDefaultsService } from '@app/shared/components/grids/grids-defaults.service';
 import { SettingsService } from '@app/core/settings/settings.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -14,13 +15,14 @@ import { ValueEditorComponent } from '@app/shared/components/grids/editors';
 
 @Injectable()
 export class GridsService {
+
   constructor(
     private settingsService: SettingsService,
     private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
-  convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): ColDef[] {
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string, defaults?: GridsDefaultsService): ColDef[] {
     const savedColumns = persistenceKey
       ? this.getLocalSettings(persistenceKey).columns
       : [];
@@ -29,13 +31,17 @@ export class GridsService {
     const savedColumnIds = savedColumns.map(c => c.colId);
     const ids = Array.from(new Set([ ...savedColumnIds, ...columnIds ]));
 
+    if (defaults) {
+      defaults.save(columns, persistenceKey);
+    }
+
     return ids
       .map(id => {
         const column = columns.find(c => c.prop === id);
         return column
           ? {
               field: column.prop,
-              headerName: this.translateService.instant(column.label),
+              headerName: this.translateService.instant(column.label) || id,
               hide: column.isGroup,
               minWidth: column.minWidth,
               maxWidth: column.maxWidth,

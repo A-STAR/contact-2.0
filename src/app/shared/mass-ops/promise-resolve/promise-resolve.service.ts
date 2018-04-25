@@ -24,13 +24,6 @@ export class PromiseResolveService {
           idData: this.actionGridService.buildRequest(idData)
         }
       )
-      .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
-        } else {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
-        }
-      })
       .catch(this.notificationsService.updateError().entity('entities.promises.gen.plural').dispatchCallback());
   }
 
@@ -41,13 +34,6 @@ export class PromiseResolveService {
           idData: this.actionGridService.buildRequest(idData)
         }
       )
-      .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
-        } else {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
-        }
-      })
       .catch(this.notificationsService.deleteError().entity('entities.promises.gen.plural').dispatchCallback());
   }
 }

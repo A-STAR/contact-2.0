@@ -16,8 +16,9 @@
               #dropdown
               position="right"
               class="icon"
+              [ngClass]="item.classes | async"
               [title]="getTitle(item)"
-              [enabled]="!(isDisabled(item) | async)"
+              [enabled]="!(item.enabled | async)"
             >
               <i trigger class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
               <app-menu [items]="item.children"></app-menu>
@@ -26,8 +27,9 @@
           <ng-template #button>
             <button
               class="icon"
-              [disabled]="isDisabled(item) | async"
-              [title]="getTitle(item)"
+              [ngClass]="item.classes | async"
+              [disabled]="!(item.enabled | async)"
+              [title]="getTitle(item) | translate"
               (click)="item.action()"
             >
               <i class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>

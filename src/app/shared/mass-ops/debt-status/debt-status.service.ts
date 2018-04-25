@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IOperationResult } from '../debt-responsible/debt-responsible.interface';
@@ -28,14 +28,8 @@ export class DebtStatusService {
         }
       )
       .pipe(
-        tap(response => {
-          if (response.success) {
-            this.notificationsService.info().entity('default.dialog.result.message').response(response).dispatch();
-          } else {
-            this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(response).dispatch();
-          }
-        }),
-        catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));
+        catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback())
+      );
   }
 
   getDebtsCount(actionData: IGridActionPayload): number | string {

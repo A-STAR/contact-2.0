@@ -10,14 +10,11 @@ import {
 } from '@angular/core';
 
 import { IAttribute, IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
-import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { getFormControlConfig, getRawValue, getValue } from '@app/core/utils/value';
-import { makeKey } from '@app/core/utils';
-
-const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
   selector: 'app-attribute-version-edit',
@@ -34,6 +31,9 @@ export class AttributeVersionEditComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  config: IDynamicFormConfig = {
+    labelKey: 'widgets.attribute.grid'
+  };
   controls: IDynamicFormControl[];
   formData: IAttributeVersionForm;
 
@@ -80,21 +80,20 @@ export class AttributeVersionEditComponent implements OnInit {
   }
 
   private buildControls(attr: IAttribute): IDynamicFormControl[] {
+    const valueControlType = getFormControlConfig(attr);
     return [
       {
-        label: labelKey('value'),
         controlName: 'value',
         required: true,
-        ...getFormControlConfig(attr)
+        ...valueControlType,
+        dictCode: valueControlType.type === 'select' ? attr.dictNameCode : null
       },
       {
-        label: labelKey('changeDateTime'),
         controlName: 'changeDateTime',
         required: true,
         type: 'datepicker',
       },
       {
-        label: labelKey('comment'),
         controlName: 'comment',
         type: 'textarea',
       },

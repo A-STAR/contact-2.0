@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Inpu
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'app-password-input',
-  templateUrl: './password.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -11,7 +10,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-password-input',
+  templateUrl: './password.component.html',
 })
 export class PasswordComponent implements ControlValueAccessor {
   @Input() label: string;
