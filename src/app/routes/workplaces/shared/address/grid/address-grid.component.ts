@@ -280,6 +280,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return this._addresses;
   }
 
+  get personRole(): number {
+    return this._personRole$.value;
+  }
+
   getRowClass(): any {
     return (address: IAddress) => address.isInactive ? 'inactive' : null;
   }
