@@ -3460,7 +3460,8 @@
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
-        "registerContact": "Регистрация контакта"
+        "registerContact": "Регистрация контакта",
+        "changePersonType": "Изменить тип персоны"
       }
     },
     "filter": {

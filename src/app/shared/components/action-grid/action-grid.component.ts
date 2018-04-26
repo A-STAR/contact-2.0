@@ -597,6 +597,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('DEBT_OUTSOURCING_RETURN') : selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
       registerContact: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         of(true) : selection.length && of(true),
+      changePersonType: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('PERSON_INFO_EDIT') : selection.length && permissions.has('PERSON_INFO_EDIT'),
     };
   }
 }
