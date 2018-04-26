@@ -1,4 +1,6 @@
 <div>
-    <p>Template:</p>
-    {{ template | json }}
-  </div>
+  <p>Template:</p>
+  <ng-container *ngIf="tRef">
+    <ng-container *ngTemplateOutlet="tRef"></ng-container>
+  </ng-container>
+</div>

@@ -1,1 +1,5 @@
-<app-dynamic-layout [layout]="layout"></app-dynamic-layout>
+<app-dynamic-layout *ngIf="templates" [layout]="layout" [templates]="templates"></app-dynamic-layout>
+
+<ng-template #foo>
+  I am a template. Nice to have you here.
+</ng-template>

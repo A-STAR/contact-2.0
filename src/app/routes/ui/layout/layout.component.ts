@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import {
   ContextOperator,
@@ -14,7 +14,9 @@ import {
   selector: 'app-route-ui-layout',
   templateUrl: './layout.component.html'
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
+  @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
+
   readonly layout: IDynamicLayoutConfig = {
     items: [
       {
@@ -67,10 +69,22 @@ export class LayoutComponent {
                   },
                 ],
               },
+              {
+                type: DynamicLayoutItemType.TEMPLATE,
+                value: 'foo',
+              },
             ],
           },
         ],
       },
     ],
   };
+
+  templates: Record<string, TemplateRef<any>>;
+
+  ngOnInit(): void {
+    this.templates = {
+      foo: this.foo,
+    };
+  }
 }

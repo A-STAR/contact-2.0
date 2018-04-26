@@ -2,4 +2,5 @@ import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from './item.interfa
 
 export interface IDynamicLayoutTemplate extends IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType.TEMPLATE;
+  value: string;
 }

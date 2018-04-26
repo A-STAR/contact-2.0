@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '@angular/core';
 
 import { IDynamicLayoutTemplate } from '../../interface';
+
+import { TemplateService } from '../../services/template.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,6 +10,16 @@ import { IDynamicLayoutTemplate } from '../../interface';
   selector: 'app-dynamic-layout-template',
   templateUrl: 'template.component.html'
 })
-export class TemplateComponent {
+export class TemplateComponent implements OnInit {
   @Input() template: IDynamicLayoutTemplate;
+
+  tRef: TemplateRef<any>;
+
+  constructor(
+    private templateService: TemplateService,
+  ) {}
+
+  ngOnInit(): void {
+    this.tRef = this.templateService.templates[this.template.value];
+  }
 }
