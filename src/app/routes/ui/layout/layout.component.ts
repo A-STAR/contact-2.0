@@ -6,7 +6,7 @@ import {
   DynamicLayoutItemType,
   IDynamicLayoutConfig,
   DynamicLayoutGroupType,
-} from '@app/shared/components/dynamic-layout/interface';
+} from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
