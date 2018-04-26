@@ -16,7 +16,7 @@ export class FormService {
     private formBuilder: FormBuilder,
   ) {}
 
-  init(items: { [key: string]: IDynamicLayoutItemProperties }): void {
+  init(items: Record<string, IDynamicLayoutItemProperties>): void {
     this.controls = Object.keys(items)
       .map(key => items[key].item)
       .filter(item => item.type === DynamicLayoutItemType.CONTROL)
@@ -24,9 +24,6 @@ export class FormService {
 
     const forms = new Set(this.controls.map(control => control.form || 'default'));
     forms.forEach(form => this.createFormGroup(form));
-
-    // tslint:disable-next-line:no-console
-    console.log(this.groups);
   }
 
   getFormGroup(control: IDynamicLayoutControl): FormGroup {

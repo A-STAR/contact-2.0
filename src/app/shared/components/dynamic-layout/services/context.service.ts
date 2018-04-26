@@ -61,13 +61,13 @@ export class ContextService {
     return key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state);
   }
 
-  private calculateFromStore(value: { [key: string]: any }, context: IContext): any {
+  private calculateFromStore(value: Record<string, any>, context: IContext): any {
     return typeof context === 'object'
       ? this.calculateExpression(value, context)
       : context;
   }
 
-  private calculateExpression(value: { [key: string]: any }, expression: IContextExpression): any {
+  private calculateExpression(value: Record<string, any>, expression: IContextExpression): any {
     switch (expression.operator) {
       case ContextOperator.AND:
         return (expression.value as any[]).reduce((acc, e) => acc && this.calculateExpression(value, e), true);

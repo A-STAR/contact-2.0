@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import {
-  AttributeType,
   ContextOperator,
   DynamicLayoutControlType,
   DynamicLayoutItemType,
@@ -53,8 +52,8 @@ export class LayoutComponent {
               },
               {
                 type: DynamicLayoutItemType.ATTRIBUTE,
-                attributeType: AttributeType.FORMULA,
-                value: 'ctx.debt.id',
+                key: 'ctx.debt.id',
+                formula: 1,
               },
               {
                 type: DynamicLayoutItemType.GROUP,
