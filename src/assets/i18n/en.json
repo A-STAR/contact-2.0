@@ -2150,6 +2150,13 @@
           "message": "Do you really want to return outsourcing for the selected debts?",
           "title": "Return outsourcing"
         }
+      },
+      "changeStageAttr": {
+        "title": "Change debt stage",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
       }
     },
     "nextCallDateSet": {
