@@ -8,6 +8,7 @@ export enum DynamicLayoutControlType {
 export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType.CONTROL;
   controlType: DynamicLayoutControlType;
+  name: string;
   form?: string;
 }
 

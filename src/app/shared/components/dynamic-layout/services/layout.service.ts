@@ -12,6 +12,7 @@ import {
 
 import { AttributeService } from './attribute.service';
 import { ContextService } from './context.service';
+import { FormService } from './form.service';
 import { MetadataService } from './metadata.service';
 
 @Injectable()
@@ -23,6 +24,7 @@ export class LayoutService {
   constructor(
     private attributeService: AttributeService,
     private contextService: ContextService,
+    private formService: FormService,
     private metadataService: MetadataService,
   ) {}
 
@@ -48,6 +50,10 @@ export class LayoutService {
     }
   }
 
+  getItem(uid: string): IDynamicLayoutItemProperties {
+    return this._items[uid];
+  }
+
   private init(config: IDynamicLayoutConfig): void {
     const items = this.addUids(config.items);
     this._group = {
@@ -56,21 +62,19 @@ export class LayoutService {
       type: DynamicLayoutItemType.GROUP,
     };
     this._items = this.flattenItems(items);
-    this.attributeService.getAttributes(this._items);
+    this.attributeService.init(this._items);
+    this.formService.init(this._items);
     this._initialized = true;
-
-    // tslint:disable-next-line:no-console
-    console.log(this._group);
-    // tslint:disable-next-line:no-console
-    console.log(this._items);
   }
 
-  private addUids(items: IDynamicLayoutItem[], level: number = 0): IDynamicLayoutItem[] {
+  private addUids(items: IDynamicLayoutItem[], parent: string = null): IDynamicLayoutItem[] {
     return items.map((item, i) => {
-      const uid = `${level}.${i}`;
+      const uid = parent
+        ? `${parent}.${i + 1}`
+        : `${i + 1}`;
       switch (item.type) {
         case DynamicLayoutItemType.GROUP:
-          return { ...item, uid, children: this.addUids(item.children, level + 1) };
+          return { ...item, uid, children: this.addUids(item.children, uid) };
         default:
           return { ...item, uid };
       }
@@ -93,6 +97,7 @@ export class LayoutService {
     return {
       item,
       streams: {
+        disabled: item.disabled ? this.contextService.calculate(item.disabled) : of(true),
         display: item.display ? this.contextService.calculate(item.display) : of(true),
       },
     };

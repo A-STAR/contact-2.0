@@ -26,6 +26,7 @@ export interface IDynamicLayoutConfig {
 export interface IDynamicLayoutItemProperties {
   item: IDynamicLayoutItem;
   streams: {
+    disabled: Observable<boolean>;
     display: Observable<boolean>;
   };
 }

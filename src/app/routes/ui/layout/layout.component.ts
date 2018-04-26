@@ -6,6 +6,7 @@ import {
   DynamicLayoutControlType,
   DynamicLayoutItemType,
   IDynamicLayoutConfig,
+  DynamicLayoutGroupType,
 } from '@app/shared/components/dynamic-layout/interface';
 
 @Component({
@@ -19,29 +20,55 @@ export class LayoutComponent {
     items: [
       {
         type: DynamicLayoutItemType.GROUP,
+        groupType: DynamicLayoutGroupType.HORIZONTAL,
         children: [
           {
             type: DynamicLayoutItemType.CONTROL,
             controlType: DynamicLayoutControlType.TEXT,
-            display: {
-              operator: ContextOperator.AND,
-              value: [
-                {
-                  operator: ContextOperator.EVAL,
-                  value: 'userPermissions.permissions.CONST_VALUE_VIEW.valueB',
-                },
-                {
-                  operator: ContextOperator.EVAL,
-                  value: 'userPermissions.permissions.CONST_VALUE_EDIT.valueB',
-                },
-              ],
-            },
+            label: 'Foo',
+            name: 'foo',
           },
           {
-            type: DynamicLayoutItemType.ATTRIBUTE,
-            attributeType: AttributeType.FORMULA,
-            value: 'ctx.debt.id',
-          }
+            type: DynamicLayoutItemType.GROUP,
+            children: [
+              {
+                type: DynamicLayoutItemType.CONTROL,
+                controlType: DynamicLayoutControlType.TEXT,
+                label: 'Text Control',
+                name: 'text',
+                display: {
+                  operator: ContextOperator.AND,
+                  value: [
+                    {
+                      operator: ContextOperator.EVAL,
+                      value: 'userPermissions.permissions.CONST_VALUE_VIEW.valueB',
+                    },
+                    {
+                      operator: ContextOperator.EVAL,
+                      value: 'userPermissions.permissions.CONST_VALUE_EDIT.valueB',
+                    },
+                  ],
+                },
+              },
+              {
+                type: DynamicLayoutItemType.ATTRIBUTE,
+                attributeType: AttributeType.FORMULA,
+                value: 'ctx.debt.id',
+              },
+              {
+                type: DynamicLayoutItemType.GROUP,
+                groupType: DynamicLayoutGroupType.TABS,
+                children: [
+                  {
+                    type: DynamicLayoutItemType.CONTROL,
+                    controlType: DynamicLayoutControlType.TEXT,
+                    label: 'Bar',
+                    name: 'bar',
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
     ],

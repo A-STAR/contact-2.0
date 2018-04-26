@@ -2,8 +2,10 @@ import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from './item.interfa
 import { IDynamicLayoutItem } from '.';
 
 export enum DynamicLayoutGroupType {
-  PLAIN = 'plain',
-  TABS  = 'tabs',
+  HORIZONTAL = 'horizontal',
+  PLAIN      = 'plain',
+  TABS       = 'tabs',
+  VERTICAL   = 'vertical',
 }
 
 export interface IDynamicLayoutGroup extends IDynamicLayoutGenericItem {

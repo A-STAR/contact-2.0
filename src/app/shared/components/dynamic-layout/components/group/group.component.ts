@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDynamicLayoutGroup, IDynamicLayoutItem } from '../../interface';
+
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,7 +13,11 @@ import { IDynamicLayoutGroup, IDynamicLayoutItem } from '../../interface';
 export class GroupComponent {
   @Input() group: IDynamicLayoutGroup;
 
-  get items(): IDynamicLayoutItem[] {
-    return this.group.children;
+  constructor(
+    private layoutService: LayoutService,
+  ) {}
+
+  isDisplayed(item: IDynamicLayoutItem): Observable<boolean> {
+    return this.layoutService.getItem(item.uid).streams.display;
   }
 }
