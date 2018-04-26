@@ -2976,6 +2976,7 @@
         "filterByContactType": "Filter by contact type",
         "filterByVisitType": "Filter by visit type",
         "hideAddresses": "Hide addresses",
+        "hideAccuracy": "Hide accuracy",
         "showAllAdresses": "Show all addresses",
         "showInactives": "Show inactive addresses",
         "resetFilter": "Reset filter"

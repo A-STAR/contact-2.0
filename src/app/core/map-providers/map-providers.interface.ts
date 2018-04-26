@@ -9,6 +9,12 @@ import {
   LatLngBounds,
   LatLngBoundsLiteral,
   Polyline,
+  Circle,
+  Polygon,
+  Rectangle,
+  MarkerOptions,
+  PolylineOptions,
+  CircleMarkerOptions,
 } from 'leaflet';
 
 export interface IMapModuleOptions {
@@ -22,22 +28,76 @@ export interface IMapConfig {
 
 export interface IMapService<T> {
   container: HTMLElement;
-  getEntities(): IMapEntity<T>[];
   createBounds(latlngs?: LatLngBoundsLiteral | google.maps.LatLngLiteral[]): LatLngBounds | google.maps.LatLngBounds;
-  createControl(controlDef: IControlDef<T>): ControlComponentRefGetter<T>;
-  createMarker(markerDef: IMarker<T>): ICreateMarkerResult<T>;
-  createPolyline(latlngs: ILatLng[]): google.maps.Polyline | Polyline;
+  createControl(controlDef: IControlDef<T>): void;
+  createLayer(layerDef: ILayerDef<T>): ILayer<T>;
   getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
-  getIconConfig(configKey: string, entity: T): IMarkerIconConfig;
+  getIconConfig(configKey: string, data: T): ILayerIconConfig;
   getMap(): google.maps.Map | Map;
-  addToMap(entity: IMapEntity<T>): void;
-  removeFromMap(entity: IMapEntity<T>): void;
+  addToMap(layer: ILayer<T>): void;
+  removeFromMap(layer: ILayer<T>): void;
   init(mapConfig: IMapOptions): Observable<any>;
   removeMap(): void;
 }
 
-export interface IMapEntity<T> {
-  marker: Marker | google.maps.Marker;
+export enum LayerType {
+  MARKER,
+  POLYLINE,
+  CIRCLE,
+  POLYGON,
+  RECTANGLE,
+}
+
+export interface ILayerDef<T> {
+  latlngs: Geo;
+  type: LayerType;
+  options?: GeoLayerOptions;
+  iconConfig?: any;
+  data?: T;
+  radius?: number;
+  popup?: Type<IPopupCmp<T>>;
+  tpl?: TemplateRef<T>;
+}
+
+export type GeoPoint = google.maps.LatLngLiteral | LatLngLiteral;
+
+export type GeoCircle = GeoPoint & { radius: number };
+
+export type GeoLine = GeoPoint[];
+
+export type GeoPolygon = GeoPoint[] | GeoPoint[][];
+
+export type Geo = GeoPoint | GeoCircle | GeoLine | GeoPolygon;
+
+export type GoogleLayerOptions =  google.maps.MarkerOptions |
+                                  google.maps.CircleOptions |
+                                  google.maps.PolylineOptions |
+                                  google.maps.PolygonOptions;
+
+export type LeafletLayerOptions = MarkerOptions |
+                                  CircleMarkerOptions |
+                                  PolylineOptions;
+
+export type GeoLayerOptions = GoogleLayerOptions | LeafletLayerOptions;
+
+export type GoogleGeoLayer =  google.maps.Marker |
+                              google.maps.Polyline |
+                              google.maps.Circle |
+                              google.maps.Polygon |
+                              google.maps.Rectangle;
+
+export type LeafletGeoLayer = Marker |
+                              Polyline |
+                              Circle |
+                              Polygon |
+                              Rectangle;
+
+export type GeoLayer = GoogleGeoLayer | LeafletGeoLayer;
+
+export interface ILayer<T> {
+  layer: GeoLayer;
+  id?: number;
+  type: LayerType;
   data?: T;
 }
 
@@ -74,9 +134,9 @@ export interface IComponentContext<T> {
 }
 
 export interface IControlCmpContext<T> extends IComponentContext<T> {
-  index: number;
   position: MapControlPosition;
   map: any;
+  index?: number;
 }
 
 export interface IPopupCmp<T> {
@@ -84,25 +144,17 @@ export interface IPopupCmp<T> {
   tpl?: TemplateRef<T>;
 }
 
-export interface IMapComponents<T> {
-  popups?: PopupComponentRefGetter<T>[];
-  controls?: ControlComponentRefGetter<T>[];
-}
+export type MapComponents<T>  = Array<ControlComponentRefGetter<T> | PopupComponentRefGetter<T>>;
 
 export interface IIconConfigParam {
   typeCode: number;
   isInactive: number | boolean;
 }
 
-export interface IMarkerIconConfig {
+export interface ILayerIconConfig {
   char?: string;
   fillColor?: string;
   textColor?: string;
-}
-
-export interface ICreateMarkerResult<T> {
-  entity: IMapEntity<T>;
-  popupRef?: PopupComponentRefGetter<T>;
 }
 
 export type PopupComponentRefGetter<T> = () => ComponentRef<IPopupCmp<T>>;
@@ -114,17 +166,6 @@ export interface IMapOptions extends MapOptions, google.maps.MapOptions {
   center?: { lat: number, lng: number };
   fitToData?: boolean;
 }
-
-export interface IMarker<T> {
-  lat: number;
-  lng: number;
-  iconConfig?: any;
-  data?: T;
-  popup?: Type<IPopupCmp<T>>;
-  tpl?: TemplateRef<T>;
-}
-
-export type ILatLng = LatLngLiteral | google.maps.LatLng;
 
 export enum MapProvider {
   GOOGLE = 'google',

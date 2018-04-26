@@ -2976,6 +2976,7 @@
         "filterByContactType": "Фильтр по типу контакта",
         "filterByVisitType": "Фильтр по типу выезда",
         "hideAddresses": "Скрыть адреса",
+        "hideAccuracy": "Скрыть точность",
         "showAllAdresses": "Отображать все адреса",
         "showInactives": "Отображать все заблокированные адреса",
         "resetFilter": "Сбросить фильтр"

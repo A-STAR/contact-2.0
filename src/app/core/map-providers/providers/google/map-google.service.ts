@@ -4,17 +4,20 @@ import {} from '@types/googlemaps';
 
 import {
   IMapOptions,
-  IMarker,
-  ICreateMarkerResult,
+  ILayer,
   PopupComponentRefGetter,
-  IMarkerIconConfig,
+  ILayerIconConfig,
   IControlDef,
-  ControlComponentRefGetter,
   IControlCmp,
   IPopupCmp,
   MapControlPosition,
-  IMapEntity,
   IMapService,
+  LayerType,
+  ILayerDef,
+  GeoPoint,
+  GeoLine,
+  GeoLayer,
+  GoogleGeoLayer,
 } from '../../map-providers.interface';
 import { Libraries } from './maps-google.interface';
 
@@ -22,9 +25,10 @@ import { ConfigService } from '@app/core/config/config.service';
 import { MapRendererService } from '../../renderer/map-renderer.service';
 
 import { IncId } from '@app/core/utils';
+import { MapProvider } from '@app/core/map-providers/providers/map-provider';
 
 @Injectable()
-export class MapGoogleService<T> implements IMapService<T> {
+export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T> {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
   // TODO(i.lobanov): pass from client code
   static MY_MAGIC_CONSTANT = 100;
@@ -61,7 +65,7 @@ export class MapGoogleService<T> implements IMapService<T> {
   };
 
   static ICON_CONFIG_GETTERS = {
-    singleAddress: (config: IMarkerIconConfig[], entity) => {
+    singleAddress: (config: ILayerIconConfig[], entity) => {
       return entity.isInactive ?  {
         ...config[entity.typeCode],
         ...config[0],
@@ -69,7 +73,7 @@ export class MapGoogleService<T> implements IMapService<T> {
         ...config[entity.typeCode]
       };
     },
-    addressByPerson: (config: IMarkerIconConfig[], entity) => {
+    addressByPerson: (config: ILayerIconConfig[], entity) => {
       return entity.isInactive ?  {
         ...config[entity.typeCode],
         ...config[0],
@@ -77,7 +81,7 @@ export class MapGoogleService<T> implements IMapService<T> {
         ...config[entity.typeCode]
       };
     },
-    addressByContact: (config: IMarkerIconConfig[], entity) => {
+    addressByContact: (config: ILayerIconConfig[], entity) => {
       if (entity.addressLatitude && entity.addressLongitude) {
         const result = { ...config[entity.addressType] };
         result.fillColor = entity.distance >= MapGoogleService.MY_MAGIC_CONSTANT ? '37bc9b' : 'fad732';
@@ -93,7 +97,6 @@ export class MapGoogleService<T> implements IMapService<T> {
   private libraryEl: HTMLScriptElement;
   private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
   private _map: google.maps.Map;
-  private _entities: IMapEntity<T>[] = [];
   private _listeners: any[] = [];
 
   container: HTMLElement;
@@ -102,7 +105,9 @@ export class MapGoogleService<T> implements IMapService<T> {
     private configService: ConfigService,
     private mapRendererService: MapRendererService,
     private zone: NgZone,
-  ) {}
+  ) {
+    super();
+  }
 
   init(mapConfig: IMapOptions): Observable<any> {
     return Observable.create(observer =>
@@ -119,26 +124,45 @@ export class MapGoogleService<T> implements IMapService<T> {
     );
   }
 
-  createMarker(markerDef: IMarker<T>,
-  ): ICreateMarkerResult<T> {
-    let popupRef;
-    const marker = new google.maps.Marker({
-      position: { lat: markerDef.lat, lng: markerDef.lng },
-      map: this._map,
-      icon: markerDef.iconConfig
-        ? this.createMarkerIcon(markerDef.iconConfig)
-        : undefined,
-    });
-    if (markerDef.popup) {
-      popupRef = this.createPopup(this._map, marker, markerDef);
+  createLayer(data: ILayerDef<T>): ILayer<T> {
+    switch (data.type) {
+      case LayerType.MARKER:
+        return this.createMarker(data);
+      case LayerType.POLYLINE:
+        return this.createPolyline(data);
+      case LayerType.CIRCLE:
+        return this.createCircle(data);
+      case LayerType.POLYGON:
+      case LayerType.RECTANGLE:
+        return this.createPolygon(data);
+      default:
+        throw new Error(`Unknown layer type: ${data.type}`);
     }
-    const entity = { marker, data: markerDef.data };
-    this._entities.push(entity);
-
-    return { entity, popupRef };
   }
 
-  createControl(controlDef: IControlDef<T>): ControlComponentRefGetter<T> {
+  createMarker(data: ILayerDef<T>,
+  ): ILayer<T> {
+    let popupRef;
+    const marker = new google.maps.Marker({
+      ...data.options as google.maps.MarkerOptions,
+      position: data.latlngs as GeoPoint,
+      map: this._map,
+      icon: data.iconConfig
+        ? this.createMarkerIcon(data.iconConfig)
+        : undefined,
+    });
+    if (data.popup) {
+      popupRef = this.createPopup(this._map, marker, data);
+    }
+
+    if (popupRef) {
+      this.addComponent(popupRef);
+    }
+
+    return { layer: marker, data: data.data, type: data.type };
+  }
+
+  createControl(controlDef: IControlDef<T>): void {
     const { compRef, el } = this.mapRendererService.render<IControlCmp<T>>(
       controlDef.cmp,
       controlDef.data,
@@ -160,10 +184,10 @@ export class MapGoogleService<T> implements IMapService<T> {
     };
 
     this._map.controls[this.getControlPositionFromDef(controlDef.position)].push(el);
-
+    // to prevent `Expression has changed after it was checked` error
     compRef.changeDetectorRef.detectChanges();
 
-    return () => compRef;
+    this.addComponent(() => compRef);
   }
 
   removeControl(position: any, index: number): void {
@@ -178,17 +202,13 @@ export class MapGoogleService<T> implements IMapService<T> {
     }
   }
 
-  getEntities(): IMapEntity<T>[] {
-    return this._entities;
-  }
-
-  createMarkerIcon(config: IMarkerIconConfig): string {
+  createMarkerIcon(config: ILayerIconConfig): string {
     return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${
       config.char
     }%7C${config.fillColor}%7C${config.textColor}`;
   }
 
-  getIconConfig(configKey: string, entity: T): IMarkerIconConfig {
+  getIconConfig(configKey: string, entity: T): ILayerIconConfig {
     if (MapGoogleService.ICON_CONFIGS[configKey]) {
       return MapGoogleService.ICON_CONFIG_GETTERS[configKey] ?
         MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity)
@@ -199,14 +219,15 @@ export class MapGoogleService<T> implements IMapService<T> {
     }
   }
 
-  createPolyline(latlngs: [google.maps.LatLng, google.maps.LatLng]): google.maps.Polyline {
+  createPolyline(data: ILayerDef<T>): ILayer<T> {
     const lineSymbol = {
       path: 'M 0,-1 0,1',
       strokeOpacity: 1,
       scale: 4
     };
     const polyline = new google.maps.Polyline({
-      path: latlngs,
+      ...data.options as google.maps.PolylineOptions,
+      path: data.latlngs as GeoLine,
       map: this._map,
       icons: [
         {
@@ -228,7 +249,21 @@ export class MapGoogleService<T> implements IMapService<T> {
         popup.close();
       })
     );
-    return polyline;
+    return { layer: polyline, data: data.data, type: data.type };
+  }
+
+  createCircle(data: ILayerDef<T>): ILayer<T> {
+    const circle = new google.maps.Circle({
+      ...data.options as google.maps.CircleOptions,
+      map: this._map,
+      center: data.latlngs as GeoPoint,
+      radius: data.radius || 10
+    });
+    return { layer: circle, type: data.type, data: data.data };
+  }
+
+  createPolygon(_: ILayerDef<T>): ILayer<T> {
+    throw new Error('Not implemented');
   }
 
   createBounds(
@@ -239,7 +274,7 @@ export class MapGoogleService<T> implements IMapService<T> {
 
   removeMap(): void {
     this.removeControls();
-    this.removeMarkers();
+    this.removeComponents();
     this.removeListeners();
   }
 
@@ -280,15 +315,15 @@ export class MapGoogleService<T> implements IMapService<T> {
     return this._map;
   }
 
-  removeFromMap(entity: IMapEntity<T>): void {
-    if (entity && entity.marker) {
-      (entity.marker as google.maps.Marker).setMap(null);
+  removeFromMap(layer: ILayer<T>): void {
+    if (layer && layer.layer) {
+      (layer.layer as google.maps.Marker).setMap(null);
     }
   }
 
-  addToMap(entity: IMapEntity<T>): void {
-    if (entity && entity.marker && !(entity.marker as google.maps.Marker).getMap()) {
-      (entity.marker as google.maps.Marker).setMap(this._map);
+  addToMap(layer: ILayer<T>): void {
+    if (layer && layer.layer && !(layer.layer as GoogleGeoLayer).getMap()) {
+      (layer.layer as google.maps.Marker).setMap(this._map);
     }
   }
 
@@ -304,11 +339,6 @@ export class MapGoogleService<T> implements IMapService<T> {
     return projection.fromPointToLatLng(midPoint);
   }
 
-  private removeMarkers(): void {
-    this._entities.forEach(entity => (entity.marker as google.maps.Marker).setMap(null));
-    this._entities = [];
-  }
-
   private removeListeners(): void {
     this._listeners.forEach(l => google.maps.event.removeListener(l));
   }
@@ -316,7 +346,7 @@ export class MapGoogleService<T> implements IMapService<T> {
   private createPopup(
     map: google.maps.Map,
     marker: google.maps.Marker,
-    markerDef: IMarker<T>,
+    layerDef: ILayerDef<T>,
   ): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new google.maps.InfoWindow();
@@ -327,9 +357,9 @@ export class MapGoogleService<T> implements IMapService<T> {
             compRef.destroy();
           }
           const result = this.mapRendererService.render<IPopupCmp<T>>(
-            markerDef.popup,
-            markerDef.data,
-            markerDef.tpl,
+            layerDef.popup,
+            layerDef.data,
+            layerDef.tpl,
           );
           el = result.el;
           // prevent google InfoGroup scrolls

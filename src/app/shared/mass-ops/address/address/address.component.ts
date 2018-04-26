@@ -16,11 +16,12 @@ import { of } from 'rxjs/observable/of';
 import { IAddressByPerson } from '@app/shared/mass-ops/address/address.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import {
-  IMarker,
   IMapOptions,
   IMapService,
   IControlDef,
   MapControlPosition,
+  ILayerDef,
+  LayerType,
 } from '@app/core/map-providers/map-providers.interface';
 import {
   MapToolbarFilterItemType,
@@ -51,7 +52,7 @@ export class AddressComponent implements OnInit {
   @ViewChild('tpl') tpl: TemplateRef<IAddressByPerson>;
 
   dialog: string;
-  markers: IMarker<IAddressByPerson>[];
+  layers: ILayerDef<IAddressByPerson>[][];
   options: IMapOptions = { fitToData: true, zoom: 8 };
   controls: IControlDef<IMapToolbarItem[]>[] = [
     {
@@ -65,7 +66,7 @@ export class AddressComponent implements OnInit {
           children: [
             {
               type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.ALL,
+              filter: MapFilters.TOGGLE_ALL,
               label: 'massOperations.addressesByContacts.filter.showAllAdresses',
               enabled: of(true),
               checked: true
@@ -127,8 +128,8 @@ export class AddressComponent implements OnInit {
       .pipe(
         map(addresses =>
           addresses.map(address => ({
-            lat: address.latitude,
-            lng: address.longitude,
+            latlngs: { lat: address.latitude, lng: address.longitude },
+            type: LayerType.MARKER,
             iconConfig: this.mapService.getIconConfig('addressByPerson', address),
             data: address,
             popup: PopupComponent,
@@ -138,8 +139,8 @@ export class AddressComponent implements OnInit {
       )
       .filter(markers => Boolean(markers && markers.length))
       .subscribe(markers => {
-        this.options.center = { lat: markers[0].lat, lng: markers[0].lng };
-        this.markers = markers;
+        this.options.center = { lat: markers[0].latlngs.lat, lng: markers[0].latlngs.lng };
+        this.layers = [ markers ];
         this.cdRef.markForCheck();
       });
   }

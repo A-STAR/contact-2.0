@@ -5,6 +5,7 @@ import { MapRendererModule } from '@app/core/map-providers/renderer/map-renderer
 import { IMapService, MapProvider } from './map-providers.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
+import { LayersService } from './map-layers.service';
 import { MapGoogleService } from './providers/google/map-google.service';
 import { MapRendererService } from './renderer/map-renderer.service';
 import { MapYandexService } from './providers/yandex/map-yandex.service';
@@ -32,6 +33,7 @@ export function mapServiceFactory(
     MapRendererModule
   ],
   providers: [
+    LayersService,
     {
       provide: MAP_SERVICE,
       useFactory: mapServiceFactory,

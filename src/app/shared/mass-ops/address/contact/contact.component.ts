@@ -18,25 +18,30 @@ import {
 } from '@app/shared/mass-ops/address/address.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import {
-  IMarker,
   IMapOptions,
   IMapService,
   MapControlPosition,
   IControlDef,
+  ILayerDef,
+  GeoPoint,
+  LayerType,
 } from '@app/core/map-providers/map-providers.interface';
 import {
   MapToolbarFilterItemType,
   MapToolbarItemType,
   IMapToolbarItem,
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { AddressService } from '../address.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 
 import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
 import { MapToolbarComponent } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.component';
 import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   selector: 'app-map-contact',
@@ -51,8 +56,7 @@ export class ContactComponent implements OnInit {
   @ViewChild('tpl') tpl: TemplateRef<IAddressByContact>;
 
   dialog: string;
-  markers: IMarker<IAddressByContact>[];
-  polylines: any[];
+  layers: ILayerDef<IAddressByContact>[][];
   options: IMapOptions = { fitToData: true, zoom: 8 };
 
   controls: IControlDef<IMapToolbarItem[]>[] = [
@@ -67,7 +71,7 @@ export class ContactComponent implements OnInit {
           children: [
             {
               type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.ALL,
+              filter: MapFilters.TOGGLE_ALL,
               label: 'massOperations.addressesByContacts.filter.showAllAdresses',
               enabled: of(true),
               checked: true
@@ -96,8 +100,14 @@ export class ContactComponent implements OnInit {
             },
             {
               type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.HIDE_ADDRESSES,
+              filter: MapFilters.TOGGLE_ADDRESSES,
               label: 'massOperations.addressesByContacts.filter.hideAddresses',
+              checked: false
+            },
+            {
+              type: MapToolbarFilterItemType.CHECKBOX,
+              filter: MapFilters.TOGGLE_ACCURACY,
+              label: 'massOperations.addressesByContacts.filter.hideAccuracy',
               checked: false
             },
             {
@@ -119,64 +129,82 @@ export class ContactComponent implements OnInit {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     @Inject(MAP_SERVICE) private mapService: IMapService<IAddressByContact>,
+    private userConstantsService: UserConstantsService,
   ) {}
 
   ngOnInit(): void {
-    this.addressService
-      .getAddressesByContacts(this.actionData.payload)
+    combineLatest(
+      this.userConstantsService.get('VisitContactAddress.AllowableDeviationRadius'),
+      this.addressService.getAddressesByContacts(this.actionData.payload)
+      )
       .pipe(
-        map(response => {
-          // TODO(i.lobanov): refactor
-          const polylines = [];
-          const markers = response.reduce((acc: IMarker<IAddressByContact>[], address) => {
-            const addressMarker = [{
-              lat: address.contactLatitude,
-              lng: address.contactLongitude,
-              iconConfig: this.mapService.getIconConfig('addressByContact', {
-                ...address,
-                typeCode: (address as IAddressByContact).contactType,
-                isInactive: false
-              }),
-              data: address,
-              popup: PopupComponent,
-              tpl: this.tpl,
-            }];
-            if (address.addressLatitude && address.addressLongitude) {
-              addressMarker.push(
-                {
-                  lat: address.addressLatitude,
-                  lng: address.addressLongitude,
-                  iconConfig: this.mapService.getIconConfig('addressByContact', {
-                    ...address,
-                    typeCode: (address as IAddressByContact).addressTypeCode,
-                    isInactive: false
-                  }),
-                  data: address,
-                  popup: PopupComponent,
-                  tpl: this.tpl,
-                }
-              );
-              polylines.push([
-                  { lat: address.contactLatitude, lng: address.contactLongitude },
-                  { lat: address.addressLatitude, lng: address.addressLongitude }
-              ]);
-            }
-            acc.push(...addressMarker);
+        map(([constant, response]) => {
+          return response.reduce((acc: ILayerDef<IAddressByContact>[][], address) => {
+            acc.push(this.createContactGroup(address, constant));
             return acc;
           }, []);
-          return [ markers, polylines ];
         }),
       )
-      .filter(([markers, polylines]) => Boolean(markers && markers.length) || Boolean(polylines && polylines.length))
-      .subscribe(([markers, polylines]) => {
-        this.options.center = { lat: markers[0].lat, lng: markers[0].lng };
-        this.markers = markers;
-        this.polylines = polylines;
+      .subscribe(layers => {
+        // this.options.center = { lat: (layers[0][0] as GeoPoint).lat, lng: ;
+        this.layers = layers;
         this.cdRef.markForCheck();
       });
   }
 
   onClose(): void {
     this.close.emit();
+  }
+
+  private createContactGroup(data: IAddressByContact, constant: IUserConstant): ILayerDef<IAddressByContact>[] {
+    const group = [
+        {
+        latlngs: { lat: data.contactLatitude, lng: data.contactLongitude },
+        type: LayerType.MARKER,
+        iconConfig: this.mapService.getIconConfig('addressByContact', {
+          ...data,
+          typeCode: (data as IAddressByContact).contactType,
+          isInactive: false
+        }),
+        data,
+        popup: PopupComponent,
+        tpl: this.tpl,
+      },
+      {
+        latlngs: { lat: data.contactLatitude, lng: data.contactLongitude },
+        radius: data.accuracy || constant.valueN,
+        type: LayerType.CIRCLE,
+        iconConfig: this.mapService.getIconConfig('addressByContact', {
+          ...data,
+          typeCode: (data as IAddressByContact).contactType,
+          isInactive: false
+        }),
+      }
+    ];
+    if (data.addressLatitude && data.addressLongitude) {
+      group.push(
+        {
+          latlngs: { lat: data.addressLatitude, lng: data.addressLongitude },
+          type: LayerType.MARKER,
+          iconConfig: this.mapService.getIconConfig('addressByContact', {
+            ...data,
+            typeCode: (data as IAddressByContact).addressTypeCode,
+            isInactive: false
+          }),
+          data,
+          popup: PopupComponent,
+          tpl: this.tpl,
+        },
+        {
+          latlngs: [
+            { lat: data.contactLatitude, lng: data.contactLongitude },
+            { lat: data.addressLatitude, lng: data.addressLongitude },
+          ],
+          type: LayerType.POLYLINE,
+          data
+        } as any
+      );
+    }
+    return group;
   }
 }

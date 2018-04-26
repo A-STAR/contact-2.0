@@ -11,25 +11,29 @@ import {
   LatLngBounds,
   LatLngBoundsLiteral,
   ControlPosition,
+  LatLngExpression,
+  MarkerOptions,
 } from 'leaflet';
 
 import {
   IMapOptions,
-  ICreateMarkerResult,
-  IMarker,
   PopupComponentRefGetter,
-  IMarkerIconConfig,
+  ILayerIconConfig,
   IPopupCmp,
   MapControlPosition,
-  IMapEntity,
+  ILayer,
   IMapService,
+  ILayerDef,
+  LayerType,
+  LeafletGeoLayer,
 } from '../../map-providers.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { MapRendererService } from '../../renderer/map-renderer.service';
+import { MapProvider } from '@app/core/map-providers/providers/map-provider';
 
 @Injectable()
-export class MapYandexService<T> implements IMapService<T> {
+export class MapYandexService<T> extends MapProvider<T> implements IMapService<T> {
 
   private static OSM_URL = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
 
@@ -37,13 +41,13 @@ export class MapYandexService<T> implements IMapService<T> {
 
   container: HTMLElement;
   private _map: Map;
-  private _entities: IMapEntity<T>[] = [];
 
   constructor(
     private configService: ConfigService,
     private mapRendererService: MapRendererService,
     private zone: NgZone,
   ) {
+    super();
     // override Leaflet default icon path
     Icon.Default.imagePath = 'assets/img/';
   }
@@ -64,60 +68,78 @@ export class MapYandexService<T> implements IMapService<T> {
     return map;
   }
 
-  createMarker(markerDef: IMarker<T>): ICreateMarkerResult<T> {
+  createLayer(data: ILayerDef<T>): ILayer<T> {
+    switch (data.type) {
+      case LayerType.MARKER:
+        return this.createMarker(data);
+      case LayerType.POLYLINE:
+        return this.createPolyline(data);
+      case LayerType.CIRCLE:
+        return this.createCircle(data);
+      case LayerType.POLYGON:
+      case LayerType.RECTANGLE:
+        return this.createPolygon(data);
+      default:
+        throw new Error(`Unknown layer type: ${data.type}`);
+    }
+  }
+
+  createMarker(data: ILayerDef<T>): ILayer<T> {
     let popupRef;
-    const marker = new Marker({ lat: markerDef.lat, lng: markerDef.lng });
-    if (markerDef.popup) {
-      popupRef = this.createPopup(this._map, marker, markerDef);
+    const marker = new Marker(data.latlngs as LatLngExpression, data.options as MarkerOptions);
+    if (data.popup) {
+      popupRef = this.createPopup(this._map, marker, data);
     }
     this._map.addLayer(marker);
-    const entity = { marker, data: markerDef.data };
-    this._entities.push(entity);
-    return { entity, popupRef };
+    if (popupRef) {
+      this.addComponent(popupRef);
+    }
+    return { layer: marker, data: data.data, type: data.type };
+  }
+
+  createPolyline(_: ILayerDef<T>): ILayer<T> {
+    throw new Error('Not implemented!');
+  }
+
+  createCircle(_: ILayerDef<T>): ILayer<T> {
+    throw new Error('Not implemented!');
+  }
+
+  createPolygon(_: ILayerDef<T>): ILayer<T> {
+    throw new Error('Not implemented!');
   }
 
   createControl(): any {
-    // TODO(i.lobanov): implement;
-    return _ => ({} as T);
+    throw new Error('Not implemented!');
   }
 
-  createPolyline(): any {
-    // TODO(i.lobanov): implement;
-    return {};
-  }
-
-  getIconConfig(): IMarkerIconConfig {
-    // TODO(i.lobanov): implement;
-    return {};
+  getIconConfig(): ILayerIconConfig {
+    throw new Error('Not implemented!');
   }
 
   getMap(): Map {
     return this._map;
   }
 
+  addToMap(layer: ILayer<T>): void {
+    if (layer && layer.layer && !this._map.hasLayer((layer.layer as LeafletGeoLayer))) {
+      (layer.layer as LeafletGeoLayer).addTo(this._map);
+    }
+  }
+
+  removeFromMap(layer: ILayer<T>): void {
+    if (layer && layer.layer && this._map.hasLayer((layer.layer as LeafletGeoLayer))) {
+      (layer.layer as LeafletGeoLayer).removeFrom(this._map);
+    }
+  }
+
   removeMap(): void {
     // TODO(i.lobanov): implement
-    this._entities = [];
-  }
-
-  addToMap(entity: IMapEntity<T>): void {
-    if (entity && entity.marker && !this._map.hasLayer((entity.marker as Marker))) {
-      (entity.marker as Marker).addTo(this._map);
-    }
-  }
-
-  removeFromMap(entity: IMapEntity<T>): void {
-    if (entity && entity.marker && this._map.hasLayer((entity.marker as Marker))) {
-      (entity.marker as Marker).removeFrom(this._map);
-    }
+    this.removeComponents();
   }
 
   createBounds(latlngs: LatLngBoundsLiteral): LatLngBounds {
     return new LatLngBounds(latlngs);
-  }
-
-  getEntities(): IMapEntity<T>[] {
-    return this._entities;
   }
 
   getControlPositionFromDef(position: MapControlPosition): ControlPosition {
@@ -143,7 +165,7 @@ export class MapYandexService<T> implements IMapService<T> {
     }
   }
 
-  private createPopup(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {
+  private createPopup(map: Map, marker: Marker, data: ILayerDef<T>): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new Popup({ closeButton: false }, marker);
     marker.on('click', (e: LeafletEvent) => {
@@ -151,7 +173,7 @@ export class MapYandexService<T> implements IMapService<T> {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.mapRendererService.render<IPopupCmp<T>>(markerDef.popup, markerDef.data);
+        const result = this.mapRendererService.render<IPopupCmp<T>>(data.popup, data.data);
         el = result.el;
         compRef = result.compRef;
         popup.setContent(el);
