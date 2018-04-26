@@ -3457,6 +3457,7 @@
         "changeCreditTypeAttr": "Тип кредитного продукта",
         "changeBranchAttr": "Филиал",
         "changeTimezoneAttr": "Часовой пояс",
+        "changeStageAttr": "Стадия",
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
