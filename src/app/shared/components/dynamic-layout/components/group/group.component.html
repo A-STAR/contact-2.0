@@ -1,17 +1,23 @@
 <div *ngFor="let item of items">
   <ng-container [ngSwitch]="item.type">
 
+    <!-- Control -->
+    <app-dynamic-layout-control
+      *ngSwitchCase="'control'"
+      [control]="item"
+    ></app-dynamic-layout-control>
+
+    <!-- Field -->
+    <app-dynamic-layout-field
+      *ngSwitchCase="'field'"
+      [field]="item"
+    ></app-dynamic-layout-field>
+
     <!-- Group -->
     <app-dynamic-layout-group
       *ngSwitchCase="'group'"
       [group]="item"
     ></app-dynamic-layout-group>
-
-    <!-- Item -->
-    <app-dynamic-layout-control
-      *ngSwitchCase="'control'"
-      [control]="item"
-    ></app-dynamic-layout-control>
 
     <!-- Template -->
     <app-dynamic-layout-template

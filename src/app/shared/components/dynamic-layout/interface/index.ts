@@ -6,6 +6,7 @@ import { IDynamicLayoutTemplate } from './template.interface';
 
 export * from './context.interface';
 export * from './control.interface';
+export * from './field.interface';
 export * from './group.interface';
 export * from './item.interface';
 export * from './template.interface';

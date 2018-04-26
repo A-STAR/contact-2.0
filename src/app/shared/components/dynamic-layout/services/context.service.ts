@@ -58,7 +58,7 @@ export class ContextService {
   }
 
   private getStateSlice(state: IAppState, key: string): any {
-    return key.split('.').reduce((a, c) => a ? a[c] : null, state);
+    return key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state);
   }
 
   private calculateFromStore(value: { [key: string]: any }, context: IContext): any {

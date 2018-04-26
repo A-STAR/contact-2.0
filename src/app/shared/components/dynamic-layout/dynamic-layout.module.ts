@@ -6,6 +6,7 @@ import { MetadataService } from './services/metadata.service';
 
 import { ControlComponent } from './components/control/control.component';
 import { DynamicLayoutComponent } from './dynamic-layout.component';
+import { FieldComponent } from './components/field/field.component';
 import { GroupComponent } from './components/group/group.component';
 import { TemplateComponent } from './components/template/template.component';
 
@@ -19,6 +20,7 @@ import { TemplateComponent } from './components/template/template.component';
   declarations: [
     ControlComponent,
     DynamicLayoutComponent,
+    FieldComponent,
     GroupComponent,
     TemplateComponent,
   ],
