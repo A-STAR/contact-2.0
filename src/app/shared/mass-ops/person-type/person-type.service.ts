@@ -20,7 +20,7 @@ export class PersonTypeService {
 
   change(idData: IGridActionPayload, typeCode: number): Observable<IOperationResult> {
     return this.dataService
-      .update('mass/persons/typechange', {},
+      .update('/mass/persons/typechange', {},
         {
          idData: this.actionGridService.buildRequest(idData),
          actionData: { typeCode }

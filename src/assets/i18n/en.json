@@ -2150,6 +2150,13 @@
           "message": "Do you really want to return outsourcing for the selected debts?",
           "title": "Return outsourcing"
         }
+      },
+      "changePersonType": {
+        "title": "Change person type",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
       }
     },
     "nextCallDateSet": {
