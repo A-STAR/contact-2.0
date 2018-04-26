@@ -1,5 +1,3 @@
-import * as brace from 'brace';
-
 export class ContextAutocomplete {
 
   private static ROOT_NODE = {
@@ -10,7 +8,7 @@ export class ContextAutocomplete {
   private nodes: any[];
 
   constructor(context: any[]) {
-    this.utils = brace.acequire('ace/autocomplete/util');
+    this.utils = (<any>window).ace.require('ace/autocomplete/util');
     this.nodes = this.flattenNodes(this.mapParents(context, ContextAutocomplete.ROOT_NODE));
   }
 

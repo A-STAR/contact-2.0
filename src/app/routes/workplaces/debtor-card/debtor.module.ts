@@ -244,41 +244,21 @@ const routes: Routes = [
       {
         path: 'pledge/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
-        data: {
-          edit: false,
-          showContractForm: true,
-          showPledgorForm: true,
-        },
       },
       {
         path: 'pledge/:contractId/pledgor/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
-        data: {
-          edit: false,
-          showContractForm: false,
-          showPledgorForm: true,
-        },
       },
       {
         path: 'pledge/:contractId/pledgor/:pledgorId/property/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
-        data: {
-          edit: false,
-          showContractForm: false,
-          showPledgorForm: false,
-        },
       },
       {
         path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
-        data: {
-          edit: true,
-          showContractForm: true,
-          showPledgorForm: true,
-        },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/phone/create',
+        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -286,7 +266,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/phone/:phoneId',
+        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -294,7 +274,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/address/create',
+        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/address/create',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -302,7 +282,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/address/:addressId',
+        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/address/:addressId',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,

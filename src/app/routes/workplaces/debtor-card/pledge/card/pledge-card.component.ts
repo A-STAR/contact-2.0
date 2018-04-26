@@ -1,28 +1,25 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators/map';
+import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators';
 
-import {
-  IContextByEntityMethod,
-  IContextByExpressionMethod,
-  IContextByStateMethod,
-  IContextByValueBagMethod,
-  IContextConfigItemType,
-  IContextConfigOperator,
-} from '@app/core/context/context.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
-import {
-  IMetadataFormConfig,
-  IMetadataFormControlType,
-  IMetadataFormTextControl,
-} from '@app/shared/components/form/metadata-form/metadata-form.interface';
-
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
+import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
-import { range } from '@app/core/utils';
+import { contractFormConfig } from './config/contract-form.config';
+import { pledgorFormConfig } from './config/pledgor-form.config';
+import { propertyFormConfig } from './config/property-form.config';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,337 +27,143 @@ import { range } from '@app/core/utils';
   selector: 'app-pledge-card',
   templateUrl: 'pledge-card.component.html',
 })
-export class PledgeCardComponent {
+export class PledgeCardComponent implements AfterViewInit {
+  @ViewChild('contractForm') contractForm: MetadataFormComponent<any>;
   @ViewChild('pledgorForm') pledgorForm: MetadataFormComponent<any>;
   @ViewChild('propertyForm') propertyForm: MetadataFormComponent<any>;
 
-  readonly contractFormConfig: IMetadataFormConfig = {
-    id: 'pledgeCardContractForm',
-    editable: true,
-    items: [
-      {
-        disabled: false,
-        display: true,
-        label: 'Номер договора',
-        name: 'contractNumber',
-        type: IMetadataFormControlType.TEXT,
-        validators: {
-          required: true,
-        },
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Начало',
-        name: 'contractStartDate',
-        type: IMetadataFormControlType.DATE,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Окончание',
-        name: 'contractEndDate',
-        type: IMetadataFormControlType.DATE,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Комментарий',
-        name: 'comment',
-        type: IMetadataFormControlType.TEXTAREA,
-        validators: {},
-        width: 0,
-      },
-    ],
-    plugins: [],
-  };
-
-  readonly pledgorFormConfig: IMetadataFormConfig = {
-    id: 'pledgeCardPledgorForm',
-    editable: true,
-    items: [
-      {
-        dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
-        disabled: false,
-        display: true,
-        label: 'Тип',
-        name: 'typeCode',
-        type: IMetadataFormControlType.SELECT,
-        validators: {
-          required: true,
-        },
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Фамилия/Название',
-        name: 'lastName',
-        type: IMetadataFormControlType.TEXT,
-        validators: {
-          required: true,
-        },
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Имя',
-        name: 'firstName',
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Отчество',
-        name: 'middleName',
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Дата рождения',
-        name: 'birthDate',
-        type: IMetadataFormControlType.DATE,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Место рождения',
-        name: 'birthPlace',
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      },
-      {
-        dictCode: UserDictionariesService.DICTIONARY_GENDER,
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Пол',
-        name: 'genderCode',
-        type: IMetadataFormControlType.SELECT,
-        validators: {},
-        width: 0,
-      },
-      {
-        dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Семейное положение',
-        name: 'familyStatusCode',
-        type: IMetadataFormControlType.SELECT,
-        validators: {},
-        width: 0,
-      },
-      {
-        dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.STATE,
-          method: IContextByStateMethod.EQUALS,
-          key: 'pledgeCardPledgorForm.value.typeCode',
-          value: 1,
-        },
-        label: 'Образование',
-        name: 'educationCode',
-        type: IMetadataFormControlType.SELECT,
-        validators: {},
-        width: 0,
-      },
-      ...range(1, 10).map(i => ({
-        disabled: false,
-        display: {
-          type: IContextConfigItemType.GROUP,
-          operator: IContextConfigOperator.AND,
-          children: [
-            {
-              type: IContextConfigItemType.ENTITY,
-              method: IContextByEntityMethod.IS_USED,
-              value: 363 + i,
-            },
-            {
-              type: IContextConfigItemType.CONSTANT,
-              method: IContextByValueBagMethod.CONTAINS,
-              name: {
-                type: IContextConfigItemType.EXPRESSION,
-                method: IContextByExpressionMethod.SWITCH,
-                key: {
-                  type: IContextConfigItemType.STATE,
-                  method: IContextByStateMethod.VALUE,
-                  key: 'pledgeCardPledgorForm.value.typeCode',
-                },
-                value: {
-                  1: 'Person.Individual.AdditionalAttribute.List',
-                  2: 'Person.LegalEntity.AdditionalAttribute.List',
-                  3: 'Person.SoleProprietorship.AdditionalAttribute.List',
-                },
-              },
-              value: 363 + i,
-            }
-          ],
-        },
-        label: `Строковый атрибут ${i}`,
-        name: `stringValue${i}`,
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      }) as IMetadataFormTextControl),
-      {
-        disabled: false,
-        display: true,
-        label: 'Комментарий',
-        name: 'comment',
-        type: IMetadataFormControlType.TEXTAREA,
-        validators: {},
-        width: 0,
-      },
-    ],
-    plugins: [],
-  };
-
-  readonly propertyFormConfig: IMetadataFormConfig = {
-    id: 'pledgeCardPropertyForm',
-    editable: true,
-    items: [
-      {
-        disabled: false,
-        display: true,
-        label: 'Название',
-        name: 'propertyName',
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Тип имущества',
-        name: 'propertyType',
-        type: IMetadataFormControlType.SELECT,
-        validators: {
-          required: true,
-        },
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Залоговая стоимость',
-        name: 'pledgeValue',
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Рыночная стоимость',
-        name: 'marketValue',
-        type: IMetadataFormControlType.TEXT,
-        validators: {},
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'Валюта',
-        lookupKey: 'currencies',
-        name: 'currencyId',
-        type: IMetadataFormControlType.SELECT,
-        validators: {
-          required: {
-            type: IContextConfigItemType.GROUP,
-            operator: IContextConfigOperator.OR,
-            children: [
-              {
-                type: IContextConfigItemType.STATE,
-                method: IContextByStateMethod.NOT_EMPTY,
-                key: 'pledgeCardPropertyForm.value.pledgeValue',
-              },
-              {
-                type: IContextConfigItemType.STATE,
-                method: IContextByStateMethod.NOT_EMPTY,
-                key: 'pledgeCardPropertyForm.value.marketValue',
-              },
-            ],
-          },
-        },
-        width: 0,
-      },
-    ],
-    plugins: [],
-  };
+  readonly contractFormConfig = contractFormConfig;
+  readonly pledgorFormConfig = pledgorFormConfig;
+  readonly propertyFormConfig = propertyFormConfig;
 
   readonly pledgor$ = this.pledgeCardService.pledgor$;
-
   readonly isPledgorFormDisabled$ = this.pledgor$.pipe(
     map(Boolean),
   );
 
   readonly property$ = this.pledgeCardService.property$;
-
   readonly isPropertyFormDisabled$ = this.property$.pipe(
     map(Boolean),
   );
 
-  readonly edit$ = this.route.data.pipe(
-    map(data => data.edit),
-  );
+  readonly paramMap = this.route.snapshot.paramMap;
 
-  readonly showContractForm$ = this.route.data.pipe(
-    map(data => data.showContractForm),
-  );
+  /**
+   * Contract ID (link between debtor, pledgor and property)
+   */
+  readonly contractId = Number(this.paramMap.get('contractId'));
 
-  readonly showPledgorForm$ = this.route.data.pipe(
-    map(data => data.showPledgorForm),
-  );
+  /**
+   * Debt ID
+   */
+  readonly debtId = Number(this.paramMap.get('debtId'));
+
+  /**
+   * ID of person who is a debtor (displayed in debtor card)
+   */
+  readonly debtorId = Number(this.paramMap.get('debtorId'));
+
+  /**
+   * ID of person who is linked as pledgor via contractId
+   */
+  readonly pledgorId = Number(this.paramMap.get('pledgorId'));
+
+  /**
+   * Pledgor role (according to dictionary 44)
+   */
+  readonly pledgorRole = 3;
+
+  /**
+   * ID of property that is linked via contractId
+   */
+  readonly propertyId = Number(this.paramMap.get('propertyId'));
+
+  readonly createMode = !this.contractId;
+  readonly addPledgorMode = !!this.contractId && !this.pledgorId;
+  readonly addPropertyMode = !!this.pledgorId && !this.propertyId;
+  readonly editMode = !!this.propertyId;
+
+  readonly showContractForm = this.createMode || this.editMode;
+  readonly showPledgorForm = this.createMode || this.addPledgorMode || this.editMode;
+
+  readonly contractTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+  };
+
+  readonly pledgorTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
+
+  readonly propertyTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPropertySearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
 
   constructor(
+    private injector: Injector,
+    private personService: PersonService,
     private pledgeCardService: PledgeCardService,
+    private pledgeService: PledgeService,
+    private popupOutletService: PopupOutletService,
+    private propertyService: PropertyService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
+
+  get canSubmit(): boolean {
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const pledgorFormGroup = this.pledgorForm
+      ? this.pledgorForm.formGroup
+      : null;
+    const propertyFormGroup = this.propertyForm
+      ? this.propertyForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const pledgorFormValid = !pledgorFormGroup || pledgorFormGroup.valid;
+    const propertyFormValid = !propertyFormGroup || propertyFormGroup.valid;
+    return contractFormValid && pledgorFormValid && propertyFormValid;
+  }
+
+  get title(): string {
+    switch (true) {
+      case this.createMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.add';
+      case this.addPledgorMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor';
+      case this.addPropertyMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addProperty';
+      default:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.edit';
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.contractId) {
+      this.fetchContract();
+    }
+    if (this.pledgorId) {
+      this.fetchPledgor();
+    }
+    if (this.propertyId) {
+      this.fetchProperty();
+    }
+  }
 
   onPledgorFormClear(): void {
     this.pledgeCardService.selectPledgor(null);
@@ -373,7 +176,32 @@ export class PledgeCardComponent {
   }
 
   onSave(): void {
-    this.onBack();
+    if (this.createMode) {
+      const contractData = this.contractForm.data;
+      const pledgorData = this.pledgorForm.data;
+      const propertyData = this.propertyForm.data;
+      this.pledgeCardService
+        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .subscribe(() => this.onSuccess());
+    }
+    if (this.addPledgorMode) {
+      this.pledgeCardService
+        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.pledgorForm.data, this.propertyForm.data)
+        .subscribe(() => this.onSuccess());
+    }
+    if (this.addPropertyMode) {
+      this.pledgeCardService
+        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.propertyForm.data)
+        .subscribe(() => this.onSuccess());
+    }
+    if (this.editMode) {
+      const contractData = this.contractForm.data;
+      const pledgorData = this.pledgorForm.data;
+      const propertyData = this.propertyForm.data;
+      this.pledgeCardService
+        .updatePledge(this.debtId, this.contractId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .subscribe(() => this.onSuccess());
+    }
   }
 
   onBack(): void {
@@ -382,5 +210,52 @@ export class PledgeCardComponent {
     if (debtId && debtorId) {
       this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
     }
+  }
+
+  onPhoneAdd(): void {
+    this.router.navigate([ 'phone/create' ], { relativeTo: this.route });
+  }
+
+  onPhoneEdit(phone: IPhone): void {
+    this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressAdd(): void {
+    this.router.navigate([ 'address/create' ], { relativeTo: this.route });
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+  }
+
+  private fetchContract(): void {
+    this.pledgeService
+      .fetch(this.debtId, this.contractId)
+      .subscribe(contract => this.contractForm.formGroup.patchValue(contract));
+  }
+
+  private fetchPledgor(): void {
+    this.personService
+      .fetch(this.pledgorId)
+      .subscribe(person => this.pledgorForm.formGroup.patchValue(person));
+  }
+
+  private fetchProperty(): void {
+    this.propertyService
+      .fetch(this.pledgorId, this.propertyId)
+      .subscribe(property => this.propertyForm.formGroup.patchValue(property));
+  }
+
+  private onSuccess(): void {
+    this.pledgeService.dispatchPledgeSavedMessage();
+    this.onBack();
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
+  }
+
+  private openPropertySearch(): void {
+    this.popupOutletService.open(this.modules, 'select-property', this.injector);
   }
 }
