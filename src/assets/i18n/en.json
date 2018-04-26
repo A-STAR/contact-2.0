@@ -2150,6 +2150,13 @@
           "message": "Do you really want to return outsourcing for the selected debts?",
           "title": "Return outsourcing"
         }
+      },
+      "changeStageAttr": {
+        "title": "Change debt stage",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
       }
     },
     "nextCallDateSet": {
@@ -3451,6 +3458,7 @@
         "changeCreditTypeAttr": "Credit Product Type",
         "changeBranchAttr": "Branch",
         "changeTimezoneAttr": "Time zone",
+        "changeStageAttr": "Stage",
         "debtOutsourcingSend": "Send to outsourcing",
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",

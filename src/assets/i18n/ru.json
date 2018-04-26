@@ -2150,6 +2150,13 @@
           "message": "Вы действительно хотите отозвать из аутсорсинга выбранные долги?",
           "title": "Отозвать из аутсорсинга"
         }
+      },
+      "changeStageAttr": {
+        "title": "Изменить стадию долга",
+        "grid": {
+          "code": "Код",
+          "name": "Название"
+        }
       }
     },
     "nextCallDateSet": {
@@ -3451,6 +3458,7 @@
         "changeCreditTypeAttr": "Тип кредитного продукта",
         "changeBranchAttr": "Филиал",
         "changeTimezoneAttr": "Часовой пояс",
+        "changeStageAttr": "Стадия",
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",

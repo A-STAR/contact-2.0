@@ -103,6 +103,12 @@
   (close)="onCloseAction($event)"
 ></app-mass-attr-timezone>
 
+<app-mass-attr-stage
+  *ngIf="isDialog('changeStageAttr')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-attr-stage>
+
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [actionData]="dialogData"
