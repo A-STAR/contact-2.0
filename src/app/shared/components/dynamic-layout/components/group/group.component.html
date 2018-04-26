@@ -7,11 +7,11 @@
       [control]="item"
     ></app-dynamic-layout-control>
 
-    <!-- Field -->
-    <app-dynamic-layout-field
-      *ngSwitchCase="'field'"
-      [field]="item"
-    ></app-dynamic-layout-field>
+    <!-- Attribute -->
+    <app-dynamic-layout-attribute
+      *ngSwitchCase="'attribute'"
+      [attribute]="item"
+    ></app-dynamic-layout-attribute>
 
     <!-- Group -->
     <app-dynamic-layout-group

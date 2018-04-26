@@ -8,10 +8,10 @@ export enum DynamicLayoutItemType {
   CONTROL = 'control',
 
   /**
-   * Readonly fields for dynamic form model
+   * Readonly attributes for dynamic form model
    * See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=176259099#id-Конфигурацияформ-Параметры
    */
-  FIELD = 'field',
+  ATTRIBUTE = 'attribute',
 
   /**
    * Groups that contain other controls, fields, groups and templates
