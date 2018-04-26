@@ -10,6 +10,7 @@ import {
   IDynamicLayoutItemProperties,
 } from '../interface';
 
+import { AttributeService } from './attribute.service';
 import { ContextService } from './context.service';
 import { MetadataService } from './metadata.service';
 
@@ -20,6 +21,7 @@ export class LayoutService {
   private _items: IDynamicLayoutItemProperties[];
 
   constructor(
+    private attributeService: AttributeService,
     private contextService: ContextService,
     private metadataService: MetadataService,
   ) {}
@@ -54,6 +56,7 @@ export class LayoutService {
       type: DynamicLayoutItemType.GROUP,
     };
     this._items = this.flattenItems(config.items);
+    this.attributeService.getAttributes(this._items);
     // this._items.forEach(item => {
     //   item.streams.display.subscribe(r => {
     //     // tslint:disable-next-line:no-console

@@ -2,12 +2,14 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 
 import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './interface';
 
+import { AttributeService } from './services/attribute.service';
 import { FormService } from './services/form.service';
 import { LayoutService } from './services/layout.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
+    AttributeService,
     FormService,
     LayoutService,
   ],

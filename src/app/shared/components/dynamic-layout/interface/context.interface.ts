@@ -1,8 +1,9 @@
 export enum ContextOperator {
 
   // Unary
-  EVAL = 'eval',
-  NOT  = 'not',
+  EVAL  = 'eval',
+  NOT   = 'not',
+  ROUTE = 'route',
 
   // Binary
   CONTAINS = 'contains',
