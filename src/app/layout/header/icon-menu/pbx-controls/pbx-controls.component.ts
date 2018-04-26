@@ -40,6 +40,10 @@ export class PbxControlsComponent extends DialogFunctions {
     return this.callService.canTransferCall$;
   }
 
+  get hasActiveCall$(): Observable<boolean> {
+    return this.callService.activeCall$.map(Boolean);
+  }
+
   get showDropCall$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('PBX_PREVIEW'),
@@ -70,6 +74,14 @@ export class PbxControlsComponent extends DialogFunctions {
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall)
     ]);
+  }
+
+  get activeCallNumber$(): Observable<string> {
+    return this.callService.activeCall$.map(call => call.phone);
+  }
+
+  get activeCallPersonName$(): Observable<string> {
+    return this.callService.activeCall$.map(call => `${call.lastName} ${call.firstName} ${call.middleName[0]}.`);
   }
 
   onDropCall(): void {
