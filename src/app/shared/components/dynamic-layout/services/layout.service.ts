@@ -16,6 +16,7 @@ import { MetadataService } from './metadata.service';
 @Injectable()
 export class LayoutService {
   private config: IDynamicLayoutConfig;
+  private _group: IDynamicLayoutGroup;
   private _items: IDynamicLayoutItemProperties[];
 
   constructor(
@@ -27,16 +28,12 @@ export class LayoutService {
     return Boolean(this.config);
   }
 
-  get items(): IDynamicLayoutItemProperties[] {
-    return this._items;
+  get group(): IDynamicLayoutGroup {
+    return this._group;
   }
 
-  get group(): IDynamicLayoutGroup {
-    return {
-      children: this.config.items,
-      groupType: DynamicLayoutGroupType.PLAIN,
-      type: DynamicLayoutItemType.GROUP,
-    };
+  get items(): IDynamicLayoutItemProperties[] {
+    return this._items;
   }
 
   set layout(layout: string | IDynamicLayoutConfig) {
@@ -51,15 +48,20 @@ export class LayoutService {
 
   private init(config: IDynamicLayoutConfig): void {
     this.config = config;
+    this._group = {
+      children: config.items,
+      groupType: DynamicLayoutGroupType.PLAIN,
+      type: DynamicLayoutItemType.GROUP,
+    };
     this._items = this.flattenItems(config.items);
-    this._items.forEach(item => {
-      item.streams.display.subscribe(r => {
-        // tslint:disable-next-line:no-console
-        console.log(item);
-        // tslint:disable-next-line:no-console
-        console.log(r);
-      });
-    });
+    // this._items.forEach(item => {
+    //   item.streams.display.subscribe(r => {
+    //     // tslint:disable-next-line:no-console
+    //     console.log(item);
+    //     // tslint:disable-next-line:no-console
+    //     console.log(r);
+    //   });
+    // });
   }
 
   private flattenItems(items: IDynamicLayoutItem[]): IDynamicLayoutItemProperties[] {

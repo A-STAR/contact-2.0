@@ -1,8 +1,26 @@
 import { IContext } from './context.interface';
 
 export enum DynamicLayoutItemType {
-  CONTROL  = 'control',
-  GROUP    = 'group',
+
+  /**
+   * Form control, such as text input, textarea, checkbox, etc.
+   */
+  CONTROL = 'control',
+
+  /**
+   * Readonly fields for dynamic form model
+   * See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=176259099#id-Конфигурацияформ-Параметры
+   */
+  FIELD = 'field',
+
+  /**
+   * Groups that contain other controls, fields, groups and templates
+   */
+  GROUP = 'group',
+
+  /**
+   * References to Angular templates that can be inserted into dynamic layout
+   */
   TEMPLATE = 'template',
 }
 
