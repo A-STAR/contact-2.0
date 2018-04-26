@@ -26,5 +26,7 @@ export enum DynamicLayoutItemType {
 
 export interface IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType;
+  // Optional:
   display?: IContext;
+  uid?: string;
 }

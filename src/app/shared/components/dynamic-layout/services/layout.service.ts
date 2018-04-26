@@ -16,9 +16,9 @@ import { MetadataService } from './metadata.service';
 
 @Injectable()
 export class LayoutService {
-  private config: IDynamicLayoutConfig;
   private _group: IDynamicLayoutGroup;
-  private _items: IDynamicLayoutItemProperties[];
+  private _items: { [key: string]: IDynamicLayoutItemProperties };
+  private _initialized = false;
 
   constructor(
     private attributeService: AttributeService,
@@ -27,14 +27,14 @@ export class LayoutService {
   ) {}
 
   get initialized(): boolean {
-    return Boolean(this.config);
+    return this._initialized;
   }
 
   get group(): IDynamicLayoutGroup {
     return this._group;
   }
 
-  get items(): IDynamicLayoutItemProperties[] {
+  get items(): { [key: string]: IDynamicLayoutItemProperties } {
     return this._items;
   }
 
@@ -49,33 +49,44 @@ export class LayoutService {
   }
 
   private init(config: IDynamicLayoutConfig): void {
-    this.config = config;
+    const items = this.addUids(config.items);
     this._group = {
-      children: config.items,
+      children: items,
       groupType: DynamicLayoutGroupType.PLAIN,
       type: DynamicLayoutItemType.GROUP,
     };
-    this._items = this.flattenItems(config.items);
+    this._items = this.flattenItems(items);
     this.attributeService.getAttributes(this._items);
-    // this._items.forEach(item => {
-    //   item.streams.display.subscribe(r => {
-    //     // tslint:disable-next-line:no-console
-    //     console.log(item);
-    //     // tslint:disable-next-line:no-console
-    //     console.log(r);
-    //   });
-    // });
+    this._initialized = true;
+
+    // tslint:disable-next-line:no-console
+    console.log(this._group);
+    // tslint:disable-next-line:no-console
+    console.log(this._items);
   }
 
-  private flattenItems(items: IDynamicLayoutItem[]): IDynamicLayoutItemProperties[] {
-    return items.reduce((acc, item) => {
+  private addUids(items: IDynamicLayoutItem[], level: number = 0): IDynamicLayoutItem[] {
+    return items.map((item, i) => {
+      const uid = `${level}.${i}`;
       switch (item.type) {
         case DynamicLayoutItemType.GROUP:
-          return [ ...acc, ...this.flattenItems(item.children) ];
+          return { ...item, uid, children: this.addUids(item.children, level + 1) };
         default:
-          return [ ...acc, this.createItemProperties(item) ];
+          return { ...item, uid };
       }
-    }, []);
+    });
+  }
+
+  private flattenItems(items: IDynamicLayoutItem[]): { [key: string]: IDynamicLayoutItemProperties } {
+    return items.reduce((acc, item) => {
+      const properties = this.createItemProperties(item);
+      switch (item.type) {
+        case DynamicLayoutItemType.GROUP:
+          return { ...acc, [item.uid]: properties, ...this.flattenItems(item.children) };
+        default:
+          return { ...acc, [item.uid]: properties };
+      }
+    }, {});
   }
 
   private createItemProperties(item: IDynamicLayoutItem): IDynamicLayoutItemProperties {

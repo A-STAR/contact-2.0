@@ -18,9 +18,9 @@ export class AttributeService {
     // private notificationsService: NotificationsService,
   ) {}
 
-  getAttributes(items: IDynamicLayoutItemProperties[]): void {
-    const attributes = items
-      .map(i => i.item)
+  getAttributes(items: { [key: string]: IDynamicLayoutItemProperties }): void {
+    const attributes = Object.keys(items)
+      .map(key => items[key].item)
       .filter(item => item.type === DynamicLayoutItemType.ATTRIBUTE)
       .map((attribute: IDynamicLayoutAttribute) => {
         const { attributeType, value } = attribute;
