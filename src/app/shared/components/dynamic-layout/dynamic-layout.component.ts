@@ -37,7 +37,7 @@ export class DynamicLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.layoutService.layout = this.layout;
+    this.layoutService.init(this.layout);
     this.templateService.init(this.templates);
   }
 }

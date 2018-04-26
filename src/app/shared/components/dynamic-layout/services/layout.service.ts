@@ -18,7 +18,7 @@ import { MetadataService } from './metadata.service';
 @Injectable()
 export class LayoutService {
   private _group: IDynamicLayoutGroup;
-  private _items: { [key: string]: IDynamicLayoutItemProperties };
+  private _items: Record<string, IDynamicLayoutItemProperties>;
   private _initialized = false;
 
   constructor(
@@ -36,17 +36,17 @@ export class LayoutService {
     return this._group;
   }
 
-  get items(): { [key: string]: IDynamicLayoutItemProperties } {
+  get items(): Record<string, IDynamicLayoutItemProperties> {
     return this._items;
   }
 
-  set layout(layout: string | IDynamicLayoutConfig) {
+  init(layout: string | IDynamicLayoutConfig): void {
     if (typeof layout === 'string') {
       this.metadataService
         .getConfig(layout)
-        .subscribe(config => this.init(config));
+        .subscribe(config => this.onInit(config));
     } else {
-      this.init(layout);
+      this.onInit(layout);
     }
   }
 
@@ -54,7 +54,7 @@ export class LayoutService {
     return this._items[uid];
   }
 
-  private init(config: IDynamicLayoutConfig): void {
+  private onInit(config: IDynamicLayoutConfig): void {
     const items = this.addUids(config.items);
     this._group = {
       children: items,
