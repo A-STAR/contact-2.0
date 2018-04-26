@@ -8,6 +8,7 @@ import { LayoutService } from './services/layout.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-size' },
   providers: [
     AttributeService,
     FormService,

@@ -1,4 +1,12 @@
-<div>
-  <p>Control:</p>
-  {{ control | json }}
-</div>
+<ng-container [formGroup]="formGroup">
+  <ng-container [ngSwitch]="control.controlType">
+
+    <!-- Text -->
+    <app-text
+      *ngSwitchCase="'text'"
+      [formControlName]="control.name"
+      [label]="control.label"
+    ></app-text>
+
+  </ng-container>
+</ng-container>

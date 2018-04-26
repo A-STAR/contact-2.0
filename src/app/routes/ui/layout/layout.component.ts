@@ -34,6 +34,7 @@ export class LayoutComponent {
               {
                 type: DynamicLayoutItemType.CONTROL,
                 controlType: DynamicLayoutControlType.TEXT,
+                form: 'custom',
                 label: 'Text Control',
                 name: 'text',
                 display: {

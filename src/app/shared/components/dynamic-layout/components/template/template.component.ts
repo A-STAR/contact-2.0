@@ -4,6 +4,7 @@ import { IDynamicLayoutTemplate } from '../../interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-size' },
   selector: 'app-dynamic-layout-template',
   templateUrl: 'template.component.html'
 })

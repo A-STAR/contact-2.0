@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AreaModule } from '@app/shared/components/layout/area/area.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
@@ -26,6 +27,7 @@ import { TemplateComponent } from './components/template/template.component';
     DateTimeModule,
     DropdownInputModule,
     InputModule,
+    ReactiveFormsModule,
     SelectModule,
     TabViewModule,
   ],

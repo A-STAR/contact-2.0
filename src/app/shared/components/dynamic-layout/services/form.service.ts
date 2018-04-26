@@ -1,21 +1,43 @@
 import { Injectable } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { IDynamicLayoutItemProperties } from '../interface';
+import {
+  DynamicLayoutItemType,
+  IDynamicLayoutControl,
+  IDynamicLayoutItemProperties,
+} from '../interface';
 
 @Injectable()
 export class FormService {
-  init(items: { [key: string]: IDynamicLayoutItemProperties }): void {
-    // tslint:disable-next-line:no-console
-    console.log(items);
-    // const attributes = Object.keys(items)
-    //   .map(key => items[key].item)
-    //   .filter(item => item.type === DynamicLayoutItemType.ATTRIBUTE)
-    //   .map((attribute: IDynamicLayoutAttribute) => {
-    //     const { attributeType, value } = attribute;
-    //     return { attributeType, value };
-    //   });
+  private controls: IDynamicLayoutControl[];
+  private groups = new Map<string, FormGroup>();
 
-    // // tslint:disable-next-line:no-console
-    // console.log(attributes);
+  constructor(
+    private formBuilder: FormBuilder,
+  ) {}
+
+  init(items: { [key: string]: IDynamicLayoutItemProperties }): void {
+    this.controls = Object.keys(items)
+      .map(key => items[key].item)
+      .filter(item => item.type === DynamicLayoutItemType.CONTROL)
+      .map((control: IDynamicLayoutControl) => control);
+
+    const forms = new Set(this.controls.map(control => control.form || 'default'));
+    forms.forEach(form => this.createFormGroup(form));
+
+    // tslint:disable-next-line:no-console
+    console.log(this.groups);
+  }
+
+  getFormGroup(control: IDynamicLayoutControl): FormGroup {
+    return this.groups.get(control.form || 'default');
+  }
+
+  private createFormGroup(name: string): void {
+    const controls = this.controls
+      .filter(control => (control.form || 'default') === name)
+      .reduce((acc, control) => ({ ...acc, [control.name]: this.formBuilder.control(null) }), {});
+    const group = this.formBuilder.group(controls);
+    this.groups.set(name, group);
   }
 }

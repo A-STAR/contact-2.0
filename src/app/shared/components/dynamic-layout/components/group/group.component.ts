@@ -7,6 +7,7 @@ import { LayoutService } from '../../services/layout.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-size' },
   selector: 'app-dynamic-layout-group',
   templateUrl: 'group.component.html'
 })
