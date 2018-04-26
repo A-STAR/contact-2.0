@@ -8,11 +8,11 @@ import {
   IDynamicLayoutGroup,
   IDynamicLayoutItem,
   IDynamicLayoutItemProperties,
-} from '../interface';
+} from './dynamic-layout.interface';
 
-import { AttributeService } from './attribute.service';
+import { AttributeService } from './attribute/attribute.service';
 import { ContextService } from './context.service';
-import { FormService } from './form.service';
+import { FormService } from './control/form.service';
 import { MetadataService } from './metadata.service';
 
 @Injectable()

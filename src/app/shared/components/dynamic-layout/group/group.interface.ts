@@ -1,5 +1,5 @@
-import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from './item.interface';
-import { IDynamicLayoutItem } from '.';
+import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../item.interface';
+import { IDynamicLayoutItem } from '../dynamic-layout.interface';
 
 export enum DynamicLayoutGroupType {
   HORIZONTAL = 'horizontal',

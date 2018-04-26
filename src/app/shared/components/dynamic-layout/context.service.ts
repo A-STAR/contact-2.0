@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContext, IContextExpression, ContextOperator } from '../interface';
+import { IContext, IContextExpression, ContextOperator } from './dynamic-layout.interface';
 
 @Injectable()
 export class ContextService {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError, map } from 'rxjs/operators';
 
-import { IDynamicLayoutConfig } from '../interface';
+import { IDynamicLayoutConfig } from './dynamic-layout.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';

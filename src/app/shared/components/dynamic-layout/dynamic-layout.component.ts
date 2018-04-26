@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '@angular/core';
 
-import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './interface';
+import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './dynamic-layout.interface';
 
-import { AttributeService } from './services/attribute.service';
-import { FormService } from './services/form.service';
-import { LayoutService } from './services/layout.service';
-import { TemplateService } from './services/template.service';
+import { AttributeService } from './attribute/attribute.service';
+import { FormService } from './control/form.service';
+import { LayoutService } from './dynamic-layout.service';
+import { TemplateService } from './template/template.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

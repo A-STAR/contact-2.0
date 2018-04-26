@@ -5,7 +5,7 @@ import {
   DynamicLayoutItemType,
   IDynamicLayoutControl,
   IDynamicLayoutItemProperties,
-} from '../interface';
+} from '../dynamic-layout.interface';
 
 @Injectable()
 export class FormService {

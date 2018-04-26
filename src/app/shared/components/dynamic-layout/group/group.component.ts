@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDynamicLayoutGroup, IDynamicLayoutItem } from '../../interface';
+import { IDynamicLayoutGroup, IDynamicLayoutItem } from '../dynamic-layout.interface';
 
-import { LayoutService } from '../../services/layout.service';
+import { LayoutService } from '../dynamic-layout.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

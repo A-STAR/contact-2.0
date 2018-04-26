@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicLayoutAttribute } from '../../interface';
+import { IDynamicLayoutAttribute } from '../dynamic-layout.interface';
 
-import { AttributeService } from '../../services/attribute.service';
+import { AttributeService } from '../attribute/attribute.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

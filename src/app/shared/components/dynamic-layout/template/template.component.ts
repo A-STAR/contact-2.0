@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '@angular/core';
 
-import { IDynamicLayoutTemplate } from '../../interface';
+import { IDynamicLayoutTemplate } from '../dynamic-layout.interface';
 
-import { TemplateService } from '../../services/template.service';
+import { TemplateService } from '../template/template.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

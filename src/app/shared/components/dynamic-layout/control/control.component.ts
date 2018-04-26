@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicLayoutControl } from '../../interface';
+import { IDynamicLayoutControl } from '../dynamic-layout.interface';
 
-import { FormService } from '../../services/form.service';
+import { FormService } from '../control/form.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

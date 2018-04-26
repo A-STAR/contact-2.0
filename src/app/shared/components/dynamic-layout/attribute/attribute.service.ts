@@ -6,7 +6,7 @@ import {
   DynamicLayoutItemType,
   IDynamicLayoutAttribute,
   IDynamicLayoutItemProperties,
-} from '@app/shared/components/dynamic-layout/interface';
+} from '../dynamic-layout.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';

@@ -1,4 +1,4 @@
-import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from './item.interface';
+import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../item.interface';
 
 export enum DynamicLayoutControlType {
   TEXT     = 'text',
