@@ -3190,7 +3190,8 @@
       "userNotFound": "User not found by ID",
       "userNotFoundWithName": "User with the login {{ $1 }} not found",
       "userRoleNotFound": "User role not found",
-      "visitNotFound": "Visit not found by the requested parameters"
+      "visitNotFound": "Visit not found by the requested parameters",
+      "scheduleEventIsExecuting": "The shedule event can't be removed because it is currently in progress"
     },
     "default": {
       "read": {
