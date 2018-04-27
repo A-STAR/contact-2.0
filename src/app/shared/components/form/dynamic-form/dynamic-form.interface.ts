@@ -39,6 +39,7 @@ export type IDynamicFormControl =
   IDynamicFormMultiSelectControl |
   IDynamicFormNumberControl |
   IDynamicFormRadioControl |
+  IDynamicFormRangeControl |
   IDynamicFormRichTextControl |
   IDynamicFormSegmentedInputControl |
   IDynamicFormSelectControl |
@@ -159,6 +160,13 @@ export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
   max?: number;
   placeholder?: string;
   positive?: boolean;
+}
+
+export interface IDynamicFormRangeControl extends IDynamicFormBaseControl {
+  type: 'range';
+  min?: number;
+  max?: number;
+  debounce?: number;
 }
 
 export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {
