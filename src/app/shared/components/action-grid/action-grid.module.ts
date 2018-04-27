@@ -16,6 +16,7 @@ import { NextCallDateSetModule } from '@app/shared/mass-ops/next-call-date-set/n
 import { OperatorDetailsModule } from '@app/shared/mass-ops/operator-details/operator-details.module';
 import { PaymentConfirmModule } from '@app/shared/mass-ops/payment-confirm/payment-confirm.module';
 import { PaymentOperatorModule } from '@app/shared/mass-ops/payment-operator/payment-operator.module';
+import { PersonTypeModule } from '@app/shared/mass-ops/person-type/person-type.module';
 import { PromiseResolveModule } from '@app/shared/mass-ops/promise-resolve/promise-resolve.module';
 import { RegisterContactOpenModule } from '@app/shared/mass-ops/register-contact-open/register-contact-open.module';
 import { SmsDeleteModule } from '@app/shared/mass-ops/sms-delete/sms-delete.module';
@@ -45,6 +46,7 @@ import { ActionGridComponent } from './action-grid.component';
     OperatorDetailsModule,
     PaymentConfirmModule,
     PaymentOperatorModule,
+    PersonTypeModule,
     PromiseResolveModule,
     SmsDeleteModule,
     TitlebarModule,

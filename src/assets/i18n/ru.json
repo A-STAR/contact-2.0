@@ -2157,6 +2157,13 @@
           "code": "Код",
           "name": "Название"
         }
+      },
+      "changePersonType": {
+        "title": "Изменить тип персоны",
+        "grid": {
+          "code": "Код",
+          "name": "Имя"
+        }
       }
     },
     "nextCallDateSet": {
@@ -3461,7 +3468,8 @@
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
-        "registerContact": "Регистрация контакта"
+        "registerContact": "Регистрация контакта",
+        "changePersonType": "Изменить тип персоны"
       }
     },
     "filter": {

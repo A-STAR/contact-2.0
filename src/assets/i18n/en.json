@@ -2157,6 +2157,13 @@
           "code": "Code",
           "name": "Name"
         }
+      },
+      "changePersonType": {
+        "title": "Change person type",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
       }
     },
     "nextCallDateSet": {
@@ -3461,7 +3468,8 @@
         "debtOutsourcingSend": "Send to outsourcing",
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
-        "registerContact": "Register Contact"
+        "registerContact": "Register Contact",
+        "changePersonType": "Change person type"
       }
     },
     "filter": {

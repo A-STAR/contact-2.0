@@ -175,6 +175,12 @@
   (close)="onCloseAction($event)"
 ></app-map-contact>
 
+<app-mass-person-type
+  *ngIf="isDialog('changePersonType')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-person-type>
+
 <!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader
