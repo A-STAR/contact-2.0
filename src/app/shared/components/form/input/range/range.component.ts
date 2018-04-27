@@ -6,7 +6,6 @@ import {
   ChangeDetectorRef,
   OnInit,
   OnDestroy,
-  HostBinding,
 } from '@angular/core';
 
 import {
