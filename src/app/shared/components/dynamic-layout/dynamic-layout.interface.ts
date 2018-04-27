@@ -21,6 +21,8 @@ export type IDynamicLayoutItem =
 
 export interface IDynamicLayoutConfig {
   items: IDynamicLayoutItem[];
+  // Optional
+  key?: string;
 }
 
 export interface IDynamicLayoutItemProperties<T> {
@@ -28,5 +30,6 @@ export interface IDynamicLayoutItemProperties<T> {
   streams: {
     disabled: Observable<boolean>;
     display: Observable<boolean>;
+    validators: Record<string, Observable<any>>;
   };
 }

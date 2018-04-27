@@ -17,6 +17,16 @@ import {
 export class LayoutComponent implements OnInit {
   @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
 
+  readonly data = {
+    default: {
+      foo: 'Foo',
+      bar: 'Bar',
+    },
+    custom: {
+      text: 'Text',
+    },
+  };
+
   readonly layout: IDynamicLayoutConfig = {
     items: [
       {

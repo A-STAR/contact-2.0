@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import {
@@ -20,6 +21,7 @@ export class LayoutService {
   private _group: IDynamicLayoutGroup;
   private _items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>;
   private _initialized = false;
+  private _key: string;
 
   constructor(
     private attributeService: AttributeService,
@@ -44,7 +46,7 @@ export class LayoutService {
     if (typeof layout === 'string') {
       this.metadataService
         .getConfig(layout)
-        .subscribe(config => this.onInit(config));
+        .subscribe(config => this.onInit(config, layout));
     } else {
       this.onInit(layout);
     }
@@ -54,16 +56,17 @@ export class LayoutService {
     return this._items[uid];
   }
 
-  private onInit(config: IDynamicLayoutConfig): void {
+  private onInit(config: IDynamicLayoutConfig, key: string = null): void {
     const items = this.addUids(config.items);
     this._group = {
       children: items,
       groupType: DynamicLayoutGroupType.PLAIN,
       type: DynamicLayoutItemType.GROUP,
     };
+    this._key = key || config.key;
     this._items = this.flattenItems(items);
     this.attributeService.init(this._items);
-    this.formService.init(this._items);
+    this.formService.init(this._items, this._key);
     this._initialized = true;
   }
 
@@ -94,12 +97,18 @@ export class LayoutService {
   }
 
   private createItemProperties(item: IDynamicLayoutItem): IDynamicLayoutItemProperties<IDynamicLayoutItem> {
+    const validators = item.validators || {};
     return {
       item,
       streams: {
-        disabled: item.disabled ? this.contextService.calculate(item.disabled) : of(true),
-        display: item.display ? this.contextService.calculate(item.display) : of(true),
+        disabled: this.calculate(item, 'disabled'),
+        display: this.calculate(item, 'display'),
+        validators: Object.keys(validators).reduce((acc, key) => ({ ...acc, [key]: this.calculate(validators, key) }), {}),
       },
     };
+  }
+
+  private calculate(item: any, prop: string): Observable<any> {
+    return item[prop] ? this.contextService.calculate(item[prop]) : of(true);
   }
 }

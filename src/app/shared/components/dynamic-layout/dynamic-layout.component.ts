@@ -23,7 +23,12 @@ export class DynamicLayoutComponent implements OnInit {
   @Input() layout: string | IDynamicLayoutConfig;
   @Input() templates: Record<string, TemplateRef<any>>;
 
+  @Input() set data(data: Record<string, any>) {
+    this.formService.setData(data);
+  }
+
   constructor(
+    private formService: FormService,
     private layoutService: LayoutService,
     private templateService: TemplateService,
   ) {}

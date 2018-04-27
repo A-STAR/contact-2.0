@@ -31,4 +31,5 @@ export interface IDynamicLayoutGenericItem {
   display?: IContext;
   label?: string;
   uid?: string;
+  validators?: Record<string, IContext>;
 }
