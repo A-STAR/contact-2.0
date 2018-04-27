@@ -7,7 +7,7 @@ import {
 } from '../toolbar/map-toolbar.interface';
 import { MapFilters } from './map-filter.interface';
 
-import { LayersService } from '@app/shared/components/map/map.service';
+import { LayersService } from '@app/core/map-providers/layers/map-layers.service';
 
 import { isEmpty } from '@app/core/utils';
 
@@ -72,7 +72,7 @@ export class MapFilterService<T> {
             const layerIds = g.getLayersByType(LayerType.CIRCLE)
             .map(l => l.id);
 
-            this.defaultItems[item.filter as MapFilters](null, params) ? g.showByIds(layerIds) : g.hideByIds(layerIds);
+            this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
           });
         break;
       case MapFilters.TOGGLE_ADDRESSES:
@@ -84,7 +84,7 @@ export class MapFilterService<T> {
               .filter(m => (m.data as any).addressLatitude && (m.data as any).addressLongitude)
               .map(l => l.id);
 
-              this.defaultItems[item.filter as MapFilters](null, params) ? g.showByIds(layerIds) : g.hideByIds(layerIds);
+              this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
           });
         break;
       default:

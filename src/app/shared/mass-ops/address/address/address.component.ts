@@ -52,7 +52,7 @@ export class AddressComponent implements OnInit {
   @ViewChild('tpl') tpl: TemplateRef<IAddressByPerson>;
 
   dialog: string;
-  layers: ILayerDef<IAddressByPerson>[][];
+  layers: ILayerDef<IAddressByPerson>[][] = [];
   options: IMapOptions = { fitToData: true, zoom: 8 };
   controls: IControlDef<IMapToolbarItem[]>[] = [
     {
