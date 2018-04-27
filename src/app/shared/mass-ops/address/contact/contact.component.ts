@@ -155,15 +155,16 @@ export class ContactComponent implements OnInit {
   }
 
   private createContactGroup(data: IAddressByContact, constant: IUserConstant): ILayerDef<IAddressByContact>[] {
+    const iconConfig = this.mapService.getIconConfig('addressByContact', {
+      ...data,
+      typeCode: (data as IAddressByContact).contactType,
+      isInactive: false
+    });
     const group = [
         {
         latlngs: { lat: data.contactLatitude, lng: data.contactLongitude },
         type: LayerType.MARKER,
-        iconConfig: this.mapService.getIconConfig('addressByContact', {
-          ...data,
-          typeCode: (data as IAddressByContact).contactType,
-          isInactive: false
-        }),
+        iconConfig,
         data,
         popup: PopupComponent,
         tpl: this.tpl,
@@ -172,11 +173,11 @@ export class ContactComponent implements OnInit {
         latlngs: { lat: data.contactLatitude, lng: data.contactLongitude },
         radius: data.accuracy || constant.valueN,
         type: LayerType.CIRCLE,
-        iconConfig: this.mapService.getIconConfig('addressByContact', {
-          ...data,
-          typeCode: (data as IAddressByContact).contactType,
-          isInactive: false
-        }),
+        options: {
+          fillColor: '#' + iconConfig.fillColor,
+          fillOpacity: 0.4,
+          strokeColor: '#' + iconConfig.fillColor
+        },
       }
     ];
     if (data.addressLatitude && data.addressLongitude) {
@@ -199,6 +200,9 @@ export class ContactComponent implements OnInit {
             { lat: data.addressLatitude, lng: data.addressLongitude },
           ],
           type: LayerType.POLYLINE,
+          options: {
+            strokeColor: '#' + iconConfig.fillColor
+          },
           data
         } as any
       );
