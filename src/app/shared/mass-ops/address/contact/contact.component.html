@@ -4,8 +4,7 @@
   </div>
   <div class="contact-map-container" *ngIf="markers && options">
     <app-map
-      [markers]="markers"
-      [polylines]="polylines"
+      [layers]="layers"
       [options]="options"
       [styles]="{ height: '500px' }"
       [controls]="controls">

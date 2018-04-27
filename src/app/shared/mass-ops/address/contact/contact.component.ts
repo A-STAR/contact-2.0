@@ -23,7 +23,6 @@ import {
   MapControlPosition,
   IControlDef,
   ILayerDef,
-  GeoPoint,
   LayerType,
 } from '@app/core/map-providers/map-providers.interface';
 import {
@@ -146,7 +145,6 @@ export class ContactComponent implements OnInit {
         }),
       )
       .subscribe(layers => {
-        // this.options.center = { lat: (layers[0][0] as GeoPoint).lat, lng: ;
         this.layers = layers;
         this.cdRef.markForCheck();
       });

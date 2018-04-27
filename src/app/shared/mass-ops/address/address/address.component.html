@@ -4,7 +4,7 @@
   </div>
   <div class="address-map-container" *ngIf="markers && options">
     <app-map
-      [markers]="markers"
+      [layers]="layers"
       [options]="options"
       [styles]="{ height: '500px' }"
       [controls]="controls">

@@ -139,7 +139,6 @@ export class AddressComponent implements OnInit {
       )
       .filter(markers => Boolean(markers && markers.length))
       .subscribe(markers => {
-        this.options.center = { lat: markers[0].latlngs.lat, lng: markers[0].latlngs.lng };
         this.layers = [ markers ];
         this.cdRef.markForCheck();
       });

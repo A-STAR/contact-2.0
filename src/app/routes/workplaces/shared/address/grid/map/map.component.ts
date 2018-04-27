@@ -12,7 +12,12 @@ import {
 } from '@angular/core';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
-import { IMapOptions, IMarker, IMapService } from '@app/core/map-providers/map-providers.interface';
+import {
+  IMapOptions,
+  IMapService,
+  ILayerDef,
+  LayerType,
+} from '@app/core/map-providers/map-providers.interface';
 
 import { PopupComponent } from '@app/shared/components/map/components/popups/popup.component';
 
@@ -30,7 +35,7 @@ export class AddressGridMapComponent implements OnInit {
   @ViewChild('addressPopup') tpl: TemplateRef<IAddress>;
 
   options: IMapOptions;
-  markers: IMarker<IAddress>[];
+  layers: ILayerDef<IAddress>[][];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<IAddress>,
@@ -47,14 +52,18 @@ export class AddressGridMapComponent implements OnInit {
       zoom: 13
     };
 
-    this.markers = [{
-      lat: this.address.latitude,
-      lng: this.address.longitude,
-      iconConfig: this.mapService.getIconConfig('singleAddress', this.address),
-      data: this.address,
-      popup: PopupComponent,
-      tpl: this.tpl
-    }];
+    this.layers = [
+      [
+        {
+          latlngs: { lat: this.address.latitude, lng: this.address.longitude },
+          type: LayerType.MARKER,
+          iconConfig: this.mapService.getIconConfig('singleAddress', this.address),
+          data: this.address,
+          popup: PopupComponent,
+          tpl: this.tpl
+        }
+      ]
+    ];
 
     this.cdRef.markForCheck();
   }

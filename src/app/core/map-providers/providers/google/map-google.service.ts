@@ -16,7 +16,6 @@ import {
   ILayerDef,
   GeoPoint,
   GeoLine,
-  GeoLayer,
   GoogleGeoLayer,
 } from '../../map-providers.interface';
 import { Libraries } from './maps-google.interface';

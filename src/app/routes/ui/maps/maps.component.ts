@@ -23,7 +23,7 @@ import { range, random as randomInt } from '@app/core/utils';
 })
 export class MapsComponent implements OnInit {
 
-  layers: ILayerDef<IDebtorAddress>[];
+  layers: ILayerDef<IDebtorAddress>[][];
   controls: IControlDef<IMapToolbarItem[]>[];
   @ViewChild('tpl')
   tpl: TemplateRef<IDebtorAddress>;
@@ -33,17 +33,17 @@ export class MapsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.layers = this.generateMarkers();
+    this.layers = [ this.generateMarkers() ];
     this.controls = this.getControls();
     this.cdRef.markForCheck();
   }
 
   onNameChange(value: any, index: number): void {
-    this.layers[index].data.name = value;
+    this.layers[0][index].data.name = value;
   }
 
   onAddressChange(value: any, index: number): void {
-    this.layers[index].data.address = value;
+    this.layers[0][index].data.address = value;
   }
 
   private generateMarkers(count: number = 5): ILayerDef<IDebtorAddress>[] {

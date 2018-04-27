@@ -2,7 +2,7 @@
   <div dialog-header>
     <h3>{{ 'widgets.address.dialogs.map.title' | translate }}</h3>
   </div>
-  <app-map [markers]="markers" [options]="options" [styles]="{ height: '75vh' }"></app-map>
+  <app-map [layers]="layers" [options]="options" [styles]="{ height: '75vh' }"></app-map>
   <div dialog-footer>
     <app-button type="back" (click)="onCancel()"></app-button>
   </div>
