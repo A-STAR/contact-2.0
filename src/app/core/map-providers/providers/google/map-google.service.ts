@@ -240,11 +240,17 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
       ],
     });
     const popup = new google.maps.InfoWindow({
-      content: 'Test'
+      content: ''
     });
     this._listeners.push(
       polyline.addListener('mouseover', _ => {
         popup.setPosition( this.getPolylineMiddlePoint(polyline));
+        const path = polyline.getPath().getArray();
+        const distance = getLatLngDistance(
+          { lat: path[0].lat(), lng: path[0].lng() },
+          { lat: path[1].lat(), lng: path[1].lng() }
+        );
+        popup.setContent(`${distance.toFixed(2)} m`);
         popup.open(this._map);
       }),
       polyline.addListener('mouseout', _ => {
