@@ -71,7 +71,7 @@ export class FieldCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ 'reports' ]);
+    this.routingService.navigate([ '/app/reports' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

@@ -2151,6 +2151,13 @@
           "title": "Отозвать из аутсорсинга"
         }
       },
+      "changeStageAttr": {
+        "title": "Изменить стадию долга",
+        "grid": {
+          "code": "Код",
+          "name": "Название"
+        }
+      },
       "changePersonType": {
         "title": "Изменить тип персоны",
         "grid": {
@@ -3457,6 +3464,7 @@
         "changeCreditTypeAttr": "Тип кредитного продукта",
         "changeBranchAttr": "Филиал",
         "changeTimezoneAttr": "Часовой пояс",
+        "changeStageAttr": "Стадия",
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",

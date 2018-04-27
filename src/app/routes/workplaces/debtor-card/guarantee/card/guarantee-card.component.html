@@ -41,14 +41,14 @@
       <!-- Identifications -->
       <app-tabview-tab title="Удостоверения личности">
         <app-identity-grid
-          [personId]="4"
+          [personId]="guarantorId"
         ></app-identity-grid>
       </app-tabview-tab>
 
       <!-- Employment -->
       <app-tabview-tab title="Трудоустройство">
         <app-employment-grid
-          [personId]="4"
+          [personId]="guarantorId"
         ></app-employment-grid>
       </app-tabview-tab>
 
@@ -56,26 +56,33 @@
       <app-tabview-tab title="Телефоны">
         <app-phone-grid
           [contactType]="1"
-          [debtId]="1"
-          [personId]="4"
-          [personRole]="1"
+          [debtId]="debtId"
+          [personId]="guarantorId"
+          [personRole]="guaarantorRole"
+          (add)="onPhoneAdd()"
+          (dblClick)="onPhoneEdit($event)"
+          (edit)="onPhoneEdit($event)"
         ></app-phone-grid>
       </app-tabview-tab>
 
       <!-- Addresses -->
       <app-tabview-tab title="Адреса">
         <app-address-grid
-          [debtId]="1"
-          [personId]="4"
-          [personRole]="1"
+          [debtId]="debtId"
+          [personId]="guarantorId"
+          [personRole]="guaarantorRole"
+          (add)="onAddressAdd()"
+          (dblClick)="onAddressEdit($event)"
+          (edit)="onAddressEdit($event)"
         ></app-address-grid>
       </app-tabview-tab>
 
       <!-- Documents -->
       <app-tabview-tab title="Документы">
+        <!-- Documents for debt (term 19 in dictionary 55) -->
         <app-document-grid
           [entityType]="19"
-          [entityId]="1"
+          [entityId]="debtId"
         ></app-document-grid>
       </app-tabview-tab>
     </app-tabview>

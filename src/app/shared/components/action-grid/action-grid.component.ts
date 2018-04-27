@@ -537,6 +537,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
       changeTimezoneAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
+      changeStageAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
       confirmPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
       confirmPromise: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?

@@ -2151,6 +2151,13 @@
           "title": "Return outsourcing"
         }
       },
+      "changeStageAttr": {
+        "title": "Change debt stage",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
+      },
       "changePersonType": {
         "title": "Change person type",
         "grid": {
@@ -3457,6 +3464,7 @@
         "changeCreditTypeAttr": "Credit Product Type",
         "changeBranchAttr": "Branch",
         "changeTimezoneAttr": "Time zone",
+        "changeStageAttr": "Stage",
         "debtOutsourcingSend": "Send to outsourcing",
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
