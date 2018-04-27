@@ -185,7 +185,7 @@ export class ContactComponent implements OnInit {
         {
           latlngs: { lat: data.addressLatitude, lng: data.addressLongitude },
           type: LayerType.MARKER,
-          iconConfig: this.mapService.getIconConfig('addressByContact', {
+          iconConfig: this.mapService.getIconConfig('addressByPerson', {
             ...data,
             typeCode: (data as IAddressByContact).addressTypeCode,
             isInactive: false

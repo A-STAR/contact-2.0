@@ -26,29 +26,29 @@ import { MapRendererService } from '../../renderer/map-renderer.service';
 import { IncId } from '@app/core/utils';
 import { MapProvider } from '@app/core/map-providers/providers/map-provider';
 
+import { getLatLngDistance } from '../../utils/map-utils';
+
 @Injectable()
 export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T> {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
-  // TODO(i.lobanov): pass from client code
-  static MY_MAGIC_CONSTANT = 100;
 
   private static ICON_CONFIGS = {
     singleAddress: [
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'ffffff' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'ffffff' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'ffffff' }, // Blue fill, white textColor
       { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
     addressByPerson: [
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'ffffff' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'ffffff' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'ffffff' }, // Blue fill, white textColor
       { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
     addressByContact: [
@@ -56,10 +56,10 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'CR', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'CA', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'CW', textColor: 'd8d5e2' }, // Blue fill, white textColor
-      { fillColor: 'fad732', char: 'CE', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+      { fillColor: '37bc9b', char: 'CR', fontSize: 10, textColor: 'ffffff' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'CA', fontSize: 10, textColor: 'ffffff' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'CW', fontSize: 10, textColor: 'ffffff' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'CE', fontSize: 10, textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
   };
 
@@ -80,10 +80,13 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
         ...config[entity.typeCode]
       };
     },
-    addressByContact: (config: ILayerIconConfig[], entity) => {
-      if (entity.addressLatitude && entity.addressLongitude) {
-        const result = { ...config[entity.addressType] };
-        result.fillColor = entity.distance >= MapGoogleService.MY_MAGIC_CONSTANT ? '37bc9b' : 'fad732';
+    addressByContact: (config: ILayerIconConfig[], data) => {
+      if (data.addressLatitude && data.addressLongitude) {
+        const result = { ...config[data.addressTypeCode] };
+        result.fillColor = data.distance >= getLatLngDistance(
+          { lat: data.contactLatitude, lng: data.contactLongitude },
+          { lat: data.addressLatitude, lng: data.addressLongitude },
+        ) ? '37bc9b' : 'fad732';
         return result;
       }
       return {
@@ -202,9 +205,8 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
   }
 
   createMarkerIcon(config: ILayerIconConfig): string {
-    return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${
-      config.char
-    }%7C${config.fillColor}%7C${config.textColor}`;
+    // tslint:disable-next-line:max-line-length
+    return `${this.dynamicIconBaseUrl}chst=d_map_spin&chld=${[0.75, 0, config.fillColor, config.fontSize || 12, '_', config.char].join('%7C')}`;
   }
 
   getIconConfig(configKey: string, entity: T): ILayerIconConfig {
@@ -222,10 +224,11 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
     const lineSymbol = {
       path: 'M 0,-1 0,1',
       strokeOpacity: 1,
+      strokeColor: (data.options as google.maps.PolylineOptions).strokeColor,
       scale: 4
     };
     const polyline = new google.maps.Polyline({
-      ...data.options as google.maps.PolylineOptions,
+      strokeOpacity: 0,
       path: data.latlngs as GeoLine,
       map: this._map,
       icons: [
@@ -383,7 +386,7 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
   private load(
     onLoad: EventListener,
     onError: EventListener,
-    libraries: Libraries[] = ['drawing'],
+    libraries: Libraries[] = ['drawing', 'geometry'],
   ): void {
     if (!this.libraryEl) {
       this.unload(onLoad, onError);

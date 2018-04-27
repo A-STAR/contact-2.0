@@ -155,6 +155,7 @@ export interface ILayerIconConfig {
   char?: string;
   fillColor?: string;
   textColor?: string;
+  fontSize?: number;
 }
 
 export type PopupComponentRefGetter<T> = () => ComponentRef<IPopupCmp<T>>;
