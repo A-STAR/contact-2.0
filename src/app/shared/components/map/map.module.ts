@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { PopupModule } from './components/popups/popup.module';
 import { MapControlsModule } from './components/controls/map-controls.module';
 
+import { LayersService } from './map.service';
+
 import { MapComponent } from './map.component';
 
 @NgModule({
@@ -12,6 +14,7 @@ import { MapComponent } from './map.component';
     MapControlsModule,
     PopupModule,
   ],
+  providers: [ LayersService ],
   declarations: [ MapComponent ],
   exports: [ MapComponent ],
 })

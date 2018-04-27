@@ -1,7 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
-import { IMapService, LayerType, ILayer, ILayerDef } from './map-providers.interface';
-import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
+
+import {
+  IMapService,
+  LayerType,
+  ILayer,
+  ILayerDef,
+} from '@app/core/map-providers/map-providers.interface';
+
 import { IncId } from '@app/core/utils';
+import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
 @Injectable()
 export class LayersService<T> {

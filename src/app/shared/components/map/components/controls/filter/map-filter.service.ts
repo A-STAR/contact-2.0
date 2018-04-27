@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 
+import { ILayer, LayerType } from '@app/core/map-providers/map-providers.interface';
 import {
   IMapToolbarFilterItem,
   IMapFilterFn,
 } from '../toolbar/map-toolbar.interface';
 import { MapFilters } from './map-filter.interface';
-import { ILayer, LayerType } from '@app/core/map-providers/map-providers.interface';
+
+import { LayersService } from '@app/shared/components/map/map.service';
 
 import { isEmpty } from '@app/core/utils';
-import { LayersService } from '@app/core/map-providers/map-layers.service';
 
 @Injectable()
 export class MapFilterService<T> {
@@ -17,8 +18,8 @@ export class MapFilterService<T> {
 
     [MapFilters.RESET]: (_, __) => true,
 
-    [MapFilters.INACTIVE]: (layer: ILayer<any>, _) =>
-      Boolean(layer.data.isInactive),
+    [MapFilters.TOGGLE_INACTIVE]: (layer: ILayer<any>, params: boolean) =>
+      layer.data.isInactive ? params : true,
 
     [MapFilters.ADDRESS_STATUS]: (layer: ILayer<any>, params: number[]) =>
       isEmpty(params) || params.includes(layer.data.statusCode),
@@ -53,6 +54,7 @@ export class MapFilterService<T> {
       case MapFilters.ADDRESS_TYPE:
       case MapFilters.CONTACT_TYPE:
       case MapFilters.VISIT_STATUS:
+      case MapFilters.TOGGLE_INACTIVE:
         this.layersService
           .getGroups()
           .forEach(g => {

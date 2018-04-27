@@ -1,7 +1,7 @@
 export enum MapFilters {
   TOGGLE_ALL = 1,
   RESET,
-  INACTIVE,
+  TOGGLE_INACTIVE,
   ADDRESS_TYPE,
   VISIT_STATUS,
   ADDRESS_STATUS,

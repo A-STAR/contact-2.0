@@ -19,7 +19,7 @@ import {
   ILayerDef,
   GeoPoint,
 } from '@app/core/map-providers/map-providers.interface';
-import { LayersService } from '@app/core/map-providers/map-layers.service';
+import { LayersService } from './map.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';

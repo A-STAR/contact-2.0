@@ -124,7 +124,7 @@ export class MapsComponent implements OnInit {
                 },
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
-                  filter: MapFilters.INACTIVE,
+                  filter: MapFilters.TOGGLE_INACTIVE,
                   label: 'massOperations.addressesByContacts.filter.showInactives',
                   // enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
                   enabled: of(true),
