@@ -17,5 +17,6 @@
   </div>
   <div>
     <span *ngIf="errors">{{ errors | json }}</span>
+    <span *ngIf="!errors"> {{ 'default.filter.value' | translate }}: {{ value }} </span>
   </div>
 </label>

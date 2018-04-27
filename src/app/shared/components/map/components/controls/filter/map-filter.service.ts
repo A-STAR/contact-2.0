@@ -88,7 +88,7 @@ export class MapFilterService<T> {
           .forEach(g => {
             const layerIds = g
               .getLayersByType(LayerType.MARKER)
-              .filter(m => (m.data as any).addressLatitude && (m.data as any).addressLongitude)
+              .filter(m => (m.data as any).addressLatitude && (m.data as any).addressLongitude && !(m.data as any).isContact)
               .map(l => l.id);
 
               this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);

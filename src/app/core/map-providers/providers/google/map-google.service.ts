@@ -83,7 +83,7 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
     addressByContact: (config: ILayerIconConfig[], data, params?: number) => {
       if (data.addressLatitude && data.addressLongitude) {
         const result = { ...config[data.addressTypeCode] };
-        result.fillColor = data.distance >= params ? '37bc9b' : 'fad732';
+        result.fillColor = data.distance <= params ? 'fad732' : '37bc9b';
         return result;
       }
       return {
