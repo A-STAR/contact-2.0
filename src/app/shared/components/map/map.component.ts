@@ -19,6 +19,7 @@ import {
   ILayerDef,
   GeoPoint,
 } from '@app/core/map-providers/map-providers.interface';
+import { LayersService } from '@app/core/map-providers/map-layers.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
@@ -34,7 +35,7 @@ import { tap, delay } from 'rxjs/operators';
 export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
-  @Input() layers: ILayerDef<T>[];
+  @Input() layers: ILayerDef<T>[][];
   @Input() options: IMapOptions = {
     zoom: 6,
     center: {
@@ -54,6 +55,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
     private cdRef: ChangeDetectorRef,
+    private layersService: LayersService<T>,
     private notificationsService: NotificationsService,
   ) { }
 
@@ -87,21 +89,24 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.layersService.clear();
     this.mapService.removeMap();
   }
 
-  addLayers(layers: ILayerDef<T>[]): void {
+  addLayers(layers: ILayerDef<T>[][]): void {
     if (layers && layers.length) {
       layers
-        .map(layer => this.mapService.createLayer(layer))
-        .map(layer => {
-
-          if (this.options.fitToData && layer.type === LayerType.MARKER) {
-            this.bounds.extend(this.getLatLng(layer.layer));
+        // for each layer group
+        .map(g => this.layersService.createGroup(g))
+        .map(group => {
+          // extend bounds by geo points layers
+          if (this.options.fitToData) {
+            group.getLayersByType(LayerType.MARKER).forEach(l => {
+              this.bounds.extend(this.getLatLng(l.layer));
+            });
           }
 
-        })
-        .filter(Boolean);
+        });
     }
   }
 
