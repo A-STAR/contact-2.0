@@ -1,0 +1,21 @@
+<label class="m0">
+  <div *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </div>
+  <div class="input-container">
+    <input
+      class="form-control"
+      type="range"
+      [min]="min"
+      [max]="max"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [ngModel]="value"
+      (ngModelChange)="onChange($event)"
+    />
+  </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
+</label>
