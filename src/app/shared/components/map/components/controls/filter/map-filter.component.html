@@ -38,6 +38,20 @@
         >
         {{ child.label | translate }}
         </button>
+        <!-- Slider -->
+        <label
+          *ngSwitchCase="'slider'"
+          class="dropdown-control-slider"
+          for="map-filter-slider">
+          {{ child.label | translate }}
+          <input
+            id="map-filter-slider"
+            type="range"
+            [ngModel]="child.value"
+            (ngModelChange)="onChildSelect($event, child)"
+            max="100000"
+            min="10" >
+        </label>
         <!-- Checkbox -->
         <app-tick
           *ngSwitchCase="'checkbox'"

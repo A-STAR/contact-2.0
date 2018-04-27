@@ -58,71 +58,7 @@ export class ContactComponent implements OnInit {
   layers: ILayerDef<IAddressByContact>[][];
   options: IMapOptions = { fitToData: true, zoom: 8 };
 
-  controls: IControlDef<IMapToolbarItem[]>[] = [
-    {
-      position: MapControlPosition.BOTTOM_LEFT,
-      hostClass: 'map-toolbar-placement',
-      cmp: MapToolbarComponent,
-      data: [
-        {
-          type: MapToolbarItemType.FILTER,
-          enabled: of(true),
-          children: [
-            {
-              type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.TOGGLE_ALL,
-              label: 'massOperations.addressesByContacts.filter.showAllAdresses',
-              enabled: of(true),
-              checked: true
-            },
-            {
-              type: MapToolbarFilterItemType.SEPARATOR,
-            },
-            {
-              type: MapToolbarFilterItemType.DICTIONARY,
-              filter: MapFilters.ADDRESS_TYPE,
-              label: 'massOperations.addressesByContacts.filter.filterByAddressType',
-              dictCode: 21,
-              enabled: of(true),
-              preserveOnClick: true,
-            },
-            {
-              type: MapToolbarFilterItemType.DICTIONARY,
-              filter: MapFilters.CONTACT_TYPE,
-              label: 'massOperations.addressesByContacts.filter.filterByContactType',
-              dictCode: 50,
-              enabled: of(true),
-              preserveOnClick: true,
-            },
-            {
-              type: MapToolbarFilterItemType.SEPARATOR,
-            },
-            {
-              type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.TOGGLE_ADDRESSES,
-              label: 'massOperations.addressesByContacts.filter.hideAddresses',
-              checked: false
-            },
-            {
-              type: MapToolbarFilterItemType.CHECKBOX,
-              filter: MapFilters.TOGGLE_ACCURACY,
-              label: 'massOperations.addressesByContacts.filter.hideAccuracy',
-              checked: false
-            },
-            {
-              type: MapToolbarFilterItemType.SEPARATOR,
-            },
-            {
-              type: MapToolbarFilterItemType.BUTTON,
-              filter: MapFilters.RESET,
-              label: 'massOperations.addressesByContacts.filter.resetFilter',
-              enabled: of(true),
-            },
-          ]
-        },
-      ]
-    }
-  ];
+  controls: IControlDef<IMapToolbarItem[]>[] = [];
 
   constructor(
     private addressService: AddressService,
@@ -138,6 +74,7 @@ export class ContactComponent implements OnInit {
       )
       .pipe(
         map(([constant, response]) => {
+          this.controls = this.getControls(constant);
           return response.reduce((acc: ILayerDef<IAddressByContact>[][], address) => {
             acc.push(this.createContactGroup(address, constant));
             return acc;
@@ -159,19 +96,19 @@ export class ContactComponent implements OnInit {
       ...data,
       typeCode: (data as IAddressByContact).contactType,
       isInactive: false
-    });
+    }, constant);
     const group = [
         {
         latlngs: { lat: data.contactLatitude, lng: data.contactLongitude },
         type: LayerType.MARKER,
         iconConfig,
-        data,
+        data: {...data, isContact: true},
         popup: PopupComponent,
         tpl: this.tpl,
       },
       {
         latlngs: { lat: data.contactLatitude, lng: data.contactLongitude },
-        radius: data.accuracy || constant.valueN,
+        radius: data.accuracy || 10,
         type: LayerType.CIRCLE,
         options: {
           fillColor: '#' + iconConfig.fillColor,
@@ -193,7 +130,7 @@ export class ContactComponent implements OnInit {
           data,
           popup: PopupComponent,
           tpl: this.tpl,
-        },
+        } as any,
         {
           latlngs: [
             { lat: data.contactLatitude, lng: data.contactLongitude },
@@ -208,5 +145,83 @@ export class ContactComponent implements OnInit {
       );
     }
     return group;
+  }
+
+  private getControls(constant: IUserConstant): IControlDef<IMapToolbarItem[]>[] {
+    return [
+      {
+        position: MapControlPosition.BOTTOM_LEFT,
+        hostClass: 'map-toolbar-placement',
+        cmp: MapToolbarComponent,
+        data: [
+          {
+            type: MapToolbarItemType.FILTER,
+            enabled: of(true),
+            children: [
+              {
+                type: MapToolbarFilterItemType.CHECKBOX,
+                filter: MapFilters.TOGGLE_ALL,
+                label: 'massOperations.addressesByContacts.filter.showAllAdresses',
+                enabled: of(true),
+                checked: true
+              },
+              {
+                type: MapToolbarFilterItemType.SEPARATOR,
+              },
+              {
+                type: MapToolbarFilterItemType.DICTIONARY,
+                filter: MapFilters.ADDRESS_TYPE,
+                label: 'massOperations.addressesByContacts.filter.filterByAddressType',
+                dictCode: 21,
+                enabled: of(true),
+                preserveOnClick: true,
+              },
+              {
+                type: MapToolbarFilterItemType.DICTIONARY,
+                filter: MapFilters.CONTACT_TYPE,
+                label: 'massOperations.addressesByContacts.filter.filterByContactType',
+                dictCode: 50,
+                enabled: of(true),
+                preserveOnClick: true,
+              },
+              {
+                type: MapToolbarFilterItemType.SEPARATOR,
+              },
+              {
+                type: MapToolbarFilterItemType.CHECKBOX,
+                filter: MapFilters.TOGGLE_ADDRESSES,
+                label: 'massOperations.addressesByContacts.filter.hideAddresses',
+                checked: false
+              },
+              {
+                type: MapToolbarFilterItemType.CHECKBOX,
+                filter: MapFilters.TOGGLE_ACCURACY,
+                label: 'massOperations.addressesByContacts.filter.hideAccuracy',
+                checked: false
+              },
+              {
+                type: MapToolbarFilterItemType.SEPARATOR,
+              },
+              {
+                type: MapToolbarFilterItemType.SLIDER,
+                filter: MapFilters.DISTANCE,
+                value: constant,
+                label: 'massOperations.addressesByContacts.filter.distance',
+                enabled: of(true),
+              },
+              {
+                type: MapToolbarFilterItemType.SEPARATOR,
+              },
+              {
+                type: MapToolbarFilterItemType.BUTTON,
+                filter: MapFilters.RESET,
+                label: 'massOperations.addressesByContacts.filter.resetFilter',
+                enabled: of(true),
+              },
+            ]
+          },
+        ]
+      }
+    ];
   }
 }

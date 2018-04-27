@@ -32,12 +32,13 @@ export interface IMapService<T> {
   createControl(controlDef: IControlDef<T>): void;
   createLayer(layerDef: ILayerDef<T>): ILayer<T>;
   getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
-  getIconConfig(configKey: string, data: T): ILayerIconConfig;
+  getIconConfig(configKey: string, data: T, params?: any): ILayerIconConfig;
   getMap(): google.maps.Map | Map;
   addToMap(layer: ILayer<T>): void;
   removeFromMap(layer: ILayer<T>): void;
   init(mapConfig: IMapOptions): Observable<any>;
   removeMap(): void;
+  setIcon?(layer: ILayer<T>, configKey: string, params?: any): void;
 }
 
 export enum LayerType {

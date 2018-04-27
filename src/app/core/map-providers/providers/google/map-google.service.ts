@@ -80,13 +80,10 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
         ...config[entity.typeCode]
       };
     },
-    addressByContact: (config: ILayerIconConfig[], data) => {
+    addressByContact: (config: ILayerIconConfig[], data, params?: number) => {
       if (data.addressLatitude && data.addressLongitude) {
         const result = { ...config[data.addressTypeCode] };
-        result.fillColor = data.distance >= getLatLngDistance(
-          { lat: data.contactLatitude, lng: data.contactLongitude },
-          { lat: data.addressLatitude, lng: data.addressLongitude },
-        ) ? '37bc9b' : 'fad732';
+        result.fillColor = data.distance >= params ? '37bc9b' : 'fad732';
         return result;
       }
       return {
@@ -164,6 +161,13 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
     return { layer: marker, data: data.data, type: data.type };
   }
 
+  setIcon(layer: ILayer<T>, configKey: string, params?: any): void {
+    if (layer.type === LayerType.MARKER) {
+      const iconConfig = this.getIconConfig(configKey, layer.data, params);
+      (layer.layer as google.maps.Marker).setIcon(this.createMarkerIcon(iconConfig));
+    }
+  }
+
   createControl(controlDef: IControlDef<T>): void {
     const { compRef, el } = this.mapRendererService.render<IControlCmp<T>>(
       controlDef.cmp,
@@ -209,10 +213,10 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
     return `${this.dynamicIconBaseUrl}chst=d_map_spin&chld=${[0.75, 0, config.fillColor, config.fontSize || 12, '_', config.char].join('%7C')}`;
   }
 
-  getIconConfig(configKey: string, entity: T): ILayerIconConfig {
+  getIconConfig(configKey: string, entity: T, params?: any): ILayerIconConfig {
     if (MapGoogleService.ICON_CONFIGS[configKey]) {
       return MapGoogleService.ICON_CONFIG_GETTERS[configKey] ?
-        MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity)
+        MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity, params)
           // no config getter found, return first config entry
           : MapGoogleService.ICON_CONFIGS[configKey][0];
     } else {

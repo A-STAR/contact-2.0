@@ -28,5 +28,6 @@ export interface IAddressByContact extends IAddressResponce, IContact {
   isInactive?: boolean;
   addressLatitude?: number;
   addressLongitude?: number;
+  isContact?: boolean;
 }
 

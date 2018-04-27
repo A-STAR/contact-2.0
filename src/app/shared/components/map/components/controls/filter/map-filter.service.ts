@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
-import { ILayer, LayerType } from '@app/core/map-providers/map-providers.interface';
+import { ILayer, LayerType, IMapService } from '@app/core/map-providers/map-providers.interface';
 import {
   IMapToolbarFilterItem,
   IMapFilterFn,
@@ -9,6 +9,7 @@ import { MapFilters } from './map-filter.interface';
 
 import { LayersService } from '@app/core/map-providers/layers/map-layers.service';
 
+import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 import { isEmpty } from '@app/core/utils';
 
 @Injectable()
@@ -36,10 +37,16 @@ export class MapFilterService<T> {
 
     [MapFilters.TOGGLE_ADDRESSES]: (_, params: boolean) => params,
 
-    [MapFilters.TOGGLE_ACCURACY]: (_, params: boolean) => params
+    [MapFilters.TOGGLE_ACCURACY]: (_, params: boolean) => params,
+
+    [MapFilters.DISTANCE]: (layer: ILayer<any>, params: number) =>
+       layer.data.isContact && layer.data.contactLatitude && layer.data.contactLongitude && Boolean(params)
   };
 
-  constructor(private layersService: LayersService<T>) {}
+  constructor(
+      private layersService: LayersService<T>,
+      @Inject(MAP_SERVICE) private mapService: IMapService<T>,
+    ) {}
 
   applyFilter(item: IMapToolbarFilterItem, params: any): void {
     switch (item.filter) {
@@ -85,6 +92,16 @@ export class MapFilterService<T> {
               .map(l => l.id);
 
               this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+          });
+        break;
+      case MapFilters.DISTANCE:
+        this.layersService
+          .getGroups()
+          .forEach(g => {
+            g
+            .getLayersByType(LayerType.MARKER)
+            .filter(m => this.defaultItems[item.filter as MapFilters](m, params))
+            .map(l => this.mapService.setIcon(l, 'addressByContact', params));
           });
         break;
       default:

@@ -66,7 +66,10 @@ export class MapFilterComponent<T> implements OnInit {
   }
 
   private shouldCloseDropdown(child: IMapToolbarFilterItem): boolean {
-    return !(child.preserveOnClick || child.type === MapToolbarFilterItemType.CHECKBOX);
+    return !(child.preserveOnClick || [
+      MapToolbarFilterItemType.CHECKBOX,
+      MapToolbarFilterItemType.SLIDER
+    ].includes(child.type));
   }
 
 }

@@ -2993,6 +2993,7 @@
         "hideAccuracy": "Hide accuracy",
         "showAllAdresses": "Show all addresses",
         "showInactives": "Show inactive addresses",
+        "distance": "Set preffered distance",
         "resetFilter": "Reset filter"
       }
     },
