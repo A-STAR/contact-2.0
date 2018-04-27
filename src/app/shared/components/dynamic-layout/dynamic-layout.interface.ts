@@ -23,8 +23,8 @@ export interface IDynamicLayoutConfig {
   items: IDynamicLayoutItem[];
 }
 
-export interface IDynamicLayoutItemProperties {
-  item: IDynamicLayoutItem;
+export interface IDynamicLayoutItemProperties<T> {
+  item: T;
   streams: {
     disabled: Observable<boolean>;
     display: Observable<boolean>;

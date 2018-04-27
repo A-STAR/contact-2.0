@@ -6,6 +6,7 @@ import {
   DynamicLayoutItemType,
   IDynamicLayoutAttribute,
   IDynamicLayoutItemProperties,
+  IDynamicLayoutItem,
 } from '../dynamic-layout.interface';
 
 import { DataService } from '@app/core/data/data.service';
@@ -20,7 +21,7 @@ export class AttributeService {
     private notificationsService: NotificationsService,
   ) {}
 
-  init(items: Record<string, IDynamicLayoutItemProperties>): void {
+  init(items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>): void {
     const attributes = Object.keys(items)
       .map(key => items[key].item)
       .filter(item => item.type === DynamicLayoutItemType.ATTRIBUTE)

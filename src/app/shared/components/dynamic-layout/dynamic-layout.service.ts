@@ -18,7 +18,7 @@ import { MetadataService } from './metadata.service';
 @Injectable()
 export class LayoutService {
   private _group: IDynamicLayoutGroup;
-  private _items: Record<string, IDynamicLayoutItemProperties>;
+  private _items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>;
   private _initialized = false;
 
   constructor(
@@ -36,7 +36,7 @@ export class LayoutService {
     return this._group;
   }
 
-  get items(): Record<string, IDynamicLayoutItemProperties> {
+  get items(): Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>> {
     return this._items;
   }
 
@@ -50,7 +50,7 @@ export class LayoutService {
     }
   }
 
-  getItem(uid: string): IDynamicLayoutItemProperties {
+  getItem(uid: string): IDynamicLayoutItemProperties<IDynamicLayoutItem> {
     return this._items[uid];
   }
 
@@ -81,7 +81,7 @@ export class LayoutService {
     });
   }
 
-  private flattenItems(items: IDynamicLayoutItem[]): { [key: string]: IDynamicLayoutItemProperties } {
+  private flattenItems(items: IDynamicLayoutItem[]): { [key: string]: IDynamicLayoutItemProperties<IDynamicLayoutItem> } {
     return items.reduce((acc, item) => {
       const properties = this.createItemProperties(item);
       switch (item.type) {
@@ -93,7 +93,7 @@ export class LayoutService {
     }, {});
   }
 
-  private createItemProperties(item: IDynamicLayoutItem): IDynamicLayoutItemProperties {
+  private createItemProperties(item: IDynamicLayoutItem): IDynamicLayoutItemProperties<IDynamicLayoutItem> {
     return {
       item,
       streams: {
