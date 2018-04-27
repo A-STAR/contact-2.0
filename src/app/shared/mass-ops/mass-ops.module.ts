@@ -13,6 +13,7 @@ import { OperatorDetailsModule } from './operator-details/operator-details.modul
 import { OutsourcingModule } from './outsourcing/outsourcing.module';
 import { PaymentConfirmModule } from './payment-confirm/payment-confirm.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
+import { PersonTypeModule } from '@app/shared/mass-ops/person-type/person-type.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { SmsDeleteModule } from './sms-delete/sms-delete.module';
 import { SmsModule } from './sms/sms.module';
@@ -36,6 +37,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     OutsourcingModule,
     PaymentConfirmModule,
     PaymentOperatorModule,
+    PersonTypeModule,
     PromiseResolveModule,
     SmsDeleteModule,
     SmsModule,
@@ -55,6 +57,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     OutsourcingModule,
     PaymentConfirmModule,
     PaymentOperatorModule,
+    PersonTypeModule,
     PromiseResolveModule,
     SmsDeleteModule,
     SmsModule,
