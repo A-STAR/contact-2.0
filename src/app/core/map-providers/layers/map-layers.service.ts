@@ -10,52 +10,6 @@ import {
 import { IncId } from '@app/core/utils';
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
-@Injectable()
-export class LayersService<T> {
-  private groups: LayerGroup<T>[] = [];
-
-  constructor(
-    @Inject(MAP_SERVICE) private mapService: IMapService<T>
-  ) {}
-
-  show(): void {
-    this.groups.forEach(g => g.show());
-  }
-
-  hide(): void {
-    this.groups.forEach(g => g.hide());
-  }
-
-  createGroup(layersConfig: ILayerDef<T>[]): LayerGroup<T> {
-    const group = new LayerGroup<T>(this.mapService, layersConfig);
-    this.groups.push(group);
-    return group;
-  }
-
-  getGroups(): LayerGroup<T>[] {
-    return this.groups;
-  }
-
-  getGroupById(id: number): LayerGroup<T> {
-    return this.groups.find(g => g.id === id);
-  }
-
-  removeGroupById(id: number): void {
-    const groupIndex = this.groups.findIndex(g => g.id === id);
-    if (groupIndex !== -1) {
-      const group = this.groups[groupIndex];
-      group.clear();
-      this.groups.splice(groupIndex, 1);
-    }
-  }
-
-  clear(): void {
-    this.groups.forEach(g => g.clear());
-    this.groups = [];
-  }
-
-}
-
 class LayerGroup<T> {
   private layers: Map<LayerType, ILayer<T>[]> = new Map();
   id: number;
@@ -142,4 +96,50 @@ class LayerGroup<T> {
     this.getLayers().forEach(l => this.mapService.removeFromMap(l));
     this.layers.clear();
   }
+}
+
+@Injectable()
+export class LayersService<T> {
+  private groups: LayerGroup<T>[] = [];
+
+  constructor(
+    @Inject(MAP_SERVICE) private mapService: IMapService<T>
+  ) {}
+
+  show(): void {
+    this.groups.forEach(g => g.show());
+  }
+
+  hide(): void {
+    this.groups.forEach(g => g.hide());
+  }
+
+  createGroup(layersConfig: ILayerDef<T>[]): LayerGroup<T> {
+    const group = new LayerGroup<T>(this.mapService, layersConfig);
+    this.groups.push(group);
+    return group;
+  }
+
+  getGroups(): LayerGroup<T>[] {
+    return this.groups;
+  }
+
+  getGroupById(id: number): LayerGroup<T> {
+    return this.groups.find(g => g.id === id);
+  }
+
+  removeGroupById(id: number): void {
+    const groupIndex = this.groups.findIndex(g => g.id === id);
+    if (groupIndex !== -1) {
+      const group = this.groups[groupIndex];
+      group.clear();
+      this.groups.splice(groupIndex, 1);
+    }
+  }
+
+  clear(): void {
+    this.groups.forEach(g => g.clear());
+    this.groups = [];
+  }
+
 }
