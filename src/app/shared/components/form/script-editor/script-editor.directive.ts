@@ -75,16 +75,7 @@ export class ScriptEditorDirective {
   private initTern(options: any): void {
     this.ace.config.loadModule('ace/ext/tern', () => {
       this.scriptEditor.setOptions(options);
-      this.initSnippets(options);
-    });
-  }
-
-  private initSnippets(options: any): void {
-    this.ace.config.loadModule(`ace/snippets/${this.scriptEditorMode}`, m => {
-      if (m) {
-        m.snippets.push(...(options.enableSnippets || []));
-        this.snippetManager.register(m.snippets, m.scope);
-      }
+      this.snippetManager.register(options.enableSnippets || [], this.scriptEditorMode);
     });
   }
 
