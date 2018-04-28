@@ -1,4 +1,4 @@
-import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../item.interface';
+import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-layout.interface';
 import { IDynamicLayoutItem } from '../dynamic-layout.interface';
 
 export enum DynamicLayoutGroupType {

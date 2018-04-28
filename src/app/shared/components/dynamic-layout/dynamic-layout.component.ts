@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '
 import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './dynamic-layout.interface';
 
 import { AttributeService } from './attribute/attribute.service';
-import { FormService } from './control/form.service';
+import { ControlService } from './control/control.service';
 import { DynamicLayoutService } from './dynamic-layout.service';
 import { TemplateService } from './template/template.service';
 
@@ -12,7 +12,7 @@ import { TemplateService } from './template/template.service';
   host: { class: 'full-size' },
   providers: [
     AttributeService,
-    FormService,
+    ControlService,
     DynamicLayoutService,
     TemplateService,
   ],
@@ -28,7 +28,7 @@ export class DynamicLayoutComponent implements OnInit {
   }
 
   constructor(
-    private formService: FormService,
+    private formService: ControlService,
     private layoutService: DynamicLayoutService,
     private templateService: TemplateService,
   ) {}

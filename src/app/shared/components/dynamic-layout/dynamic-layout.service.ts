@@ -13,7 +13,7 @@ import {
 
 import { AttributeService } from './attribute/attribute.service';
 import { ContextService } from './context.service';
-import { FormService } from './control/form.service';
+import { ControlService } from './control/control.service';
 import { MetadataService } from './metadata.service';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class DynamicLayoutService {
   constructor(
     private attributeService: AttributeService,
     private contextService: ContextService,
-    private formService: FormService,
+    private formService: ControlService,
     private metadataService: MetadataService,
   ) {}
 

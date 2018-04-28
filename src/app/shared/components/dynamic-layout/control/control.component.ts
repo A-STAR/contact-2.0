@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 
 import { IDynamicLayoutControl } from '../dynamic-layout.interface';
 
-import { FormService } from '../control/form.service';
+import { ControlService } from '../control/control.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +15,7 @@ export class ControlComponent {
   @Input() control: IDynamicLayoutControl;
 
   constructor(
-    private formService: FormService,
+    private formService: ControlService,
   ) {}
 
   get formGroup(): FormGroup {

@@ -1,4 +1,4 @@
-import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../item.interface';
+import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-layout.interface';
 
 export interface IAttributeContext {
   debtId: number;

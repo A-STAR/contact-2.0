@@ -16,7 +16,7 @@ import {
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
 @Injectable()
-export class FormService implements OnDestroy {
+export class ControlService implements OnDestroy {
   private controls: IDynamicLayoutItemProperties<IDynamicLayoutControl>[];
   private data: Record<string, any> = {};
   private groups = new Map<string, FormGroup>();
