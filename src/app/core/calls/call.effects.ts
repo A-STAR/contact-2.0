@@ -165,7 +165,7 @@ export class CallEffects {
       return this.call(phoneId, debtId, personId, personRole)
         .map(() => ({
           type: CallService.CALL_START_SUCCESS,
-          payload: { phoneId, debtId, personId, personRole }
+          payload: action.payload
         }))
         .catch(error => {
           return [
