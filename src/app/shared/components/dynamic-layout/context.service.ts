@@ -28,14 +28,49 @@ export class ContextService {
    * ```
    */
   calculate(context: IContext): Observable<any> {
-    const storeReferences = this.findStoreReferences(context);
+    const resolvedContext = this.resolveMetaOperatorsRecursively(context);
+    const storeReferences = this.findStoreReferences(resolvedContext);
     return this.store.pipe(
       select(state => {
         const value = storeReferences.reduce((acc, key) => ({ ...acc, [key]: this.getStateSlice(state, key) }), {});
-        return this.calculateFromStore(value, context);
+        return this.calculateFromStore(value, resolvedContext);
       }),
       distinctUntilChanged(),
     );
+  }
+
+  private resolveMetaOperatorsRecursively(context: IContext): IContext {
+    return typeof context === 'object'
+      ? this.resolveMetaOperators(context)
+      : context;
+  }
+
+  private resolveMetaOperators(expression: IContextExpression): IContext {
+    switch (expression.operator) {
+      case ContextOperator.PERMISSION:
+        return {
+          ...expression,
+        };
+      case ContextOperator.ATTRIBUTE:
+        return {
+          ...expression,
+        };
+      case ContextOperator.CONSTANT:
+        return {
+          ...expression,
+        };
+      case ContextOperator.PERSON_ATTRIBUTES:
+        return {
+          ...expression,
+        };
+      default:
+        return {
+          ...expression,
+          value: Array.isArray(expression.value)
+            ? expression.value.map(e => this.resolveMetaOperatorsRecursively(e))
+            : this.resolveMetaOperatorsRecursively(expression.value),
+        };
+    }
   }
 
   private findStoreReferences(context: IContext): string[] {
