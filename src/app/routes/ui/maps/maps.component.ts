@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
-import { random, name, address } from 'faker';
 import { of } from 'rxjs/observable/of';
 
 import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
-import { IMarker, IControlDef, MapControlPosition } from '@app/core/map-providers/map-providers.interface';
+import { IControlDef, MapControlPosition, ILayerDef, LayerType } from '@app/core/map-providers/map-providers.interface';
 import {
   MapToolbarItemType,
   IMapToolbarItem,
@@ -24,7 +23,7 @@ import { range, random as randomInt } from '@app/core/utils';
 })
 export class MapsComponent implements OnInit {
 
-  markers: IMarker<IDebtorAddress>[];
+  layers: ILayerDef<IDebtorAddress>[][];
   controls: IControlDef<IMapToolbarItem[]>[];
   @ViewChild('tpl')
   tpl: TemplateRef<IDebtorAddress>;
@@ -34,28 +33,31 @@ export class MapsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.markers = this.generateMarkers();
+    this.layers = [ this.generateMarkers() ];
     this.controls = this.getControls();
     this.cdRef.markForCheck();
   }
 
   onNameChange(value: any, index: number): void {
-    this.markers[index].data.name = value;
+    this.layers[0][index].data.name = value;
   }
 
   onAddressChange(value: any, index: number): void {
-    this.markers[index].data.address = value;
+    this.layers[0][index].data.address = value;
   }
 
-  private generateMarkers(count: number = 5): IMarker<IDebtorAddress>[] {
-    return range(1, count).map(_ => ({
-      lat: 55 + random.number({ min: 0, max: 1, precision: 0.0001 }),
-      lng: 37 + random.number({ min: 0, max: 1, precision: 0.0001 }),
+  private generateMarkers(count: number = 5): ILayerDef<IDebtorAddress>[] {
+    return range(1, count).map(i => ({
+      latlngs: {
+        lat: 55 + Math.random(),
+        lng: 37 + Math.random()
+      },
+      type: LayerType.MARKER,
       popup: PopupComponent,
       tpl: this.tpl,
       data: {
-        name: name.findName(),
-        address: address.streetAddress(),
+        name: 'Name' + i,
+        address: 'Address' + i,
         statusType: randomInt(1, 3),
         typeCode: randomInt(1, 3),
         visitType: randomInt(1, 3),
@@ -77,7 +79,7 @@ export class MapsComponent implements OnInit {
               children: [
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
-                  filter: MapFilters.ALL,
+                  filter: MapFilters.TOGGLE_ALL,
                   label: 'massOperations.addressesByContacts.filter.showAllAdresses',
                   enabled: of(true),
                   checked: true
@@ -122,7 +124,7 @@ export class MapsComponent implements OnInit {
                 },
                 {
                   type: MapToolbarFilterItemType.CHECKBOX,
-                  filter: MapFilters.INACTIVE,
+                  filter: MapFilters.TOGGLE_INACTIVE,
                   label: 'massOperations.addressesByContacts.filter.showInactives',
                   // enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
                   enabled: of(true),

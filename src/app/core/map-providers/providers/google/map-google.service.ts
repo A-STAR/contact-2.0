@@ -4,17 +4,19 @@ import {} from '@types/googlemaps';
 
 import {
   IMapOptions,
-  IMarker,
-  ICreateMarkerResult,
+  ILayer,
   PopupComponentRefGetter,
-  IMarkerIconConfig,
+  ILayerIconConfig,
   IControlDef,
-  ControlComponentRefGetter,
   IControlCmp,
   IPopupCmp,
   MapControlPosition,
-  IMapEntity,
   IMapService,
+  LayerType,
+  ILayerDef,
+  GeoPoint,
+  GeoLine,
+  GoogleGeoLayer,
 } from '../../map-providers.interface';
 import { Libraries } from './maps-google.interface';
 
@@ -22,30 +24,31 @@ import { ConfigService } from '@app/core/config/config.service';
 import { MapRendererService } from '../../renderer/map-renderer.service';
 
 import { IncId } from '@app/core/utils';
+import { MapProvider } from '@app/core/map-providers/providers/map-provider';
+
+import { getLatLngDistance } from '../../utils/map-utils';
 
 @Injectable()
-export class MapGoogleService<T> implements IMapService<T> {
+export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T> {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
-  // TODO(i.lobanov): pass from client code
-  static MY_MAGIC_CONSTANT = 100;
 
   private static ICON_CONFIGS = {
     singleAddress: [
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'ffffff' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'ffffff' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'ffffff' }, // Blue fill, white textColor
       { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
     addressByPerson: [
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'ffffff' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'ffffff' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'ffffff' }, // Blue fill, white textColor
       { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
     addressByContact: [
@@ -53,15 +56,15 @@ export class MapGoogleService<T> implements IMapService<T> {
       // NOTE: colors without hash
       // Inactive color, char determined by typeCode
       { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'CR', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'CA', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'CW', textColor: 'd8d5e2' }, // Blue fill, white textColor
-      { fillColor: 'fad732', char: 'CE', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+      { fillColor: '37bc9b', char: 'CR', fontSize: 10, textColor: 'ffffff' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'CA', fontSize: 10, textColor: 'ffffff' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'CW', fontSize: 10, textColor: 'ffffff' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'CE', fontSize: 10, textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
   };
 
   static ICON_CONFIG_GETTERS = {
-    singleAddress: (config: IMarkerIconConfig[], entity) => {
+    singleAddress: (config: ILayerIconConfig[], entity) => {
       return entity.isInactive ?  {
         ...config[entity.typeCode],
         ...config[0],
@@ -69,7 +72,7 @@ export class MapGoogleService<T> implements IMapService<T> {
         ...config[entity.typeCode]
       };
     },
-    addressByPerson: (config: IMarkerIconConfig[], entity) => {
+    addressByPerson: (config: ILayerIconConfig[], entity) => {
       return entity.isInactive ?  {
         ...config[entity.typeCode],
         ...config[0],
@@ -77,10 +80,10 @@ export class MapGoogleService<T> implements IMapService<T> {
         ...config[entity.typeCode]
       };
     },
-    addressByContact: (config: IMarkerIconConfig[], entity) => {
-      if (entity.addressLatitude && entity.addressLongitude) {
-        const result = { ...config[entity.addressType] };
-        result.fillColor = entity.distance >= MapGoogleService.MY_MAGIC_CONSTANT ? '37bc9b' : 'fad732';
+    addressByContact: (config: ILayerIconConfig[], data, params?: number) => {
+      if (data.addressLatitude && data.addressLongitude) {
+        const result = { ...config[data.addressTypeCode] };
+        result.fillColor = data.distance <= params ? 'fad732' : '37bc9b';
         return result;
       }
       return {
@@ -93,7 +96,6 @@ export class MapGoogleService<T> implements IMapService<T> {
   private libraryEl: HTMLScriptElement;
   private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
   private _map: google.maps.Map;
-  private _entities: IMapEntity<T>[] = [];
   private _listeners: any[] = [];
 
   container: HTMLElement;
@@ -102,7 +104,9 @@ export class MapGoogleService<T> implements IMapService<T> {
     private configService: ConfigService,
     private mapRendererService: MapRendererService,
     private zone: NgZone,
-  ) {}
+  ) {
+    super();
+  }
 
   init(mapConfig: IMapOptions): Observable<any> {
     return Observable.create(observer =>
@@ -119,26 +123,52 @@ export class MapGoogleService<T> implements IMapService<T> {
     );
   }
 
-  createMarker(markerDef: IMarker<T>,
-  ): ICreateMarkerResult<T> {
-    let popupRef;
-    const marker = new google.maps.Marker({
-      position: { lat: markerDef.lat, lng: markerDef.lng },
-      map: this._map,
-      icon: markerDef.iconConfig
-        ? this.createMarkerIcon(markerDef.iconConfig)
-        : undefined,
-    });
-    if (markerDef.popup) {
-      popupRef = this.createPopup(this._map, marker, markerDef);
+  createLayer(data: ILayerDef<T>): ILayer<T> {
+    switch (data.type) {
+      case LayerType.MARKER:
+        return this.createMarker(data);
+      case LayerType.POLYLINE:
+        return this.createPolyline(data);
+      case LayerType.CIRCLE:
+        return this.createCircle(data);
+      case LayerType.POLYGON:
+      case LayerType.RECTANGLE:
+        return this.createPolygon(data);
+      default:
+        throw new Error(`Unknown layer type: ${data.type}`);
     }
-    const entity = { marker, data: markerDef.data };
-    this._entities.push(entity);
-
-    return { entity, popupRef };
   }
 
-  createControl(controlDef: IControlDef<T>): ControlComponentRefGetter<T> {
+  createMarker(data: ILayerDef<T>,
+  ): ILayer<T> {
+    let popupRef;
+    const marker = new google.maps.Marker({
+      ...data.options as google.maps.MarkerOptions,
+      position: data.latlngs as GeoPoint,
+      map: this._map,
+      icon: data.iconConfig
+        ? this.createMarkerIcon(data.iconConfig)
+        : undefined,
+    });
+    if (data.popup) {
+      popupRef = this.createPopup(this._map, marker, data);
+    }
+
+    if (popupRef) {
+      this.addComponent(popupRef);
+    }
+
+    return { layer: marker, data: data.data, type: data.type };
+  }
+
+  setIcon(layer: ILayer<T>, configKey: string, params?: any): void {
+    if (layer.type === LayerType.MARKER) {
+      const iconConfig = this.getIconConfig(configKey, layer.data, params);
+      (layer.layer as google.maps.Marker).setIcon(this.createMarkerIcon(iconConfig));
+    }
+  }
+
+  createControl(controlDef: IControlDef<T>): void {
     const { compRef, el } = this.mapRendererService.render<IControlCmp<T>>(
       controlDef.cmp,
       controlDef.data,
@@ -160,10 +190,10 @@ export class MapGoogleService<T> implements IMapService<T> {
     };
 
     this._map.controls[this.getControlPositionFromDef(controlDef.position)].push(el);
-
+    // to prevent `Expression has changed after it was checked` error
     compRef.changeDetectorRef.detectChanges();
 
-    return () => compRef;
+    this.addComponent(() => compRef);
   }
 
   removeControl(position: any, index: number): void {
@@ -178,20 +208,15 @@ export class MapGoogleService<T> implements IMapService<T> {
     }
   }
 
-  getEntities(): IMapEntity<T>[] {
-    return this._entities;
+  createMarkerIcon(config: ILayerIconConfig): string {
+    // tslint:disable-next-line:max-line-length
+    return `${this.dynamicIconBaseUrl}chst=d_map_spin&chld=${[0.75, 0, config.fillColor, config.fontSize || 12, '_', config.char].join('%7C')}`;
   }
 
-  createMarkerIcon(config: IMarkerIconConfig): string {
-    return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${
-      config.char
-    }%7C${config.fillColor}%7C${config.textColor}`;
-  }
-
-  getIconConfig(configKey: string, entity: T): IMarkerIconConfig {
+  getIconConfig(configKey: string, entity: T, params?: any): ILayerIconConfig {
     if (MapGoogleService.ICON_CONFIGS[configKey]) {
       return MapGoogleService.ICON_CONFIG_GETTERS[configKey] ?
-        MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity)
+        MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity, params)
           // no config getter found, return first config entry
           : MapGoogleService.ICON_CONFIGS[configKey][0];
     } else {
@@ -199,14 +224,16 @@ export class MapGoogleService<T> implements IMapService<T> {
     }
   }
 
-  createPolyline(latlngs: [google.maps.LatLng, google.maps.LatLng]): google.maps.Polyline {
+  createPolyline(data: ILayerDef<T>): ILayer<T> {
     const lineSymbol = {
       path: 'M 0,-1 0,1',
       strokeOpacity: 1,
+      strokeColor: (data.options as google.maps.PolylineOptions).strokeColor,
       scale: 4
     };
     const polyline = new google.maps.Polyline({
-      path: latlngs,
+      strokeOpacity: 0,
+      path: data.latlngs as GeoLine,
       map: this._map,
       icons: [
         {
@@ -217,18 +244,38 @@ export class MapGoogleService<T> implements IMapService<T> {
       ],
     });
     const popup = new google.maps.InfoWindow({
-      content: 'Test'
+      content: ''
     });
     this._listeners.push(
       polyline.addListener('mouseover', _ => {
         popup.setPosition( this.getPolylineMiddlePoint(polyline));
+        const path = polyline.getPath().getArray();
+        const distance = getLatLngDistance(
+          { lat: path[0].lat(), lng: path[0].lng() },
+          { lat: path[1].lat(), lng: path[1].lng() }
+        );
+        popup.setContent(`${distance.toFixed(2)} m`);
         popup.open(this._map);
       }),
       polyline.addListener('mouseout', _ => {
         popup.close();
       })
     );
-    return polyline;
+    return { layer: polyline, data: data.data, type: data.type };
+  }
+
+  createCircle(data: ILayerDef<T>): ILayer<T> {
+    const circle = new google.maps.Circle({
+      ...data.options as google.maps.CircleOptions,
+      map: this._map,
+      center: data.latlngs as GeoPoint,
+      radius: data.radius || 10
+    });
+    return { layer: circle, type: data.type, data: data.data };
+  }
+
+  createPolygon(_: ILayerDef<T>): ILayer<T> {
+    throw new Error('Not implemented');
   }
 
   createBounds(
@@ -239,7 +286,7 @@ export class MapGoogleService<T> implements IMapService<T> {
 
   removeMap(): void {
     this.removeControls();
-    this.removeMarkers();
+    this.removeComponents();
     this.removeListeners();
   }
 
@@ -280,15 +327,15 @@ export class MapGoogleService<T> implements IMapService<T> {
     return this._map;
   }
 
-  removeFromMap(entity: IMapEntity<T>): void {
-    if (entity && entity.marker) {
-      (entity.marker as google.maps.Marker).setMap(null);
+  removeFromMap(layer: ILayer<T>): void {
+    if (layer && layer.layer) {
+      (layer.layer as google.maps.Marker).setMap(null);
     }
   }
 
-  addToMap(entity: IMapEntity<T>): void {
-    if (entity && entity.marker && !(entity.marker as google.maps.Marker).getMap()) {
-      (entity.marker as google.maps.Marker).setMap(this._map);
+  addToMap(layer: ILayer<T>): void {
+    if (layer && layer.layer && !(layer.layer as GoogleGeoLayer).getMap()) {
+      (layer.layer as google.maps.Marker).setMap(this._map);
     }
   }
 
@@ -304,11 +351,6 @@ export class MapGoogleService<T> implements IMapService<T> {
     return projection.fromPointToLatLng(midPoint);
   }
 
-  private removeMarkers(): void {
-    this._entities.forEach(entity => (entity.marker as google.maps.Marker).setMap(null));
-    this._entities = [];
-  }
-
   private removeListeners(): void {
     this._listeners.forEach(l => google.maps.event.removeListener(l));
   }
@@ -316,7 +358,7 @@ export class MapGoogleService<T> implements IMapService<T> {
   private createPopup(
     map: google.maps.Map,
     marker: google.maps.Marker,
-    markerDef: IMarker<T>,
+    layerDef: ILayerDef<T>,
   ): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IPopupCmp<T>>;
     const popup = new google.maps.InfoWindow();
@@ -327,9 +369,9 @@ export class MapGoogleService<T> implements IMapService<T> {
             compRef.destroy();
           }
           const result = this.mapRendererService.render<IPopupCmp<T>>(
-            markerDef.popup,
-            markerDef.data,
-            markerDef.tpl,
+            layerDef.popup,
+            layerDef.data,
+            layerDef.tpl,
           );
           el = result.el;
           // prevent google InfoGroup scrolls
@@ -354,7 +396,7 @@ export class MapGoogleService<T> implements IMapService<T> {
   private load(
     onLoad: EventListener,
     onError: EventListener,
-    libraries: Libraries[] = ['drawing'],
+    libraries: Libraries[] = ['drawing', 'geometry'],
   ): void {
     if (!this.libraryEl) {
       this.unload(onLoad, onError);

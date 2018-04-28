@@ -2,9 +2,9 @@
   <div dialog-header>
     <h3>{{ 'massOperations.addressesByPersons.title' | translate }}</h3>
   </div>
-  <div class="address-map-container" *ngIf="markers && options">
+  <div class="address-map-container">
     <app-map
-      [markers]="markers"
+      [layers]="layers"
       [options]="options"
       [styles]="{ height: '500px' }"
       [controls]="controls">

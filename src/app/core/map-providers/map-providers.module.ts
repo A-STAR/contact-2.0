@@ -29,7 +29,7 @@ export function mapServiceFactory(
 
 @NgModule({
   imports: [
-    MapRendererModule
+    MapRendererModule,
   ],
   providers: [
     {

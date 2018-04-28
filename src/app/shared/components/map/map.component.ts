@@ -13,12 +13,14 @@ import { empty } from 'rxjs/observable/empty';
 
 import {
   IMapService,
-  IMarker,
   IMapOptions,
-  ILatLng,
   IControlDef,
-  IMapComponents,
+  LayerType,
+  ILayerDef,
+  GeoPoint,
 } from '@app/core/map-providers/map-providers.interface';
+
+import { LayersService } from '@app/core/map-providers/layers/map-layers.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
@@ -34,8 +36,7 @@ import { tap, delay } from 'rxjs/operators';
 export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
-  @Input() markers: IMarker<T>[];
-  @Input() polylines: any[];
+  @Input() layers: ILayerDef<T>[][];
   @Input() options: IMapOptions = {
     zoom: 6,
     center: {
@@ -50,12 +51,12 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
 
   static MAX_MAP_ZOOM: 8;
   map: any;
-  private components: IMapComponents<T> = {};
   private bounds;
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
     private cdRef: ChangeDetectorRef,
+    private layersService: LayersService<T>,
     private notificationsService: NotificationsService,
   ) { }
 
@@ -76,8 +77,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
           if (map) {
             this.map = map;
             this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-            this.addMarkers(this.markers);
-            this.addPolylines(this.polylines);
+            this.addLayers(this.layers);
             this.addControls(this.controls);
             this.cdRef.markForCheck();
           }
@@ -90,48 +90,30 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.removeComponents(this.components);
+    this.layersService.clear();
     this.mapService.removeMap();
-    this.components = {};
   }
 
-  addMarkers(markers: IMarker<T>[]): void {
-    if (markers && markers.length) {
-      this.components.popups = markers
-        .map(marker => this.mapService.createMarker(marker))
-        .map(({ popupRef, entity }) => {
-
+  addLayers(layers: ILayerDef<T>[][]): void {
+    if (layers && layers.length) {
+      layers
+        // for each layer group
+        .map(g => this.layersService.createGroup(g))
+        .map(group => {
+          // extend bounds by geo points layers
           if (this.options.fitToData) {
-            this.bounds.extend(this.getLatLng(entity.marker));
+            group.getLayersByType(LayerType.MARKER).forEach(l => {
+              this.bounds.extend(this.getLatLng(l.layer));
+            });
           }
 
-          return popupRef;
-        })
-        .filter(Boolean);
-    }
-  }
-
-  addPolylines(polylines: [ILatLng, ILatLng][]): void {
-    if (polylines && polylines.length) {
-      polylines.map(polyline => {
-        this.mapService.createPolyline(polyline);
-      });
+        });
     }
   }
 
   addControls(controls: IControlDef<T>[]): void {
     if (controls && controls.length) {
-      this.components.controls = controls.map(cDef => this.mapService.createControl(cDef));
-    }
-  }
-
-  removeComponents(cmps: IMapComponents<T>): void {
-    const componentTypes = Object.keys(cmps);
-    if (componentTypes && componentTypes.length) {
-      componentTypes
-        .map(cmpType => cmps[cmpType].map(cmpRef => cmpRef())
-          .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
-          .forEach(cmp => cmp.changeDetectorRef.destroy()));
+      controls.forEach(cDef => this.mapService.createControl(cDef));
     }
   }
 
@@ -144,7 +126,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
     }
   }
 
-  private getLatLng(marker: any): ILatLng {
+  private getLatLng(marker: any): GeoPoint {
     return typeof marker.getPosition === 'function' ? marker.getPosition() : marker.getLatLng();
   }
 

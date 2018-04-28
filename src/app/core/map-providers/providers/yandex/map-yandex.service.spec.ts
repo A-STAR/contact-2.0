@@ -40,7 +40,7 @@ describe('MapYandexService', () => {
     });
   });
 
-  it('should be created', inject([MapYandexService], (service: MapYandexService) => {
+  it('should be created', inject([MapYandexService], (service: MapYandexService<any>) => {
     expect(service).toBeTruthy();
   }));
 });

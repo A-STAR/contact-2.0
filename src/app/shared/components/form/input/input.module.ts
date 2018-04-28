@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NumberComponent } from './number/number.component';
 import { PasswordComponent } from './password/password.component';
+import { RangeComponent } from './range/range.component';
 import { TextareaComponent } from './textarea/textarea.component';
 import { TextComponent } from './text/text.component';
 
@@ -17,6 +18,7 @@ import { TextComponent } from './text/text.component';
   exports: [
     NumberComponent,
     PasswordComponent,
+    RangeComponent,
     TextareaComponent,
     TextComponent,
   ],
@@ -25,6 +27,7 @@ import { TextComponent } from './text/text.component';
     PasswordComponent,
     TextareaComponent,
     TextComponent,
+    RangeComponent,
   ],
 })
 export class InputModule {}

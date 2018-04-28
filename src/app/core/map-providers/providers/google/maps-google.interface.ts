@@ -1,1 +1,1 @@
-export type Libraries = 'drawing' | 'geoemtry' | 'places';
+export type Libraries = 'drawing' | 'geometry' | 'places';
