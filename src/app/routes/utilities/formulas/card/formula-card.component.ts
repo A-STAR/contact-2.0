@@ -6,7 +6,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IFormula } from '../formulas.interface';
-import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
+import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { FormulasService } from '../formulas.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -29,7 +29,7 @@ export class FormulaCardComponent implements OnInit {
   formula: Partial<IFormula>;
   formulaId = Number(this.route.snapshot.paramMap.get('formulaId'));
 
-  private metadata: IScriptEditorMetadata[];
+  private metadata: IScriptEditorConfig[];
 
   constructor(
     private cdRef: ChangeDetectorRef,

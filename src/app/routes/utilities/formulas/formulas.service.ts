@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IFormula, IFormulaParams, IFormulaResult } from './formulas.interface';
-import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
+import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -78,50 +78,74 @@ export class FormulasService extends AbstractActionService {
       );
   }
 
-  fetchFormulasMetadata(): Observable<IScriptEditorMetadata[]> {
+  fetchFormulasMetadata(): Observable<IScriptEditorConfig[]> {
     // return this.dataService.read(`${this.baseUrl}/data`, {})
       // .catch(this.notificationsService.fetchError().entity('entities.formulas.gen.singular').dispatchCallback());
-    return of([
-      {
-        'name': 'debt',
-        'desc': 'Долг из контекста выполнения формулы',
-        'children': [
-          {
-            name: 'debtor',
-            desc: 'Должник текущего долга',
-            children: [
-              {
-                name: 'firstName',
-                desc: 'Имя персоны',
-                type: 3
-              }
-            ]
+    return of([{
+      '!name': 'context',
+      '!define': {
+        'date': {
+          'value': 'string',
+          'getYear': {
+            '!doc': 'Получить год',
+            '!type': 'fn() -> string'
           },
-          {
-            name: 'payments',
-            desc: 'Платежи текущего долга',
-            children: [
-              {
-                name: 'amount',
-                desc: 'Сумма платежа',
-                type: 5
-              }
-            ]
+          'setYear': {
+            '!doc': 'Установить год',
+            '!type': 'fn(year: debt)'
+          },
+          'compareTo': {
+            '!doc': 'Сравнить с другой датой',
+            '!type': 'fn(d: date) -> number'
           }
-        ]
+        },
+        'debt': {
+          'creditType': {
+            '!doc': 'Тип кредитного продукта',
+            '!type': 'number'
+          },
+          'creditName': {
+            '!doc': 'Название кредитного продукта',
+            '!type': 'string'
+          },
+          'contract': {
+            '!doc': 'Номер договора',
+            '!type': 'string'
+          },
+          'status': {
+            '!doc': 'Статус долга',
+            '!type': 'number'
+          },
+          'statusReason': {
+            '!doc': 'Причина перехода в текущий статус',
+            '!type': 'number'
+          },
+          'components': {
+            '!doc': 'Составляющие долга',
+            '!type': '[component]'
+          },
+          'date': 'date'
+        },
+        'component': {
+          'amountType': {
+            '!doc': 'Тип составляющей',
+            '!type': 'number'
+          },
+          'amount': {
+            '!doc': 'Сумма',
+            '!type': 'number'
+          },
+          'currencyId': {
+            '!doc': 'Валюта',
+            '!type': 'number'
+          }
+        },
       },
-      {
-        name: 'user',
-        desc: 'Пользователь из контекста выполнения формулы',
-        children: [
-          {
-            name: 'login',
-            desc: 'Имя пользователя',
-            type: 3
-          }
-        ]
+      'debt': {
+        '!doc': 'Долг из контекста выполнения формулы',
+        '!type': 'debt'
       }
-    ]);
+    }]);
   }
 
   private mapResult(response: any): IFormulaResult {

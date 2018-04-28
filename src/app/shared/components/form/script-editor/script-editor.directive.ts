@@ -6,7 +6,8 @@ import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/cor
 })
 export class ScriptEditorDirective {
 
-  private editor: any;
+  private scriptEditorMode: string;
+  private scriptEditor: any;
   private value: string;
 
   @Output() textChanged = new EventEmitter<any>();
@@ -20,17 +21,18 @@ export class ScriptEditorDirective {
 
   @Input()
   set readOnly(value: boolean) {
-    this.editor.setReadOnly(value);
+    this.scriptEditor.setReadOnly(value);
   }
 
   @Input()
   set theme(value: string) {
-    this.editor.setTheme(`ace/theme/${value}`);
+    this.scriptEditor.setTheme(`ace/theme/${value}`);
   }
 
   @Input()
   set mode(value: string) {
-    this.editor.getSession().setMode(`ace/mode/${value}`);
+    this.scriptEditorMode = value;
+    this.scriptEditor.getSession().setMode(`ace/mode/${value}`);
   }
 
   @Input()
@@ -38,17 +40,25 @@ export class ScriptEditorDirective {
     if (value === this.value) {
       return;
     }
-    this.editor.setValue(value);
-    this.editor.clearSelection();
-    this.editor.focus();
+    this.scriptEditor.setValue(value);
+    this.scriptEditor.clearSelection();
+    this.scriptEditor.focus();
   }
 
   constructor(private elementRef: ElementRef) {
-    this.editor = this.createEditor();
+    this.scriptEditor = this.createEditor();
   }
 
-  getEditor(): any {
-    return this.editor;
+  get editor(): any {
+    return this.scriptEditor;
+  }
+
+  private get ace(): any {
+    return (<any>window).ace;
+  }
+
+  private get snippetManager(): any {
+    return this.ace.require('ace/snippets').snippetManager;
   }
 
   private createEditor(): any {
@@ -63,13 +73,23 @@ export class ScriptEditorDirective {
   }
 
   private initTern(options: any): void {
-    (<any>window).ace.config.loadModule('ace/ext/tern', () => {
-      this.editor.setOptions(options);
+    this.ace.config.loadModule('ace/ext/tern', () => {
+      this.scriptEditor.setOptions(options);
+      this.initSnippets(options);
+    });
+  }
+
+  private initSnippets(options: any): void {
+    this.ace.config.loadModule(`ace/snippets/${this.scriptEditorMode}`, m => {
+      if (m) {
+        m.snippets.push(...(options.enableSnippets || []));
+        this.snippetManager.register(m.snippets, m.scope);
+      }
     });
   }
 
   private onTextChanged(): void {
-    const newVal = this.editor.getValue();
+    const newVal = this.scriptEditor.getValue();
     if (newVal !== this.value) {
       this.textChanged.emit(newVal);
       this.value = newVal;

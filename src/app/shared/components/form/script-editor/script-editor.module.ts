@@ -5,8 +5,6 @@ import { ScriptEditorComponent } from './script-editor.component';
 
 import { ScriptEditorDirective } from './script-editor.directive';
 
-import { ScriptEditorService } from './script-editor.service';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -18,8 +16,5 @@ import { ScriptEditorService } from './script-editor.service';
     ScriptEditorComponent,
     ScriptEditorDirective,
   ],
-  providers: [
-    ScriptEditorService
-  ]
 })
 export class ScriptEditorModule {}

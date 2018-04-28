@@ -72,30 +72,7 @@ var JavaScriptHighlightRules = function(options) {
           "class|finally|long|strictfp|volatile|" +
           "def|float|native|super|while",
         "support.function":
-          "AbstractMethodError|AssertionError|ClassCircularityError|"+
-          "ClassFormatError|Deprecated|EnumConstantNotPresentException|"+
-          "ExceptionInInitializerError|IllegalAccessError|"+
-          "IllegalThreadStateException|InstantiationError|InternalError|"+
-          "NegativeArraySizeException|NoSuchFieldError|Override|Process|"+
-          "ProcessBuilder|SecurityManager|StringIndexOutOfBoundsException|"+
-          "SuppressWarnings|TypeNotPresentException|UnknownError|"+
-          "UnsatisfiedLinkError|UnsupportedClassVersionError|VerifyError|"+
-          "InstantiationException|IndexOutOfBoundsException|"+
-          "ArrayIndexOutOfBoundsException|CloneNotSupportedException|"+
-          "NoSuchFieldException|IllegalArgumentException|NumberFormatException|"+
-          "SecurityException|Void|InheritableThreadLocal|IllegalStateException|"+
-          "InterruptedException|NoSuchMethodException|IllegalAccessException|"+
-          "UnsupportedOperationException|Enum|StrictMath|Package|Compiler|"+
-          "Readable|Runtime|StringBuilder|Math|IncompatibleClassChangeError|"+
-          "NoSuchMethodError|ThreadLocal|RuntimePermission|ArithmeticException|"+
-          "NullPointerException|Long|Integer|Short|Byte|Double|Number|Float|"+
-          "Character|Boolean|StackTraceElement|Appendable|StringBuffer|"+
-          "Iterable|ThreadGroup|Runnable|Thread|IllegalMonitorStateException|"+
-          "StackOverflowError|OutOfMemoryError|VirtualMachineError|"+
-          "ArrayStoreException|ClassCastException|LinkageError|"+
-          "NoClassDefFoundError|ClassNotFoundException|RuntimeException|"+
-          "Exception|ThreadDeath|Error|Throwable|System|ClassLoader|"+
-          "Cloneable|Class|CharSequence|Comparable|String|Object",
+          "",
         "constant.language.boolean": "null|Infinity|NaN|undefined"
     }, "identifier");
     var kwBeforeRe = "case|do|else|finally|in|instanceof|return|throw|try|typeof|yield|void";
