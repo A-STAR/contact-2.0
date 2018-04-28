@@ -20,7 +20,7 @@ export class GridSelectService {
         { prop: 'id' },
         { prop: 'name' },
       ].map(addGridLabel('default.filters.entityGroups.grid')),
-      fetchCallback: ({entityTypeId, isManual}) => this.gridFiltersService.fetchEntitiesGroups(entityTypeId, isManual),
+      fetchCallback: ({entityTypeIds, isManual}) => this.gridFiltersService.fetchEntitiesGroups(entityTypeIds, isManual),
       // title: 'default.filters.entityGroups.title',
       labelGetter: row => row.name,
       valueGetter: row => row.id,
