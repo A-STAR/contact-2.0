@@ -6,7 +6,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IFormula } from '../formulas.interface';
-import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
+import { IScriptEditorDefs } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { FormulasService } from '../formulas.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -29,7 +29,7 @@ export class FormulaCardComponent implements OnInit {
   formula: Partial<IFormula>;
   formulaId = Number(this.route.snapshot.paramMap.get('formulaId'));
 
-  private metadata: IScriptEditorConfig[];
+  private editorDefs: IScriptEditorDefs[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -45,8 +45,8 @@ export class FormulaCardComponent implements OnInit {
       this.formulasService.fetchFormulasMetadata()
     )
     .pipe(first())
-    .subscribe(([ canEdit, formula, metadata ]) => {
-      this.metadata = metadata;
+    .subscribe(([ canEdit, formula, defs ]) => {
+      this.editorDefs = defs;
       this.formula = formula;
       this.controls = this.initControls(canEdit);
       this.cdRef.markForCheck();
@@ -75,7 +75,17 @@ export class FormulaCardComponent implements OnInit {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       { controlName: 'name', type: 'text', disabled: !canEdit, required: true },
-      { controlName: 'script', type: 'scripteditor', disabled: !canEdit, required: true, metadata: this.metadata },
+      {
+        controlName: 'script',
+        type: 'scripteditor',
+        disabled: !canEdit,
+        required: true,
+        options: {
+          enableTern: {
+            defs: this.editorDefs
+          }
+        }
+      },
       {
         controlName: 'typeCode',
         type: 'select',

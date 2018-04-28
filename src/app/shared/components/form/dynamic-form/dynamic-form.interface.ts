@@ -178,8 +178,7 @@ export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
 
 export interface IDynamicFormScriptControl extends IDynamicFormBaseControl {
   type: 'scripteditor';
-  options?: any;
-  metadata?: IScriptEditorConfig[];
+  options?: IScriptEditorConfig[];
 }
 
 export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseControl {

@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IFormula, IFormulaParams, IFormulaResult } from './formulas.interface';
-import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
+import { IScriptEditorDefs } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -78,7 +78,7 @@ export class FormulasService extends AbstractActionService {
       );
   }
 
-  fetchFormulasMetadata(): Observable<IScriptEditorConfig[]> {
+  fetchFormulasMetadata(): Observable<IScriptEditorDefs[]> {
     // return this.dataService.read(`${this.baseUrl}/data`, {})
       // .catch(this.notificationsService.fetchError().entity('entities.formulas.gen.singular').dispatchCallback());
     return of([{

@@ -27,8 +27,7 @@ import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/s
 export class ScriptEditorComponent implements ControlValueAccessor, AfterViewInit {
   @ViewChild(ScriptEditorDirective) editor: ScriptEditorDirective;
 
-  @Input() metadata: IScriptEditorConfig[];
-  @Input() options: any = {};
+  @Input() options: IScriptEditorConfig = {};
   @Input() isDisabled = false;
 
   theme = 'eclipse';
@@ -38,18 +37,18 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
 
   ngAfterViewInit(): void {
     this.editor.options = {
+      enableBasicAutocompletion: true,
+      enableSnippets: [],
+      ...(this.options || {}),
       enableTern: {
-        defs: this.metadata,
         plugins: {
           doc_comment: {
             fullDocs: true
           }
         },
         useWorker: this.editor.editor.getSession().getUseWorker(),
-        ...this.options
-      },
-      enableSnippets: [],
-      enableBasicAutocompletion: true,
+        ...(this.options.enableTern || {})
+      }
     };
 
     this.editor.editor.on('focus', () => this.propagateTouch());
