@@ -30,6 +30,7 @@ export interface IDynamicLayoutGenericItem {
   disabled?: IContext;
   display?: IContext;
   label?: string;
+  size?: number;
   uid?: string;
   validators?: Record<string, IContext>;
 }

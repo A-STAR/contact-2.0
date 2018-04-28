@@ -11,14 +11,14 @@
 
   <!-- Horizontal Group with Splitters -->
   <app-area *ngSwitchCase="'horizontal'" layout="row">
-    <app-area *ngFor="let item of group.children">
+    <app-area *ngFor="let item of group.children" [initialSize]="item.size">
       <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
     </app-area>
   </app-area>
 
   <!-- Vertical Group with Splitters -->
   <app-area *ngSwitchCase="'vertical'" layout="column">
-    <app-area *ngFor="let item of group.children">
+    <app-area *ngFor="let item of group.children" [initialSize]="item.size">
       <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
     </app-area>
   </app-area>

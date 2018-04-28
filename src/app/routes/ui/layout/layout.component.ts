@@ -38,9 +38,11 @@ export class LayoutComponent implements OnInit {
             controlType: DynamicLayoutControlType.TEXT,
             label: 'Foo',
             name: 'foo',
+            size: 1,
           },
           {
             type: DynamicLayoutItemType.GROUP,
+            size: 2,
             children: [
               {
                 type: DynamicLayoutItemType.CONTROL,
