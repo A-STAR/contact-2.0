@@ -3,14 +3,22 @@ import { IDynamicLayoutItem } from '../dynamic-layout.interface';
 
 export enum DynamicLayoutGroupType {
   HORIZONTAL = 'horizontal',
-  PLAIN      = 'plain',
-  ROOT       = 'root',
-  TABS       = 'tabs',
   VERTICAL   = 'vertical',
+  TABS       = 'tabs',
 }
 
-export interface IDynamicLayoutGroup extends IDynamicLayoutGenericItem {
+export interface IDynamicLayoutGenericGroup extends IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType.GROUP;
   children: IDynamicLayoutItem[];
-  groupType?: DynamicLayoutGroupType;
 }
+
+export interface IDynamicLayoutTabsGroup extends IDynamicLayoutGenericGroup {
+  groupType: DynamicLayoutGroupType.TABS;
+}
+
+export interface IDynamicLayoutPlainGroup extends IDynamicLayoutGenericGroup {
+  groupType: DynamicLayoutGroupType.HORIZONTAL | DynamicLayoutGroupType.VERTICAL;
+  splitters?: boolean;
+}
+
+export type IDynamicLayoutGroup = IDynamicLayoutTabsGroup | IDynamicLayoutPlainGroup;

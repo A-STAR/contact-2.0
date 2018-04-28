@@ -32,6 +32,7 @@ export class LayoutComponent implements OnInit {
       {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
+        splitters: true,
         children: [
           {
             type: DynamicLayoutItemType.CONTROL,
@@ -42,6 +43,7 @@ export class LayoutComponent implements OnInit {
           },
           {
             type: DynamicLayoutItemType.GROUP,
+            groupType: DynamicLayoutGroupType.VERTICAL,
             size: 2,
             children: [
               {
