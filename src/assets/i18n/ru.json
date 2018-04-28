@@ -3206,7 +3206,8 @@
       "userNotFound": "Не найден пользователь, запрошенный по ID",
       "userNotFoundWithName": "Не найден пользователь с логином {{ $1 }}",
       "userRoleNotFound": "Не найдена роль пользователя",
-      "visitNotFound": "Visit not found by requested parameters"
+      "visitNotFound": "Visit not found by requested parameters",
+      "scheduleEventIsExecuting": "Мероприятие в данный момент выполняется, поэтому не может быть удалено"
     },
     "default": {
       "read": {
