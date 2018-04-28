@@ -28,6 +28,7 @@ export class LayoutComponent implements OnInit {
   };
 
   readonly layout: IDynamicLayoutConfig = {
+    key: 'routes/ui/layout',
     items: [
       {
         type: DynamicLayoutItemType.GROUP,
@@ -35,16 +36,21 @@ export class LayoutComponent implements OnInit {
         splitters: true,
         children: [
           {
+            type: DynamicLayoutItemType.TEMPLATE,
+            value: 'foo',
+            size: 25,
+          },
+          {
             type: DynamicLayoutItemType.CONTROL,
             controlType: DynamicLayoutControlType.TEXT,
             label: 'Foo',
             name: 'foo',
-            size: 1,
+            size: 25,
           },
           {
             type: DynamicLayoutItemType.GROUP,
             groupType: DynamicLayoutGroupType.VERTICAL,
-            size: 2,
+            size: 50,
             children: [
               {
                 type: DynamicLayoutItemType.CONTROL,

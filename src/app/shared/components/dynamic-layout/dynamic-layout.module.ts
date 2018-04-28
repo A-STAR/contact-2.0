@@ -12,6 +12,7 @@ import { TabViewModule } from '@app/shared/components/layout/tabview/tabview.mod
 
 import { ContextService } from './context.service';
 import { MetadataService } from './metadata.service';
+import { GroupService } from './group/group.service';
 
 import { AttributeComponent } from './attribute/attribute.component';
 import { ControlComponent } from './control/control.component';
@@ -43,6 +44,7 @@ import { TemplateComponent } from './template/template.component';
   ],
   providers: [
     ContextService,
+    GroupService,
     MetadataService,
   ],
 })

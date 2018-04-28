@@ -13,11 +13,12 @@
     <!-- Group with splitters -->
     <split
       *ngIf="group.splitters"
-      [direction]="splitDirection"
       gutterColor="transparent"
       gutterSize="25"
+      [direction]="splitDirection"
+      (dragEnd)="onDragEnd($event)"
     >
-      <split-area *ngFor="let item of group.children" [size]="getItemSize(item)">
+      <split-area *ngFor="let item of group.children; let i = index;" [size]="getAreaSize(item, i)">
         <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
       </split-area>
     </split>

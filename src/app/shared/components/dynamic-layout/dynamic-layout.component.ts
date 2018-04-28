@@ -4,7 +4,7 @@ import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './dynamic-layout.inte
 
 import { AttributeService } from './attribute/attribute.service';
 import { FormService } from './control/form.service';
-import { LayoutService } from './dynamic-layout.service';
+import { DynamicLayoutService } from './dynamic-layout.service';
 import { TemplateService } from './template/template.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { TemplateService } from './template/template.service';
   providers: [
     AttributeService,
     FormService,
-    LayoutService,
+    DynamicLayoutService,
     TemplateService,
   ],
   selector: 'app-dynamic-layout',
@@ -29,7 +29,7 @@ export class DynamicLayoutComponent implements OnInit {
 
   constructor(
     private formService: FormService,
-    private layoutService: LayoutService,
+    private layoutService: DynamicLayoutService,
     private templateService: TemplateService,
   ) {}
 

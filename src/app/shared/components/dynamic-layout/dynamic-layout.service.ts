@@ -17,7 +17,7 @@ import { FormService } from './control/form.service';
 import { MetadataService } from './metadata.service';
 
 @Injectable()
-export class LayoutService {
+export class DynamicLayoutService {
   private _group: IDynamicLayoutGroup;
   private _items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>;
   private _initialized = false;
@@ -32,6 +32,10 @@ export class LayoutService {
 
   get initialized(): boolean {
     return this._initialized;
+  }
+
+  get key(): string {
+    return this._key;
   }
 
   get group(): IDynamicLayoutGroup {
