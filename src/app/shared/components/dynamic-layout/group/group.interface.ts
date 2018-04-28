@@ -4,6 +4,7 @@ import { IDynamicLayoutItem } from '../dynamic-layout.interface';
 export enum DynamicLayoutGroupType {
   HORIZONTAL = 'horizontal',
   PLAIN      = 'plain',
+  ROOT       = 'root',
   TABS       = 'tabs',
   VERTICAL   = 'vertical',
 }

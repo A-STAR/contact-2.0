@@ -23,8 +23,15 @@
     </app-area>
   </app-area>
 
+  <!-- Root Group -->
+  <div *ngSwitchCase="'root'" class="full-size">
+    <div *ngFor="let item of group.children" class="full-size">
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
+    </div>
+  </div>
+
   <!-- Plain Group -->
-  <div *ngSwitchDefault>
+  <div *ngSwitchDefault class="full-size">
     <div *ngFor="let item of group.children">
       <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
     </div>
@@ -32,20 +39,18 @@
 </ng-container>
 
 <ng-template #content let-item>
-  <div *ngIf="isDisplayed(item) | async" class="mb" style="width: 100%;">
+  <ng-container *ngIf="isDisplayed(item) | async">
     <ng-container [ngSwitch]="item.type">
 
       <!-- Attribute -->
-      <app-dynamic-layout-attribute
-        *ngSwitchCase="'attribute'"
-        [attribute]="item"
-      ></app-dynamic-layout-attribute>
+      <div *ngSwitchCase="'attribute'" class="mb" style="width: 100%">
+        <app-dynamic-layout-attribute [attribute]="item"></app-dynamic-layout-attribute>
+      </div>
 
       <!-- Control -->
-      <app-dynamic-layout-control
-        *ngSwitchCase="'control'"
-        [control]="item"
-      ></app-dynamic-layout-control>
+      <div *ngSwitchCase="'control'" class="mb" style="width: 100%">
+        <app-dynamic-layout-control [control]="item"></app-dynamic-layout-control>
+      </div>
 
       <!-- Group -->
       <app-dynamic-layout-group
@@ -59,5 +64,5 @@
         [template]="item"
       ></app-dynamic-layout-template>
     </ng-container>
-  </div>
+  </ng-container>
 </ng-template>

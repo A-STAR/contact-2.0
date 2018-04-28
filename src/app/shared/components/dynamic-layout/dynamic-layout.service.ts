@@ -60,7 +60,7 @@ export class LayoutService {
     const items = this.addUids(config.items);
     this._group = {
       children: items,
-      groupType: DynamicLayoutGroupType.PLAIN,
+      groupType: DynamicLayoutGroupType.ROOT,
       type: DynamicLayoutItemType.GROUP,
     };
     this._key = key || config.key;
