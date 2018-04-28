@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { AreaLayout } from '@app/shared/components/layout/area/area.interface';
-import { IDynamicLayoutGroup, IDynamicLayoutItem, DynamicLayoutGroupType, DynamicLayoutItemType } from '../dynamic-layout.interface';
+import {
+  DynamicLayoutGroupType,
+  DynamicLayoutItemType,
+  IDynamicLayoutGroup,
+  IDynamicLayoutItem,
+} from '../dynamic-layout.interface';
 
 import { LayoutService } from '../dynamic-layout.service';
 
@@ -29,10 +33,10 @@ export class GroupComponent {
       : 'flex horizontal';
   }
 
-  get areaLayout(): string {
+  get splitDirection(): string {
     return this.group.groupType === DynamicLayoutGroupType.VERTICAL
-      ? AreaLayout.COLUMN
-      : AreaLayout.ROW;
+      ? 'vertical'
+      : 'horizontal';
   }
 
   getItemStyle(item: IDynamicLayoutItem): Partial<CSSStyleDeclaration> {

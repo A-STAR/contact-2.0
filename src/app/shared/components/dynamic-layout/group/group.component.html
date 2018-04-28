@@ -11,22 +11,23 @@
   <ng-container *ngSwitchDefault>
 
     <!-- Group with splitters -->
-    <ng-container *ngIf="group.splitters">
-      <app-area [layout]="areaLayout">
-        <app-area *ngFor="let item of group.children" [initialSize]="getItemSize(item)">
-          <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
-        </app-area>
-      </app-area>
-    </ng-container>
+    <split
+      *ngIf="group.splitters"
+      [direction]="splitDirection"
+      gutterColor="transparent"
+      gutterSize="25"
+    >
+      <split-area *ngFor="let item of group.children" [size]="getItemSize(item)">
+        <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
+      </split-area>
+    </split>
 
     <!-- Group without splitters -->
-    <ng-container *ngIf="!group.splitters">
-      <div [ngClass]="groupClass">
-        <div *ngFor="let item of group.children" [ngStyle]="getItemStyle(item)">
-          <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
-        </div>
+    <div *ngIf="!group.splitters" [ngClass]="groupClass">
+      <div *ngFor="let item of group.children" [ngStyle]="getItemStyle(item)">
+        <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
       </div>
-    </ng-container>
+    </div>
   </ng-container>
 </ng-container>
 

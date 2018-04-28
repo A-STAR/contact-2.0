@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AngularSplitModule } from 'angular-split';
 
-import { AreaModule } from '@app/shared/components/layout/area/area.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { DateTimeModule } from '@app/shared/components/form/datetime/datetime.module';
 import { DropdownInputModule } from '@app/shared/components/form/dropdown/dropdown-input.module';
@@ -21,7 +21,7 @@ import { TemplateComponent } from './template/template.component';
 
 @NgModule({
   imports: [
-    AreaModule,
+    AngularSplitModule,
     CheckModule,
     CommonModule,
     DateTimeModule,
