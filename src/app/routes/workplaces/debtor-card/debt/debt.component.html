@@ -10,14 +10,17 @@
         <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
       </button>
     </div>
-    <div class="pb-lg">
+    <div class="pb-lg" style="height: 500px;">
+      <!--
       <app-metadata-form config="debt" [data]="debt"></app-metadata-form>
+      -->
+      <app-dynamic-layout
+        *ngIf="templates"
+        layout="debt"
+        [data]="{ default: debt }"
+        [templates]="templates"
+      ></app-dynamic-layout>
     </div>
-    <!--
-    <div class="pb-lg">
-      <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
-    </div>
-    -->
   </div>
 
   <!-- Debt Details Tab -->
@@ -50,3 +53,7 @@
     </app-tabview>
   </div>
 </div>
+
+<ng-template #foo>
+  I am a template. Nice to have you here.
+</ng-template>

@@ -1,4 +1,4 @@
 <app-dynamic-layout-group
-  *ngIf="initialized"
+  *ngIf="ready$ | async"
   [group]="group"
 ></app-dynamic-layout-group>

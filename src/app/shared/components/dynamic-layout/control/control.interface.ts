@@ -1,8 +1,13 @@
 import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-layout.interface';
 
 export enum DynamicLayoutControlType {
-  TEXT     = 'text',
-  TEXTAREA = 'textarea',
+  CHECKBOX   = 'checkbox',
+  DATE       = 'date',
+  GRIDSELECT = 'gridselect',
+  PASSWORD   = 'password',
+  SELECT     = 'select',
+  TEXT       = 'text',
+  TEXTAREA   = 'textarea',
 }
 
 export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem {

@@ -15,7 +15,8 @@ import { GroupService } from './group.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
   selector: 'app-dynamic-layout-group',
-  templateUrl: 'group.component.html'
+  styleUrls: [ './group.component.scss' ],
+  templateUrl: './group.component.html'
 })
 export class GroupComponent implements OnInit {
   @Input() group: IDynamicLayoutGroup;
@@ -30,13 +31,19 @@ export class GroupComponent implements OnInit {
   get groupClass(): string {
     return this.group.groupType === DynamicLayoutGroupType.VERTICAL
       ? 'flex vertical'
-      : 'flex horizontal';
+      : 'flex horizontal horizontal-group';
   }
 
   get splitDirection(): string {
     return this.group.groupType === DynamicLayoutGroupType.VERTICAL
       ? 'vertical'
       : 'horizontal';
+  }
+
+  get itemClass(): string {
+    return this.group.groupType === DynamicLayoutGroupType.HORIZONTAL
+      ? 'horizontal-group-item'
+      : null;
   }
 
   ngOnInit(): void {
@@ -54,7 +61,8 @@ export class GroupComponent implements OnInit {
   }
 
   getItemStyle(item: IDynamicLayoutItem): Partial<CSSStyleDeclaration> {
-    return [ DynamicLayoutItemType.ATTRIBUTE, DynamicLayoutItemType.CONTROL ].includes(item.type)
+    const itemIsControl = [ DynamicLayoutItemType.ATTRIBUTE, DynamicLayoutItemType.CONTROL ].includes(item.type);
+    return itemIsControl && this.group.groupType !== DynamicLayoutGroupType.HORIZONTAL
       ? {}
       : { flex: `${this.getItemSize(item)} 0` };
   }

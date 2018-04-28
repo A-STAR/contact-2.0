@@ -1,6 +1,45 @@
 <ng-container [formGroup]="formGroup">
   <ng-container [ngSwitch]="control.controlType">
 
+    <!-- Checkbox -->
+    <app-checkbox
+      *ngSwitchCase="'checkbox'"
+      [formControlName]="control.name"
+      [label]="control.label"
+    ></app-checkbox>
+
+    <!-- Date -->
+    <app-datepicker
+      *ngSwitchCase="'date'"
+      [formControlName]="control.name"
+      [label]="control.label"
+    ></app-datepicker>
+
+    <!-- Grid Select -->
+    <app-grid-select
+      *ngSwitchCase="'gridselect'"
+      [filterParams]="control.filterParams"
+      [filterType]="control.filterType"
+      [formControlName]="control.name"
+      [label]="control.label"
+    ></app-grid-select>
+
+    <!-- Password -->
+    <app-password-input
+      *ngSwitchCase="'password'"
+      [formControlName]="control.name"
+      [label]="control.label"
+    ></app-password-input>
+
+    <!-- Select -->
+    <app-select
+      *ngSwitchCase="'select'"
+      [dictCode]="control.dictCode"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [lookupKey]="control.lookupKey"
+    ></app-select>
+
     <!-- Text -->
     <app-text
       *ngSwitchCase="'text'"
@@ -8,5 +47,11 @@
       [label]="control.label"
     ></app-text>
 
+    <!-- Textarea -->
+    <app-textarea
+      *ngSwitchCase="'textarea'"
+      [formControlName]="control.name"
+      [label]="control.label"
+    ></app-textarea>
   </ng-container>
 </ng-container>

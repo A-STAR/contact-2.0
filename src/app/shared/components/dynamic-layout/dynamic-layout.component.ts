@@ -27,15 +27,13 @@ export class DynamicLayoutComponent implements OnInit {
     this.formService.setData(data);
   }
 
+  readonly ready$ = this.layoutService.ready$;
+
   constructor(
     private formService: ControlService,
     private layoutService: DynamicLayoutService,
     private templateService: TemplateService,
   ) {}
-
-  get initialized(): boolean {
-    return this.layoutService.initialized;
-  }
 
   get group(): IDynamicLayoutGroup {
     return this.layoutService.group;

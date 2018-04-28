@@ -15,13 +15,15 @@ import { AttributeService } from './attribute/attribute.service';
 import { ContextService } from './context.service';
 import { ControlService } from './control/control.service';
 import { MetadataService } from './metadata.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class DynamicLayoutService {
   private _group: IDynamicLayoutGroup;
   private _items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>;
-  private _initialized = false;
   private _key: string;
+
+  readonly ready$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private attributeService: AttributeService,
@@ -29,10 +31,6 @@ export class DynamicLayoutService {
     private formService: ControlService,
     private metadataService: MetadataService,
   ) {}
-
-  get initialized(): boolean {
-    return this._initialized;
-  }
 
   get key(): string {
     return this._key;
@@ -71,7 +69,8 @@ export class DynamicLayoutService {
     this._items = this.flattenItems(items);
     this.attributeService.init(this._items);
     this.formService.init(this._items, this._key);
-    this._initialized = true;
+    this.ready$.next(true);
+    this.ready$.complete();
   }
 
   private addUids(items: IDynamicLayoutItem[], parent: string = null): IDynamicLayoutItem[] {

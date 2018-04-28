@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -6,7 +6,6 @@ import { of } from 'rxjs/observable/of';
 import { first, flatMap, map } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/debt/debt.interface';
-import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
@@ -14,7 +13,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { makeKey } from '@app/core/utils';
-import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 const label = makeKey('widgets.debt');
 
@@ -25,15 +24,16 @@ const label = makeKey('widgets.debt');
   templateUrl: './debt.component.html',
 })
 export class DebtComponent implements OnInit {
-  @ViewChild(MetadataFormComponent) form: MetadataFormComponent<IDebt>;
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
+  @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
 
-  controls: Array<IDynamicFormItem> = null;
   debt: IDebt;
   tabs = [
     { title: label('component.title'), isInitialised: true },
     { title: label('portfolioLog.title'), isInitialised: false },
     { title: label('componentLog.title'), isInitialised: false }
   ];
+  templates: Record<string, TemplateRef<any>>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -53,6 +53,10 @@ export class DebtComponent implements OnInit {
       this.debt = debt;
       this.cdRef.markForCheck();
     });
+
+    this.templates = {
+      foo: this.foo,
+    };
   }
 
   get debtId$(): Observable<number> {
@@ -73,8 +77,8 @@ export class DebtComponent implements OnInit {
         //   ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
         //   : this.debtService.create(personId, this.form.serializedUpdates);
         return debtId
-          ? this.debtService.update(personId, debtId, this.form.data)
-          : this.debtService.create(personId, this.form.data);
+          ? this.debtService.update(personId, debtId, this.layout.data.default)
+          : this.debtService.create(personId, this.layout.data.default);
       })
     )
     .subscribe(() => {
@@ -96,7 +100,8 @@ export class DebtComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return true;
+    // return this.form && this.form.canSubmit;
   }
 
   get canViewComponentLog$(): Observable<boolean> {

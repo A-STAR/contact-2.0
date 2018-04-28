@@ -94,7 +94,7 @@ export class ControlService implements OnDestroy {
   private patchFormGroups(): void {
     Object.keys(this.data).forEach(key => {
       const group = this.groups.get(key);
-      if (group) {
+      if (group && this.data[key]) {
         group.patchValue(this.data[key]);
       }
     });
