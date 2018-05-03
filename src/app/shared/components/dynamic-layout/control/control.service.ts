@@ -65,8 +65,8 @@ export class ControlService implements OnDestroy {
     forms.forEach(form => this.createFormGroup(form, key));
 
     this.controls.forEach(control => {
-      const { disabled, display } = control.streams;
-      const subscription = combineLatest(disabled, display, (a, b) => !a && b).subscribe(d => this.disable(control.item, d));
+      const { enabled, display } = control.streams;
+      const subscription = combineLatest(enabled, display, (a, b) => a && b).subscribe(e => this.enable(control.item, e));
       this.formSubscription.add(subscription);
     });
 
@@ -128,13 +128,13 @@ export class ControlService implements OnDestroy {
     });
   }
 
-  private disable(control: IDynamicLayoutControl, disabled: boolean): void {
+  private enable(control: IDynamicLayoutControl, enabled: boolean): void {
     const formGroup = this.getFormGroup(control);
     const c = formGroup.get(control.name);
-    if (disabled) {
-      c.disable();
-    } else {
+    if (enabled) {
       c.enable();
+    } else {
+      c.disable();
     }
   }
 

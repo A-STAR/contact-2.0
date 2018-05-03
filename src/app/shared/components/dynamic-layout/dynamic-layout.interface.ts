@@ -41,8 +41,8 @@ export enum DynamicLayoutItemType {
 export interface IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType;
   // Optional:
-  disabled?: IContext;
   display?: IContext;
+  enabled?: IContext;
   label?: string;
   size?: number;
   uid?: string;
@@ -66,8 +66,8 @@ export interface IDynamicLayoutConfig {
 export interface IDynamicLayoutItemProperties<T> {
   item: T;
   streams: {
-    disabled: Observable<boolean>;
     display: Observable<boolean>;
+    enabled: Observable<boolean>;
     validators: Record<string, Observable<any>>;
   };
 }

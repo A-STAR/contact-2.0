@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContext, IContextExpression, ContextOperator } from './dynamic-layout.interface';
+import { ContextOperator, IAppContext, IContext, IContextExpression } from './dynamic-layout.interface';
+
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
 export class ContextService {
   constructor(
+    private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
+    private userConstantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   /**
@@ -28,49 +36,20 @@ export class ContextService {
    * ```
    */
   calculate(context: IContext): Observable<any> {
-    const resolvedContext = this.resolveMetaOperatorsRecursively(context);
-    const storeReferences = this.findStoreReferences(resolvedContext);
-    return this.store.pipe(
-      select(state => {
+    const storeReferences = this.findStoreReferences(context);
+    return combineLatest(
+      this.store,
+      this.entityAttributesService.bag$,
+      this.userConstantsService.bag(),
+      this.userPermissionsService.bag(),
+    ).pipe(
+      select(([ state, attributes, constants, permissions ]) => {
         const value = storeReferences.reduce((acc, key) => ({ ...acc, [key]: this.getStateSlice(state, key) }), {});
-        return this.calculateFromStore(value, resolvedContext);
+        const appContext = { state: value, attributes, constants, permissions };
+        return this.calculateFromStore(appContext, context);
       }),
       distinctUntilChanged(),
     );
-  }
-
-  private resolveMetaOperatorsRecursively(context: IContext): IContext {
-    return typeof context === 'object'
-      ? this.resolveMetaOperators(context)
-      : context;
-  }
-
-  private resolveMetaOperators(expression: IContextExpression): IContext {
-    switch (expression.operator) {
-      case ContextOperator.PERMISSION:
-        return {
-          ...expression,
-        };
-      case ContextOperator.ATTRIBUTE:
-        return {
-          ...expression,
-        };
-      case ContextOperator.CONSTANT:
-        return {
-          ...expression,
-        };
-      case ContextOperator.PERSON_ATTRIBUTES:
-        return {
-          ...expression,
-        };
-      default:
-        return {
-          ...expression,
-          value: Array.isArray(expression.value)
-            ? expression.value.map(e => this.resolveMetaOperatorsRecursively(e))
-            : this.resolveMetaOperatorsRecursively(expression.value),
-        };
-    }
   }
 
   private findStoreReferences(context: IContext): string[] {
@@ -96,18 +75,50 @@ export class ContextService {
     return key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state);
   }
 
-  private calculateFromStore(value: Record<string, any>, context: IContext): any {
+  private calculateFromStore(appContext: IAppContext, context: IContext): any {
     return typeof context === 'object'
-      ? this.calculateExpression(value, context)
+      ? this.calculateExpression(appContext, context)
       : context;
   }
 
-  private calculateExpression(value: Record<string, any>, expression: IContextExpression): any {
-    switch (expression.operator) {
-      case ContextOperator.AND:
-        return (expression.value as any[]).reduce((acc, e) => acc && this.calculateExpression(value, e), true);
-      case ContextOperator.EVAL:
-        return value[expression.value as any];
+  private calculateExpression(appContext: IAppContext, expression: IContextExpression): any {
+    if (expression.operator === ContextOperator.EVAL) {
+      return appContext.state[expression.value];
+    } else {
+      const v = Array.isArray(expression.value)
+        ? expression.value.map(e => this.calculateFromStore(appContext, e))
+        : this.calculateFromStore(appContext, expression.value);
+      switch (expression.operator) {
+        case ContextOperator.AND:
+          return v.reduce((acc, item) => acc && item, true);
+        case ContextOperator.ENTITY_IS_MANDATORY:
+          this.entityAttributesService
+            .getAttribute(v)
+            .pipe(first())
+            .subscribe();
+          return appContext.attributes[v] && appContext.attributes[v].isMandatory;
+        case ContextOperator.ENTITY_IS_USED:
+          this.entityAttributesService
+            .getAttribute(v)
+            .pipe(first())
+            .subscribe();
+          return appContext.attributes[v] && appContext.attributes[v].isUsed;
+        case ContextOperator.EQUALS:
+          return String(v[0]) === String(v[1]);
+        case ContextOperator.CONSTANT_IS_TRUE:
+          return appContext.constants.has(v);
+        case ContextOperator.CONSTANT_NOT_EMPTY:
+          return appContext.constants.notEmpty(v);
+        case ContextOperator.PERMISSION_IS_TRUE:
+          return appContext.permissions.has(v);
+        case ContextOperator.PERMISSION_NOT_EMPTY:
+          return appContext.permissions.notEmpty(v);
+        case ContextOperator.NOT:
+          return !v;
+        case ContextOperator.OR:
+          return v.reduce((acc, item) => acc || item, false);
+      }
     }
+    throw new Error(`Unknown operator ${expression.operator}`);
   }
 }

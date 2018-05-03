@@ -10,7 +10,7 @@
           "groupType": "horizontal",
           "children": [
             {
-              "disabled": true,
+              "enabled": false,
               "label": "widgets.debt.grid.id",
               "name": "id",
               "type": "control",
@@ -30,7 +30,7 @@
               "size": 25
             },
             {
-              "disabled": true,
+              "enabled": false,
               "label": "widgets.debt.grid.bankId",
               "lookupKey": "contractors",
               "name": "bankId",
@@ -39,9 +39,9 @@
               "size": 25
             },
             {
-              "disabled": {
-                "operator": "eval",
-                "value": "userPermissions.permissions.DEBT_EDIT.valueB"
+              "enabled": {
+                "operator": "permissionIsTrue",
+                "value": "DEBT_EDIT"
               },
               "label": "widgets.debt.grid.contract",
               "name": "contract",
@@ -170,6 +170,102 @@
               "controlType": "select"
             }
           ]
+        },
+        {
+          "type": "group",
+          "groupType": "horizontal",
+          "children": [
+            {
+              "enabled": {
+                "operator": "permissionNotEmpty",
+                "value": "DEBT_DICT1_EDIT_LIST"
+              },
+              "display": {
+                "operator": "entityIsUsed",
+                "value": 198
+              },
+              "dictCode": 34,
+              "label": "widgets.debt.grid.dict1Code",
+              "name": "dict1Code",
+              "type": "control",
+              "controlType": "select",
+              "validators": {
+                "required": {
+                  "operator": "entityIsMandatory",
+                  "value": 198
+                }
+              }
+            },
+            {
+              "enabled": {
+                "operator": "permissionNotEmpty",
+                "value": "DEBT_DICT2_EDIT_LIST"
+              },
+              "display": {
+                "operator": "entityIsUsed",
+                "value": 199
+              },
+              "dictCode": 35,
+              "label": "widgets.debt.grid.dict2Code",
+              "name": "dict2Code",
+              "type": "control",
+              "controlType": "select",
+              "validators": {
+                "required": {
+                  "operator": "entityIsMandatory",
+                  "value": 199
+                }
+              }
+            },
+            {
+              "enabled": {
+                "operator": "permissionNotEmpty",
+                "value": "DEBT_DICT3_EDIT_LIST"
+              },
+              "display": {
+                "operator": "entityIsUsed",
+                "value": 200
+              },
+              "dictCode": 36,
+              "label": "widgets.debt.grid.dict3Code",
+              "name": "dict3Code",
+              "type": "control",
+              "controlType": "select",
+              "validators": {
+                "required": {
+                  "operator": "entityIsMandatory",
+                  "value": 200
+                }
+              }
+            },
+            {
+              "enabled": {
+                "operator": "permissionNotEmpty",
+                "value": "DEBT_DICT4_EDIT_LIST"
+              },
+              "display": {
+                "operator": "entityIsUsed",
+                "value": 201
+              },
+              "dictCode": 37,
+              "label": "widgets.debt.grid.dict4Code",
+              "name": "dict4Code",
+              "type": "control",
+              "controlType": "select",
+              "validators": {
+                "required": {
+                  "operator": "entityIsMandatory",
+                  "value": 201
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "control",
+          "controlType": "textarea",
+          "label": "widgets.debt.grid.comment",
+          "name": "comment"
         }
       ]
     }

@@ -107,8 +107,8 @@ export class DynamicLayoutService {
     return {
       item,
       streams: {
-        disabled: this.calculate(item, 'disabled'),
         display: this.calculate(item, 'display'),
+        enabled: this.calculate(item, 'enabled'),
         validators: Object.keys(validators).reduce((acc, key) => ({ ...acc, [key]: this.calculate(validators, key) }), {}),
       },
     };
