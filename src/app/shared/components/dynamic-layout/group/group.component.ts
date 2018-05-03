@@ -66,10 +66,6 @@ export class GroupComponent implements OnInit {
     return {
       flex: `${this.getItemSize(item)} 0`,
     };
-    // const itemIsControl = [ DynamicLayoutItemType.ATTRIBUTE, DynamicLayoutItemType.CONTROL ].includes(item.type);
-    // return itemIsControl && this.group.groupType !== DynamicLayoutGroupType.HORIZONTAL
-    //   ? {}
-    //   : { flex: `${this.getItemSize(item)} 0` };
   }
 
   getItemSize(item: IDynamicLayoutItem): number {
