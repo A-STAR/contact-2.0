@@ -115,7 +115,7 @@ export class DynamicLayoutService {
   }
 
   private calculate(item: any, prop: string): Observable<any> {
-    if (item[prop] === undefined || item[prop] === null) {
+    if (item[prop] == null) {
       return of(true);
     }
     return typeof item[prop] === 'object'
