@@ -79,73 +79,8 @@ export class FormulasService extends AbstractActionService {
   }
 
   fetchFormulasMetadata(): Observable<IScriptEditorDefs[]> {
-    // return this.dataService.read(`${this.baseUrl}/data`, {})
-      // .catch(this.notificationsService.fetchError().entity('entities.formulas.gen.singular').dispatchCallback());
-    return of([{
-      '!name': 'context',
-      '!define': {
-        'date': {
-          'value': 'string',
-          'getYear': {
-            '!doc': 'Получить год',
-            '!type': 'fn() -> string'
-          },
-          'setYear': {
-            '!doc': 'Установить год',
-            '!type': 'fn(year: debt)'
-          },
-          'compareTo': {
-            '!doc': 'Сравнить с другой датой',
-            '!type': 'fn(d: date) -> number'
-          }
-        },
-        'debt': {
-          'creditType': {
-            '!doc': 'Тип кредитного продукта',
-            '!type': 'number'
-          },
-          'creditName': {
-            '!doc': 'Название кредитного продукта',
-            '!type': 'string'
-          },
-          'contract': {
-            '!doc': 'Номер договора',
-            '!type': 'string'
-          },
-          'status': {
-            '!doc': 'Статус долга',
-            '!type': 'number'
-          },
-          'statusReason': {
-            '!doc': 'Причина перехода в текущий статус',
-            '!type': 'number'
-          },
-          'components': {
-            '!doc': 'Составляющие долга',
-            '!type': '[component]'
-          },
-          'date': 'date'
-        },
-        'component': {
-          'amountType': {
-            '!doc': 'Тип составляющей',
-            '!type': 'number'
-          },
-          'amount': {
-            '!doc': 'Сумма',
-            '!type': 'number'
-          },
-          'currencyId': {
-            '!doc': 'Валюта',
-            '!type': 'number'
-          }
-        },
-      },
-      'debt': {
-        '!doc': 'Долг из контекста выполнения формулы',
-        '!type': 'debt'
-      }
-    }]);
+    return this.dataService.read(`${this.baseUrl}/data`, {})
+      .catch(this.notificationsService.fetchError().entity('entities.formulas.gen.singular').dispatchCallback());
   }
 
   private mapResult(response: any): IFormulaResult {
