@@ -12,14 +12,18 @@ import {
   IDynamicLayoutItemProperties,
   IDynamicLayoutItem,
   IDynamicLayoutPlugin,
+  DynamicLayoutControlType,
 } from '../dynamic-layout.interface';
 
 import { EventService } from '../event/event.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
 @Injectable()
 export class ControlService implements OnDestroy {
+  static readonly DEFAULT_GROUP_NAME = 'default';
+
   static DEFAULT_MESSAGES = {
     required: 'validation.fieldRequired',
     min: 'validation.fieldMin',
@@ -45,6 +49,7 @@ export class ControlService implements OnDestroy {
     private eventService: EventService,
     private formBuilder: FormBuilder,
     private store: Store<IAppState>,
+    private valueConverterService: ValueConverterService,
   ) {}
 
   ngOnDestroy(): void {
@@ -76,7 +81,7 @@ export class ControlService implements OnDestroy {
     });
   }
 
-  getData(form: string): any {
+  getData(form: string = ControlService.DEFAULT_GROUP_NAME): any {
     const group = this.groups.get(form);
     return group
       ? this.getGroupValue(group)
@@ -108,7 +113,7 @@ export class ControlService implements OnDestroy {
 
     if (key) {
       const subscription = group.valueChanges.subscribe(value => this.store.dispatch({
-        // TODO: write the reducer
+        // TODO(d.maltsev): write the reducer
         type: null,
         payload: { key, value },
       }));
@@ -139,11 +144,11 @@ export class ControlService implements OnDestroy {
   }
 
   private getControlForm(control: IDynamicLayoutControl): string {
-    return control.form || 'default';
+    return control.form || ControlService.DEFAULT_GROUP_NAME;
   }
 
   private getPluginForm(plugin: IDynamicLayoutPlugin): string {
-    return plugin.form || 'default';
+    return plugin.form || ControlService.DEFAULT_GROUP_NAME;
   }
 
   private getAsyncValidators(control: IDynamicLayoutItemProperties<IDynamicLayoutControl>): AsyncValidatorFn[] {
@@ -183,11 +188,11 @@ export class ControlService implements OnDestroy {
   }
 
   private serializeControlValue(value: any, control: IDynamicLayoutItemProperties<IDynamicLayoutControl>): any {
-    switch (control.item.type) {
-      // case DynamicLayoutControlType.DATE:
-      //   return value ? this.valueConverterService.toDateOnly(value) : null;
-      // case DynamicLayoutControlType.CHECKBOX:
-      //   return Number(value);
+    switch (control.item.controlType) {
+      case DynamicLayoutControlType.DATE:
+        return value ? this.valueConverterService.toDateOnly(value) : null;
+      case DynamicLayoutControlType.CHECKBOX:
+        return Number(value);
       default:
         return value;
     }

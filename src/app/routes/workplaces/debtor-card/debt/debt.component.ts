@@ -73,12 +73,9 @@ export class DebtComponent implements OnInit {
     .pipe(
       first(),
       flatMap(([personId, debtId]) => {
-        // return debtId
-        //   ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
-        //   : this.debtService.create(personId, this.form.serializedUpdates);
         return debtId
-          ? this.debtService.update(personId, debtId, this.layout.data.default)
-          : this.debtService.create(personId, this.layout.data.default);
+          ? this.debtService.update(personId, debtId, this.layout.getData())
+          : this.debtService.create(personId, this.layout.getData());
       })
     )
     .subscribe(() => {

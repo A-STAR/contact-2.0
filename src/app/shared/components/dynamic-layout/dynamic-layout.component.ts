@@ -37,6 +37,10 @@ export class DynamicLayoutComponent implements OnInit {
     private templateService: TemplateService,
   ) {}
 
+  getData(form?: string): any {
+    return this.formService.getData(form);
+  }
+
   get group(): IDynamicLayoutGroup {
     return this.layoutService.group;
   }
