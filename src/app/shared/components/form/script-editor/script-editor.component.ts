@@ -80,8 +80,9 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
     this.isDisabled = isDisabled;
   }
 
-  onChange(): void {
-    this.propagateChange(this.value);
+  onChange(value: string): void {
+    this.value = value;
+    this.propagateChange(value);
   }
 
   private propagateChange: Function = () => {};

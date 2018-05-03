@@ -9,7 +9,7 @@ export class ScriptEditorDirective {
   private editor: any;
   private value: string;
 
-  @Output() textChanged = new EventEmitter<any>();
+  @Output() textChanged = new EventEmitter<string>();
 
   @Input()
   set options(value: any) {
