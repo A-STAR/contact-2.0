@@ -173,5 +173,13 @@
         }
       ]
     }
+  ],
+  "plugins": [
+    {
+      "type": "gridselect",
+      "from": "portfolioId",
+      "to": "bankId",
+      "key": "contractorId"
+    }
   ]
 }

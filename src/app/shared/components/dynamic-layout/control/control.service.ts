@@ -11,7 +11,10 @@ import {
   IDynamicLayoutControl,
   IDynamicLayoutItemProperties,
   IDynamicLayoutItem,
+  IDynamicLayoutPlugin,
 } from '../dynamic-layout.interface';
+
+import { EventService } from '../event/event.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
@@ -24,6 +27,7 @@ export class ControlService implements OnDestroy {
   private formSubscription = new Subscription();
 
   constructor(
+    private eventService: EventService,
     private formBuilder: FormBuilder,
     private store: Store<IAppState>,
   ) {}
@@ -32,7 +36,11 @@ export class ControlService implements OnDestroy {
     this.formSubscription.unsubscribe();
   }
 
-  init(items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>, key: string): void {
+  init(
+    items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>,
+    plugins: IDynamicLayoutPlugin[],
+    key: string,
+  ): void {
     this.controls = Object.keys(items)
       .map(k => items[k])
       .filter(item => item.item.type === DynamicLayoutItemType.CONTROL)
@@ -45,6 +53,11 @@ export class ControlService implements OnDestroy {
       const { disabled, display } = control.streams;
       const subscription = combineLatest(disabled, display, (a, b) => !a && b).subscribe(d => this.disable(control.item, d));
       this.formSubscription.add(subscription);
+    });
+
+    this.groups.forEach((group, groupName) => {
+      const groupPlugins = plugins.filter(p => this.getPluginForm(p) === groupName);
+      this.eventService.setPlugins(group, groupPlugins);
     });
   }
 
@@ -112,6 +125,10 @@ export class ControlService implements OnDestroy {
 
   private getControlForm(control: IDynamicLayoutControl): string {
     return control.form || 'default';
+  }
+
+  private getPluginForm(plugin: IDynamicLayoutPlugin): string {
+    return plugin.form || 'default';
   }
 
   private getAsyncValidators(control: IDynamicLayoutItemProperties<IDynamicLayoutControl>): AsyncValidatorFn[] {

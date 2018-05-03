@@ -18,6 +18,10 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
   form?: string;
 }
 
+export interface IDynamicLayoutGridSelectControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.GRIDSELECT;
+}
+
 export interface IDynamicLayoutTextControl extends IDynamicLayoutGenericControl {
   controlType: DynamicLayoutControlType.TEXT;
 }
@@ -26,4 +30,8 @@ export interface IDynamicLayoutTextareaControl extends IDynamicLayoutGenericCont
   controlType: DynamicLayoutControlType;
 }
 
-export type IDynamicLayoutControl = IDynamicLayoutTextControl | IDynamicLayoutTextareaControl;
+export type IDynamicLayoutControl =
+  | IDynamicLayoutGridSelectControl
+  | IDynamicLayoutTextControl
+  | IDynamicLayoutTextareaControl
+;

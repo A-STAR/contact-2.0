@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { IDynamicLayoutControl } from '../dynamic-layout.interface';
+import { IDynamicLayoutControl, IDynamicLayoutGridSelectControl } from '../dynamic-layout.interface';
 
 import { ControlService } from '../control/control.service';
+import { EventService } from '../event/event.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,10 +16,15 @@ export class ControlComponent {
   @Input() control: IDynamicLayoutControl;
 
   constructor(
+    private eventService: EventService,
     private formService: ControlService,
   ) {}
 
   get formGroup(): FormGroup {
     return this.formService.getFormGroup(this.control);
+  }
+
+  onGridSelect(control: IDynamicLayoutGridSelectControl, event: any): void {
+    this.eventService.onGridSelect(control, event);
   }
 }

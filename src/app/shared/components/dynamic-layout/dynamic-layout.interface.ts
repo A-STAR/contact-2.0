@@ -4,11 +4,13 @@ import { IContext } from './context.interface';
 import { IDynamicLayoutAttribute } from './attribute/attribute.interface';
 import { IDynamicLayoutControl } from './control/control.interface';
 import { IDynamicLayoutGroup } from './group/group.interface';
+import { IDynamicLayoutPlugin } from './event/event.interface';
 import { IDynamicLayoutTemplate } from './template/template.interface';
 
 export * from './attribute/attribute.interface';
 export * from './context.interface';
 export * from './control/control.interface';
+export * from './event/event.interface';
 export * from './group/group.interface';
 export * from './template/template.interface';
 
@@ -58,6 +60,7 @@ export interface IDynamicLayoutConfig {
   items: IDynamicLayoutItem[];
   // Optional
   key?: string;
+  plugins?: IDynamicLayoutPlugin[];
 }
 
 export interface IDynamicLayoutItemProperties<T> {

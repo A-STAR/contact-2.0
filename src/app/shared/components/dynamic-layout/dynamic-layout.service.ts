@@ -9,6 +9,7 @@ import {
   IDynamicLayoutGroup,
   IDynamicLayoutItem,
   IDynamicLayoutItemProperties,
+  IDynamicLayoutPlugin,
 } from './dynamic-layout.interface';
 
 import { AttributeService } from './attribute/attribute.service';
@@ -22,6 +23,7 @@ export class DynamicLayoutService {
   private _group: IDynamicLayoutGroup;
   private _items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>;
   private _key: string;
+  private _plugins: IDynamicLayoutPlugin[];
 
   readonly ready$ = new BehaviorSubject<boolean>(false);
 
@@ -67,8 +69,9 @@ export class DynamicLayoutService {
     };
     this._key = key || config.key;
     this._items = this.flattenItems(items);
+    this._plugins = config.plugins || [];
     this.attributeService.init(this._items);
-    this.formService.init(this._items, this._key);
+    this.formService.init(this._items, this._plugins, this._key);
     this.ready$.next(true);
     this.ready$.complete();
   }

@@ -5,6 +5,7 @@ import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './dynamic-layout.inte
 import { AttributeService } from './attribute/attribute.service';
 import { ControlService } from './control/control.service';
 import { DynamicLayoutService } from './dynamic-layout.service';
+import { EventService } from './event/event.service';
 import { TemplateService } from './template/template.service';
 
 @Component({
@@ -13,6 +14,7 @@ import { TemplateService } from './template/template.service';
   providers: [
     AttributeService,
     ControlService,
+    EventService,
     DynamicLayoutService,
     TemplateService,
   ],
