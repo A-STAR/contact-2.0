@@ -32,7 +32,7 @@ import { combineLatestOr, combineLatestAnd, addGridLabel, isEmpty } from '@app/c
   templateUrl: './document-grid.component.html',
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
-  @Input() action: 'edit' | 'download' = 'edit';
+  @Input() action: 'edit' | 'download' = 'download';
   @Input() callCenter = false;
   @Input() entityType: number;
   @Input() hideToolbar = false;
