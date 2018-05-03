@@ -10,7 +10,7 @@ export class ScriptEditorDirective {
   private scriptEditor: any;
   private value: string;
 
-  @Output() textChanged = new EventEmitter<any>();
+  @Output() textChanged = new EventEmitter<string>();
 
   @Input()
   set options(value: any) {
