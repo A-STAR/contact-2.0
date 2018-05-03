@@ -8,11 +8,8 @@ import {
 } from '@angular/core';
 import { ScriptEditorDirective } from './script-editor.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { first } from 'rxjs/operators/first';
 
-import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
-
-import { ScriptEditorService } from '@app/shared/components/form/script-editor/script-editor.service';
+import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 @Component({
   selector: 'app-script-editor',
@@ -30,8 +27,7 @@ import { ScriptEditorService } from '@app/shared/components/form/script-editor/s
 export class ScriptEditorComponent implements ControlValueAccessor, AfterViewInit {
   @ViewChild(ScriptEditorDirective) editor: ScriptEditorDirective;
 
-  @Input() metadata: IScriptEditorMetadata[];
-  @Input() options: any = {};
+  @Input() options: IScriptEditorConfig = {};
   @Input() isDisabled = false;
 
   theme = 'eclipse';
@@ -39,29 +35,22 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
 
   value: string;
 
-  constructor(private scriptEditorService: ScriptEditorService) {
-  }
-
   ngAfterViewInit(): void {
-    this.scriptEditorService.createScriptEditorDefs(this.metadata)
-      .pipe(first())
-      .subscribe(defs => {
-        this.editor.options = {
-          enableTern: {
-            defs,
-            plugins: {
-              doc_comment: {
-                fullDocs: true
-              }
-            },
-            useWorker: this.editor.getEditor().getSession().getUseWorker(),
-            ...this.options
-          },
-          enableSnippets: true,
-          enableBasicAutocompletion: true,
-        };
-        this.editor.getEditor().on('focus', () => this.propagateTouch());
-      });
+    this.editor.options = {
+      enableBasicAutocompletion: true,
+      ...(this.options || {}),
+      enableTern: {
+        plugins: {
+          doc_comment: {
+            fullDocs: true
+          }
+        },
+        useWorker: this.editor.editor.getSession().getUseWorker(),
+        ...(this.options.enableTern || {})
+      }
+    };
+
+    this.editor.editor.on('focus', () => this.propagateTouch());
   }
 
   writeValue(value: string): void {
@@ -80,8 +69,9 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
     this.isDisabled = isDisabled;
   }
 
-  onChange(): void {
-    this.propagateChange(this.value);
+  onChange(value: string): void {
+    this.value = value;
+    this.propagateChange(value);
   }
 
   private propagateChange: Function = () => {};

@@ -1,10 +1,16 @@
-export interface IScriptEditorMetadata {
-  name: string;
-  type?: number;
-  desc?: string;
-  children?: IScriptEditorMetadata[];
+export interface IScriptEditorConfig {
+  enableTern?: { defs: IScriptEditorDefs[], plugins: any };
+  useWorker?: any;
+  enableBasicAutocompletion?: boolean;
+  enableSnippets?: any[];
 }
 
-export interface IScriptEditorDef {
+export interface IScriptEditorDefs {
   [variable: string]: any;
+}
+
+export interface IScriptEditorSnippet {
+  name: string;
+  tabTrigger: string;
+  content: string;
 }

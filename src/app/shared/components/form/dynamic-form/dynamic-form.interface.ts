@@ -7,7 +7,7 @@ import { IMultiLanguageConfig } from '@app/shared/components/form/multilanguage/
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
+import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
@@ -186,8 +186,7 @@ export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
 
 export interface IDynamicFormScriptControl extends IDynamicFormBaseControl {
   type: 'scripteditor';
-  options?: any;
-  metadata?: IScriptEditorMetadata[];
+  options?: IScriptEditorConfig[];
 }
 
 export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseControl {
