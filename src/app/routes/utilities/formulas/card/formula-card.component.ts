@@ -83,7 +83,8 @@ export class FormulaCardComponent implements OnInit {
         options: {
           enableTern: {
             defs: this.editorDefs
-          }
+          },
+          enableSnippets: this.formulasService.formulaSnippets
         }
       },
       {

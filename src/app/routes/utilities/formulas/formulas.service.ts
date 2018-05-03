@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IFormula, IFormulaParams, IFormulaResult } from './formulas.interface';
-import { IScriptEditorDefs } from '@app/shared/components/form/script-editor/script-editor.interface';
+import { IScriptEditorDefs, IScriptEditorSnippet } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -40,6 +40,30 @@ export class FormulasService extends AbstractActionService {
 
   get canCalculate$(): Observable<boolean> {
     return this.userPermissionsService.has('FORMULA_CALCULATE');
+  }
+
+  get formulaSnippets(): IScriptEditorSnippet[] {
+    return [{
+      name: 'if',
+      tabTrigger: 'if',
+      content: 'if (${1:true}) {\n${0}\n}\n'
+    }, {
+      name: 'if ... else',
+      tabTrigger: 'if',
+      content: 'if (${1:true}) {\n${2}\n} else {\n${0}\n}\n'
+    }, {
+      name: 'switch',
+      tabTrigger: 'switch',
+      content: 'switch (${1:expression}) {\ncase \'${3:case}\':\n${4:// code}\nbreak;\n${5}\ndefault:\n${2:// code}\n}\n'
+    }, {
+      name: 'case',
+      tabTrigger: 'case',
+      content: 'case \'${1:case}\':\n${2:// code}\nbreak;\n${3}\n'
+    }, {
+      name: 'for',
+      tabTrigger: 'for',
+      content: 'for (${1:i} = 0; $1 < ${2:limit}; $1++) {\n${3:$2[$1]}$0\n}\n'
+    }];
   }
 
   fetchAll(): Observable<Array<IFormula>> {

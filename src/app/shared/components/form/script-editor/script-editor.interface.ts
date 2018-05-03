@@ -8,3 +8,9 @@ export interface IScriptEditorConfig {
 export interface IScriptEditorDefs {
   [variable: string]: any;
 }
+
+export interface IScriptEditorSnippet {
+  name: string;
+  tabTrigger: string;
+  content: string;
+}
