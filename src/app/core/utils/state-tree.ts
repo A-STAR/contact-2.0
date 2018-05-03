@@ -1,6 +1,7 @@
 export interface IStateTreeParams {
+  dataKeys: any[];
+  mask: number[][];
   dataToState?(data: any): number;
-  transformState?(prev: number, next: number): number;
   // shouldChangeParentState(prev: number, next: number): boolean;
   // shouldChangeChildrenState(prev: number, next: number): boolean;
   // tranformParentState(prev: number, next: number): number;
@@ -24,13 +25,18 @@ export class StateTreeNode {
     currentPath = currentPath || path;
     while (currentPath.length) {
       if (currentPath.length === 1) {
-        node = new StateTreeNode(initialState, path);
-        this.children.push(node);
-        node.parent = this;
+        node = this.findChild(currentPath);
+        if (node) {
+          node.currentState = initialState;
+        } else {
+          node = new StateTreeNode(initialState, path);
+          this.children.push(node);
+          node.parent = this;
+        }
         return;
       } else {
 
-        const foundChild = this.children.find(c => c.path[c.path.length - 1] === currentPath[0]);
+        const foundChild = this.findChild(currentPath);
 
         if (!foundChild) {
 
@@ -53,9 +59,9 @@ export class StateTreeNode {
       if (this.path[this.path.length - 1] === path[0]) {
         return this;
       }
-      return this.children.find(c => c.path[c.path.length - 1] === path[0]);
+      return this.findChild(path);
     } else {
-      const foundChild = this.children.find(c => c.path[c.path.length - 1] === path[0]);
+      const foundChild = this.findChild(path);
       path = path.slice(1);
       return path.length && foundChild ? foundChild.findNode(path) : foundChild;
     }
@@ -77,14 +83,33 @@ export class StateTreeNode {
     const str = !this.isRoot ? new Array(indent + 1).join(' ') + this.path[this.path.length - 1] + '\n' : '';
     return str + (this.children && this.children.length ? this.children.map(c => c.toString(indent + 1)).join('') : '');
   }
+
+  private findChild(path: string[]): StateTreeNode {
+    return this.children.find(c => c.path[c.path.length - 1] === path[0]);
+  }
 }
 
 export class StateTree {
   private root: StateTreeNode;
+  private states: number[];
+  private dataToState: (data: any) => number;
 
-  constructor(options: IStateTreeParams = {}) {
-    this.transformState = options.transformState || this.transformState;
-    this.dataToState = options.dataToState || this.dataToState;
+  constructor(private params: IStateTreeParams) {
+
+    if (!params) {
+      throw new Error('Params for state tree not found!');
+    }
+
+    if (params && !params.dataKeys) {
+      throw new Error('Data keys for state tree not found!');
+    }
+
+    if (params && !params.mask) {
+      throw new Error('Rule mask for state tree not found!');
+    }
+
+    this.dataToState = params.dataToState || (data => Number(data));
+    this.states = this.actionsToStates(this.params.dataKeys);
     this.root = new StateTreeNode(null, ['root']);
   }
 
@@ -107,8 +132,14 @@ export class StateTree {
     return this.root.toString();
   }
 
-  private transformState: (prev: number, next: number) => number = (_: number, next: number) => next;
-  private dataToState: (data: any) => number = data => Number(data);
+  private actionsToStates(dataKeys: any[]): number[] {
+    return Array.from(Array(Math.pow(2, dataKeys.length)).keys());
+  }
+
+  private transformState(prev: number, next: number): number {
+    const rule = this.params.mask.find(r => r[0] === prev && r[1] === next);
+    return rule ? this.states[rule[2]] : next;
+  }
 
 }
 

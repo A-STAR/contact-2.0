@@ -2,7 +2,8 @@ import { ICellRendererParams, ICellEditorParams } from 'ag-grid';
 import { ValueGetterParams, ValueSetterParams, ValueParserParams } from 'ag-grid/dist/lib/entities/colDef';
 
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
-import { IStateTreeParams } from '@app/core/utils/state-tree';
+
+import { StateTree } from '@app/core/utils/state-tree';
 
 export enum IGridSelectionType {
   SINGLE = 'single',
@@ -39,7 +40,6 @@ export interface IGridColumn<T> {
   maxWidth?: number;
   renderer?: any;
   rendererParams?: any;
-  actionParams?: IStateTreeParams;
   valueTypeKey?: string;
   // params for value renderer
   valueTypeParams?: {
@@ -50,7 +50,8 @@ export interface IGridColumn<T> {
   valueSetter?: ((params: ValueSetterParams) => boolean) | string;
   valueParser?: ((params: ValueParserParams) => any);
   isGroup?: boolean;
-  hasAction?: boolean;
+  isDisplayed?: (data: T) => boolean;
+  actionParams?: { mask?: [ number, number, number][], dataToState?(data: T): number };
   edit?: IGridEditableColumn<T>;
 }
 
@@ -72,16 +73,6 @@ export interface IGridLocalSettingsColumn {
   width: number;
 }
 
-export interface IActionCheckboxRendererConfig {
-  props: string[];
-  masks: {
-    mask: string,
-    action: (state: number) => string;
-    emitForParents?: boolean;
-    emitForChildren?: boolean;
-  }[];
-}
-
 export interface IGridLocalSettings {
   columns: IGridLocalSettingsColumn[];
   sortModel: any;
@@ -94,6 +85,8 @@ export interface IValueRendererDef {
     lookupKey?: ILookupKey;
   };
 }
+
+export type ActionRendererParams = ICellRendererParams & { stateTree: StateTree, isDisplayed: Function };
 
 export type IValueRendererParams = ICellRendererParams & IValueRendererDef & { data: any };
 

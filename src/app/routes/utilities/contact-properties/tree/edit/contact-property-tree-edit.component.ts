@@ -73,11 +73,14 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     },
     {
       prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
-      hasAction: true, actionParams: { transformState: (prev, next) => prev + next },
+      actionParams: {
+        mask: []
+      }
     },
     {
       prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
-      hasAction: true
+      rendererParams: { isDisplayed: (data: ITreeNode) => data.data.disabledValue !== 1 },
+      actionParams: true
     },
   ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
