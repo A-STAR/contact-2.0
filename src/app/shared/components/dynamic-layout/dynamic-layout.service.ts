@@ -115,6 +115,11 @@ export class DynamicLayoutService {
   }
 
   private calculate(item: any, prop: string): Observable<any> {
-    return item[prop] ? this.contextService.calculate(item[prop]) : of(true);
+    if (item[prop] === undefined || item[prop] === null) {
+      return of(true);
+    }
+    return typeof item[prop] === 'object'
+      ? this.contextService.calculate(item[prop])
+      : of(item[prop]);
   }
 }
