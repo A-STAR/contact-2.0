@@ -38,7 +38,31 @@ export class ScriptEditorComponent implements ControlValueAccessor, AfterViewIni
   ngAfterViewInit(): void {
     this.editor.options = {
       enableBasicAutocompletion: true,
-      enableSnippets: [],
+      enableSnippets: [{
+        name: 'if',
+        tabTrigger: 'if',
+        content: 'if (${1:true}) {\n${0}\n}\n'
+      }, {
+        name: 'if ... else',
+        tabTrigger: 'if',
+        content: 'if (${1:true}) {\n${2}\n} else {\n${0}\n}\n'
+      }, {
+        name: 'switch',
+        tabTrigger: 'switch',
+        content: 'switch (${1:expression}) {\ncase \'${3:case}\':\n${4:// code}\nbreak;\n${5}\ndefault:\n${2:// code}\n}\n'
+      }, {
+        name: 'case',
+        tabTrigger: 'case',
+        content: 'case \'${1:case}\':\n${2:// code}\nbreak;\n${3}\n'
+      }, {
+        name: 'for',
+        tabTrigger: 'for',
+        content: 'for (${1:i} = 0; $1 < ${2:limit}; $1++) {\n${3:$2[$1]}$0\n}\n'
+      }, {
+        name: 'for collection',
+        tabTrigger: 'for',
+        content: 'for (${1:type} ${2:variable}: ${3:collection}) {\n${4:$2}$0\n}\n'
+      }],
       ...(this.options || {}),
       enableTern: {
         plugins: {
