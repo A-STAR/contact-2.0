@@ -5,7 +5,9 @@ import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
@@ -56,6 +58,11 @@ export class GuarantorCardComponent implements AfterViewInit {
    */
   readonly guarantorId = Number(this.paramMap.get('guarantorId'));
 
+  /**
+   * Guarantor role (according to dictionary 44)
+   */
+  readonly guaarantorRole = 2;
+
   readonly editing = Boolean(this.guarantorId);
 
   readonly guarantor$ = this.guaranteeCardService.guarantor$;
@@ -98,6 +105,18 @@ export class GuarantorCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
+  get canSubmit(): boolean {
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const guarantorFormGroup = this.guarantorForm
+      ? this.guarantorForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
+    return contractFormValid && guarantorFormValid;
+  }
+
   ngAfterViewInit(): void {
     if (this.editing) {
       this.guaranteeService
@@ -129,7 +148,12 @@ export class GuarantorCardComponent implements AfterViewInit {
             : this.saveGuarantor();
         }),
         mergeMap(guarantorId => this.saveContract(guarantorId))
-      ).subscribe(() => this.onBack());
+      ).subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.guaranteeService.dispatchGuarantorSavedMessage();
+    this.onBack();
   }
 
   onBack(): void {
@@ -140,7 +164,26 @@ export class GuarantorCardComponent implements AfterViewInit {
     }
   }
 
+  onPhoneAdd(): void {
+    this.router.navigate([ 'phone/create' ], { relativeTo: this.route });
+  }
+
+  onPhoneEdit(phone: IPhone): void {
+    this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressAdd(): void {
+    this.router.navigate([ 'address/create' ], { relativeTo: this.route });
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+  }
+
   private saveContract(guarantorId: number): Observable<void> {
+    if (!this.contractForm) {
+      return this.guaranteeService.addGuarantor(this.debtId, this.contractId, guarantorId);
+    }
     const { data } = this.contractForm;
     if (isEmpty(data)) {
       return of(null);

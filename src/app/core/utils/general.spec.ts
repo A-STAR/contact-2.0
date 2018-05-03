@@ -1,4 +1,4 @@
-import { range, deepFilterAndMap } from './general';
+import { range, deepFilterAndMap, IncId } from './general';
 
 describe('General helper:', () => {
 
@@ -87,6 +87,53 @@ describe('General helper:', () => {
       expect(deepFilterAndMap(mockData, 'mandatory', 'test')).toEqual([ 2 ]);
     });
 
+  });
+
+  describe('incId', () => {
+    let incId: IncId;
+
+    beforeEach(() => {
+      if (incId) {
+        incId.uuid = 0;
+      }
+      incId = IncId.get();
+    });
+
+    it('should increment ids', () => {
+      expect(incId.uuid).toEqual(1);
+      expect(incId.uuid).toEqual(2);
+      expect(incId.uuid).toEqual(3);
+      expect(incId.uuid).toEqual(4);
+    });
+
+    it('should be singletone', () => {
+      expect(incId.uuid).toEqual(1);
+      expect(incId.uuid).toEqual(2);
+
+      let incIdInstance = IncId.get();
+
+      expect(incIdInstance.uuid).toEqual(3);
+      expect(incIdInstance.uuid).toEqual(4);
+
+      incIdInstance = IncId.get();
+      incIdInstance.uuid = 66;
+
+      expect(incIdInstance.uuid).toEqual(67);
+      expect(incIdInstance.uuid).toEqual(68);
+      expect(incId.uuid).toEqual(69);
+    });
+
+    it('should contain only positive values', () => {
+      incId.uuid = -999;
+      expect(incId.is(999)).toBeTruthy();
+      expect(incId.uuid).toBe(1000);
+
+      const _incId = IncId.get();
+
+      _incId.uuid = -45;
+
+      expect(_incId.is(45)).toBeTruthy();
+    });
   });
 
 });

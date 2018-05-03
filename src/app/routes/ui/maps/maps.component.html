@@ -1,15 +1,19 @@
-<app-map [markers]="markers" [styles]="{ height: '500px' }"></app-map>
+<app-map
+  [layers]="layers"
+  [styles]="{ height: '500px' }"
+  [controls]="controls"
+></app-map>
 <br>
 <h2> Dynamic popup content </h2>
-<div class="flex maps-markers-popup-inputs" *ngIf="markers && markers.length">
-  <div *ngFor="let marker of markers; let i = index">
+<div class="flex maps-markers-popup-inputs" *ngIf="layers && layers.length">
+  <div *ngFor="let layer of layers[0]; let i = index">
     <h4> Marker №{{ i + 1 }} </h4>
     <div class="flex horizontal">
       <div class="flex-item">
-        <app-text label="Choose name" [ngModel]="marker.data.name" (ngModelChange)="onNameChange($event, i)"></app-text>
+        <app-text label="Choose name" [ngModel]="layer.data.name" (ngModelChange)="onNameChange($event, i)"></app-text>
       </div>
       <div class="flex-item" >
-        <app-text label="Choose address" [ngModel]="marker.data.address" (ngModelChange)="onAddressChange($event, i)"></app-text>
+        <app-text label="Choose address" [ngModel]="layer.data.address" (ngModelChange)="onAddressChange($event, i)"></app-text>
       </div>
     </div>
   </div>

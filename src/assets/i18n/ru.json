@@ -2150,6 +2150,20 @@
           "message": "Вы действительно хотите отозвать из аутсорсинга выбранные долги?",
           "title": "Отозвать из аутсорсинга"
         }
+      },
+      "changeStageAttr": {
+        "title": "Изменить стадию долга",
+        "grid": {
+          "code": "Код",
+          "name": "Название"
+        }
+      },
+      "changePersonType": {
+        "title": "Изменить тип персоны",
+        "grid": {
+          "code": "Код",
+          "name": "Имя"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2963,8 +2977,25 @@
     "addressesByContacts": {
       "title": "Просмотр мест регистрации контактов",
       "personFullName": "ФИО персоны",
-      "contactType": "Тип контакта",
-      "fullAddress": "Адрес"
+      "contactType": "Тип",
+      "fullAddress": "Адрес",
+      "commentary": "Комментарий",
+      "userFullName": "Оператор",
+      "contactDateTime": "Дата контакта",
+      "resultName": "Результат",
+      "contract": "Договор",
+      "filter": {
+        "filterByAddressType": "Фильтр по типу адреса",
+        "filterByStatusType": "Фильтр по типу статуса",
+        "filterByContactType": "Фильтр по типу контакта",
+        "filterByVisitType": "Фильтр по типу выезда",
+        "hideAddresses": "Скрыть адреса",
+        "hideAccuracy": "Скрыть точность",
+        "showAllAdresses": "Отображать все адреса",
+        "showInactives": "Отображать все заблокированные адреса",
+        "distance": "Задайте предпочитаемое расстояние",
+        "resetFilter": "Сбросить фильтр"
+      }
     },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",
@@ -3175,7 +3206,8 @@
       "userNotFound": "Не найден пользователь, запрошенный по ID",
       "userNotFoundWithName": "Не найден пользователь с логином {{ $1 }}",
       "userRoleNotFound": "Не найдена роль пользователя",
-      "visitNotFound": "Visit not found by requested parameters"
+      "visitNotFound": "Visit not found by requested parameters",
+      "scheduleEventIsExecuting": "Мероприятие в данный момент выполняется, поэтому не может быть удалено"
     },
     "default": {
       "read": {
@@ -3435,10 +3467,12 @@
         "changeCreditTypeAttr": "Тип кредитного продукта",
         "changeBranchAttr": "Филиал",
         "changeTimezoneAttr": "Часовой пояс",
+        "changeStageAttr": "Стадия",
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
-        "registerContact": "Регистрация контакта"
+        "registerContact": "Регистрация контакта",
+        "changePersonType": "Изменить тип персоны"
       }
     },
     "filter": {

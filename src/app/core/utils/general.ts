@@ -137,6 +137,8 @@ export const floor = (value: number, precision: number) => {
 
 export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
 
+export const random = (min: number, max: number): number => min + Math.round(Math.random() * (max - min));
+
 /**
  * Allows to check is the current route matches the segment
  * i.e. `isRoute('create')`
@@ -163,6 +165,30 @@ export function getTranslations(languages: ILookupLanguage[], translations: IEnt
       value: findTranslation(translations, language.id)
     })
   );
+}
+
+export class IncId {
+  private static _instance: IncId;
+  private _uuid = 0;
+
+  private constructor() {}
+
+  static get(): IncId {
+    return this._instance || (this._instance = new this());
+  }
+
+  is(id: number): boolean {
+    return this._uuid === id;
+  }
+
+  set uuid(to: number) {
+    this._uuid = Math.abs(to);
+  }
+
+  get uuid(): number {
+    return ++this._uuid;
+  }
+
 }
 
 export function deepFilterAndMap<T extends { children?: T[] }, V>(items: T[],

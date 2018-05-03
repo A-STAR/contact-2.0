@@ -103,6 +103,12 @@
   (close)="onCloseAction($event)"
 ></app-mass-attr-timezone>
 
+<app-mass-attr-stage
+  *ngIf="isDialog('changeStageAttr')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-attr-stage>
+
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [actionData]="dialogData"
@@ -168,6 +174,12 @@
   [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-map-contact>
+
+<app-mass-person-type
+  *ngIf="isDialog('changePersonType')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-person-type>
 
 <!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader

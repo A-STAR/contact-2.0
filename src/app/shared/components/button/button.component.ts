@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { IButtonStyle, IButtonType } from './button.interface';
 
-import { ButtonService } from './button.service';
+import { ButtonService } from '@app/core/button/button.service';
 
 @Component({
   selector: 'app-button',
@@ -16,11 +16,14 @@ export class ButtonComponent {
   @Input() label: string | false;
   @Input() title: string;
   @Input() type: IButtonType;
+  // TODO(i.lobanov): remove it when btn service is refactored
+  @Input() btnClass: string;
+  @Input() withBtnClass = true;
 
   constructor(private buttonService: ButtonService) {}
 
   get buttonClass(): string {
-    return this.buttonService.getClass(this.color);
+    return (this.btnClass ? this.btnClass + ' ' : '') + this.buttonService.getClass(this.color, this.withBtnClass);
   }
 
   get iconClass(): string {

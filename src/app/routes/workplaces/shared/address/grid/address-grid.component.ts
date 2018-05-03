@@ -11,7 +11,7 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
@@ -51,7 +51,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this._personId$.next(personId);
     this.cdRef.markForCheck();
   }
-  @Input() personRole: number;
+
+  @Input('personRole')
+  set personRole(personRole: number) {
+    this._personRole$.next(personRole);
+    this.cdRef.markForCheck();
+  }
 
   @Output() add = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<IAddress>();
@@ -60,6 +65,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _debtId$ = new BehaviorSubject<number>(null);
   private _personId$ = new BehaviorSubject<number>(null);
+  private _personRole$ = new BehaviorSubject<number>(null);
 
   readonly selectedAddress$ = new BehaviorSubject<IAddress>(null);
   readonly debtId$ = this._debtId$;
@@ -71,6 +77,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   readonly canViewBlock$ = this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW');
 
   readonly canAdd$ = this.userPermissionsService.has('ADDRESS_ADD');
+
+  readonly selectedAddressId$ = this.selectedAddress$.pipe(
+    map(address => address ? address.id : null),
+  );
 
   readonly canEdit$ = combineLatestAnd([
     this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]),
@@ -113,12 +123,14 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ]);
 
   readonly canGenerateLetter$ = combineLatestAnd([
-    this.userPermissionsService.contains('LETTER_FORM_PERSON_ROLE_LIST', this.personRole),
+    this._personRole$.flatMap(personRole => this.userPermissionsService.contains('LETTER_FORM_PERSON_ROLE_LIST', personRole)),
     this.selectedAddress$.map(address => address && !address.isInactive)
   ]);
 
-  readonly canViewMap$ = this.selectedAddress$
-    .map(address => Boolean(address && address.longitude && address.latitude));
+  readonly canViewMap$ = combineLatestAnd([
+    this.selectedAddress$.map(address => Boolean(address && address.longitude && address.latitude)),
+    this.userPermissionsService.has('MAP_ADDRESS_VIEW')
+  ]);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -266,6 +278,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get addresses(): Array<IAddress> {
     return this._addresses;
+  }
+
+  get personRole(): number {
+    return this._personRole$.value;
   }
 
   getRowClass(): any {

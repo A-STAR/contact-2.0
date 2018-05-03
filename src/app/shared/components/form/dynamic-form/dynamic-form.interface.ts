@@ -7,6 +7,7 @@ import { IMultiLanguageConfig } from '@app/shared/components/form/multilanguage/
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
@@ -38,6 +39,7 @@ export type IDynamicFormControl =
   IDynamicFormMultiSelectControl |
   IDynamicFormNumberControl |
   IDynamicFormRadioControl |
+  IDynamicFormRangeControl |
   IDynamicFormRichTextControl |
   IDynamicFormSegmentedInputControl |
   IDynamicFormSelectControl |
@@ -160,6 +162,13 @@ export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
   positive?: boolean;
 }
 
+export interface IDynamicFormRangeControl extends IDynamicFormBaseControl {
+  type: 'range';
+  min?: number;
+  max?: number;
+  debounce?: number;
+}
+
 export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {
   type: 'radio' | 'boolean';
   // options for radio group
@@ -178,6 +187,7 @@ export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
 export interface IDynamicFormScriptControl extends IDynamicFormBaseControl {
   type: 'scripteditor';
   options?: any;
+  metadata?: IScriptEditorMetadata[];
 }
 
 export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseControl {

@@ -2,16 +2,53 @@
   <div dialog-header>
     <h3>{{ 'massOperations.addressesByContacts.title' | translate }}</h3>
   </div>
-  <div class="contact-map-container" *ngIf="markers && options">
-    <app-map [markers]="markers" [options]="options" [styles]="{ height: '600px' }"></app-map>
+  <div class="contact-map-container" *ngIf="layers && options">
+    <app-map
+      [layers]="layers"
+      [options]="options"
+      [styles]="{ height: '500px' }"
+      [controls]="controls">
+    </app-map>
   </div>
 </app-dialog>
 
 <ng-template #tpl let-data="data">
-  <h5>{{ 'massOperations.addressesByContacts.personFullName' | translate }}</h5>
-  <span>{{ data.personFullName }}</span>
-  <h5>{{ 'massOperations.addressesByContacts.fullAddress' | translate }}</h5>
-  <span>{{ data.fullAddress }}</span>
-  <h5>{{ 'massOperations.addressesByContacts.contactType' | translate }}</h5>
-  <span>{{ data.contactType | dict:21 }}</span>
+  <div class="description">
+    <div *ngIf="data.personFullName" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.personFullName' | translate }}:</span>
+      <span class="description-info">{{ data.personFullName }} (ID: {{ data.personId }}) </span>
+    </div>
+    <div *ngIf="data.contract" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.contract' | translate }}:</span>
+      <span class="description-info">{{ data.contract }} (ID: {{ data.debtId }})</span>
+    </div>
+    <div *ngIf="data.userFullName" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.userFullName' | translate }}:</span>
+      <span class="description-info">{{ data.userFullName }} (ID: {{ data.userId }})</span>
+    </div>
+    <div *ngIf="data.contactDateTime" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.contactDateTime' | translate }}:</span>
+      <span class="description-info">{{ data.contactDateTime | momentFormat:'L LTS' }}</span>
+    </div>
+    <div *ngIf="data.contactType" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
+      <span class="description-info">{{ data.contactType | dict:50 }}</span>
+    </div>
+    <div *ngIf="data.resultName" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.resultName' | translate }}:</span>
+      <span class="description-info">{{ data.resultName }}</span>
+    </div>
+    <div *ngIf="data.comment" class="description-entry">
+      <span class="description-title">{{ 'massOperations.addressesByContacts.commentary' | translate }}:</span>
+      <span class="description-info">{{ data.comment }}</span>
+    </div>
+    <div *ngIf="data.fullAddress" class="description-entry">
+        <span class="description-title">{{ 'massOperations.addressesByContacts.fullAddress' | translate }}:</span>
+        <span class="description-info">{{ data.fullAddress }}</span>
+    </div>
+    <div *ngIf="data.typeCode" class="description-entry">
+        <span class="description-title">{{ 'massOperations.addressesByContacts.contactType' | translate }}:</span>
+        <span class="description-info">{{ data.typeCode | dict:21 }}</span>
+    </div>
+  </div>
 </ng-template>

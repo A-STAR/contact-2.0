@@ -5,11 +5,14 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IFormula, IFormulaParams, IFormulaResult } from './formulas.interface';
+import { IScriptEditorMetadata } from '@app/shared/components/form/script-editor/script-editor.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class FormulasService extends AbstractActionService {
@@ -73,6 +76,52 @@ export class FormulasService extends AbstractActionService {
           .entity('entities.formulas.gen.singular')
           .dispatchCallback()
       );
+  }
+
+  fetchFormulasMetadata(): Observable<IScriptEditorMetadata[]> {
+    // return this.dataService.read(`${this.baseUrl}/data`, {})
+      // .catch(this.notificationsService.fetchError().entity('entities.formulas.gen.singular').dispatchCallback());
+    return of([
+      {
+        'name': 'debt',
+        'desc': 'Долг из контекста выполнения формулы',
+        'children': [
+          {
+            name: 'debtor',
+            desc: 'Должник текущего долга',
+            children: [
+              {
+                name: 'firstName',
+                desc: 'Имя персоны',
+                type: 3
+              }
+            ]
+          },
+          {
+            name: 'payments',
+            desc: 'Платежи текущего долга',
+            children: [
+              {
+                name: 'amount',
+                desc: 'Сумма платежа',
+                type: 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'user',
+        desc: 'Пользователь из контекста выполнения формулы',
+        children: [
+          {
+            name: 'login',
+            desc: 'Имя пользователя',
+            type: 3
+          }
+        ]
+      }
+    ]);
   }
 
   private mapResult(response: any): IFormulaResult {

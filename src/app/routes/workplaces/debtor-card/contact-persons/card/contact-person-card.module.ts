@@ -30,6 +30,13 @@ export function contactPersonCardPersonFormReducer(
   return createMetadataFormReducer('contactPersonCardPersonForm')(state, action);
 }
 
+export function contactPersonCardLinkFormReducer(
+  state: IMetadataFormState,
+  action: IMetadataFormAction,
+): IMetadataFormState {
+  return createMetadataFormReducer('contactPersonCardLinkForm')(state, action);
+}
+
 export function contactPersonCardSelectPersonFormReducer(
   state: IMetadataFormState,
   action: IMetadataFormAction,
@@ -57,6 +64,7 @@ export function contactPersonCardSelectPersonFormReducer(
     ),
     RouterModule.forChild(routes),
     SharedModule,
+    StoreModule.forFeature('contactPersonCardLinkForm', contactPersonCardLinkFormReducer),
     StoreModule.forFeature('contactPersonCardPersonForm', contactPersonCardPersonFormReducer),
     StoreModule.forFeature('contactPersonCardSelectPersonForm', contactPersonCardSelectPersonFormReducer),
     WorkplacesSharedModule,

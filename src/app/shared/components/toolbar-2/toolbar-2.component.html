@@ -1,56 +1,8 @@
-<div class="toolbar">
-  <div class="toolbar-item" [ngClass]="getItemCls(item)" *ngFor="let item of items">
-
-    <!-- Button -->
-    <ng-container *ngIf="isButton(item)">
-
-      <!-- Dropdown Group -->
-      <div *ngIf="item.children; else button">
-        <app-dropdown #dropdown position="left" [enabled]="!(isDisabled(item) | async)">
-          <app-button2
-            trigger
-            [disabled]="isDisabled(item) | async"
-            [icon]="item.icon"
-            [label]="false"
-            [title]="item.label"
-            [type]="getButtonType(item)"
-            (click)="onClick(item)">
-          </app-button2>
-          <ul class="list-group mb0">
-            <li *ngFor="let child of item.children" class="list-group-item p-sm b0">
-              <button
-                class="btn btn-link"
-                [disabled]="isDisabled(child) | async"
-                (click)="onClick(child)"
-              >
-                {{ child.label | translate }}
-              </button>
-            </li>
-          </ul>
-        </app-dropdown>
-      </div>
-
-      <!-- Simple Button -->
-      <ng-template #button>
-        <app-button2
-          [disabled]="isDisabled(item) | async"
-          [icon]="item.icon"
-          [label]="false"
-          [title]="item.label"
-          [type]="getButtonType(item)"
-          (click)="onClick(item)">
-        </app-button2>
-      </ng-template>
-    </ng-container>
-
-    <!-- Checkbox -->
-    <span *ngIf="isCheckbox(item)">
-      <app-checkbox
-        [disabled]="item.disabled | async"
-        [label]="item.label"
-        [ngModel]="item.state | async"
-        (change)="onClick(item)"
-      ></app-checkbox>
-    </span>
-  </div>
+<div class="toolbar" [ngClass]="toolbarClass">
+  <ng-container *ngFor="let item of items">
+    <app-toolbar-2-item
+      [item]="item"
+      (action)="onAction($event)"
+    ></app-toolbar-2-item>
+  </ng-container>
 </div>

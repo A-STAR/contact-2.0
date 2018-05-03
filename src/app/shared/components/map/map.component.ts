@@ -1,18 +1,30 @@
 import {
   Component,
   Inject,
-  InjectionToken,
   ViewChild,
   ElementRef,
   AfterViewInit,
   Input,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  DoCheck
+  OnDestroy
 } from '@angular/core';
-import { IMapService, IMarker, PopupComponentRefGetter, IMapOptions, ILatLng } from './map.interface';
+import { empty } from 'rxjs/observable/empty';
 
-export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
+import {
+  IMapService,
+  IMapOptions,
+  IControlDef,
+  LayerType,
+  ILayerDef,
+  GeoPoint,
+} from '@app/core/map-providers/map-providers.interface';
+
+import { LayersService } from '@app/core/map-providers/layers/map-layers.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+
+import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
+import { tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -21,10 +33,10 @@ export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent<T> implements AfterViewInit, DoCheck {
+export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
-  @Input() markers: IMarker<T>[];
+  @Input() layers: ILayerDef<T>[][];
   @Input() options: IMapOptions = {
     zoom: 6,
     center: {
@@ -33,15 +45,19 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
     },
   };
 
+  @Input() controls: IControlDef<T>[];
+
   @Input() styles: CSSStyleDeclaration;
 
+  static MAX_MAP_ZOOM: 8;
   map: any;
-  private popups: PopupComponentRefGetter<T>[];
   private bounds;
 
   constructor(
-    @Inject(MAP_SERVICE) private mapService: IMapService,
+    @Inject(MAP_SERVICE) private mapService: IMapService<T>,
     private cdRef: ChangeDetectorRef,
+    private layersService: LayersService<T>,
+    private notificationsService: NotificationsService,
   ) { }
 
   ngAfterViewInit(): void {
@@ -52,50 +68,65 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
           ...this.options,
         }
       )
-      .subscribe((map: any) => {
-        this.map = map;
-        this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-        this.addMarkers(this.markers);
-        this.fitBounds();
-        this.detectPopupsChanges();
-        this.cdRef.markForCheck();
-      });
+      .catch( e => {
+        this.notificationsService.fetchError(e).dispatch();
+        return empty();
+      })
+      .pipe(
+        tap((map: any) => {
+          if (map) {
+            this.map = map;
+            this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
+            this.addLayers(this.layers);
+            this.addControls(this.controls);
+            this.cdRef.markForCheck();
+          }
+        }),
+        // NOTE: the only way I found to fit bounds properly, is when map already has size (i.lobanov)
+        delay(200)
+      )
+      .subscribe(_ => this.fitBounds());
+
   }
 
-  ngDoCheck(): void {
-    this.detectPopupsChanges();
+  ngOnDestroy(): void {
+    this.layersService.clear();
+    this.mapService.removeMap();
   }
 
-  detectPopupsChanges(): void {
-    if (this.popups && this.popups.length) {
-      this.popups
-        .map(cmpRef => cmpRef())
-        .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
-        .forEach(cmp => cmp.changeDetectorRef.detectChanges());
+  addLayers(layers: ILayerDef<T>[][]): void {
+    if (layers && layers.length) {
+      layers
+        // for each layer group
+        .map(g => this.layersService.createGroup(g))
+        .map(group => {
+          // extend bounds by geo points layers
+          if (this.options.fitToData) {
+            group.getLayersByType(LayerType.MARKER).forEach(l => {
+              this.bounds.extend(this.getLatLng(l.layer));
+            });
+          }
+
+        });
     }
   }
 
-  addMarkers(markers: IMarker<T>[]): void {
-    if (markers && markers.length) {
-      this.popups = markers
-        .map(marker => this.mapService.createMarker<T>(this.map, marker))
-        .map(({ popupRef, marker }) => {
-          if (this.options.fitToData) {
-            this.bounds.extend(this.getLatLng(marker));
-          }
-          return popupRef;
-        })
-        .filter(Boolean);
+  addControls(controls: IControlDef<T>[]): void {
+    if (controls && controls.length) {
+      controls.forEach(cDef => this.mapService.createControl(cDef));
     }
   }
 
   private fitBounds(): void {
     if (this.options.fitToData && this.map) {
       this.map.fitBounds(this.bounds);
+      if (this.map.getZoom() > MapComponent.MAX_MAP_ZOOM) {
+        this.map.setZoom(MapComponent.MAX_MAP_ZOOM);
+      }
     }
   }
 
-  private getLatLng(marker: any): ILatLng {
+  private getLatLng(marker: any): GeoPoint {
     return typeof marker.getPosition === 'function' ? marker.getPosition() : marker.getLatLng();
   }
 

@@ -2150,6 +2150,20 @@
           "message": "Do you really want to return outsourcing for the selected debts?",
           "title": "Return outsourcing"
         }
+      },
+      "changeStageAttr": {
+        "title": "Change debt stage",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
+      },
+      "changePersonType": {
+        "title": "Change person type",
+        "grid": {
+          "code": "Code",
+          "name": "Name"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2963,8 +2977,25 @@
     "addressesByContacts": {
       "title": "View contact registrations",
       "personFullName": "Person Full Name",
-      "contactType": "Contact Type",
-      "fullAddress": "Address"
+      "contactType": "Type",
+      "fullAddress": "Address",
+      "commentary": "Commentary",
+      "userFullName": "Operator",
+      "contactDateTime": "Contact date",
+      "resultName": "Result",
+      "contract": "Contract",
+      "filter": {
+        "filterByAddressType": "Filter by address type",
+        "filterByStatusType": "Filter by status type",
+        "filterByContactType": "Filter by contact type",
+        "filterByVisitType": "Filter by visit type",
+        "hideAddresses": "Hide addresses",
+        "hideAccuracy": "Hide accuracy",
+        "showAllAdresses": "Show all addresses",
+        "showInactives": "Show inactive addresses",
+        "distance": "Set preffered distance",
+        "resetFilter": "Reset filter"
+      }
     },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",
@@ -3175,7 +3206,8 @@
       "userNotFound": "User not found by ID",
       "userNotFoundWithName": "User with the login {{ $1 }} not found",
       "userRoleNotFound": "User role not found",
-      "visitNotFound": "Visit not found by the requested parameters"
+      "visitNotFound": "Visit not found by the requested parameters",
+      "scheduleEventIsExecuting": "The shedule event can't be removed because it is currently in progress"
     },
     "default": {
       "read": {
@@ -3435,10 +3467,12 @@
         "changeCreditTypeAttr": "Credit Product Type",
         "changeBranchAttr": "Branch",
         "changeTimezoneAttr": "Time zone",
+        "changeStageAttr": "Stage",
         "debtOutsourcingSend": "Send to outsourcing",
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
-        "registerContact": "Register Contact"
+        "registerContact": "Register Contact",
+        "changePersonType": "Change person type"
       }
     },
     "filter": {

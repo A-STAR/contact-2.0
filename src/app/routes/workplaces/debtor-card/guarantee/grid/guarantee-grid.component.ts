@@ -9,7 +9,6 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -89,7 +88,6 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   constructor(
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
-    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
@@ -98,18 +96,10 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   ngOnInit(): void {
-    this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
-          this.notificationsService.permissionError().entity('entities.employment.gen.plural').dispatch();
-          this.clear();
-        }
-      });
+    this.fetch();
 
     this.actionSubscription = this.guaranteeService
-      .getAction(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
+      .getAction(GuaranteeService.MESSAGE_GUARANTOR_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -181,11 +171,4 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
         this.cdRef.markForCheck();
       });
   }
-
-  private clear(): void {
-    this.contracts = [];
-    this.selectedContract$.next(null);
-    this.cdRef.markForCheck();
-  }
-
 }

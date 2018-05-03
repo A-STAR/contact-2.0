@@ -21,6 +21,7 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
 
   @Input() disabled = false;
   @Input() fitWidthToContent = false;
+  @Input() container: Element;
 
   @Output() change = new EventEmitter<boolean>();
 
@@ -97,10 +98,12 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   private getPosition(): any {
     const contentRect: ClientRect = this.contentElement.getBoundingClientRect();
     const parentRect: ClientRect = this.parentElement.getBoundingClientRect();
-    const top = parentRect.bottom + contentRect.height > window.innerHeight
+    const containerHeight = (this.container && this.container.clientHeight) || window.innerHeight;
+    const containerWidth = (this.container && this.container.clientWidth) || window.innerWidth;
+    const top = parentRect.bottom + contentRect.height > containerHeight
       ? parentRect.top - contentRect.height - DropdownDirective.OFFSET
       : parentRect.bottom + DropdownDirective.OFFSET;
-    const left = parentRect.left + contentRect.width > window.innerWidth
+    const left = parentRect.left + contentRect.width > containerWidth
       ? parentRect.right - contentRect.width
       : parentRect.left;
     const width = parentRect.width;

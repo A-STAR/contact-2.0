@@ -35,6 +35,18 @@
     [required]="control.required"
   ></app-number>
 
+  <app-range
+    *ngSwitchCase="'range'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [isDisabled]="control.disabled"
+    [isReadonly]="control.readonly"
+    [min]="control.min"
+    [max]="control.max"
+    [required]="control.required"
+    [debounce]="control.debounce"
+  ></app-range>
+
   <app-checkbox
     *ngSwitchCase="'checkbox'"
     [formControlName]="control.controlName"
@@ -300,6 +312,7 @@
       [isDisabled]="control.disabled"
       [formControlName]="control.controlName"
       [options]="control.options"
+      [metadata]="control.metadata"
     ></app-script-editor>
   </ng-container>
 

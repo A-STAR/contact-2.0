@@ -6,7 +6,7 @@ import { IButtonStyle, IButtonStylesConfig, IButtonType, IButtonTypesConfig } fr
 export class ButtonService {
   private defaultIcons: IButtonTypesConfig = {
     add:              { icon: 'co co-add',                  label: 'default.buttons.add'              },
-    addUser:          { icon: 'co co-add',                  label: 'default.buttons.addUser'          },
+    addUser:          { icon: 'co co-add-person',           label: 'default.buttons.addUser'          },
     back:             { icon: 'co co-back',                 label: 'default.buttons.back'             },
     block:            { icon: 'co co-lock',                 label: 'default.buttons.block'            },
     call:             { icon: 'co co-call-incoming',        label: 'default.buttons.call'             },
@@ -50,7 +50,7 @@ export class ButtonService {
   };
 
   private styles: IButtonStylesConfig = {
-    none: 'btn-link',
+    none: 'btn-link ph0',
     default: 'btn-default',
     primary: 'btn-success',
     secondary: 'btn-primary',
@@ -66,7 +66,7 @@ export class ButtonService {
     return this.defaultIcons[type] ? this.defaultIcons[type].label : null;
   }
 
-  getClass(style: IButtonStyle): string {
-    return this.styles[style];
+  getClass(style: IButtonStyle, withBtnClass: boolean = true): string {
+    return (withBtnClass ? 'btn ' : '') + this.styles[style];
   }
 }

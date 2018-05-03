@@ -15,6 +15,10 @@ export interface ICall {
   debtId: number;
   personId: number;
   personRole: number;
+  phone: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
 }
 
 export interface ICallState {

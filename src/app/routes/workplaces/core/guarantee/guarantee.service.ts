@@ -13,7 +13,6 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 @Injectable()
 export class GuaranteeService extends AbstractActionService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
-  static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
   private url = '/debts/{debtId}/guaranteeContract';
   private errSingular = 'entities.guaranteeContract.gen.singular';
@@ -27,6 +26,10 @@ export class GuaranteeService extends AbstractActionService {
     super();
   }
 
+  dispatchGuarantorSavedMessage(): void {
+    this.dispatchAction(GuaranteeService.MESSAGE_GUARANTOR_SAVED);
+  }
+
   fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
       .readAll(this.url, { debtId })
@@ -38,13 +41,6 @@ export class GuaranteeService extends AbstractActionService {
       .read(`${this.url}/{contractId}`, { debtId, contractId })
       .catch(this.notificationsService.fetchError().entity('entities.guaranteeContract.gen.singular').dispatchCallback());
   }
-
-  // // TODO: fetch one item form server
-  // fetch(_: number, contractId: number, personId: number = null): Observable<IGuaranteeContract> {
-  //   return this.contracts$.map(contracts => contracts.find(
-  //     contract => contract.contractId === contractId && (!personId || contract.personId === personId))
-  //   );
-  // }
 
   create(debtId: number, contract: IGuaranteeContract): Observable<any> {
     return this.dataService

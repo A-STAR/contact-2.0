@@ -10,7 +10,6 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -78,26 +77,16 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactPersonsService: ContactPersonsService,
-    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService
   ) { }
 
   ngOnInit(): void {
-
-    this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
-          this.notificationsService.permissionError().entity('entities.contact.gen.plural').dispatch();
-          this.clear();
-        }
-      });
+    this.fetch();
 
     this.busSubscription = this.contactPersonsService
-      .getAction(ContactPersonsService.MESSAGE_CONTACT_SAVED)
+      .getAction(ContactPersonsService.MESSAGE_CONTACT_PERSON_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -175,11 +164,5 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
         this.selectedContact$.next(null);
         this.cdRef.markForCheck();
       });
-  }
-
-  private clear(): void {
-    this.contacts = [];
-    this.selectedContact$.next(null);
-    this.cdRef.markForCheck();
   }
 }
