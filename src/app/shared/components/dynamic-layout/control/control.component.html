@@ -13,6 +13,7 @@
       *ngSwitchCase="'date'"
       [formControlName]="control.name"
       [label]="control.label"
+      [required]="isRequired(control) | async"
     ></app-datepicker>
 
     <!-- Grid Select -->
@@ -22,6 +23,7 @@
       [filterType]="control.filterType"
       [formControlName]="control.name"
       [label]="control.label"
+      [required]="isRequired(control) | async"
       (select)="onGridSelect(control, $event)"
     ></app-grid-select>
 
@@ -30,6 +32,7 @@
       *ngSwitchCase="'password'"
       [formControlName]="control.name"
       [label]="control.label"
+      [required]="isRequired(control) | async"
     ></app-password-input>
 
     <!-- Select -->
@@ -37,6 +40,7 @@
       *ngSwitchCase="'select'"
       [dictCode]="control.dictCode"
       [formControlName]="control.name"
+      [isRequired]="isRequired(control) | async"
       [label]="control.label"
       [lookupKey]="control.lookupKey"
     ></app-select>
@@ -46,6 +50,7 @@
       *ngSwitchCase="'text'"
       [formControlName]="control.name"
       [label]="control.label"
+      [required]="isRequired(control) | async"
     ></app-text>
 
     <!-- Textarea -->
@@ -53,6 +58,11 @@
       *ngSwitchCase="'textarea'"
       [formControlName]="control.name"
       [label]="control.label"
+      [required]="isRequired(control) | async"
     ></app-textarea>
   </ng-container>
+
+  <div class="errors">
+    {{ getErrorMessage(control) }}
+  </div>
 </ng-container>

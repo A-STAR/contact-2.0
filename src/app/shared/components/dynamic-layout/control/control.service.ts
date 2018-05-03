@@ -20,6 +20,21 @@ import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/valid
 
 @Injectable()
 export class ControlService implements OnDestroy {
+  static DEFAULT_MESSAGES = {
+    required: 'validation.fieldRequired',
+    min: 'validation.fieldMin',
+    max: 'validation.fieldMax',
+    minlength: 'validation.fieldMinLength',
+    hasdigits: 'validation.fieldDigits',
+    haslowercasechars: 'validation.fieldLowerCase',
+    hasuppercasechars: 'validation.fieldUpperCase',
+    multilanguageRequired: 'validation.multilanguageRequired',
+    maxsize: 'validation.fieldMaxSize',
+    oneofgrouprequired: 'validation.oneOfGroupRequired',
+    datepicker: 'validation.datepicker',
+    timepicker: 'validation.timepicker'
+  };
+
   private controls: IDynamicLayoutItemProperties<IDynamicLayoutControl>[];
   private data: Record<string, any> = {};
   private groups = new Map<string, FormGroup>();
