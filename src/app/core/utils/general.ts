@@ -103,8 +103,18 @@ export const binaryFromArray = (arr: boolean[]) => {
   return arr.reduceRight<number>((acc, val, index) => acc |= Number(val) << (arr.length - index - 1), 0);
 };
 
-export const arrayFromBinary = (num: number) => {
+export const toBoolArray = (num: number) => {
   return num.toString(2).split('').map(n => Boolean(+n));
+};
+
+export const toBoolSizedArray = (num: number, size: number = 1) => {
+  const binaryArr = toBoolArray(num);
+  size = size - binaryArr.length;
+  while (size > 0) {
+    binaryArr.unshift(false);
+    size--;
+  }
+  return binaryArr;
 };
 
 export const invert = (a: boolean) => !a;

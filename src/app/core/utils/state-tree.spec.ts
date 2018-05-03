@@ -13,6 +13,7 @@ describe('State tree', () => {
     tree =  new StateTree({
       mask: [],
       dataKeys: [],
+      dataToState: data => Number(data)
     });
   });
 
@@ -121,14 +122,13 @@ describe('State tree', () => {
     const options = {
       dataToState: data => data.state,
       mask: [],
-      dataKeys: []
+      dataKeys: [ 'state' ]
     };
-    const dataToState = spyOn(options, 'dataToState');
+    const dataToState = spyOn(options, 'dataToState').and.returnValue(1);
     const _tree = new StateTree(options);
 
-    _tree.addNode(['test1'], { state: 333 });
-
-    expect(dataToState).toBeCalledWith({ state: 333 });
+    _tree.addNode(['test1'], { state: 1 });
+    expect(dataToState).toBeCalledWith({ state: 1 });
   });
 
   it('should throw specific error when no params are passed', () => {
@@ -153,7 +153,8 @@ describe('State tree', () => {
   it('should transform state according to mask', () => {
     const options = {
       mask: [[ 1, 2, 3 ], [3, 8, 2]],
-      dataKeys: [1, 2, 3]
+      dataKeys: [1, 2, 3],
+      dataToState: data => Number(data)
     };
     const _tree = new StateTree(options);
     _tree.addNode(['test1'], 1);
@@ -173,18 +174,47 @@ describe('State tree', () => {
 
   it('should convert data to state', () => {
     const options = {
-      mask: [[ 1, 2, 3 ]],
+      mask: [],
       dataKeys: ['myKeyOne', 'myKeyTwo'],
-      dataToState: (data: any) => Number(data.myKeyOne) + Number(data.myKeyTwo)
     };
     const _tree = new StateTree(options);
-    _tree.addNode(['test1'], { myKeyOne: 1, myKeyTwo: 0 });
+    _tree.addNode(['test1'], { myKeyOne: true, myKeyTwo: false });
+    const node = _tree.findNode(['test1']);
+    expect(node.currentState).toBe(2);
+
+    _tree.onChange(['test1'], { myKeyOne: false, myKeyTwo: true });
+
+    expect(node.currentState).toBe(1);
+  });
+
+  it('should return data keys with the new state', () => {
+    const options = {
+      mask: [[ 1, 3, 1 ]],
+      dataKeys: ['myKeyOne', 'myKeyTwo']
+    };
+    const _tree = new StateTree(options);
+    _tree.addNode(['test1'], { myKeyOne: false, myKeyTwo: true });
     const node = _tree.findNode(['test1']);
     expect(node.currentState).toBe(1);
 
-    _tree.onChange(['test1'], { myKeyOne: 1, myKeyTwo: 1 });
+    let result = _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: true });
 
-    expect(node.currentState).toBe(3);
+    expect(result).toEqual({
+      myKeyOne: false,
+      myKeyTwo: true,
+    });
+
+    expect(node.currentState).toBe(1);
+
+    result = _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: false });
+
+    expect(node.currentState).toBe(2);
+
+    expect(result).toEqual({
+      myKeyOne: true,
+      myKeyTwo: false,
+    });
+
   });
 
 });

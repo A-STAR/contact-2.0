@@ -1,3 +1,5 @@
+import { toBoolSizedArray, binaryFromArray } from '@app/core/utils';
+
 export interface IStateTreeParams {
   dataKeys: any[];
   mask: number[][];
@@ -75,7 +77,7 @@ export class StateTreeNode {
     return this.children && !!this.children.length;
   }
 
-  onChange(state: any): void {
+  onChange(state: number): void {
     this.currentState = state;
   }
 
@@ -92,7 +94,6 @@ export class StateTreeNode {
 export class StateTree {
   private root: StateTreeNode;
   private states: number[];
-  private dataToState: (data: any) => number;
 
   constructor(private params: IStateTreeParams) {
 
@@ -108,16 +109,17 @@ export class StateTree {
       throw new Error('Rule mask for state tree not found!');
     }
 
-    this.dataToState = params.dataToState || (data => Number(data));
+    this.dataToState = params.dataToState || this.dataToState.bind(this);
     this.states = this.actionsToStates(this.params.dataKeys);
     this.root = new StateTreeNode(null, ['root']);
   }
 
-  onChange(path: string[], data: any): void {
+  onChange(path: string[], data: any): { [key: string]: boolean } {
     const node = this.findNode(path);
     if (node) {
       node.onChange(this.transformState(node.currentState, this.dataToState(data)));
     }
+    return this.stateToData(node.currentState);
   }
 
   addNode(path: string[], data: any): void {
@@ -132,6 +134,15 @@ export class StateTree {
     return this.root.toString();
   }
 
+  private stateToData(state: number): { [key: string]: boolean } {
+    const boolArr = toBoolSizedArray(state, this.params.dataKeys.length || 1);
+    return (this.params.dataKeys.length ? this.params.dataKeys : Object.keys(boolArr))
+      .reduce((acc, key, i) => ({
+        ...acc,
+        [key]: boolArr[i]
+      }), {});
+  }
+
   private actionsToStates(dataKeys: any[]): number[] {
     return Array.from(Array(Math.pow(2, dataKeys.length)).keys());
   }
@@ -141,6 +152,9 @@ export class StateTree {
     return rule ? this.states[rule[2]] : next;
   }
 
+  private dataToState(data: any): number {
+    return binaryFromArray(this.params.dataKeys.map(k => data[k]));
+  }
 }
 
 

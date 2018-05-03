@@ -3,8 +3,6 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 import { ActionRendererParams } from '../../grids.interface';
 
-import { GridsTreeActionService } from '@app/shared/components/grids/grids-tree-action.service';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-grid-action-checkbox-renderer',
