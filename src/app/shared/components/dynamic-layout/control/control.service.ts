@@ -1,8 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first, map } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
@@ -42,6 +44,7 @@ export class ControlService implements OnDestroy {
   private controls: IDynamicLayoutItemProperties<IDynamicLayoutControl>[];
   private data: Record<string, any> = {};
   private groups = new Map<string, FormGroup>();
+  private status = new Map<string, Observable<boolean>>();
 
   private formSubscription = new Subscription();
 
@@ -79,6 +82,13 @@ export class ControlService implements OnDestroy {
       const groupPlugins = plugins.filter(p => this.getPluginForm(p) === groupName);
       this.eventService.setPlugins(group, groupPlugins);
     });
+  }
+
+  getStatus(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
+    const status = this.status.get(form);
+    return status
+      ? status
+      : of(false);
   }
 
   getData(form: string = ControlService.DEFAULT_GROUP_NAME): any {
@@ -121,6 +131,13 @@ export class ControlService implements OnDestroy {
     }
 
     this.groups.set(name, group);
+
+    const status$ = group.statusChanges.pipe(
+      map(status => status === 'VALID' && group.dirty),
+    );
+
+    this.status.set(name, status$);
+
     this.patchFormGroups();
   }
 

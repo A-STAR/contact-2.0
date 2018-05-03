@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -12,8 +20,9 @@ import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { makeKey } from '@app/core/utils';
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
+
+import { makeKey, invert } from '@app/core/utils';
 
 const label = makeKey('widgets.debt');
 
@@ -23,7 +32,7 @@ const label = makeKey('widgets.debt');
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
 })
-export class DebtComponent implements OnInit {
+export class DebtComponent implements AfterViewInit, OnInit {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
   @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
 
@@ -34,6 +43,8 @@ export class DebtComponent implements OnInit {
     { title: label('componentLog.title'), isInitialised: false }
   ];
   templates: Record<string, TemplateRef<any>>;
+
+  isDisabled$ = of(true);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -57,6 +68,12 @@ export class DebtComponent implements OnInit {
     this.templates = {
       foo: this.foo,
     };
+  }
+
+  ngAfterViewInit(): void {
+    this.isDisabled$ = this.layout.canSubmit().pipe(
+      map(invert),
+    );
   }
 
   get debtId$(): Observable<number> {
@@ -94,11 +111,6 @@ export class DebtComponent implements OnInit {
 
   get displayDebtData(): Observable<boolean> {
     return this.debtorCardService.selectedDebt$.pipe(map(Boolean));
-  }
-
-  get canSubmit(): boolean {
-    return true;
-    // return this.form && this.form.canSubmit;
   }
 
   get canViewComponentLog$(): Observable<boolean> {

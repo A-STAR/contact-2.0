@@ -6,7 +6,7 @@
       <button class="btn btn-default" (click)="onBack()">
         <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
       </button>
-      <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+      <button class="btn btn-success" (click)="onSubmit()" [disabled]="isDisabled$ | async">
         <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
       </button>
     </div>

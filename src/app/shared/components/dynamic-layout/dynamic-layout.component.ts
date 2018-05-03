@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDynamicLayoutConfig, IDynamicLayoutGroup } from './dynamic-layout.interface';
 
@@ -32,17 +33,22 @@ export class DynamicLayoutComponent implements OnInit {
   readonly ready$ = this.layoutService.ready$;
 
   constructor(
+    private controlService: ControlService,
     private formService: ControlService,
     private layoutService: DynamicLayoutService,
     private templateService: TemplateService,
   ) {}
 
-  getData(form?: string): any {
-    return this.formService.getData(form);
-  }
-
   get group(): IDynamicLayoutGroup {
     return this.layoutService.group;
+  }
+
+  canSubmit(form?: string): Observable<boolean> {
+    return this.controlService.getStatus(form);
+  }
+
+  getData(form?: string): any {
+    return this.formService.getData(form);
   }
 
   ngOnInit(): void {
