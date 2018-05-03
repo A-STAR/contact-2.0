@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import {
   DynamicLayoutGroupType,
-  DynamicLayoutItemType,
+  // DynamicLayoutItemType,
   IDynamicLayoutGroup,
   IDynamicLayoutItem,
 } from '../dynamic-layout.interface';
@@ -28,10 +28,12 @@ export class GroupComponent implements OnInit {
     private layoutService: DynamicLayoutService,
   ) {}
 
-  get groupClass(): string {
-    return this.group.groupType === DynamicLayoutGroupType.VERTICAL
-      ? 'flex vertical'
-      : 'flex horizontal horizontal-group';
+  get groupClass(): Record<string, boolean> {
+    return {
+      'grow': this.group.grow,
+      'flex vertical': this.group.groupType === DynamicLayoutGroupType.VERTICAL,
+      'flex horizontal horizontal-group': this.group.groupType === DynamicLayoutGroupType.HORIZONTAL,
+    };
   }
 
   get splitDirection(): string {
@@ -61,10 +63,13 @@ export class GroupComponent implements OnInit {
   }
 
   getItemStyle(item: IDynamicLayoutItem): Partial<CSSStyleDeclaration> {
-    const itemIsControl = [ DynamicLayoutItemType.ATTRIBUTE, DynamicLayoutItemType.CONTROL ].includes(item.type);
-    return itemIsControl && this.group.groupType !== DynamicLayoutGroupType.HORIZONTAL
-      ? {}
-      : { flex: `${this.getItemSize(item)} 0` };
+    return {
+      flex: `${this.getItemSize(item)} 0`,
+    };
+    // const itemIsControl = [ DynamicLayoutItemType.ATTRIBUTE, DynamicLayoutItemType.CONTROL ].includes(item.type);
+    // return itemIsControl && this.group.groupType !== DynamicLayoutGroupType.HORIZONTAL
+    //   ? {}
+    //   : { flex: `${this.getItemSize(item)} 0` };
   }
 
   getItemSize(item: IDynamicLayoutItem): number {

@@ -10,6 +10,8 @@ export enum DynamicLayoutGroupType {
 export interface IDynamicLayoutGenericGroup extends IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType.GROUP;
   children: IDynamicLayoutItem[];
+  // Optional:
+  grow?: boolean;
 }
 
 export interface IDynamicLayoutTabsGroup extends IDynamicLayoutGenericGroup {
@@ -18,6 +20,7 @@ export interface IDynamicLayoutTabsGroup extends IDynamicLayoutGenericGroup {
 
 export interface IDynamicLayoutPlainGroup extends IDynamicLayoutGenericGroup {
   groupType: DynamicLayoutGroupType.HORIZONTAL | DynamicLayoutGroupType.VERTICAL;
+  // Optional:
   splitters?: boolean;
 }
 
