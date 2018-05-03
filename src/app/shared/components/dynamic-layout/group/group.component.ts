@@ -3,7 +3,6 @@ import { Observable } from 'rxjs/Observable';
 
 import {
   DynamicLayoutGroupType,
-  // DynamicLayoutItemType,
   IDynamicLayoutGroup,
   IDynamicLayoutItem,
 } from '../dynamic-layout.interface';
