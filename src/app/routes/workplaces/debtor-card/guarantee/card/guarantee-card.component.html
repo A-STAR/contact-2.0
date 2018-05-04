@@ -42,6 +42,9 @@
       <app-tabview-tab title="Удостоверения личности">
         <app-identity-grid
           [personId]="guarantorId"
+          (add)="onIdentityAdd()"
+          (dblClick)="onIdentityEdit($event)"
+          (edit)="onIdentityEdit($event)"
         ></app-identity-grid>
       </app-tabview-tab>
 
@@ -49,6 +52,9 @@
       <app-tabview-tab title="Трудоустройство">
         <app-employment-grid
           [personId]="guarantorId"
+          (add)="onEmploymentAdd()"
+          (dblClick)="onEmploymentEdit($event)"
+          (edit)="onEmploymentEdit($event)"
         ></app-employment-grid>
       </app-tabview-tab>
 
