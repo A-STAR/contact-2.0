@@ -3,7 +3,7 @@ import { ValueGetterParams, ValueSetterParams, ValueParserParams } from 'ag-grid
 
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
-import { StateTree } from '@app/core/utils/state-tree';
+import { StateTree, IStateTreeParams } from '@app/core/utils/state-tree';
 
 export enum IGridSelectionType {
   SINGLE = 'single',
@@ -51,7 +51,7 @@ export interface IGridColumn<T> {
   valueParser?: ((params: ValueParserParams) => any);
   isGroup?: boolean;
   isDisplayed?: (data: T) => boolean;
-  actionParams?: { mask?: [ number, number, number][], dataToState?(data: T): number };
+  actionParams?: IStateTreeParams;
   edit?: IGridEditableColumn<T>;
 }
 

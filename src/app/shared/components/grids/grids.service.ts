@@ -3,19 +3,29 @@ import { TranslateService } from '@ngx-translate/core';
 import { ColDef, ColumnApi, GridApi } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
-import { IGridColumn, IGridFilterType, IGridLocalSettings, IGridTreePath } from './grids.interface';
+import {
+  IGridColumn,
+  IGridFilterType,
+  IGridLocalSettings,
+  IGridTreePath,
+} from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { GridsDefaultsService } from '@app/shared/components/grids/grids-defaults.service';
 import { SettingsService } from '@app/core/settings/settings.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { CallbackRendererComponent, DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
+import {
+  CallbackRendererComponent,
+  DictRendererComponent,
+  LookupRendererComponent,
+  ValueRendererComponent,
+} from './renderers';
 import { ValueEditorComponent } from '@app/shared/components/grids/editors';
+import { StateTree } from '@app/core/utils';
 
 @Injectable()
 export class GridsService {
-
   constructor(
     private settingsService: SettingsService,
     private translateService: TranslateService,
@@ -29,13 +39,17 @@ export class GridsService {
     this.preloadDictionaries(columns);
     const columnIds = columns.map(c => c.prop);
     const savedColumnIds = savedColumns.map(c => c.colId);
-    const ids = Array.from(new Set([ ...savedColumnIds, ...columnIds ]));
+    const ids = Array.from(new Set([...savedColumnIds, ...columnIds]));
 
     if (defaults) {
       defaults.save(columns, persistenceKey);
     }
 
-    return ids
+    const actionColDef = columns.find(
+      c => c.actionParams && !!c.actionParams.dataKeys,
+    );
+
+    const colDefs = ids
       .map(id => {
         const column = columns.find(c => c.prop === id);
         return column
@@ -57,6 +71,22 @@ export class GridsService {
           : null;
       })
       .filter(Boolean);
+
+    if (actionColDef) {
+      const stateTree = new StateTree(actionColDef.actionParams);
+
+      colDefs.filter(col =>
+        actionColDef.actionParams.dataKeys.includes(col.colId as keyof T),
+      )
+      .forEach(c => {
+        c.cellRendererParams = {
+          ...c.cellRendererParams,
+          stateTree,
+        };
+      });
+    }
+
+    return colDefs;
   }
 
   getRowGrouping<T>(columns: IGridColumn<T>[]): ColDef {
@@ -166,7 +196,7 @@ export class GridsService {
       const { dictCode, lookupKey } = edit;
       return {
         cellEditorFramework: ValueEditorComponent,
-        cellEditorParams: { valueTypeKey, dictCode, lookupKey }
+        cellEditorParams: { valueTypeKey, dictCode, lookupKey },
       };
     }
     return {};
@@ -222,5 +252,4 @@ export class GridsService {
   //   }
   //   return node.data ? res.concat([node.data]) : res;
   // }
-
 }

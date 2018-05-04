@@ -81,16 +81,12 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
   @Input() readonly = false;
   @Input() disabled = false;
 
-  private _rowData: T[];
-
   @Input()
   set rows(rowData: T[]) {
-    if (rowData && rowData.length) {
-      if (!this.colDefs) {
-        this._rowData = rowData;
-      } else {
-        this.rowData = this.treeData ? this.gridsService.convertTreeData(rowData) : rowData;
-      }
+    if (this.treeData && rowData && rowData.length) {
+      this.rowData = this.gridsService.convertTreeData(rowData);
+    } else {
+      this.rowData = rowData;
     }
   }
 
@@ -214,10 +210,6 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     if (changes.columns) {
       this.autoGroupColumnDef = this.gridsService.getRowGrouping(this.columns);
       this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey, this.gridsDefaultsService);
-      if (this._rowData) {
-        this.rows =  this.treeData ? this.gridsService.convertTreeData(this._rowData) : this._rowData;
-        this._rowData = undefined;
-      }
       this.cdRef.markForCheck();
     }
   }

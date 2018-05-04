@@ -1,4 +1,3 @@
-import { GridsTreeActionService } from './grids-tree-action.service';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -108,7 +107,6 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     ContextMenuService,
     GridsDefaultsService,
     GridsService,
-    GridsTreeActionService,
   ]
 })
 export class GridsModule {}
