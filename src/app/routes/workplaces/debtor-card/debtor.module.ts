@@ -75,11 +75,11 @@ const routes: Routes = [
       },
       {
         path: 'email/create',
-        loadChildren: './information/email/email.module#EmailModule',
+        loadChildren: './information/email/card/email-card.module#EmailCardModule',
       },
       {
         path: 'email/:emailId',
-        loadChildren: './information/email/email.module#EmailModule',
+        loadChildren: './information/email/card/email-card.module#EmailCardModule',
       },
       {
         path: 'employment/create',
