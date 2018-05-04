@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { catchError, map } from 'rxjs/operators';
 
@@ -19,6 +20,7 @@ export class AttributeService {
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private route: ActivatedRoute,
   ) {}
 
   init(items: Record<string, IDynamicLayoutItemProperties<IDynamicLayoutItem>>): void {
@@ -27,11 +29,9 @@ export class AttributeService {
       .filter(item => item.type === DynamicLayoutItemType.ATTRIBUTE)
       .reduce((acc, attribute: IDynamicLayoutAttribute) => ({ ...acc, [attribute.key]: attribute.formula }), {});
 
+    const { debtId, debtorId } = this.route.snapshot.params;
     const data = {
-      // TODO(d.maltsev): fix hardcoded context
-      context: {
-        debtId: 1,
-      },
+      context: { debtId, debtorId },
       attributes,
     };
 
