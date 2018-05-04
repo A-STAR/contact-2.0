@@ -1,13 +1,5 @@
-import {
-  animate,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  style,
-  transition,
-  trigger
-} from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 
 import { AccordionService } from '../accordion.service';
 
