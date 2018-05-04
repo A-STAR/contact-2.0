@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -9,7 +9,6 @@ import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynam
 
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { EmailService } from '../email.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -38,7 +37,7 @@ export class DebtorEmailCardComponent implements OnInit {
     private debtorCardService: DebtorCardService,
     private emailService: EmailService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -93,9 +92,8 @@ export class DebtorEmailCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      `/app/workplaces/debtor-card${this.route.snapshot.paramMap.get('debtId')}`
-    ]);
+    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
+    this.router.navigate([ url ]);
   }
 
   get canSubmit(): boolean {
