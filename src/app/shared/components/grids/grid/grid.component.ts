@@ -165,7 +165,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
   autoGroupColumnDef: ColDef;
 
   colDefs: ColDef[];
-  rowData: T[] | (T & IGridTreePath)[];
+  rowData: Array<T | (T & IGridTreePath)>;
 
   constructor(
     private cdRef: ChangeDetectorRef,

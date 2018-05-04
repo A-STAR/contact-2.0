@@ -32,8 +32,8 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 import { ActionCheckboxRendererComponent } from '@app/shared/components/grids/renderers';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, isEmpty, range, valuesToOptions, addGridLabel } from '@app/core/utils';
-
+import { isEmpty, range, valuesToOptions, addGridLabel } from '@app/core/utils';
+import { CellValueChangedEvent } from 'ag-grid';
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -57,6 +57,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   };
   controls: IDynamicFormItem[];
   attributeTypes: ITreeNode[] = [];
+  attributes: any[] = [];
   data = {};
   tabs = [
     { isInitialised: true },
@@ -164,7 +165,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   onSubmit(): void {
     const { autoCommentIds, template, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
 
-    const attributes = flatten(this.attributeTypes, 'data')
+    const attributes = this.attributes
       .filter(attr => attr.isDisplayed)
       .map(attr => ({ code: attr.code, mandatory: Number(attr.isMandatory) }));
 
@@ -185,6 +186,16 @@ export class ContactPropertyTreeEditComponent implements OnInit {
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
+  }
+
+  onCellValueChanged($event: CellValueChangedEvent): void {
+    const index = this.attributes.findIndex(a => a.code === $event.data.code);
+    if (index === -1) {
+      this.attributes.push($event.data);
+    } else {
+      this.attributes[index] = $event.data;
+    }
+    this.attributeTypesChanged = !!this.attributes.length;
   }
 
   private buildControls(
