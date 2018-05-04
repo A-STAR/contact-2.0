@@ -22,7 +22,7 @@ export class StateTreeNode {
     this.currentState = initialState;
   }
 
-  addNode(path: string[], initialState: number, currentPath?: string[]): void {
+  addNode(path: string[], initialState: number, currentPath?: string[]): StateTreeNode {
     let node: StateTreeNode;
     currentPath = currentPath || path;
     while (currentPath.length) {
@@ -35,7 +35,7 @@ export class StateTreeNode {
           this.children.push(node);
           node.parent = this;
         }
-        return;
+        return node;
       } else {
 
         const foundChild = this.findChild(currentPath);
@@ -122,8 +122,9 @@ export class StateTree {
     return this.stateToData(node.currentState);
   }
 
-  addNode(path: string[], data: any): void {
-    this.root.addNode(path, this.dataToState(data));
+  addNode(path: string[], data: any): { [key: string]: boolean } {
+    const node = this.root.addNode(path, this.dataToState(data));
+    return this.stateToData(node.currentState);
   }
 
   findNode(path: string[]): StateTreeNode {

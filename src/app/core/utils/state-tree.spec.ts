@@ -187,6 +187,18 @@ describe('State tree', () => {
     expect(node.currentState).toBe(1);
   });
 
+  it('should return converted data of added node', () => {
+    const options = {
+      mask: [[ 1, 2, 3 ], [3, 8, 2]],
+      dataKeys: ['keyOne', 'keyTwo', 'keyThree'],
+    };
+    const _tree = new StateTree(options);
+    const firstNodeData = _tree.addNode(['test1'], { keyOne: true, keyTwo: false, keyThree: false });
+    const secondNodeData = _tree.addNode(['test1', 'test2'], { keyOne: false, keyTwo: true, keyThree: false });
+    expect(firstNodeData).toEqual({ keyOne: true, keyTwo: false, keyThree: false });
+    expect(secondNodeData).toEqual({ keyOne: false, keyTwo: true, keyThree: false });
+  });
+
   it('should return data keys with the new state', () => {
     const options = {
       mask: [[ 1, 3, 1 ]],

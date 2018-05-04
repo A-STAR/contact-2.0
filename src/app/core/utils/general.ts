@@ -104,7 +104,7 @@ export const binaryFromArray = (arr: boolean[]) => {
 };
 
 export const toBoolArray = (num: number) => {
-  return num.toString(2).split('').map(n => Boolean(+n));
+  return Math.abs(num || 0).toString(2).split('').map(n => Boolean(+n));
 };
 
 export const toBoolSizedArray = (num: number, size: number = 1) => {
