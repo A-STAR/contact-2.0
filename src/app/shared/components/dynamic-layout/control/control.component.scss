@@ -1,0 +1,20 @@
+@import '../../../styles/app/variables.scss';
+
+:host {
+  display: block;
+}
+
+.errors {
+  color: $brand-danger;
+  font-size: 11px;
+  height: 11px;
+  line-height: 11px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ng-invalid.ng-touched ::ng-deep .form-control {
+  border-bottom-color: $brand-danger;
+}
