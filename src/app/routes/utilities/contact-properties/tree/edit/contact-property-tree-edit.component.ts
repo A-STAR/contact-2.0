@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { ICellRendererParams, RowNode } from 'ag-grid';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -74,13 +73,30 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     {
       prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
       actionParams: {
-        mask: []
+        dataKeys: [ 'isDisplayed', 'isMandatory' ],
+        mask: [
+          [ 3, 1, 0 ],
+          [ 0, 1, 3 ]
+        ],
+        parentsMask: [
+          [ 0, 2, 0, 2 ],
+          [ 0, 2, 1, 2 ],
+          [ 1, 3, 0, 2 ],
+          [ 1, 3, 1, 2 ]
+        ],
+        childrenMask: [
+          [ 2, 1, 2, 0 ],
+          [ 2, 1, 3, 0 ],
+          [ 3, 2, 2, 0 ],
+          [ 3, 2, 3, 0 ],
+          [ 2, 0, 2, 0 ],
+          [ 2, 0, 3, 0 ],
+        ],
       }
     },
     {
       prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
-      rendererParams: { isDisplayed: (data: ITreeNode) => data.data.disabledValue !== 1 },
-      actionParams: true
+      rendererParams: { isDisplayed: data => data.disabledValue !== 1 },
     },
   ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
@@ -165,28 +181,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
 
   onCancel(): void {
     this.cancel.emit();
-  }
-
-  displayParents(params: ICellRendererParams): void {
-    let { node } = params;
-    const column = params.columnApi.getColumn('isDisplayed');
-    while (node.parent && node.data) {
-      node.setDataValue(column, true);
-      node = node.parent;
-    }
-  }
-
-  hideChildren(params: ICellRendererParams): void {
-    const { node } = params;
-    const column = params.columnApi.getColumn('isDisplayed');
-    const hide = (rowNode: RowNode) => {
-      if (rowNode.childrenAfterGroup && rowNode.childrenAfterGroup.length) {
-        rowNode.childrenAfterGroup.forEach(
-          n => n.childrenAfterGroup && n.childrenAfterGroup.length ? hide(n) : n.setDataValue(column, false)
-        );
-      }
-    };
-    hide(node);
   }
 
   onTabSelect(tabIndex: number): void {

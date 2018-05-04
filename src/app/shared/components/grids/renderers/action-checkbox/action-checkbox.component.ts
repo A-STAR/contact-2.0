@@ -19,7 +19,7 @@ export class ActionCheckboxRendererComponent implements ICellRendererAngularComp
   agInit(params: ActionRendererParams): void {
     this.params = params;
     this.value = params.value;
-    this.params.stateTree.addNode(params.data.path, params.data);
+    this.params.stateTree.addNode(params.data.path, params.data, this.setData.bind(this));
     this.isShown = typeof params.isDisplayed === 'function' ? params.isDisplayed(params.data) : true;
   }
 
@@ -34,5 +34,11 @@ export class ActionCheckboxRendererComponent implements ICellRendererAngularComp
   private setStates(value: boolean): void {
     const data = {...this.params.data, [this.params.colDef.field]: value };
     this.params.stateTree.onChange(data.path, data);
+  }
+
+  private setData(data: any): void {
+    Object.keys(data).forEach(k => {
+      this.params.node.setDataValue(k, data[k]);
+    });
   }
 }
