@@ -10,5 +10,9 @@
   "coverageReporters": [
     "text-summary"
   ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "index.ts"
+  ],
   "testRegex": "\\.spec\\.ts$"
 }

@@ -13,11 +13,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
-import { IDocument } from '../document.interface';
+import { IDocument } from '@app/routes/workplaces/core/document/document.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { DocumentService } from '../document.service';
+import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
