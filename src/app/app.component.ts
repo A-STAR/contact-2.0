@@ -1,4 +1,5 @@
-import { Component, HostBinding, animate, state, style, transition, trigger } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, HostBinding,  } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';

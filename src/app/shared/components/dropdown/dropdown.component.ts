@@ -1,4 +1,5 @@
-import { Component, ElementRef, HostListener, Input, ViewChild, animate, state, style, transition, trigger } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 
 import { IDropdownPosition } from './dropdown.interface';
 
