@@ -80,7 +80,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
 
       this.statusCodeSub = this.form.onCtrlValueChange('statusCode')
         .distinctUntilChanged()
-        .subscribe((statusCode: [{ value: number }]) => {
+        .subscribe((statusCode: number) => {
           // reset current reasonCode value
           this.form.form.patchValue({
             reasonCode: null
@@ -89,13 +89,13 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
 
           // filter reasonCode's options with respect to statusCode's value
           reasonCodeControl.options = this.dicts[UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE]
-            .filter(term => term.parentCode === statusCode[0].value)
+            .filter(term => term.parentCode === statusCode)
             .map(toLabeledValues);
           // disable when options list is empty
           reasonCodeControl.disabled = !reasonCodeControl.options.length;
 
           // set required flag
-          reasonCodeControl.required = this.isReasonCodeRequired(this.dicts.constant, statusCode[0].value);
+          reasonCodeControl.required = this.isReasonCodeRequired(this.dicts.constant, statusCode);
 
         });
 
