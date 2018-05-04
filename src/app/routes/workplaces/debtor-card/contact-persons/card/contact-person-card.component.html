@@ -30,6 +30,9 @@
       <app-tabview-tab title="Удостоверения личности">
         <app-identity-grid
           [personId]="contactId"
+          (add)="onIdentityAdd()"
+          (dblClick)="onIdentityEdit($event)"
+          (edit)="onIdentityEdit($event)"
         ></app-identity-grid>
       </app-tabview-tab>
 
@@ -37,6 +40,9 @@
       <app-tabview-tab title="Трудоустройство">
         <app-employment-grid
           [personId]="contactId"
+          (add)="onEmploymentAdd()"
+          (dblClick)="onEmploymentEdit($event)"
+          (edit)="onEmploymentEdit($event)"
         ></app-employment-grid>
       </app-tabview-tab>
 

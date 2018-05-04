@@ -5,7 +5,10 @@ import { map } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
@@ -19,7 +22,6 @@ import { MetadataFormComponent } from '@app/shared/components/form/metadata-form
 import { contractFormConfig } from './config/contract-form.config';
 import { pledgorFormConfig } from './config/pledgor-form.config';
 import { propertyFormConfig } from './config/property-form.config';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -226,6 +228,22 @@ export class PledgeCardComponent implements AfterViewInit {
 
   onAddressEdit(address: IAddress): void {
     this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onIdentityAdd(): void {
+    this.router.navigate([ 'identity/create' ], { relativeTo: this.route });
+  }
+
+  onIdentityEdit(document: IIdentityDoc): void {
+    this.router.navigate([ `identity/${document.id}` ], { relativeTo: this.route });
+  }
+
+  onEmploymentAdd(): void {
+    this.router.navigate([ 'employment/create' ], { relativeTo: this.route });
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.router.navigate([ `employment/${employment.id}` ], { relativeTo: this.route });
   }
 
   private fetchContract(): void {

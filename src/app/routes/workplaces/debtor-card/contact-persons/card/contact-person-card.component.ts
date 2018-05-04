@@ -5,6 +5,8 @@ import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
@@ -187,6 +189,22 @@ export class ContactPersonCardComponent implements AfterViewInit {
 
   onAddressEdit(address: IAddress): void {
     this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onIdentityAdd(): void {
+    this.router.navigate([ 'identity/create' ], { relativeTo: this.route });
+  }
+
+  onIdentityEdit(document: IIdentityDoc): void {
+    this.router.navigate([ `identity/${document.id}` ], { relativeTo: this.route });
+  }
+
+  onEmploymentAdd(): void {
+    this.router.navigate([ 'employment/create' ], { relativeTo: this.route });
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.router.navigate([ `employment/${employment.id}` ], { relativeTo: this.route });
   }
 
   private openPersonSearch(): void {

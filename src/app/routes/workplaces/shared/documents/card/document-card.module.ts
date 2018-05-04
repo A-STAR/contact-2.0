@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
 import { DocumentCardComponent } from './document-card.component';
-
-import { DocumentService } from '../document.service';
 
 const routes: Routes = [
   {
@@ -18,17 +16,14 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule,
     RouterModule.forChild(routes),
+    SharedModule,
   ],
   exports: [
-    DocumentCardComponent,
+    RouterModule,
   ],
   declarations: [
     DocumentCardComponent,
   ],
-  providers: [
-    DocumentService
-  ]
 })
 export class DocumentCardModule {}

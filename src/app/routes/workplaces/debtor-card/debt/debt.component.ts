@@ -22,9 +22,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
-import { makeKey, invert } from '@app/core/utils';
-
-const label = makeKey('widgets.debt');
+import { invert } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,14 +32,11 @@ const label = makeKey('widgets.debt');
 })
 export class DebtComponent implements AfterViewInit, OnInit {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
-  @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
+  @ViewChild('debtComponents', { read: TemplateRef }) debtComponents: TemplateRef<any>;
+  @ViewChild('portfolioLog', { read: TemplateRef }) portfolioLog: TemplateRef<any>;
+  @ViewChild('componentLog', { read: TemplateRef }) componentLog: TemplateRef<any>;
 
   debt: IDebt;
-  tabs = [
-    { title: label('component.title'), isInitialised: true },
-    { title: label('portfolioLog.title'), isInitialised: false },
-    { title: label('componentLog.title'), isInitialised: false }
-  ];
   templates: Record<string, TemplateRef<any>>;
 
   isDisabled$ = of(true);
@@ -66,7 +61,9 @@ export class DebtComponent implements AfterViewInit, OnInit {
     });
 
     this.templates = {
-      foo: this.foo,
+      debtComponents: this.debtComponents,
+      portfolioLog: this.portfolioLog,
+      componentLog: this.componentLog,
     };
   }
 
@@ -119,10 +116,6 @@ export class DebtComponent implements AfterViewInit, OnInit {
 
   get canViewPortfolioLog$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
-  }
-
-  onTabSelect(tabIndex: number): void {
-    this.tabs[tabIndex].isInitialised = true;
   }
 
   private isRoute(segment: string): boolean {
