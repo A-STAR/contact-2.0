@@ -1,4 +1,5 @@
 import { StateTree } from './state-tree';
+import { callbackify } from 'util';
 
 describe('State tree', () => {
   let tree: StateTree;
@@ -287,6 +288,46 @@ describe('State tree', () => {
       myKeyOne: true,
       myKeyTwo: true,
     });
+
+  });
+
+  it('should allow custom states creation and logic', () => {
+    const options = {
+      mask: [ [ 'forward', 'left', 'stale' ], [ 'forward', 'right', 'stale' ] ] as [ any, any, any ][],
+      dataKeys: ['turnLeft', 'turnRight'],
+      dataToState: data => {
+        if (data.turnLeft && data.turnRight) {
+          return 'forward';
+        } else if (data.turnLeft) {
+          return 'left';
+        } else if (data.turnRight) {
+          return 'right';
+        } else {
+          return 'stale';
+        }
+      },
+      stateToData: state => ({ direction: state }),
+      createStates: () => [
+        'stale',
+        'left',
+        'right',
+        'forward'
+      ]
+    };
+    const _tree = new StateTree(options);
+    const callback = jasmine.createSpy();
+    _tree.addNode(['test1'], { turnLeft: true, turnRight: true }, callback);
+
+    const node = _tree.findNode(['test1']);
+    expect(node.currentState).toBe('forward');
+
+    // _tree.onChange(['test1'], { turnLeft: true, turnRight: false });
+
+    // expect(callback).toBeCalledWith({
+    //   direction: 'stale'
+    // });
+
+    // expect(node.currentState).toBe('stale');
 
   });
 
