@@ -187,44 +187,137 @@ describe('State tree', () => {
     expect(node.currentState).toBe(1);
   });
 
-  it('should return converted data of added node', () => {
-    const options = {
-      mask: [[ 1, 2, 3 ], [3, 8, 2]],
-      dataKeys: ['keyOne', 'keyTwo', 'keyThree'],
-    };
-    const _tree = new StateTree(options);
-    const firstNodeData = _tree.addNode(['test1'], { keyOne: true, keyTwo: false, keyThree: false });
-    const secondNodeData = _tree.addNode(['test1', 'test2'], { keyOne: false, keyTwo: true, keyThree: false });
-    expect(firstNodeData).toEqual({ keyOne: true, keyTwo: false, keyThree: false });
-    expect(secondNodeData).toEqual({ keyOne: false, keyTwo: true, keyThree: false });
-  });
-
-  it('should return data keys with the new state', () => {
+  it('should invoke callback with changed data', () => {
     const options = {
       mask: [[ 1, 3, 1 ]],
       dataKeys: ['myKeyOne', 'myKeyTwo']
     };
     const _tree = new StateTree(options);
-    _tree.addNode(['test1'], { myKeyOne: false, myKeyTwo: true });
+
+    const callback = jasmine.createSpy();
+    _tree.addNode(['test1'], { myKeyOne: false, myKeyTwo: true }, callback);
+
     const node = _tree.findNode(['test1']);
     expect(node.currentState).toBe(1);
 
-    let result = _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: true });
+    _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: true });
 
-    expect(result).toEqual({
+    expect(callback).toBeCalledWith({
       myKeyOne: false,
       myKeyTwo: true,
     });
 
     expect(node.currentState).toBe(1);
 
-    result = _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: false });
+    _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: false });
 
     expect(node.currentState).toBe(2);
 
-    expect(result).toEqual({
+    expect(callback).toBeCalledWith({
       myKeyOne: true,
       myKeyTwo: false,
+    });
+
+  });
+
+  it('should change parents state by a given mask', () => {
+    const options = {
+      mask: [],
+      parentsMask: [[ 0, 2, 3 ]],
+      dataKeys: ['myKeyOne', 'myKeyTwo']
+    };
+    const _tree = new StateTree(options);
+    const callback = jasmine.createSpy();
+    _tree.addNode(['test1'], { myKeyOne: true, myKeyTwo: false }, callback);
+    _tree.addNode(['test1', 'test2'], { myKeyOne: false, myKeyTwo: false });
+
+    _tree.onChange(['test1', 'test2'], { myKeyOne: true, myKeyTwo: false });
+
+    const parentNode = _tree.findNode(['test1']);
+
+    expect(parentNode.currentState).toBe(3);
+
+    expect(callback).toBeCalledWith({
+      myKeyOne: true,
+      myKeyTwo: true,
+    });
+
+  });
+
+  it('should change children state by a given mask', () => {
+    const options = {
+      mask: [],
+      childrenMask: [[ 0, 2, 3 ]],
+      dataKeys: ['myKeyOne', 'myKeyTwo']
+    };
+    const _tree = new StateTree(options);
+    const callback = jasmine.createSpy();
+    _tree.addNode(['test1'], { myKeyOne: false, myKeyTwo: false });
+    _tree.addNode(['test1', 'test2'], { myKeyOne: true, myKeyTwo: false }, callback);
+    _tree.addNode(['test1', 'test3'], { myKeyOne: true, myKeyTwo: false }, callback);
+
+    _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: false });
+
+    const children = _tree.findNode(['test1']).children;
+
+    children.forEach(c => expect(c.currentState).toBe(3));
+
+    expect(callback).toHaveBeenCalledTimes(2);
+
+    expect(callback).toBeCalledWith({
+      myKeyOne: true,
+      myKeyTwo: true,
+    });
+
+  });
+
+  it('should change parents state by a given mask and respect their own masks', () => {
+    const options = {
+      mask: [[0, 3, 1]],
+      parentsMask: [[ 0, 2, 3 ]],
+      dataKeys: ['myKeyOne', 'myKeyTwo']
+    };
+    const _tree = new StateTree(options);
+    const callback = jasmine.createSpy();
+    _tree.addNode(['test1'], { myKeyOne: false, myKeyTwo: false }, callback);
+    _tree.addNode(['test1', 'test2'], { myKeyOne: false, myKeyTwo: false });
+
+    _tree.onChange(['test1', 'test2'], { myKeyOne: true, myKeyTwo: false });
+
+    const parentNode = _tree.findNode(['test1']);
+
+    expect(parentNode.currentState).toBe(1);
+
+    expect(callback).toBeCalledWith({
+      myKeyOne: false,
+      myKeyTwo: true,
+    });
+
+  });
+
+  it('should change children state by a given mask and respect their own masks', () => {
+    const options = {
+      mask: [[ 0, 3, 1]],
+      childrenMask: [[ 0, 2, 3 ]],
+      dataKeys: ['myKeyOne', 'myKeyTwo']
+    };
+    const _tree = new StateTree(options);
+    const callback = jasmine.createSpy();
+    _tree.addNode(['test1'], { myKeyOne: false, myKeyTwo: false });
+    _tree.addNode(['test1', 'test2'], { myKeyOne: false, myKeyTwo: false }, callback);
+    _tree.addNode(['test1', 'test3'], { myKeyOne: false, myKeyTwo: false }, callback);
+
+    _tree.onChange(['test1'], { myKeyOne: true, myKeyTwo: false });
+
+    const children = _tree.findNode(['test1']).children;
+
+    children.forEach(c => expect(c.currentState).toBe(1));
+
+    expect(callback).toHaveBeenCalledTimes(2);
+
+    expect(callback).toBeCalledWith({
+      myKeyOne: false,
+      myKeyTwo: true,
     });
 
   });
