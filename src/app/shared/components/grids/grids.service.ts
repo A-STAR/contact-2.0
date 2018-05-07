@@ -222,34 +222,4 @@ export class GridsService {
   private getLocalSettings(key: string): IGridLocalSettings {
     return this.settingsService.get(key) || { columns: [], sortModel: {} };
   }
-
-  // private getRowsToRemove(node: RowNode): RowNode[] {
-  //   let res = [];
-  //   for (let i = 0; i < node.childrenAfterGroup.length; i++) {
-  //     res = res.concat(this.getRowsToRemove(node.childrenAfterGroup[i]));
-  //   }
-  //   return node.data ? res.concat([node.data]) : res;
-  // }
-  // private isSelectionParentOfTarget(selectedNode: RowNode, targetNode: RowNode): boolean {
-  //   const children = selectedNode.childrenAfterGroup;
-  //   for (let i = 0; i < children.length; i++) {
-  //     if (targetNode && children[i].key === targetNode.key) {
-  //       return true;
-  //     }
-  //     this.isSelectionParentOfTarget(children[i], targetNode);
-  //   }
-  //   return false;
-  // }
-  // private getRowsToUpdate(node: RowNode, parentPath: string[]): RowNode[] {
-  //   let res = [];
-  //   const newPath = parentPath.concat([node.key]);
-  //   if (node.data) {
-  //     node.data.filePath = newPath;
-  //   }
-  //   for (let i = 0; i < node.childrenAfterGroup.length; i++) {
-  //     const updatedChildRowData = this.getRowsToUpdate(node.childrenAfterGroup[i], newPath);
-  //     res = res.concat(updatedChildRowData);
-  //   }
-  //   return node.data ? res.concat([node.data]) : res;
-  // }
 }
