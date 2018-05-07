@@ -4,7 +4,10 @@ import { DynamicLayoutFormAction, IDynamicLayoutFormState, IDynamicLayoutFormAct
 
 const initialState: IDynamicLayoutFormState = {};
 
-export const formReducer = (state = initialState, action: IDynamicLayoutFormAction): IDynamicLayoutFormState => {
+export function formReducer(
+  state: IDynamicLayoutFormState = initialState,
+  action: IDynamicLayoutFormAction,
+): IDynamicLayoutFormState {
   switch (action.type) {
     case DynamicLayoutFormAction.CHANGE_VALID: {
       const { form, key, valid, dirty } = action.payload;
