@@ -92,7 +92,7 @@ export class ControlService implements OnDestroy {
 
   canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
     return this.store.select(state => {
-      const { dirty, valid } = getIn(state, [ 'form', this.key, form, 'status' ], false);
+      const { dirty, valid } = getIn(state, [ 'form', this.key, form, 'status' ], {});
       return dirty && valid;
     });
   }
