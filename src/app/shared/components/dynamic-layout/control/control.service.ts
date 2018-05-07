@@ -4,17 +4,21 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
-import { first, map } from 'rxjs/operators';
+import { distinctUntilChanged, first, map } from 'rxjs/operators';
+import { getIn } from 'immutable';
+import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
 import {
+  DynamicLayoutControlType,
+  DynamicLayoutFormAction,
   DynamicLayoutItemType,
   IDynamicLayoutControl,
-  IDynamicLayoutItemProperties,
+  IDynamicLayoutFormChangeValidAction,
+  IDynamicLayoutFormChangeValueAction,
   IDynamicLayoutItem,
+  IDynamicLayoutItemProperties,
   IDynamicLayoutPlugin,
-  DynamicLayoutControlType,
 } from '../dynamic-layout.interface';
 
 import { EventService } from '../event/event.service';
@@ -44,7 +48,7 @@ export class ControlService implements OnDestroy {
   private controls: IDynamicLayoutItemProperties<IDynamicLayoutControl>[];
   private data: Record<string, any> = {};
   private groups = new Map<string, FormGroup>();
-  private status = new Map<string, Observable<boolean>>();
+  private key: string;
 
   private formSubscription = new Subscription();
 
@@ -69,6 +73,8 @@ export class ControlService implements OnDestroy {
       .filter(item => item.item.type === DynamicLayoutItemType.CONTROL)
       .map((item: IDynamicLayoutItemProperties<IDynamicLayoutControl>) => item);
 
+    this.key = key;
+
     const forms = new Set(this.controls.map(control => this.getControlForm(control.item)));
     forms.forEach(form => this.createFormGroup(form, key));
 
@@ -84,11 +90,11 @@ export class ControlService implements OnDestroy {
     });
   }
 
-  getStatus(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
-    const status = this.status.get(form);
-    return status
-      ? status
-      : of(false);
+  canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
+    return this.store.select(state => {
+      const { dirty, valid } = getIn(state, [ 'form', this.key, form, 'status' ], false);
+      return dirty && valid;
+    });
   }
 
   getData(form: string = ControlService.DEFAULT_GROUP_NAME): any {
@@ -108,6 +114,24 @@ export class ControlService implements OnDestroy {
     return this.groups.get(form);
   }
 
+  dispatchChangeStatusAction(form: string, valid: boolean, dirty: boolean): void {
+    const { key } = this;
+    const action: IDynamicLayoutFormChangeValidAction = {
+      type: DynamicLayoutFormAction.CHANGE_VALID,
+      payload: { key, form, valid, dirty },
+    };
+    this.store.dispatch(action);
+  }
+
+  dispatchChangeValueAction(form: string, value: Record<string, any>): void {
+    const { key } = this;
+    const action: IDynamicLayoutFormChangeValueAction = {
+      type: DynamicLayoutFormAction.CHANGE_VALUE,
+      payload: { key, form, value },
+    };
+    this.store.dispatch(action);
+  }
+
   private createFormGroup(name: string, key: string): void {
     const controls = this.controls
       .filter(control => this.getControlForm(control.item) === name)
@@ -122,22 +146,21 @@ export class ControlService implements OnDestroy {
     const group = this.formBuilder.group(controls);
 
     if (key) {
-      const subscription = group.valueChanges.subscribe(value => this.store.dispatch({
-        // TODO(d.maltsev): write the reducer
-        type: null,
-        payload: { key, value },
-      }));
-      this.formSubscription.add(subscription);
+      const valueSubscription = group.valueChanges
+        .pipe(
+          distinctUntilChanged(equals),
+        )
+        .subscribe(value => this.dispatchChangeValueAction(name, value));
+      const statusSubscription = group.statusChanges
+        .pipe(
+          distinctUntilChanged(),
+        )
+        .subscribe(status => this.dispatchChangeStatusAction(name, status === 'VALID', group.dirty));
+      this.formSubscription.add(valueSubscription);
+      this.formSubscription.add(statusSubscription);
     }
 
     this.groups.set(name, group);
-
-    const status$ = group.statusChanges.pipe(
-      map(status => status === 'VALID' && group.dirty),
-    );
-
-    this.status.set(name, status$);
-
     this.patchFormGroups();
   }
 

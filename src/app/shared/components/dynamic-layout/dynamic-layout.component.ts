@@ -44,7 +44,7 @@ export class DynamicLayoutComponent implements OnInit {
   }
 
   canSubmit(form?: string): Observable<boolean> {
-    return this.controlService.getStatus(form);
+    return this.controlService.canSubmit(form);
   }
 
   getData(form?: string): any {
