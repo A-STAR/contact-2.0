@@ -1,3 +1,4 @@
+export { ActionCheckboxRendererComponent } from './action-checkbox/action-checkbox.component';
 export { CallbackRendererComponent } from './callback/callback.component';
 export { CheckboxRendererComponent } from './checkbox/checkbox.component';
 export { DateRendererComponent } from './date/date.component';

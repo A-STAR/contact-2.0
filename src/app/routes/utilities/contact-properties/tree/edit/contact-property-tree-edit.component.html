@@ -19,13 +19,19 @@
 
       <app-tabview-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'">
         <div class="mt" *ngIf="tabs[1].isInitialised">
-          <app-gridtree2-wrapper
-            *ngIf="attributeTypes && attributeTypes.length > 0"
-            [translateColumnLabels]="true"
-            [columns]="columns"
-            [rows]="attributeTypes"
-            (cellValueChanged)="onCellValueChanged($event)"
-          ></app-gridtree2-wrapper>
+          <div class="flex vertical">
+              <div class="flex-item contact-tree-dlg-attributes">
+                <app-simple-grid
+                  *ngIf="attributeTypes && attributeTypes.length > 0"
+                  persistenceKey="[grid] utilities/contact-property-tree/edit/attributes"
+                  [columns]="columns"
+                  [rows]="attributeTypes"
+                  [treeData]="true"
+                  (cellValueChanged)="onCellValueChanged($event)"
+                  >
+                </app-simple-grid>
+              </div>
+          </div>
         </div>
       </app-tabview-tab>
 

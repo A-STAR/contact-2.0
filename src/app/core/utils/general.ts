@@ -98,6 +98,25 @@ export const flattenArray = (arr: any[]) => {
   return arr.reduce((acc, child) => acc.concat(Array.isArray(child) ? flattenArray(child) : child), []);
 };
 
+export const binaryFromArray = (arr: boolean[]) => {
+  // tslint:disable-next-line:no-bitwise
+  return arr.reduceRight<number>((acc, val, index) => acc |= Number(val) << (arr.length - index - 1), 0);
+};
+
+export const toBoolArray = (num: number) => {
+  return Math.abs(num || 0).toString(2).split('').map(n => Boolean(+n));
+};
+
+export const toBoolSizedArray = (num: number, size: number = 1) => {
+  const binaryArr = toBoolArray(num);
+  size = size - binaryArr.length;
+  while (size > 0) {
+    binaryArr.unshift(false);
+    size--;
+  }
+  return binaryArr;
+};
+
 export const invert = (a: boolean) => !a;
 
 export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
