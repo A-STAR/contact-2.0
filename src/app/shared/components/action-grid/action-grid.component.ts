@@ -134,6 +134,24 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   initialized = false;
   templates: Record<string, TemplateRef<any>>;
 
+  private _columns: IAGridColumn[];
+
+  private actions$ = new BehaviorSubject<any[]>(null);
+  private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
+  private defaultActionName: string;
+  private currentDefaultAction: IMetadataAction;
+  private currentSelectionAction: IMetadataAction;
+  private excelFilter$ = new BehaviorSubject<FilterObject>(null);
+  private gridDetails$ = new BehaviorSubject<boolean>(false);
+
+  dialog: string;
+  dialogData: IGridAction;
+  displayExcelFilter = false;
+  selectionActionData: IGridAction;
+  selectionActionName: string;
+
+  gridActions$: Observable<IMetadataAction[]>;
+  titlebar$: Observable<ITitlebar>;
   layoutConfig: IDynamicLayoutConfig = {
     key: 'action-grid',
     items: [
@@ -151,29 +169,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
             type: DynamicLayoutItemType.TEMPLATE,
             value: 'details',
             size: 35,
+            displaySplit: this.gridDetails$
           },
         ]
       }
     ],
   };
-
-  private _columns: IAGridColumn[];
-
-  private actions$ = new BehaviorSubject<any[]>(null);
-  private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
-  private defaultActionName: string;
-  private currentDefaultAction: IMetadataAction;
-  private currentSelectionAction: IMetadataAction;
-  private excelFilter$ = new BehaviorSubject<FilterObject>(null);
-
-  dialog: string;
-  dialogData: IGridAction;
-  displayExcelFilter = false;
-  selectionActionData: IGridAction;
-  selectionActionName: string;
-
-  gridActions$: Observable<IMetadataAction[]>;
-  titlebar$: Observable<ITitlebar>;
 
   constructor(
     private actionGridService: ActionGridService,
@@ -208,7 +209,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
-      return permissionKey ? this.userPermissionsService.has(permissionKey) : of(true);
+    return permissionKey ? this.userPermissionsService.has(permissionKey) : of(true);
   }
 
   getGridActions(): Observable<IMetadataAction[]> {
@@ -253,8 +254,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
   }
 
-  get isGridDetails(): boolean {
-    return this.currentSelectionAction && !!this.selectionActionData;
+  isGridDetails(name: string): boolean {
+    return this.selectionActionName === name && this.currentSelectionAction && !!this.selectionActionData;
   }
 
   get hasPagination(): boolean {
@@ -313,6 +314,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       ? this.selection.find(r => r[this.rowIdKey] === selected[0])
       : selected[0];
     this.selectionActionData = this.setDialogData({ metadataAction: this.currentSelectionAction, selection });
+    this.gridDetails$.next(this.isGridDetails(this.selectionActionName));
     this.cdRef.markForCheck();
   }
 
@@ -491,11 +493,22 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           map(active => active ? 'button-active' : null)
         ),
       }),
+      hideDetails: (_) => ({
+        type: TitlebarItemTypeEnum.BUTTON_CLOSE,
+        action: () => {
+          this.gridDetails$.next(false);
+          this.grid.deselectAll();
+        },
+        enabled: this.gridDetails$
+      })
     };
     return {
       title: config.title,
       items: config.items
-        .concat([{ name: 'filter', permissions: null }])
+        .concat([
+          { name: 'filter', permissions: null },
+          { name: 'hideDetails', permissions: null }
+        ])
         .map(item => titlebarItems[item.name](item.permissions)),
     };
   }

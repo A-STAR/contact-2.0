@@ -256,14 +256,11 @@
   </ng-template>
 
   <ng-template #details>
-    <!-- <div [ngClass]="{ 'grid-details-with-footer': hasPagination }">
-
-    </div> -->
     <app-contact-log-details
-        *ngIf="isGridDetails && selectionActionName === 'showContactHistory'"
-        [offset]="{ x: '0px', y: hasPagination ? '39px' : '0px' }"
-        [actionData]="selectionActionData"
-        [rowData]="selection[0]"
-      ></app-contact-log-details>
+      *ngIf="isGridDetails('showContactHistory')"
+      [offset]="{ x: '0px', y: hasPagination ? '39px' : '0px' }"
+      [actionData]="selectionActionData"
+      [rowData]="selection[0]">
+    </app-contact-log-details>
   </ng-template>
 

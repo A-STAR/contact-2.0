@@ -32,6 +32,7 @@ export class TitlebarComponent implements OnChanges, OnInit {
   props: { [key: string]: Partial<ITitlebarButton> } = {
     [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'co-add', title: 'Добавить' },
     [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'co-copy', title: 'Копировать' },
+    [TitlebarItemTypeEnum.BUTTON_CLOSE]: { iconCls: 'co-close', title: 'default.buttons.close' },
     [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
     [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-debt-list', title: 'Карточка должника' },

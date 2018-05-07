@@ -45,6 +45,7 @@ export interface IDynamicLayoutGenericItem {
   enabled?: IContext;
   label?: string;
   size?: number;
+  displaySplit?: Observable<boolean>;
   uid?: string;
   validators?: Record<string, IContext>;
 }
