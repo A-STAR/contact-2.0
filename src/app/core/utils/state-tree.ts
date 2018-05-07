@@ -4,6 +4,7 @@ export interface IStateTreeParams {
   /**
    * dataKeys used to create all possible states (Math.pow(2, dataKeys.length)),
    * and to change respective data props
+   * Creation of states array could be overriden by passing createStates fn.
    */
   dataKeys: any[];
   /**
@@ -23,7 +24,9 @@ export interface IStateTreeParams {
    *
    * Creation of states array could be overriden by passing createStates fn.
    *
-   * If no rule is matched, then transition procceedes normally (fromState -> toState)
+   * If no rule is matched, then we try to perform transition fromState -> toState
+   *
+   * If no toState is found in states array, then transition is not happening
    */
   mask: [any, any, any][];
   /**
@@ -181,7 +184,7 @@ export class StateTree {
       const fromState = node.currentState;
       const toState = this.transformState(fromState, this.dataToState(data));
       if (fromState !== toState) {
-        this.onNodeChange(node, toState);
+        this.onNodeChange(node, fromState, toState);
         this.changeRelatedTreeNodes(node, fromState, toState);
       }
     }
@@ -199,10 +202,12 @@ export class StateTree {
     return this.root.toString();
   }
 
-  private onNodeChange(node: StateTreeNode, toState: any): void {
-    const cb = node.onChange(toState);
-    if (cb) {
-      cb(this.stateToData(node.currentState));
+  private onNodeChange(node: StateTreeNode, fromState: any, toState: any): void {
+    if (fromState !== toState) {
+      const cb = node.onChange(toState);
+      if (cb) {
+        cb(this.stateToData(node.currentState));
+      }
     }
   }
 
@@ -219,14 +224,14 @@ export class StateTree {
   private changeChildrenState(node: StateTreeNode, prev: any, next: any): void {
     if (node.children && node.children.length) {
       node.children.forEach(n => n.children && n.children.length ? this.changeChildrenState(n, prev, next)
-        : this.onNodeChange(n, this.transformChildrenState(prev, next, n.currentState)));
+        : this.onNodeChange(n, n.currentState, this.transformChildrenState(prev, next, n.currentState)));
     }
   }
 
   private changeParentsState(node: StateTreeNode, prev: any, next: any): void {
     let _node = node.parent;
     while (_node && !_node.isRoot) {
-      this.onNodeChange(_node, this.transformParentsState(prev, next, _node.currentState));
+      this.onNodeChange(_node, _node.currentState, this.transformParentsState(prev, next, _node.currentState));
       _node = _node.parent;
     }
   }
@@ -234,17 +239,19 @@ export class StateTree {
   private transformState(prev: any, next: any): any {
     const rule = this.params.mask.find(r => r[0] === prev && r[1] === next);
     const state = rule ? rule[2] : next;
-    return this.states.includes(state) ? this.states[state] : this.states[prev];
+    return this.states.includes(state) ? state : prev;
   }
 
   private transformChildrenState(prev: any, next: any, selfState: any): any {
     const rule = this.params.childrenMask.find(r => r[0] === prev && r[1] === next && r[2] === selfState);
-    return rule ? this.states[rule[3]] : this.states[next];
+    const state = rule ? rule[3] : next;
+    return this.states.includes(state) ? state : selfState;
   }
 
   private transformParentsState(prev: any, next: any, selfState: any): any {
     const rule = this.params.parentsMask.find(r => r[0] === prev && r[1] === next && r[2] === selfState);
-    return rule ? rule[3] : next;
+    const state = rule ? rule[3] : next;
+    return this.states.includes(state) ? state : selfState;
   }
 
   private isMatchedPartRule(prev: any, next: any, mask: [any, any, any, any][]): boolean {

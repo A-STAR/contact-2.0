@@ -1,5 +1,4 @@
 import { StateTree } from './state-tree';
-import { callbackify } from 'util';
 
 describe('State tree', () => {
   let tree: StateTree;
@@ -321,13 +320,13 @@ describe('State tree', () => {
     const node = _tree.findNode(['test1']);
     expect(node.currentState).toBe('forward');
 
-    // _tree.onChange(['test1'], { turnLeft: true, turnRight: false });
+    _tree.onChange(['test1'], { turnLeft: true, turnRight: false });
 
-    // expect(callback).toBeCalledWith({
-    //   direction: 'stale'
-    // });
+    expect(node.currentState).toBe('stale');
 
-    // expect(node.currentState).toBe('stale');
+    expect(callback).toBeCalledWith({
+      direction: 'stale'
+    });
 
   });
 

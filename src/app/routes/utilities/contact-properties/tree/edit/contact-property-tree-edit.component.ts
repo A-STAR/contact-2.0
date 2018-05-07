@@ -82,8 +82,8 @@ export class ContactPropertyTreeEditComponent implements OnInit {
         parentsMask: [
           [ 0, 2, 0, 2 ],
           [ 0, 2, 1, 2 ],
-          [ 1, 3, 0, 2 ],
-          [ 1, 3, 1, 2 ]
+          [ 0, 3, 0, 2 ],
+          [ 0, 3, 1, 2 ],
         ],
         childrenMask: [
           [ 2, 1, 2, 0 ],
