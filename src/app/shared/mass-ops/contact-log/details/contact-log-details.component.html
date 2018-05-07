@@ -1,4 +1,4 @@
-<div class="contact-log-detail-container">
+<div class="contact-log-detail-container" [ngStyle]="{ paddingBottom: offset.y, paddingTop: offset.x }">
   <div class="contact-log-detail-header">
       {{ 'widgets.contactLog.grid.fullName' | translate }}: {{ contactFullName }}
   </div>

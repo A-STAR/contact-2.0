@@ -6,7 +6,8 @@ import {
   Input,
   Output,
   ViewChild,
-  OnInit
+  OnInit,
+  TemplateRef
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -16,6 +17,11 @@ import { Observable } from 'rxjs/Observable';
 import { never } from 'rxjs/observable/never';
 import { of } from 'rxjs/observable/of';
 
+import {
+  IDynamicLayoutConfig,
+  DynamicLayoutItemType,
+  DynamicLayoutGroupType,
+} from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import {
   ICloseAction,
   IGridAction,
@@ -121,10 +127,37 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
   @ViewChild('grid') grid: SimpleGridComponent<T> | Grid2Component;
+  @ViewChild('gridTpl', { read: TemplateRef }) gridTpl: TemplateRef<T>;
+  @ViewChild('details', { read: TemplateRef }) details: TemplateRef<T>;
   @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
 
+  initialized = false;
+  templates: Record<string, TemplateRef<any>>;
+
+  layoutConfig: IDynamicLayoutConfig = {
+    key: 'action-grid',
+    items: [
+      {
+        type: DynamicLayoutItemType.GROUP,
+        groupType: DynamicLayoutGroupType.HORIZONTAL,
+        splitters: true,
+        children: [
+          {
+            type: DynamicLayoutItemType.TEMPLATE,
+            value: 'gridTpl',
+            size: 65,
+          },
+          {
+            type: DynamicLayoutItemType.TEMPLATE,
+            value: 'details',
+            size: 35,
+          },
+        ]
+      }
+    ],
+  };
+
   private _columns: IAGridColumn[];
-  private _initialized = false;
 
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
@@ -356,10 +389,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  get initialized(): boolean {
-    return this._initialized;
-  }
-
   get gridOptions(): GridOptions {
     return this.grid && this.gridOptions;
   }
@@ -391,7 +420,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
     this.titlebarConfig$.next(data.titlebar || this.titlebar);
     this._columns = data.columns ? [...data.columns] : null;
-    this._initialized = true;
+    this.initialized = true;
+    this.templates = { gridTpl: this.gridTpl, details: this.details };
     this.cdRef.markForCheck();
   }
 

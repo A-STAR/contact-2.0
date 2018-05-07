@@ -75,7 +75,8 @@ export class DynamicLayoutService {
     this.attributeService.init(this._items);
     this.formService.init(this._items, this._plugins, this._key);
     this.ready$.next(true);
-    this.ready$.complete();
+    // TODO(i.lobanov): strange behaviour, investigate
+    // this.ready$.complete();
   }
 
   private addUids(items: IDynamicLayoutItem[], parent: string = null): IDynamicLayoutItem[] {
