@@ -168,7 +168,7 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
       },
       {
         controlName: 'recipientTypeCode',
-        dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE,
+        dictCode: UserDictionariesService.DICTIONARY_MESSAGE_RECIPIENT_TYPE,
         display: displayRecipient,
         type: 'select',
       },
