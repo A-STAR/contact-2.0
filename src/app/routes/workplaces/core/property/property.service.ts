@@ -30,21 +30,10 @@ export class PropertyService extends AbstractActionService {
     super();
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROPERTY_DELETE');
-  }
+  readonly canView$ = this.userPermissionsService.has('PROPERTY_VIEW');
+  readonly canAdd$ = this.userPermissionsService.has('PROPERTY_ADD');
+  readonly canEdit$ = this.userPermissionsService.has('PROPERTY_EDIT');
+  readonly canDelete$ = this.userPermissionsService.has('PROPERTY_DELETE');
 
   fetchAll(personId: number): Observable<Array<IProperty>> {
     return this.dataService.readAll(this.baseUrl, { personId })

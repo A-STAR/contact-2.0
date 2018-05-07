@@ -5,12 +5,11 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IContact } from '@app/routes/workplaces/core/contact-persons/contact-persons.interface';
+import { IContactPerson } from '@app/routes/workplaces/core/contact-persons/contact-persons.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -26,7 +25,7 @@ import { addGridLabel } from '@app/core/utils';
 export class ContactPersonsGridComponent implements OnInit, OnDestroy {
   @Input() personId: number;
 
-  private selectedContact$ = new BehaviorSubject<IContact>(null);
+  private selectedContact$ = new BehaviorSubject<IContactPerson>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -36,7 +35,10 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedContact$.value.id),
+      action: () => {
+        const { contactPersonId, contactId } = this.selectedContact$.value;
+        this.onEdit(contactPersonId, contactId);
+      },
       enabled: combineLatest(
         this.canEdit$,
         this.selectedContact$
@@ -57,7 +59,7 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<ISimpleGridColumn<IContact>> = [
+  columns: Array<ISimpleGridColumn<IContactPerson>> = [
     { prop: 'fullName' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
     { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
@@ -65,7 +67,7 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
     { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(addGridLabel('widgets.contact.grid'));
 
-  contacts: Array<IContact> = [];
+  contacts: Array<IContactPerson> = [];
 
   private dialog: string;
 
@@ -75,26 +77,16 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactPersonsService: ContactPersonsService,
-    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService
   ) { }
 
   ngOnInit(): void {
-
-    this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
-          this.notificationsService.permissionError().entity('entities.contact.gen.plural').dispatch();
-          this.clear();
-        }
-      });
+    this.fetch();
 
     this.busSubscription = this.contactPersonsService
-      .getAction(ContactPersonsService.MESSAGE_CONTACT_SAVED)
+      .getAction(ContactPersonsService.MESSAGE_CONTACT_PERSON_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -104,20 +96,20 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription.unsubscribe();
   }
 
-  get selectedContact(): IContact {
+  get selectedContact(): IContactPerson {
     return this.selectedContact$.value;
   }
 
-  onDoubleClick(contact: IContact): void {
-    this.onEdit(contact.id);
+  onDoubleClick(contact: IContactPerson): void {
+    this.onEdit(contact.contactPersonId, contact.contactId);
   }
 
-  onSelect(contacts: IContact[]): void {
+  onSelect(contacts: IContactPerson[]): void {
     this.selectedContact$.next(Array.isArray(contacts) ? contacts[0] : null);
   }
 
   onRemove(): void {
-    const { id: contactId } = this.selectedContact$.value;
+    const { contactId: contactId } = this.selectedContact$.value;
     this.contactPersonsService.delete(this.personId, contactId)
       .subscribe(() => {
         this.setDialog(null);
@@ -141,8 +133,12 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
     this.routingService.navigate([ 'contact/create' ], this.route);
   }
 
-  private onEdit(contactId: number): void {
-    this.routingService.navigate([ `contact/${contactId}` ], this.route);
+  /**
+   * @param contactPersonId Link ID in pivot table
+   * @param contactId       Linked person ID
+   */
+  private onEdit(contactPersonId: number, contactId: number): void {
+    this.routingService.navigate([ `contact/${contactPersonId}/person/${contactId}` ], this.route);
   }
 
   get canView$(): Observable<boolean> {
@@ -168,11 +164,5 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
         this.selectedContact$.next(null);
         this.cdRef.markForCheck();
       });
-  }
-
-  private clear(): void {
-    this.contacts = [];
-    this.selectedContact$.next(null);
-    this.cdRef.markForCheck();
   }
 }

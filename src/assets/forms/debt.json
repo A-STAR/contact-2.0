@@ -1,353 +1,306 @@
 {
-  "editable": true,
+  "key": "routes/workplaces/debtor/debt",
   "items": [
     {
-      "children": [
-        {
-          "disabled": true,
-          "display": true,
-          "label": "widgets.debt.grid.id",
-          "name": "id",
-          "type": "text",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "filterParams": null,
-          "filterType": "portfolios",
-          "label": "widgets.debt.grid.portfolioId",
-          "name": "portfolioId",
-          "type": "gridselect",
-          "validators": {
-            "required": true
-          },
-          "width": 1
-        },
-        {
-          "disabled": true,
-          "display": true,
-          "label": "widgets.debt.grid.bankId",
-          "lookupKey": "contractors",
-          "name": "bankId",
-          "type": "select",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": {
-            "type": "permission",
-            "method": "has",
-            "value": "DEBT_EDIT"
-          },
-          "display": true,
-          "label": "widgets.debt.grid.contract",
-          "name": "contract",
-          "type": "text",
-          "validators": {},
-          "width": 1
-        }
-      ],
-      "display": true,
       "type": "group",
-      "groupType": "plain",
-      "width": 0
-    },
-    {
+      "groupType": "vertical",
+      "splitters": true,
       "children": [
         {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.creditName",
-          "name": "creditName",
-          "type": "text",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "dictCode": 3,
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.creditTypeCode",
-          "name": "creditTypeCode",
-          "type": "select",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.creditStartDate",
-          "name": "creditStartDate",
-          "type": "date",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.creditEndDate",
-          "name": "creditEndDate",
-          "type": "date",
-          "validators": {},
-          "width": 1
-        }
-      ],
-      "display": true,
-      "type": "group",
-      "groupType": "plain",
-      "width": 0
-    },
-    {
-      "children": [
-        {
-          "dictCode": 11,
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.debtReasonCode",
-          "name": "debtReasonCode",
-          "type": "select",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.startDate",
-          "name": "startDate",
-          "type": "date",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.dpd",
-          "name": "dpd",
-          "type": "text",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.currencyId",
-          "lookupKey": "currencies",
-          "name": "currencyId",
-          "type": "select",
-          "validators": {
-            "required": true
-          },
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.debtAmount",
-          "name": "debtAmount",
-          "type": "text",
-          "validators": {
-            "required": true
-          },
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.totalAmount",
-          "name": "totalAmount",
-          "type": "text",
-          "validators": {},
-          "width": 1
-        }
-      ],
-      "display": true,
-      "type": "group",
-      "groupType": "plain",
-      "width": 0
-    },
-    {
-      "children": [
-        {
-          "dictCode": 61,
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.stageCode",
-          "name": "stageCode",
-          "type": "select",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.debtDate",
-          "name": "debtDate",
-          "type": "date",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.account",
-          "name": "account",
-          "type": "text",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "dictCode": 26,
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.regionCode",
-          "name": "regionCode",
-          "type": "select",
-          "validators": {},
-          "width": 1
-        },
-        {
-          "dictCode": 6,
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.branchCode",
-          "name": "branchCode",
-          "type": "select",
-          "validators": {},
-          "width": 1
-        }
-      ],
-      "display": true,
-      "type": "group",
-      "groupType": "plain",
-      "width": 0
-    },
-    {
-      "children": [
-        {
-          "dictCode": 34,
-          "disabled": {
-            "type": "permission",
-            "method": "has",
-            "value": "DEBT_DICT1_EDIT_LIST"
-          },
-          "display": {
-            "type": "entity",
-            "method": "isUsed",
-            "value": 198
-          },
-          "label": "widgets.debt.grid.dict1Code",
-          "name": "dict1Code",
-          "type": "select",
-          "validators": {
-            "required": {
-              "type": "entity",
-              "method": "isMandatory",
-              "value": 198
+          "type": "group",
+          "groupType": "vertical",
+          "children": [
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "enabled": false,
+                  "label": "widgets.debt.grid.id",
+                  "name": "id",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 25
+                },
+                {
+                  "filterParams": null,
+                  "filterType": "portfolios",
+                  "label": "widgets.debt.grid.portfolioId",
+                  "name": "portfolioId",
+                  "type": "control",
+                  "controlType": "gridselect",
+                  "validators": {
+                    "required": true
+                  },
+                  "size": 25
+                },
+                {
+                  "enabled": false,
+                  "label": "widgets.debt.grid.bankId",
+                  "lookupKey": "contractors",
+                  "name": "bankId",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 25
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionIsTrue",
+                    "value": "DEBT_EDIT"
+                  },
+                  "label": "widgets.debt.grid.contract",
+                  "name": "contract",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 25
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "label": "widgets.debt.grid.creditName",
+                  "name": "creditName",
+                  "type": "control",
+                  "controlType": "text"
+                },
+                {
+                  "dictCode": 3,
+                  "label": "widgets.debt.grid.creditTypeCode",
+                  "name": "creditTypeCode",
+                  "type": "control",
+                  "controlType": "select"
+                },
+                {
+                  "label": "widgets.debt.grid.creditStartDate",
+                  "name": "creditStartDate",
+                  "type": "control",
+                  "controlType": "date"
+                },
+                {
+                  "label": "widgets.debt.grid.creditEndDate",
+                  "name": "creditEndDate",
+                  "type": "control",
+                  "controlType": "date"
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "dictCode": 11,
+                  "label": "widgets.debt.grid.debtReasonCode",
+                  "name": "debtReasonCode",
+                  "type": "control",
+                  "controlType": "select"
+                },
+                {
+                  "label": "widgets.debt.grid.startDate",
+                  "name": "startDate",
+                  "type": "control",
+                  "controlType": "date"
+                },
+                {
+                  "label": "widgets.debt.grid.dpd",
+                  "name": "dpd",
+                  "type": "control",
+                  "controlType": "text"
+                },
+                {
+                  "label": "widgets.debt.grid.currencyId",
+                  "lookupKey": "currencies",
+                  "name": "currencyId",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": true
+                  }
+                },
+                {
+                  "label": "widgets.debt.grid.debtAmount",
+                  "name": "debtAmount",
+                  "type": "control",
+                  "controlType": "text",
+                  "validators": {
+                    "required": true
+                  }
+                },
+                {
+                  "label": "widgets.debt.grid.totalAmount",
+                  "name": "totalAmount",
+                  "type": "control",
+                  "controlType": "text"
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "dictCode": 61,
+                  "label": "widgets.debt.grid.stageCode",
+                  "name": "stageCode",
+                  "type": "control",
+                  "controlType": "select"
+                },
+                {
+                  "label": "widgets.debt.grid.debtDate",
+                  "name": "debtDate",
+                  "type": "control",
+                  "controlType": "date"
+                },
+                {
+                  "label": "widgets.debt.grid.account",
+                  "name": "account",
+                  "type": "control",
+                  "controlType": "text"
+                },
+                {
+                  "dictCode": 26,
+                  "label": "widgets.debt.grid.regionCode",
+                  "name": "regionCode",
+                  "type": "control",
+                  "controlType": "select"
+                },
+                {
+                  "dictCode": 6,
+                  "label": "widgets.debt.grid.branchCode",
+                  "name": "branchCode",
+                  "type": "control",
+                  "controlType": "select"
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT1_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 198
+                  },
+                  "dictCode": 34,
+                  "label": "widgets.debt.grid.dict1Code",
+                  "name": "dict1Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 198
+                    }
+                  }
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT2_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 199
+                  },
+                  "dictCode": 35,
+                  "label": "widgets.debt.grid.dict2Code",
+                  "name": "dict2Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 199
+                    }
+                  }
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT3_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 200
+                  },
+                  "dictCode": 36,
+                  "label": "widgets.debt.grid.dict3Code",
+                  "name": "dict3Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 200
+                    }
+                  }
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT4_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 201
+                  },
+                  "dictCode": 37,
+                  "label": "widgets.debt.grid.dict4Code",
+                  "name": "dict4Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 201
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "control",
+              "controlType": "textarea",
+              "label": "widgets.debt.grid.comment",
+              "name": "comment"
             }
-          },
-          "width": 1
+          ]
         },
         {
-          "dictCode": 35,
-          "disabled": {
-            "type": "permission",
-            "method": "has",
-            "value": "DEBT_DICT2_EDIT_LIST"
-          },
-          "display": {
-            "type": "entity",
-            "method": "isUsed",
-            "value": 199
-          },
-          "label": "widgets.debt.grid.dict2Code",
-          "name": "dict2Code",
-          "type": "select",
-          "validators": {
-            "required": {
-              "type": "entity",
-              "method": "isMandatory",
-              "value": 199
+          "type": "group",
+          "groupType": "tabs",
+          "children": [
+            {
+              "type": "template",
+              "label": "widgets.debt.component.title",
+              "value": "debtComponents"
+            },
+            {
+              "type": "template",
+              "label": "widgets.debt.portfolioLog.title",
+              "value": "portfolioLog"
+            },
+            {
+              "type": "template",
+              "label": "widgets.debt.componentLog.title",
+              "value": "componentLog"
             }
-          },
-          "width": 1
-        },
-        {
-          "dictCode": 36,
-          "disabled": {
-            "type": "permission",
-            "method": "has",
-            "value": "DEBT_DICT3_EDIT_LIST"
-          },
-          "display": {
-            "type": "entity",
-            "method": "isUsed",
-            "value": 200
-          },
-          "label": "widgets.debt.grid.dict3Code",
-          "name": "dict3Code",
-          "type": "select",
-          "validators": {
-            "required": {
-              "type": "entity",
-              "method": "isMandatory",
-              "value": 200
-            }
-          },
-          "width": 1
-        },
-        {
-          "dictCode": 37,
-          "disabled": {
-            "type": "permission",
-            "method": "has",
-            "value": "DEBT_DICT4_EDIT_LIST"
-          },
-          "display": {
-            "type": "entity",
-            "method": "isUsed",
-            "value": 201
-          },
-          "label": "widgets.debt.grid.dict4Code",
-          "name": "dict4Code",
-          "type": "select",
-          "validators": {
-            "required": {
-              "type": "entity",
-              "method": "isMandatory",
-              "value": 201
-            }
-          },
-          "width": 1
+          ]
         }
-      ],
-      "display": true,
-      "type": "group",
-      "groupType": "plain",
-      "width": 0
-    },
-    {
-      "children": [
-        {
-          "disabled": false,
-          "display": true,
-          "label": "widgets.debt.grid.comment",
-          "name": "comment",
-          "type": "textarea",
-          "validators": {},
-          "width": 1
-        }
-      ],
-      "display": true,
-      "type": "group",
-      "groupType": "plain",
-      "width": 0
+      ]
     }
   ],
   "plugins": [
     {
-      "type": "link-gridselect",
+      "type": "gridselect",
       "from": "portfolioId",
       "to": "bankId",
       "key": "contractorId"

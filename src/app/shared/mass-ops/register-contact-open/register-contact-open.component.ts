@@ -59,7 +59,7 @@ export class RegisterContactOpenComponent implements OnInit {
   onPhoneAction(contactId: any): void {
     this.registerContactOpenService.registerContactAction$.next(
       {
-        contactType: 2,
+        contactType: 1,
         contactId,
         debtId: this.debtId,
         personId: this.entityId,

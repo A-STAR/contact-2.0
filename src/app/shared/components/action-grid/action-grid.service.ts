@@ -135,6 +135,10 @@ export class ActionGridService {
     return actionData.type === MetadataActionType.SELECTED ? (actionData.data as IGridActionSelection).length : null;
   }
 
+  hasParamKey(paramKey: string, action: IGridAction): boolean {
+    return action.params && action.params.includes(paramKey);
+  }
+
   getAddOptions(action: IGridAction, name: string): (number|string)[] {
     // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
     // TODO(i.lobanov): why store it that way in json config?

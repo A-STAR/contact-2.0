@@ -10,6 +10,7 @@ export interface IDebtAttributeChange {
   dict2Code?: number;
   dict3Code?: number;
   dict4Code?: number;
+  stageCode?: number;
 }
 
 export const DictOperation = {

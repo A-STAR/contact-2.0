@@ -128,7 +128,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       this.columns = [
         ...this.columns,
         { prop: 'isSingleSending', maxWidth: 150, renderer: TickRendererComponent },
-        { prop: 'recipientTypeCode', maxWidth: 100, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+        { prop: 'recipientTypeCode', maxWidth: 100, dictCode: UserDictionariesService.DICTIONARY_MESSAGE_RECIPIENT_TYPE },
       ].map(addGridLabel('utilities.messageTemplates.grid'));
     }
   }

@@ -1,0 +1,64 @@
+<ng-container [ngSwitch]="group.groupType">
+
+  <!-- Tabs Group -->
+  <app-tabview *ngSwitchCase="'tabs'" [fullHeight]="true">
+    <app-tabview-tab *ngFor="let item of group.children; let i = index;" [title]="item.label || 'Tab ' + (i + 1)">
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
+    </app-tabview-tab>
+  </app-tabview>
+
+  <!-- Vertical & Horizontal Groups -->
+  <ng-container *ngSwitchDefault>
+
+    <!-- Group with splitters -->
+    <split
+      *ngIf="group.splitters"
+      gutterColor="transparent"
+      gutterSize="25"
+      [direction]="splitDirection"
+      (dragEnd)="onDragEnd($event)"
+    >
+      <split-area *ngFor="let item of group.children; let i = index;" [size]="getAreaSize(item, i)">
+        <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
+      </split-area>
+    </split>
+
+    <!-- Group without splitters -->
+    <div *ngIf="!group.splitters" [ngClass]="groupClass">
+      <div *ngFor="let item of group.children" [ngClass]="itemClass" [ngStyle]="getItemStyle(item)">
+        <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #content let-item>
+  <ng-container *ngIf="isDisplayed(item) | async">
+    <ng-container [ngSwitch]="item.type">
+
+      <!-- Attribute -->
+      <app-dynamic-layout-attribute
+        *ngSwitchCase="'attribute'"
+        [attribute]="item"
+      ></app-dynamic-layout-attribute>
+
+      <!-- Control -->
+      <app-dynamic-layout-control
+        *ngSwitchCase="'control'"
+        [control]="item"
+      ></app-dynamic-layout-control>
+
+      <!-- Group -->
+      <app-dynamic-layout-group
+        *ngSwitchCase="'group'"
+        [group]="item"
+      ></app-dynamic-layout-group>
+
+      <!-- Template -->
+      <app-dynamic-layout-template
+        *ngSwitchCase="'template'"
+        [template]="item"
+      ></app-dynamic-layout-template>
+    </ng-container>
+  </ng-container>
+</ng-template>

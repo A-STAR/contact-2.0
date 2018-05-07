@@ -98,6 +98,25 @@ export const flattenArray = (arr: any[]) => {
   return arr.reduce((acc, child) => acc.concat(Array.isArray(child) ? flattenArray(child) : child), []);
 };
 
+export const binaryFromArray = (arr: boolean[]) => {
+  // tslint:disable-next-line:no-bitwise
+  return arr.reduceRight<number>((acc, val, index) => acc |= Number(val) << (arr.length - index - 1), 0);
+};
+
+export const toBoolArray = (num: number) => {
+  return Math.abs(num || 0).toString(2).split('').map(n => Boolean(+n));
+};
+
+export const toBoolSizedArray = (num: number, size: number = 1) => {
+  const binaryArr = toBoolArray(num);
+  size = size - binaryArr.length;
+  while (size > 0) {
+    binaryArr.unshift(false);
+    size--;
+  }
+  return binaryArr;
+};
+
 export const invert = (a: boolean) => !a;
 
 export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
@@ -128,6 +147,8 @@ export const floor = (value: number, precision: number) => {
 
 export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
 
+export const random = (min: number, max: number): number => min + Math.round(Math.random() * (max - min));
+
 /**
  * Allows to check is the current route matches the segment
  * i.e. `isRoute('create')`
@@ -154,6 +175,30 @@ export function getTranslations(languages: ILookupLanguage[], translations: IEnt
       value: findTranslation(translations, language.id)
     })
   );
+}
+
+export class IncId {
+  private static _instance: IncId;
+  private _uuid = 0;
+
+  private constructor() {}
+
+  static get(): IncId {
+    return this._instance || (this._instance = new this());
+  }
+
+  is(id: number): boolean {
+    return this._uuid === id;
+  }
+
+  set uuid(to: number) {
+    this._uuid = Math.abs(to);
+  }
+
+  get uuid(): number {
+    return ++this._uuid;
+  }
+
 }
 
 export function deepFilterAndMap<T extends { children?: T[] }, V>(items: T[],

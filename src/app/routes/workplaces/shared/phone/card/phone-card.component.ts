@@ -1,13 +1,11 @@
-import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
-  OnInit, ViewChild, Output, EventEmitter
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
-import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
+import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -24,20 +22,25 @@ const labelKey = makeKey('widgets.phone.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneCardComponent implements OnInit {
-  @Input() callCenter = false;
-  @Input() entityId: number;
-  @Input() phoneId: number;
-
-  @Output() close = new EventEmitter<void>();
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[] = null;
   phone: IPhone;
 
+  private routeParamMap = this.route.snapshot.paramMap;
+  private routeData = this.route.snapshot.data;
+
+  private callCenter = this.routeData.callCenter;
+  private entityKey = this.routeData.entityKey || 'entityId';
+
+  private phoneId = Number(this.routeParamMap.get('phoneId'));
+  private entityId = Number(this.routeParamMap.get(this.entityKey));
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
+    private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -75,7 +78,8 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.close.emit();
+    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
+    this.router.navigate([ url ]);
   }
 
   get canSubmit(): boolean {

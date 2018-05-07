@@ -5,7 +5,6 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -23,6 +22,7 @@ import {
 import * as R from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { ILabeledValue } from '../select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
@@ -32,7 +32,8 @@ import { LookupService } from '@app/core/lookup/lookup.service';
 import { SortOptionsPipe } from '@app/shared/components/form/select/select.pipe';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { of } from 'rxjs/observable/of';
+
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
   selector: 'app-select',
@@ -53,8 +54,6 @@ import { of } from 'rxjs/observable/of';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
-  @ViewChild('input') input: ElementRef;
-
   @Input() dictCode: number;
   @Input() errors: ValidationErrors;
   @Input() filterByPermission: string;
@@ -66,11 +65,10 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   @Output() select = new EventEmitter<any>();
 
-  public open = false;
+  @ViewChild('input') input: ElementRef;
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   private _active: ILabeledValue;
-  private _autoAlign = false;
-  // private _autocomplete: ILabeledValue[] = [];
   private _disabled = false;
   private _options: ILabeledValue[];
   private _required = false;
@@ -88,20 +86,11 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   @Input()
-  set autoAlign(autoAlign: boolean) {
-    this._autoAlign = this.setDefault(autoAlign, this._autoAlign);
-  }
-
-  get autoAlign(): boolean {
-    return this._autoAlign;
-  }
-
-  @Input()
   set isDisabled(value: boolean) {
     this._disabled = this.setDefault(value, this._disabled);
 
     if (this._disabled) {
-      this.hideOptions();
+      this.dropdown.close();
     }
     this.setDisabledState(value);
   }
@@ -131,7 +120,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private elRef: ElementRef,
     private lookupService: LookupService,
     private renderer2: Renderer2,
     private sortOptionsPipe: SortOptionsPipe,
@@ -169,14 +157,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   ngOnDestroy(): void {
     if (this.optionsSubscription) {
       this.optionsSubscription.unsubscribe();
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    // close if target is not inside host (e.g. own caret, input)
-    if (!this.elRef.nativeElement.contains(event.target) && this.open) {
-      this.hideOptions();
     }
   }
 
@@ -221,18 +201,11 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   get caretCls(): string {
-    return this.open ? 'up' : '';
+    return this.dropdown.opened ? 'up' : '';
   }
 
-  onInputClick(): void {
-    if (this.disabled) {
-      return;
-    }
-    if (!this.open) {
-      this.showOptions();
-    } else {
-      this.hideOptions();
-    }
+  onDropdownToggle(): void {
+    this.cdRef.markForCheck();
   }
 
   onInputChange(label: string): void {
@@ -250,22 +223,14 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     this.propagateChange(option.value);
     this.select.emit(option.value);
 
-    this.hideOptions();
+    this.dropdown.close();
+    this.cdRef.markForCheck();
   }
 
   onClear(event: MouseEvent): void {
     event.preventDefault();
     this.active = null;
     this.propagateChange(null);
-  }
-
-  onCaret(event: MouseEvent): void {
-    event.preventDefault();
-    if (this.open) {
-      this.hideOptions();
-    } else {
-      this.showOptions();
-    }
   }
 
   isActive(option: ILabeledValue): boolean {
@@ -275,15 +240,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   propagateTouched: Function = () => {};
 
   private propagateChange: Function = () => {};
-
-  private hideOptions(): void {
-    this.open = false;
-    this.propagateTouched();
-  }
-
-  private showOptions(): void {
-    this.open = true;
-  }
 
   private setDefault(value: boolean, defaultValue: boolean): boolean {
     return R.defaultTo(defaultValue)(value);

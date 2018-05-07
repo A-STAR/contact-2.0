@@ -30,6 +30,7 @@ import { DebtAmountModule } from './components/form/debt-amount/debt-amount.modu
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
+import { DictionaryModule } from './pipes/dictionary/dictionary.module';
 import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DropdownInputModule } from './components/form/dropdown/dropdown-input.module';
@@ -74,6 +75,7 @@ import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
 import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
+import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynamic-layout.module';
 
 // https://angular.io/styleguide#!#04-10
 @NgModule({
@@ -103,17 +105,19 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
+    DictionaryModule,
     DownloaderModule,
-    DropdownModule,
     DropdownInputModule,
-    DynamicFormModule,
+    DropdownModule,
     DynamicForm2Module,
+    DynamicFormModule,
+    DynamicLayoutModule,
     FileUploadModule,
-    GridModule,
     Grid2Module,
-    GridsModule,
+    GridModule,
     GridTree2Module,
     GridTree2WrapperModule,
+    GridsModule,
     HDividerModule,
     HtmlTextareaModule,
     ImageUploadModule,
@@ -132,14 +136,14 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
+    ScriptEditorModule,
     SelectModule,
     SpinnerModule,
-    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
+    TitlebarModule,
     Toolbar2Module,
     TreeModule,
-    TitlebarModule,
     ValueInputModule,
     ViewFormModule,
   ],
@@ -181,19 +185,21 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
-    DialogMultiSelectModule,
-    DownloaderModule,
-    DropdownModule,
-    DropdownInputModule,
-    DynamicFormModule,
-    DynamicForm2Module,
     DialogModule,
+    DialogMultiSelectModule,
+    DictionaryModule,
+    DownloaderModule,
+    DropdownInputModule,
+    DropdownModule,
+    DynamicForm2Module,
+    DynamicFormModule,
+    DynamicLayoutModule,
     FileUploadModule,
-    GridModule,
     Grid2Module,
-    GridsModule,
+    GridModule,
     GridTree2Module,
     GridTree2WrapperModule,
+    GridsModule,
     HDividerModule,
     HtmlTextareaModule,
     ImageUploadModule,
@@ -211,17 +217,17 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     PopupInputModule,
     PopupOutletModule,
     ProgressbarModule,
-    QBuilderComponent,
     QBuilder2Module,
+    QBuilderComponent,
     RadioGroupModule,
+    ScriptEditorModule,
     SelectModule,
     SpinnerModule,
-    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
+    TitlebarModule,
     Toolbar2Module,
     TreeModule,
-    TitlebarModule,
     ValueInputModule,
     ViewFormModule,
   ]

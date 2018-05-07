@@ -1,0 +1,64 @@
+@import '../../../../shared/styles/app/variables.scss';
+$checkbox-size: 15px;
+
+.toolbar-item {
+  display: inline-block;
+  vertical-align: middle;
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+  &.align-right {
+    float: right;
+    margin-right: 0;
+    padding-left: 8px;
+  }
+}
+
+.checkbox {
+  display: inline-block;
+  label {
+    padding-left: $checkbox-size;
+  }
+  input[type="checkbox"] {
+    margin-left: -$checkbox-size;
+  }
+}
+
+$toolbar-button-size: 32px;
+
+::ng-deep .toolbar2-button {
+  display: inline-block;
+  width: $toolbar-button-size;
+  height: $toolbar-button-size;
+  border: 1px solid transparent;
+  text-align: center;
+  font-size: 18px;
+  padding: 0;
+  line-height: $toolbar-button-size + 4px;
+  &.btn-default {
+    color: $form-toolbar-icon-color;
+    border-color: transparent;
+    &:hover {
+      color: $form-toolbar-icon-color;
+      border-color: transparent;
+    }
+    &[disabled] {
+      color: $form-toolbar-icon-disabled-color;
+    }
+  }
+  transition: 100ms all ease-in-out;
+  i {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    width: 1em;
+  }
+  // This prevents changing default button styles on hover
+  &[disabled] {
+    color: $form-toolbar-icon-disabled-color;
+    &:hover {
+      background-color: #fff;
+      border-color: transparent;
+    }
+  }
+}

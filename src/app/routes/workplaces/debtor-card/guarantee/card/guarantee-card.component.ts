@@ -1,153 +1,227 @@
-import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
-import { Subscription } from 'rxjs/Subscription';
+import { of } from 'rxjs/observable/of';
+import { first, map, mapTo, mergeMap } from 'rxjs/operators';
+import { isEmpty } from 'ramda';
 
-import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract, IGuarantor } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
-import { GuarantorService } from '@app/routes/workplaces/core/guarantor/guarantor.service';
-import { RoutingService } from '@app/core/routing/routing.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { PersonService } from '@app/routes/workplaces/core/person/person.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
-import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { makeKey } from '@app/core/utils';
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
-const label = makeKey('widgets.guaranteeContract.grid');
+import { contractFormConfig } from './config/contract-form-config';
+import { guarantorFormConfig } from './config/guarantor-form-config';
+
+import { invert } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-debtor-guarantee-card',
-  templateUrl: './guarantee-card.component.html'
+  host: { class: 'full-size' },
+  selector: 'app-guarantee-card',
+  templateUrl: 'guarantee-card.component.html',
 })
-export class DebtorGuaranteeCardComponent implements OnInit, OnDestroy {
+export class GuarantorCardComponent implements AfterViewInit {
+  @ViewChild('contractForm') contractForm: MetadataFormComponent<any>;
+  @ViewChild('guarantorForm') guarantorForm: MetadataFormComponent<any>;
 
-  @ViewChild(DynamicFormComponent) set form(guaranteeForm: DynamicFormComponent) {
-    this._form = guaranteeForm;
-    if (guaranteeForm) {
-      this.onFormInit();
-    }
-  }
+  readonly contractFormConfig = contractFormConfig;
+  readonly guarantorFormConfig = guarantorFormConfig;
 
-  private _form: DynamicFormComponent;
-  private canEdit: boolean;
-  private routeParams = (<any>this.route.params).value;
-  private debtId = this.routeParams.debtId || null;
-  private contractId = this.routeParams.contractId || null;
-  private personId = this.routeParams.guarantorId || null;
-  private guarantorSelectionSub: Subscription;
+  readonly paramMap = this.route.snapshot.paramMap;
 
-  controls: IDynamicFormGroup[] = null;
-  contract: IGuaranteeContract;
+  /**
+   * Contract ID (link between debtor and guarantor)
+   */
+  readonly contractId = Number(this.paramMap.get('contractId'));
+
+  /**
+   * Debt ID
+   */
+  readonly debtId = Number(this.paramMap.get('debtId'));
+
+  /**
+   * ID of person who is a debtor (displayed in debtor card)
+   */
+  readonly debtorId = Number(this.paramMap.get('debtorId'));
+
+  /**
+   * ID of person who is linked to the debtor as guarantor via contractId
+   */
+  readonly guarantorId = Number(this.paramMap.get('guarantorId'));
+
+  /**
+   * Guarantor role (according to dictionary 44)
+   */
+  readonly guaarantorRole = 2;
+
+  readonly editing = Boolean(this.guarantorId);
+
+  readonly guarantor$ = this.guaranteeCardService.guarantor$;
+
+  readonly isGuarantorFormDisabled$ = this.guarantor$.pipe(
+    map(Boolean),
+  );
+
+  readonly edit$ = this.route.data.pipe(
+    map(data => data.edit),
+  );
+
+  readonly showContractForm$ = this.route.data.pipe(
+    map(data => data.showContractForm),
+  );
+
+  readonly contractTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title',
+  };
+
+  readonly guarantorTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: this.edit$.pipe(map(invert)),
+      },
+    ]
+  };
 
   constructor(
-    private cdRef: ChangeDetectorRef,
+    private guaranteeCardService: GuaranteeCardService,
     private guaranteeService: GuaranteeService,
+    private injector: Injector,
+    private personService: PersonService,
+    private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
   get canSubmit(): boolean {
-    if (this.isAddingGuarantor && !!this.personId) {
-      return true;
-    }
-    return this.form && this.form.canSubmit;
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const guarantorFormGroup = this.guarantorForm
+      ? this.guarantorForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
+    return contractFormValid && guarantorFormValid;
   }
 
-  get isAddingGuarantor(): boolean {
-    return this.isRoute('guarantor/add');
-  }
-
-  get form(): DynamicFormComponent {
-    return this._form;
-  }
-
-  get contract$(): Observable<IGuaranteeContract> {
-    return this.guaranteeService.fetch(this.debtId, +this.contractId, +this.personId);
-  }
-
-  ngOnInit(): void {
-    combineLatest(
-      this.contract$,
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
-      this.contract$.flatMap(
-        contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
-      )
-    )
-    .pipe(first())
-    .subscribe(([ contract, respTypeOpts, canEdit ]) => {
-      const controls: IDynamicFormGroup[] = [
-        {
-          title: 'widgets.guaranteeContract.title', collapsible: true,
-          children: [
-            { label: label('personId'), controlName: 'personId',  type: 'number', required: true, display: false },
-            { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true, width: 6 },
-            { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', width: 6 },
-            { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', width: 6 },
-            {
-              label: label('contractTypeCode'), controlName: 'contractTypeCode',
-              type: 'select', options: respTypeOpts, required: true, width: 6
-            },
-            { label: label('comment'), controlName: 'comment', type: 'textarea', },
-          ]
-        },
-      ];
-
-      this.personId = this.personId;
-      this.controls = controls;
-      this.contract = contract;
-      this.canEdit = canEdit;
-      this.cdRef.markForCheck();
-    });
-
-    this.guarantorSelectionSub = this.guaranteeService
-      .getPayload<IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
-      .subscribe(guarantor => {
-        const personId = this.form.getControl('personId');
-        personId.setValue(guarantor.id);
-        personId.markAsDirty();
-      });
-  }
-
-  onFormInit(): void {
-    if (this.isAddingGuarantor || !this.canEdit) {
-      this.form.form.disable();
-      this.cdRef.detectChanges();
+  ngAfterViewInit(): void {
+    if (this.editing) {
+      this.guaranteeService
+        .fetch(this.debtId, this.contractId)
+        .subscribe(response => {
+          const { personIds, ...contract } = response;
+          this.contractForm.formGroup.patchValue(contract);
+        });
+      this.personService
+        .fetch(this.guarantorId)
+        .subscribe(guarantor => {
+          this.guarantorForm.formGroup.patchValue(guarantor);
+        });
     }
   }
 
-  ngOnDestroy(): void {
-    if (this.guarantorSelectionSub) {
-      this.guarantorSelectionSub.unsubscribe();
-    }
+  onGuarantorFormClear(): void {
+    this.guaranteeCardService.selectGuarantor(null);
+    this.guarantorForm.formGroup.reset();
+  }
+
+  onSave(): void {
+    this.guarantor$
+      .pipe(
+        first(),
+        mergeMap(selectedGuarantor => {
+          return selectedGuarantor
+            ? of (selectedGuarantor.id)
+            : this.saveGuarantor();
+        }),
+        mergeMap(guarantorId => this.saveContract(guarantorId))
+      ).subscribe(() => this.onSuccess());
+  }
+
+  onSuccess(): void {
+    this.guaranteeService.dispatchGuarantorSavedMessage();
+    this.onBack();
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/app/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ]);
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    if (debtId && debtorId) {
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+    }
   }
 
-  onSubmit(): void {
-    const data = this.form.serializedUpdates;
-    const action = this.isAddingGuarantor
-      ? this.guaranteeService.addGuarantor(this.debtId, this.contractId, data.personId)
-      : this.isRoute('create')
-        ? this.guaranteeService.create(this.debtId, data)
-        : this.guaranteeService.update(this.debtId, this.contractId, data);
-
-    action.subscribe(() => {
-      this.guaranteeService.dispatchAction(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
-      this.onBack();
-    });
+  onPhoneAdd(): void {
+    this.router.navigate([ 'phone/create' ], { relativeTo: this.route });
   }
 
-  private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
+  onPhoneEdit(phone: IPhone): void {
+    this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressAdd(): void {
+    this.router.navigate([ 'address/create' ], { relativeTo: this.route });
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onIdentityAdd(): void {
+    this.router.navigate([ 'identity/create' ], { relativeTo: this.route });
+  }
+
+  onIdentityEdit(document: IIdentityDoc): void {
+    this.router.navigate([ `identity/${document.id}` ], { relativeTo: this.route });
+  }
+
+  onEmploymentAdd(): void {
+    this.router.navigate([ 'employment/create' ], { relativeTo: this.route });
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.router.navigate([ `employment/${employment.id}` ], { relativeTo: this.route });
+  }
+
+  private saveContract(guarantorId: number): Observable<void> {
+    if (!this.contractForm) {
+      return this.guaranteeService.addGuarantor(this.debtId, this.contractId, guarantorId);
+    }
+    const { data } = this.contractForm;
+    if (isEmpty(data)) {
+      return of(null);
+    }
+    return this.contractId
+      ? this.guaranteeService.update(this.debtId, this.contractId, data)
+      : this.guaranteeService.create(this.debtId, { ...data, personId: guarantorId });
+  }
+
+  private saveGuarantor(): Observable<number> {
+    const { data } = this.guarantorForm;
+    if (isEmpty(data)) {
+      return of(null);
+    }
+    return this.guarantorId
+      ? this.personService.update(this.guarantorId, data).pipe(mapTo(this.guarantorId))
+      : this.personService.create(data);
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
   }
 }

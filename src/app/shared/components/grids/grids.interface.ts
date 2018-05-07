@@ -3,6 +3,8 @@ import { ValueGetterParams, ValueSetterParams, ValueParserParams } from 'ag-grid
 
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
+import { StateTree, IStateTreeParams } from '@app/core/utils/state-tree';
+
 export enum IGridSelectionType {
   SINGLE = 'single',
   MULTIPLE = 'multiple',
@@ -37,6 +39,7 @@ export interface IGridColumn<T> {
   minWidth?: number;
   maxWidth?: number;
   renderer?: any;
+  rendererParams?: any;
   valueTypeKey?: string;
   // params for value renderer
   valueTypeParams?: {
@@ -47,6 +50,8 @@ export interface IGridColumn<T> {
   valueSetter?: ((params: ValueSetterParams) => boolean) | string;
   valueParser?: ((params: ValueParserParams) => any);
   isGroup?: boolean;
+  isDisplayed?: (data: T) => boolean;
+  actionParams?: IStateTreeParams;
   edit?: IGridEditableColumn<T>;
 }
 
@@ -80,6 +85,8 @@ export interface IValueRendererDef {
     lookupKey?: ILookupKey;
   };
 }
+
+export type ActionRendererParams = ICellRendererParams & { stateTree: StateTree, isDisplayed: Function };
 
 export type IValueRendererParams = ICellRendererParams & IValueRendererDef & { data: any };
 

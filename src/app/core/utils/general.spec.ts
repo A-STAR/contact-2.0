@@ -1,4 +1,4 @@
-import { range, deepFilterAndMap } from './general';
+import { range, deepFilterAndMap, IncId, binaryFromArray, toBoolArray, toBoolSizedArray } from './general';
 
 describe('General helper:', () => {
 
@@ -87,6 +87,128 @@ describe('General helper:', () => {
       expect(deepFilterAndMap(mockData, 'mandatory', 'test')).toEqual([ 2 ]);
     });
 
+  });
+
+  describe('incId', () => {
+    let incId: IncId;
+
+    beforeEach(() => {
+      if (incId) {
+        incId.uuid = 0;
+      }
+      incId = IncId.get();
+    });
+
+    it('should increment ids', () => {
+      expect(incId.uuid).toEqual(1);
+      expect(incId.uuid).toEqual(2);
+      expect(incId.uuid).toEqual(3);
+      expect(incId.uuid).toEqual(4);
+    });
+
+    it('should be singletone', () => {
+      expect(incId.uuid).toEqual(1);
+      expect(incId.uuid).toEqual(2);
+
+      let incIdInstance = IncId.get();
+
+      expect(incIdInstance.uuid).toEqual(3);
+      expect(incIdInstance.uuid).toEqual(4);
+
+      incIdInstance = IncId.get();
+      incIdInstance.uuid = 66;
+
+      expect(incIdInstance.uuid).toEqual(67);
+      expect(incIdInstance.uuid).toEqual(68);
+      expect(incId.uuid).toEqual(69);
+    });
+
+    it('should contain only positive values', () => {
+      incId.uuid = -999;
+      expect(incId.is(999)).toBeTruthy();
+      expect(incId.uuid).toBe(1000);
+
+      const _incId = IncId.get();
+
+      _incId.uuid = -45;
+
+      expect(_incId.is(45)).toBeTruthy();
+    });
+  });
+
+  describe('binaryFromArray', () => {
+    it('should return single binary value from passed array of booleans', () => {
+      let result = binaryFromArray([true, false]);
+      expect(result).toBe(2);
+
+      result = binaryFromArray([]);
+      expect(result).toBe(0);
+      result = binaryFromArray([false]);
+      expect(result).toBe(0);
+
+      result = binaryFromArray([true]);
+      expect(result).toBe(1);
+
+      result = binaryFromArray([false, true]);
+      expect(result).toBe(1);
+
+      result = binaryFromArray([false, true, true, true, false]);
+      expect(result).toBe(14);
+
+      result = binaryFromArray([undefined, true, undefined, true, null]);
+      expect(result).toBe(10);
+
+    });
+  });
+
+  describe('toBoolArray', () => {
+    it('should produce array of booleans from passed binary number', () => {
+
+      let result = toBoolArray(1);
+      expect(result).toEqual([true]);
+
+      result = toBoolArray(0);
+
+      expect(result).toEqual([false]);
+
+      result = toBoolArray(undefined);
+
+      expect(result).toEqual([false]);
+
+      result = toBoolArray(3);
+      expect(result).toEqual([true, true]);
+
+      result = toBoolArray(5);
+      expect(result).toEqual([true, false, true]);
+
+      result = toBoolArray(-5);
+      expect(result).toEqual([true, false, true]);
+
+    });
+  });
+
+  describe('toBoolSizedArray', () => {
+    it('should produce array of booleans of fixed size from passed binary number', () => {
+      let result = toBoolSizedArray(1, 1);
+      expect(result).toEqual([true]);
+
+      result = toBoolSizedArray(0);
+
+      expect(result).toEqual([false]);
+
+      result = toBoolSizedArray(undefined);
+
+      expect(result).toEqual([false]);
+
+      result = toBoolSizedArray(3, 3);
+      expect(result).toEqual([false, true, true]);
+
+      result = toBoolSizedArray(5, 5);
+      expect(result).toEqual([false, false, true, false, true]);
+
+      result = toBoolSizedArray(-5, 5);
+      expect(result).toEqual([false, false, true, false, true]);
+    });
   });
 
 });

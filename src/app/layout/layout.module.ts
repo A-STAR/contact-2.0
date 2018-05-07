@@ -43,7 +43,7 @@ const routes: Routes = [
           path: 'licence',
           loadChildren: 'app/layout/dynamic-popups/licence/licence.module#LicenceModule',
         },
-      ]
+      ],
     ),
     InfoDialogModule,
     RouterModule.forChild(routes),

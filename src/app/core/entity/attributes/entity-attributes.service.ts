@@ -27,7 +27,7 @@ export class EntityAttributesService extends AbstractActionService {
   private hash = {};
   private statuses = [EntityAttributesStatusEnum.PENDING, EntityAttributesStatusEnum.LOADED];
 
-  private readonly state$ = this.store.pipe(
+  readonly bag$ = this.store.pipe(
     select(state => state.entityAttributes),
   );
 
@@ -81,7 +81,7 @@ export class EntityAttributesService extends AbstractActionService {
       this.refresh(idsToFetch);
     }
 
-    return this.state$
+    return this.bag$
       .map(state => ids.reduce((acc, id) => ({ ...acc, [id]: state[id] }), {}))
       .filter(slice => Object.keys(slice).reduce((acc, key) => acc && slice[key], true))
       .do(slice => Object.keys(slice).forEach(id => {

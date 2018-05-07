@@ -40,6 +40,10 @@ const routes: Routes = [
         loadChildren: './forms/forms.module#FormsModule',
       },
       {
+        path: 'layout/:layoutId',
+        loadChildren: './layout/layout.module#LayoutModule',
+      },
+      {
         path: 'areas',
         loadChildren: './areas/areas.module#AreasModule',
       },

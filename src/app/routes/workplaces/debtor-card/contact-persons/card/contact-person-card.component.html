@@ -1,0 +1,89 @@
+<div class="flex vertical">
+
+  <!-- Titlebar -->
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+  </div>
+
+  <!-- Form -->
+  <div class="flex-item grow mb-lg" style="overflow-y: auto;">
+    <app-titlebar [titlebar]="contactPersonTitlebar"></app-titlebar>
+    <app-metadata-form
+      #linkForm
+      [config]="linkFormConfig"
+      [data]="contactPerson$ | async"
+    ></app-metadata-form>
+    <app-metadata-form
+      #contactPersonForm
+      [config]="contactPersonFormConfig"
+      [data]="contactPerson$ | async"
+      [disabled]="isContactPersonFormDisabled$ | async"
+    ></app-metadata-form>
+    <app-button *ngIf="!(edit$ | async)" type="clear" (click)="onContactPersonFormClear()"></app-button>
+  </div>
+
+  <!-- Additional Info -->
+  <div *ngIf="edit$ | async" class="flex-item grow mb-lg">
+    <app-tabview [fullHeight]="true">
+
+      <!-- Identifications -->
+      <app-tabview-tab title="Удостоверения личности">
+        <app-identity-grid
+          [personId]="contactId"
+          (add)="onIdentityAdd()"
+          (dblClick)="onIdentityEdit($event)"
+          (edit)="onIdentityEdit($event)"
+        ></app-identity-grid>
+      </app-tabview-tab>
+
+      <!-- Employment -->
+      <app-tabview-tab title="Трудоустройство">
+        <app-employment-grid
+          [personId]="contactId"
+          (add)="onEmploymentAdd()"
+          (dblClick)="onEmploymentEdit($event)"
+          (edit)="onEmploymentEdit($event)"
+        ></app-employment-grid>
+      </app-tabview-tab>
+
+      <!-- Phones -->
+      <app-tabview-tab title="Телефоны">
+        <app-phone-grid
+          [contactType]="1"
+          [debtId]="debtId"
+          [personId]="contactId"
+          [personRole]="contactPersonRole"
+          (add)="onPhoneAdd()"
+          (dblClick)="onPhoneEdit($event)"
+          (edit)="onPhoneEdit($event)"
+        ></app-phone-grid>
+      </app-tabview-tab>
+
+      <!-- Addresses -->
+      <app-tabview-tab title="Адреса">
+        <app-address-grid
+          [debtId]="debtId"
+          [personId]="contactId"
+          [personRole]="contactPersonRole"
+          (add)="onAddressAdd()"
+          (dblClick)="onAddressEdit($event)"
+          (edit)="onAddressEdit($event)"
+        ></app-address-grid>
+      </app-tabview-tab>
+
+      <!-- Documents -->
+      <app-tabview-tab title="Документы">
+        <!-- Documents for debt (term 19 in dictionary 55) -->
+        <app-document-grid
+          [entityType]="19"
+          [entityId]="debtId"
+        ></app-document-grid>
+      </app-tabview-tab>
+    </app-tabview>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex-item">
+    <app-button type="save" [disabled]="!canSubmit" (click)="onSave()"></app-button>
+  </div>
+</div>

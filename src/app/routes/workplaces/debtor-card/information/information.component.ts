@@ -4,9 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
-import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDebt } from '@app/core/app-modules/app-modules.interface';
-import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';

@@ -13,7 +13,7 @@ import {
   Renderer2,
 } from '@angular/core';
 
-import { IAreaLayout, IDragData } from './area.interface';
+import { AreaLayout, IDragData } from './area.interface';
 
 import { AreaService } from './area.service';
 import { SettingsService } from '@app/core/settings/settings.service';
@@ -33,7 +33,7 @@ export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostBinding('style.flex-direction')
   @Input()
-  layout: IAreaLayout;
+  layout: AreaLayout;
 
   @Input()
   persistenceKey: string;
@@ -44,7 +44,7 @@ export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setSize(size);
   }
 
-  parentLayout: IAreaLayout;
+  parentLayout: AreaLayout;
 
   private id: string;
   private rootPersistenceKey: string;
@@ -106,7 +106,7 @@ export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get size(): number {
     const r = this.elRef.nativeElement.getBoundingClientRect();
-    return this.parentLayout === IAreaLayout.ROW
+    return this.parentLayout === AreaLayout.ROW
       ? r.width
       : r.height;
   }
@@ -120,8 +120,8 @@ export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
   getGutterClass(): any {
     return {
       gutter: true,
-      horizontal: this.layout === IAreaLayout.COLUMN,
-      vertical: this.layout === IAreaLayout.ROW,
+      horizontal: this.layout === AreaLayout.COLUMN,
+      vertical: this.layout === AreaLayout.ROW,
     };
   }
 
@@ -187,7 +187,7 @@ export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getCoordFromEvent(event: MouseEvent): number {
-    return this.layout === IAreaLayout.ROW
+    return this.layout === AreaLayout.ROW
       ? event.clientX
       : event.clientY;
   }

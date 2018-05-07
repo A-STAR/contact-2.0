@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { AddressModule } from './address/address.module';
 import { AttributesModule } from './attributes/attributes.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
@@ -12,6 +13,7 @@ import { OperatorDetailsModule } from './operator-details/operator-details.modul
 import { OutsourcingModule } from './outsourcing/outsourcing.module';
 import { PaymentConfirmModule } from './payment-confirm/payment-confirm.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
+import { PersonTypeModule } from '@app/shared/mass-ops/person-type/person-type.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { SmsDeleteModule } from './sms-delete/sms-delete.module';
 import { SmsModule } from './sms/sms.module';
@@ -22,6 +24,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
 
 @NgModule({
   imports: [
+    AddressModule,
     AttributesModule,
     CommonModule,
     ContactLogModule,
@@ -34,6 +37,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     OutsourcingModule,
     PaymentConfirmModule,
     PaymentOperatorModule,
+    PersonTypeModule,
     PromiseResolveModule,
     SmsDeleteModule,
     SmsModule,
@@ -41,6 +45,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     VisitPrepareModule,
   ],
   exports: [
+    AddressModule,
     AttributesModule,
     ContactLogModule,
     DebtResponsibleModule,
@@ -52,6 +57,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     OutsourcingModule,
     PaymentConfirmModule,
     PaymentOperatorModule,
+    PersonTypeModule,
     PromiseResolveModule,
     SmsDeleteModule,
     SmsModule,

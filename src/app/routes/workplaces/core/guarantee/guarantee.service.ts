@@ -1,8 +1,7 @@
-import { Actions } from '@ngrx/effects';
-import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IGuaranteeContract } from './guarantee.interface';
@@ -14,12 +13,9 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 @Injectable()
 export class GuaranteeService extends AbstractActionService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
-  static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
   private url = '/debts/{debtId}/guaranteeContract';
   private errSingular = 'entities.guaranteeContract.gen.singular';
-
-  private contracts$ = new Subject<IGuaranteeContract[]>();
 
   constructor(
     protected actions: Actions,
@@ -30,18 +26,20 @@ export class GuaranteeService extends AbstractActionService {
     super();
   }
 
+  dispatchGuarantorSavedMessage(): void {
+    this.dispatchAction(GuaranteeService.MESSAGE_GUARANTOR_SAVED);
+  }
+
   fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
       .readAll(this.url, { debtId })
-      .do(contracts => this.contracts$.next(contracts))
       .catch(this.notificationsService.fetchError().entity('entities.guaranteeContract.gen.plural').dispatchCallback());
   }
 
-  // TODO: fetch one item form server
-  fetch(_: number, contractId: number, personId: number = null): Observable<IGuaranteeContract> {
-    return this.contracts$.map(contracts => contracts.find(
-      contract => contract.contractId === contractId && (!personId || contract.personId === personId))
-    );
+  fetch(debtId: number, contractId: number): Observable<IGuaranteeContract> {
+    return this.dataService
+      .read(`${this.url}/{contractId}`, { debtId, contractId })
+      .catch(this.notificationsService.fetchError().entity('entities.guaranteeContract.gen.singular').dispatchCallback());
   }
 
   create(debtId: number, contract: IGuaranteeContract): Observable<any> {
@@ -67,5 +65,4 @@ export class GuaranteeService extends AbstractActionService {
       .delete(`${this.url}/{contractId}/guarantor/{personId}`, { debtId, contractId, personId })
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
-
 }

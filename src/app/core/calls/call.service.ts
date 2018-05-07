@@ -66,7 +66,7 @@ export class CallService {
     ])
     .distinctUntilChanged()
     .filter(Boolean)
-    .map(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
+    .mergeMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
     .subscribe(state => this.updatePBXState(state));
@@ -201,10 +201,10 @@ export class CallService {
     });
   }
 
-  makeCall(phoneId: number, debtId: number, personId: number, personRole: number): void {
+  makeCall(call: ICall): void {
     this.store.dispatch({
       type: CallService.CALL_START,
-      payload: { phoneId, debtId, personId, personRole }
+      payload: call
     });
   }
 

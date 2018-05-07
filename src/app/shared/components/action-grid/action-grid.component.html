@@ -103,6 +103,12 @@
   (close)="onCloseAction($event)"
 ></app-mass-attr-timezone>
 
+<app-mass-attr-stage
+  *ngIf="isDialog('changeStageAttr')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-attr-stage>
+
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [actionData]="dialogData"
@@ -157,6 +163,24 @@
   (close)="onCloseAction($event)"
 ></app-open-register-contact>
 
+<app-map-address
+  *ngIf="isDialog('mapAddressView')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-map-address>
+
+<app-map-contact
+  *ngIf="isDialog('mapContactView')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-map-contact>
+
+<app-mass-person-type
+  *ngIf="isDialog('changePersonType')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-person-type>
+
 <!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader
@@ -176,6 +200,13 @@
       [metadataKey]="metadataKey"
       [data]="filterData"
     ></app-action-grid-filter>
+
+    <app-action-grid-excel-filter
+      *ngIf="displayExcelFilter"
+      [columns]="columnsDef"
+      (submit)="onExcelFilterSubmit($event)"
+      (close)="onExcelFilterClose()"
+    ></app-action-grid-excel-filter>
   </div>
 
   <app-area layout="row" [persistenceKey]="persistenceKey">

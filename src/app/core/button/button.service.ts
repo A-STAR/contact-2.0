@@ -6,7 +6,7 @@ import { IButtonStyle, IButtonStylesConfig, IButtonType, IButtonTypesConfig } fr
 export class ButtonService {
   private defaultIcons: IButtonTypesConfig = {
     add:              { icon: 'co co-add',                  label: 'default.buttons.add'              },
-    addUser:          { icon: 'co co-add',                  label: 'default.buttons.addUser'          },
+    addUser:          { icon: 'co co-add-person',           label: 'default.buttons.addUser'          },
     back:             { icon: 'co co-back',                 label: 'default.buttons.back'             },
     block:            { icon: 'co co-lock',                 label: 'default.buttons.block'            },
     call:             { icon: 'co co-call-incoming',        label: 'default.buttons.call'             },
@@ -24,8 +24,10 @@ export class ButtonService {
     email:            { icon: 'co co-mail',                 label: 'default.buttons.email'            },
     edit:             { icon: 'co co-edit',                 label: 'default.buttons.edit'             },
     exportToExcel:    { icon: 'co co-download-excel',       label: 'default.buttons.exportToExcel'    },
+    filter:           { icon: 'co co-filter',               label: 'default.buttons.filter'           },
     info:             { icon: 'co co-info-o',               label: 'default.buttons.info'             },
     loadFromExcel:    { icon: 'co co-data-upload',          label: 'default.buttons.loadFromExcel'    },
+    map:              { icon: 'co co-image',                label: 'default.buttons.map'              },
     move:             { icon: 'co co-move',                 label: 'default.buttons.move'             },
     next:             { icon: 'co co-back fa-rotate-180',   label: 'default.buttons.next'             },
     ok:               { icon: 'co co-confirm',              label: 'default.buttons.ok'               },
@@ -48,7 +50,7 @@ export class ButtonService {
   };
 
   private styles: IButtonStylesConfig = {
-    none: 'btn-link',
+    none: 'btn-link ph0',
     default: 'btn-default',
     primary: 'btn-success',
     secondary: 'btn-primary',
@@ -64,7 +66,7 @@ export class ButtonService {
     return this.defaultIcons[type] ? this.defaultIcons[type].label : null;
   }
 
-  getClass(style: IButtonStyle): string {
-    return this.styles[style];
+  getClass(style: IButtonStyle, withBtnClass: boolean = true): string {
+    return (withBtnClass ? 'btn ' : '') + this.styles[style];
   }
 }

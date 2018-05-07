@@ -12,7 +12,7 @@ import { ParamsService } from '../params.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
@@ -38,8 +38,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'paramTypeCode', dictCode: UserDictionariesService.DICTIONARY_REPORT_PARAM_TYPE_CODE },
     { prop: 'sortOrder' },
     { prop: 'systemName' },
-    { prop: 'isMandatory', renderer: CheckboxRendererComponent },
-    { prop: 'multiSelect', renderer: CheckboxRendererComponent }
+    { prop: 'isMandatory', renderer: TickRendererComponent },
+    { prop: 'multiSelect', renderer: TickRendererComponent }
   ].map(addGridLabel('modules.reports.arbitrary.params.grid'));
 
   toolbarItems: Array<IToolbarItem> = [

@@ -34,12 +34,13 @@
   height: 11px;
   line-height: 11px;
   overflow: hidden;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-:host ::ng-deep .group-item {
-  :not(.group-item) .ng-invalid.ng-touched .form-control {
+:host ::ng-deep app-metadata-form-item {
+  .ng-invalid.ng-touched:not(app-metadata-form-item):not(app-metadata-form-group) .form-control {
     border-bottom-color: $brand-danger;
   }
 }

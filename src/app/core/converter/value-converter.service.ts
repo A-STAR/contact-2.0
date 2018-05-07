@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { first } from 'rxjs/operators/first';
 import * as moment from 'moment';
 
 import {
@@ -15,13 +16,21 @@ import {
 
 @Injectable()
 export class ValueConverterService {
-  private formats: IDateFormats = this.translateService.instant('default.date.format');
-  private decimalFormat: IDecimalFormats = this.translateService.instant('default.decimal.format');
+  private formats: IDateFormats;
+  private decimalFormat: IDecimalFormats;
 
   constructor(
     private decimalPipe: DecimalPipe,
     private translateService: TranslateService
-  ) {}
+  ) {
+    this.translateService.get('default.date.format')
+      .pipe(first())
+      .subscribe(dateFormats => this.formats = dateFormats);
+
+    this.translateService.get('default.decimal.format')
+      .pipe(first())
+      .subscribe(decimalFormat => this.decimalFormat = decimalFormat);
+  }
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);
@@ -124,10 +133,12 @@ export class ValueConverterService {
   }
 
   formatNumber(num: number | string): string {
-    return this.decimalPipe.transform(
-      num,
-      `${this.decimalFormat.minIntegerDigits}.${this.decimalFormat.minIntegerDigits}-${this.decimalFormat.maxFractionDigits}`,
-    );
+    if (this.decimalFormat) {
+      return this.decimalPipe.transform(
+        num,
+        `${this.decimalFormat.minIntegerDigits}.${this.decimalFormat.minIntegerDigits}-${this.decimalFormat.maxFractionDigits}`,
+      );
+    }
   }
 
   toDateOnly(date: Date): string {

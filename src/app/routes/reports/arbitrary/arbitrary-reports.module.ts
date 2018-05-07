@@ -12,7 +12,10 @@ const routes: Routes = [
   {
     path: '',
     component: ArbitraryReportsComponent,
-  }
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

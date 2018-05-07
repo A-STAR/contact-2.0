@@ -1,52 +1,34 @@
 <div class="flex vertical">
-
-  <!-- Debt Form -->
-  <div class="flex-item">
-    <div class="pb-lg">
-      <button class="btn btn-default" (click)="onBack()">
-        <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-      </button>
-      <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-        <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-      </button>
-    </div>
-    <div class="pb-lg">
-      <app-metadata-form config="debt" [data]="debt"></app-metadata-form>
-    </div>
-    <!--
-    <div class="pb-lg">
-      <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
-    </div>
-    -->
+  <div class="flex-item mb-lg">
+    <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="save" color="primary" (click)="onSubmit()" [disabled]="isDisabled$ | async"></app-button>
   </div>
-
-  <!-- Debt Details Tab -->
-  <div *ngIf="!!debt" class="flex-item grow">
-    <app-tabview [noMargin]="true" [fullHeight]="true" (select)="onTabSelect($event)">
-
-      <!-- Debt Components -->
-      <app-tabview-tab [title]="tabs[0].title">
-        <app-debt-component-grid
-          *ngIf="tabs[0].isInitialised"
-          [debtId]="debtId$ | async"
-        ></app-debt-component-grid>
-      </app-tabview-tab>
-
-      <!-- Portfolio Log -->
-      <app-tabview-tab [title]="tabs[1].title">
-        <app-portfolio-log-grid
-          *ngIf="tabs[1].isInitialised && (canViewPortfolioLog$ | async)"
-          [debtId]="debtId$ | async"
-        ></app-portfolio-log-grid>
-      </app-tabview-tab>
-
-      <!-- Component Log -->
-      <app-tabview-tab [title]="tabs[2].title">
-        <app-component-log-grid
-          *ngIf="tabs[2].isInitialised && (canViewComponentLog$ | async)"
-          [debtId]="debtId$ | async"
-        ></app-component-log-grid>
-      </app-tabview-tab>
-    </app-tabview>
+  <div class="flex-item grow">
+    <app-dynamic-layout
+      *ngIf="templates"
+      layout="debt"
+      [data]="{ default: debt }"
+      [templates]="templates"
+    ></app-dynamic-layout>
   </div>
 </div>
+
+<ng-template #debtComponents>
+  <app-debt-component-grid
+    [debtId]="debtId$ | async"
+  ></app-debt-component-grid>
+</ng-template>
+
+<ng-template #portfolioLog>
+  <app-portfolio-log-grid
+    *ngIf="canViewPortfolioLog$ | async"
+    [debtId]="debtId$ | async"
+  ></app-portfolio-log-grid>
+</ng-template>
+
+<ng-template #componentLog>
+  <app-component-log-grid
+    *ngIf="canViewComponentLog$ | async"
+    [debtId]="debtId$ | async"
+  ></app-component-log-grid>
+</ng-template>

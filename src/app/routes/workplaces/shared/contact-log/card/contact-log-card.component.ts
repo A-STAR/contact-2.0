@@ -90,14 +90,18 @@ export class ContactLogCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const url = this.callCenter
-      ? [
-        `/app/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
-      ]
-      : [
-        `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`
-      ];
-    this.routingService.navigate(url);
+    if (this.callCenter) {
+      const campaignId = this.route.snapshot.paramMap.get('campaignId');
+      if (campaignId) {
+        this.routingService.navigate([ `/app/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}` ]);
+      }
+    } else {
+      const debtId = this.route.snapshot.paramMap.get('debtId');
+      const debtorId = this.route.snapshot.paramMap.get('debtorId');
+      if (debtId && debtorId) {
+        this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      }
+    }
   }
 
   private createDefaultControls(

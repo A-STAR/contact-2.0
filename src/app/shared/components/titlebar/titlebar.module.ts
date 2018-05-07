@@ -6,7 +6,7 @@ import { ButtonModule } from '../button/button.module';
 import { DropdownModule } from '../dropdown/dropdown.module';
 
 import { TitlebarComponent } from './titlebar.component';
-import { MenuModule } from '@app/shared/components/form/menu/menu.module';
+import { MenuModule } from '@app/shared/components/menu/menu.module';
 
 @NgModule({
   imports: [

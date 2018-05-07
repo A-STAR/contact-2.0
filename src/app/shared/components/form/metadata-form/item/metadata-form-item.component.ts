@@ -1,17 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators';
 
 import {
   IMetadataFormControl,
   IMetadataFormGridSelectControl,
   IMetadataFormItem,
-  IMetadataFormValidator,
+  IMetadataFormFlatConfig,
 } from '../metadata-form.interface';
 
-import { ContextService } from '@app/core/context/context.service';
 import { MetadataFormService } from '../metadata-form.service';
 
 @Component({
@@ -37,17 +34,17 @@ export class MetadataFormItemComponent {
   };
 
   @Input() editable: boolean;
+  @Input() flatConfig: IMetadataFormFlatConfig;
   @Input() formGroup: FormGroup;
   @Input() item: IMetadataFormItem;
+  @Input() suppressLabel = false;
 
   constructor(
-    private contextService: ContextService,
     private metadataFormService: MetadataFormService,
   ) {}
 
   isRequired(control: IMetadataFormControl): Observable<boolean> {
-    // TODO(d.maltsev): should be readonly property for each control
-    return this.calculateContextValue(control.validators['required']);
+    return this.flatConfig[control.name].required;
   }
 
   getErrorMessage(control: IMetadataFormControl): any {
@@ -66,13 +63,5 @@ export class MetadataFormItemComponent {
     return keys.length
       ? { message: MetadataFormItemComponent.DEFAULT_MESSAGES[keys[0]] || keys[0], data: c.errors[keys[0]] }
       : { message: null, data: null };
-  }
-
-  private calculateContextValue(validator: IMetadataFormValidator<any>): Observable<boolean> {
-    return typeof validator === 'object' && validator !== null
-      ? this.contextService.calculate(validator).pipe(
-          map(Boolean),
-        )
-      : of(validator);
   }
 }

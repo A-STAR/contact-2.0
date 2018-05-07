@@ -1,4 +1,4 @@
-export enum IAreaLayout {
+export enum AreaLayout {
   ROW    = 'row',
   COLUMN = 'column',
 }

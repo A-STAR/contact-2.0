@@ -113,12 +113,18 @@ export class PaymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const { paramMap } = this.route.snapshot;
-    const url = this.callCenter
-      ? [ `/app/workplaces/call-center/${paramMap.get('campaignId')}` ]
-      : [ `/app/workplaces/debtor-card/${paramMap.get('debtId')}` ];
-
-    this.routingService.navigate(url);
+    if (this.callCenter) {
+      const campaignId = this.route.snapshot.paramMap.get('campaignId');
+      if (campaignId) {
+        this.routingService.navigate([ `/app/workplaces/call-center/${campaignId}` ]);
+      }
+    } else {
+      const debtId = this.route.snapshot.paramMap.get('debtId');
+      const debtorId = this.route.snapshot.paramMap.get('debtId');
+      if (debtId && debtorId) {
+        this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      }
+    }
   }
 
   onSubmit(): void {

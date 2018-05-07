@@ -10,8 +10,8 @@ import { ROUTES } from '@angular/router';
 
 import { IDynamicModule } from './dynamic-loader.interface';
 
-import { ComponentFactoryService, DYNAMIC_MODULES, DYNAMIC_COMPONENT } from './component-factory.service';
-import { DynamicLoaderService } from './dynamic-loader.service';
+import { DYNAMIC_MODULES, DYNAMIC_COMPONENT, DynamicLoaderService } from './dynamic-loader.service';
+import { PopupOutletService } from './popup-outlet.service';
 
 @NgModule()
 export class DynamicLoaderModule {
@@ -21,7 +21,8 @@ export class DynamicLoaderModule {
     return {
       ngModule: DynamicLoaderModule,
       providers: [
-        ComponentFactoryService,
+        PopupOutletService,
+        DynamicLoaderService,
         { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
       ],
     };
@@ -39,7 +40,6 @@ export class DynamicLoaderModule {
     return {
       ngModule: DynamicLoaderModule,
       providers: [
-        DynamicLoaderService,
         { provide: ROUTES, useValue: modules, multi: true },
         { provide: DYNAMIC_MODULES, useValue: modules, multi: true },
       ],

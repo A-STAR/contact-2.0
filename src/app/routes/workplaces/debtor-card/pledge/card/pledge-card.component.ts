@@ -1,198 +1,279 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
-
-import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
-import { IPledgor } from '@app/routes/workplaces/core/pledgor/pledgor.interface';
-import { IPledgorProperty } from '@app/routes/workplaces/core/pledgor-property/pledgor-property.interface';
-import { IOption } from '@app/core/converter/value-converter.interface';
-
-import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
-import { PledgorService } from '@app/routes/workplaces/core/pledgor/pledgor.service';
-import { PledgorPropertyService } from '@app/routes/workplaces/core/pledgor-property/pledgor-property.service';
-import { RoutingService } from '@app/core/routing/routing.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-
-import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-
-import { makeKey, isRoute } from '@app/core/utils';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators';
 
-const label = makeKey('widgets.pledgeContract.card');
+import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
+import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+
+import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { PersonService } from '@app/routes/workplaces/core/person/person.service';
+import { PledgeCardService } from './pledge-card.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
+import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
+
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+
+import { contractFormConfig } from './config/contract-form.config';
+import { pledgorFormConfig } from './config/pledgor-form.config';
+import { propertyFormConfig } from './config/property-form.config';
 
 @Component({
-  selector: 'app-debtor-pledge-card',
-  templateUrl: './pledge-card.component.html'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-size' },
+  selector: 'app-pledge-card',
+  templateUrl: 'pledge-card.component.html',
 })
-export class DebtorPledgeCardComponent implements OnInit, OnDestroy {
+export class PledgeCardComponent implements AfterViewInit {
+  @ViewChild('contractForm') contractForm: MetadataFormComponent<any>;
+  @ViewChild('pledgorForm') pledgorForm: MetadataFormComponent<any>;
+  @ViewChild('propertyForm') propertyForm: MetadataFormComponent<any>;
 
-  @ViewChild(DynamicFormComponent) set form(pledgeForm: DynamicFormComponent) {
-    this._form = pledgeForm;
-    if (pledgeForm) {
-      this.onFormInit();
-    }
-  }
+  readonly contractFormConfig = contractFormConfig;
+  readonly pledgorFormConfig = pledgorFormConfig;
+  readonly propertyFormConfig = propertyFormConfig;
 
-  private _form: DynamicFormComponent;
-  private canEdit: boolean;
-  private routeParams = (<any>this.route.params).value;
-  private debtId = this.routeParams.debtId || null;
-  private contractId = this.routeParams.contractId || null;
-  private personId = this.routeParams.pledgorId || null;
-  private propertyId = this.routeParams.propertyId || null;
-  private pledgorSelectionSub: Subscription;
-  private pledgorPropertySelectionSub: Subscription;
+  readonly pledgor$ = this.pledgeCardService.pledgor$;
+  readonly isPledgorFormDisabled$ = this.pledgor$.pipe(
+    map(Boolean),
+  );
 
-  controls: IDynamicFormGroup[];
-  contract: Partial<IPledgeContract>;
+  readonly property$ = this.pledgeCardService.property$;
+  readonly isPropertyFormDisabled$ = this.property$.pipe(
+    map(Boolean),
+  );
+
+  readonly paramMap = this.route.snapshot.paramMap;
+
+  /**
+   * Contract ID (link between debtor, pledgor and property)
+   */
+  readonly contractId = Number(this.paramMap.get('contractId'));
+
+  /**
+   * Debt ID
+   */
+  readonly debtId = Number(this.paramMap.get('debtId'));
+
+  /**
+   * ID of person who is a debtor (displayed in debtor card)
+   */
+  readonly debtorId = Number(this.paramMap.get('debtorId'));
+
+  /**
+   * ID of person who is linked as pledgor via contractId
+   */
+  readonly pledgorId = Number(this.paramMap.get('pledgorId'));
+
+  /**
+   * Pledgor role (according to dictionary 44)
+   */
+  readonly pledgorRole = 3;
+
+  /**
+   * ID of property that is linked via contractId
+   */
+  readonly propertyId = Number(this.paramMap.get('propertyId'));
+
+  readonly createMode = !this.contractId;
+  readonly addPledgorMode = !!this.contractId && !this.pledgorId;
+  readonly addPropertyMode = !!this.pledgorId && !this.propertyId;
+  readonly editMode = !!this.propertyId;
+
+  readonly showContractForm = this.createMode || this.editMode;
+  readonly showPledgorForm = this.createMode || this.addPledgorMode || this.editMode;
+
+  readonly contractTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+  };
+
+  readonly pledgorTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPersonSearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
+
+  readonly propertyTitlebar: ITitlebar = {
+    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.openPropertySearch(),
+        enabled: of(!this.editMode),
+      },
+    ]
+  };
 
   constructor(
-    private cdRef: ChangeDetectorRef,
+    private injector: Injector,
+    private personService: PersonService,
+    private pledgeCardService: PledgeCardService,
     private pledgeService: PledgeService,
+    private popupOutletService: PopupOutletService,
+    private propertyService: PropertyService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
-    private userDictionariesService: UserDictionariesService
+    private router: Router,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
-  get form(): DynamicFormComponent {
-    return this._form;
-  }
-
-  get contract$(): Observable<IPledgeContract> {
-    return this.pledgeService.fetch(this.debtId, +this.contractId, +this.personId, +this.propertyId);
-  }
-
-  ngOnInit(): void {
-    combineLatest(
-      this.pledgeService.fetchAll(this.debtId),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      this.contract$.flatMap(
-        contract => contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$
-      ),
-      this.contract$.flatMap(contract => of(contract || this.getFormData()))
-    )
-    .pipe(first())
-    .subscribe(([ _, typeOptions, canEdit, pledgeContract ]) => {
-      this.controls = this.getControls(canEdit, typeOptions);
-      this.contract = pledgeContract;
-      this.canEdit = canEdit;
-    });
-
-    this.pledgorSelectionSub = this.pledgeService
-      .getPayload<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
-      .subscribe(pledgor => {
-        this.personId = pledgor.id;
-        const personId = this.form.getControl('personId');
-        personId.setValue(pledgor.id);
-        personId.markAsDirty();
-      });
-
-    this.pledgorPropertySelectionSub = this.pledgeService
-      .getPayload<IPledgorProperty>(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED)
-      .subscribe(pledgorProperty => {
-        this.propertyId = pledgorProperty.id;
-        const propertyId = this.form.getControl('propertyId');
-        propertyId.setValue(pledgorProperty.id);
-        propertyId.markAsDirty();
-        const pledgeValue = this.form.getControl('pledgeValue');
-        pledgeValue.setValue(pledgorProperty.pledgeValue);
-        pledgeValue.markAsDirty();
-        const marketValue = this.form.getControl('marketValue');
-        marketValue.setValue(pledgorProperty.marketValue);
-        marketValue.markAsDirty();
-        const currencyId = this.form.getControl('currencyId');
-        currencyId.setValue(pledgorProperty.currencyId);
-        currencyId.markAsDirty();
-      });
-  }
-
-  onFormInit(): void {
-    if (this.isAddingPledgor || !this.canEdit) {
-      this.form.form.disable();
-      this.cdRef.markForCheck();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.pledgorSelectionSub.unsubscribe();
-    this.pledgorPropertySelectionSub.unsubscribe();
-  }
-
   get canSubmit(): boolean {
-    if (this.isAddingPledgor && !!this.contract) {
-      return true;
-    }
-    return this.form && this.form.canSubmit;
+    const contractFormGroup = this.contractForm
+      ? this.contractForm.formGroup
+      : null;
+    const pledgorFormGroup = this.pledgorForm
+      ? this.pledgorForm.formGroup
+      : null;
+    const propertyFormGroup = this.propertyForm
+      ? this.propertyForm.formGroup
+      : null;
+    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
+    const pledgorFormValid = !pledgorFormGroup || pledgorFormGroup.valid;
+    const propertyFormValid = !propertyFormGroup || propertyFormGroup.valid;
+    return contractFormValid && pledgorFormValid && propertyFormValid;
   }
 
-  get isAddingPledgor(): boolean {
-    return isRoute(this.route, 'pledgor/add');
+  get title(): string {
+    switch (true) {
+      case this.createMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.add';
+      case this.addPledgorMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor';
+      case this.addPropertyMode:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.addProperty';
+      default:
+        return 'routes.workplaces.debtorCard.pledge.card.titles.edit';
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.contractId) {
+      this.fetchContract();
+    }
+    if (this.pledgorId) {
+      this.fetchPledgor();
+    }
+    if (this.propertyId) {
+      this.fetchProperty();
+    }
+  }
+
+  onPledgorFormClear(): void {
+    this.pledgeCardService.selectPledgor(null);
+    this.pledgorForm.formGroup.reset();
+  }
+
+  onPropertyFormClear(): void {
+    this.pledgeCardService.selectProperty(null);
+    this.propertyForm.formGroup.reset();
+  }
+
+  onSave(): void {
+    if (this.createMode) {
+      const contractData = this.contractForm.data;
+      const pledgorData = this.pledgorForm.data;
+      const propertyData = this.propertyForm.data;
+      this.pledgeCardService
+        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .subscribe(() => this.onSuccess());
+    }
+    if (this.addPledgorMode) {
+      this.pledgeCardService
+        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.pledgorForm.data, this.propertyForm.data)
+        .subscribe(() => this.onSuccess());
+    }
+    if (this.addPropertyMode) {
+      this.pledgeCardService
+        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.propertyForm.data)
+        .subscribe(() => this.onSuccess());
+    }
+    if (this.editMode) {
+      const contractData = this.contractForm.data;
+      const pledgorData = this.pledgorForm.data;
+      const propertyData = this.propertyForm.data;
+      this.pledgeCardService
+        .updatePledge(this.debtId, this.contractId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .subscribe(() => this.onSuccess());
+    }
   }
 
   onBack(): void {
     const debtId = this.route.snapshot.paramMap.get('debtId');
-    this.routingService.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
+    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    if (debtId && debtorId) {
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+    }
   }
 
-  onSubmit(): void {
-    const action = this.isAddingPledgor
-      ? this.pledgeService.addPledgor(
-        this.debtId,
-        this.contractId,
-        this.pledgeService.createContractPledgor(this.form.getControl('personId').value, this.form.serializedUpdates),
-      )
-      : isRoute(this.route, 'create')
-        ? this.pledgeService.create(
-          this.debtId,
-          this.pledgeService.createPledgeContractInformation(this.form.serializedUpdates)
-        )
-        : this.pledgeService.update(
-          this.debtId,
-          this.contractId,
-          this.personId,
-          this.contract.propertyId,
-          this.form.serializedUpdates,
-          this.form.serializedUpdates
-        );
-
-    action.subscribe(() => {
-      this.pledgeService.dispatchAction(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
-      this.onBack();
-    });
+  onPhoneAdd(): void {
+    this.router.navigate([ 'phone/create' ], { relativeTo: this.route });
   }
 
-  private getControls(canEdit: boolean, typeOptions: IOption[]): IDynamicFormGroup[] {
-    const controls = [
-      {
-        title: 'widgets.pledgeContract.title', collapsible: true,
-        children: [
-          { label: label('personId'), controlName: 'personId', type: 'dynamic', required: true, display: false },
-          { label: label('propertyId'), controlName: 'propertyId', type: 'number', required: true, display: false },
-          { label: label('pledgeValue'), controlName: 'pledgeValue', type: 'number', display: false },
-          { label: label('marketValue'), controlName: 'marketValue', type: 'number', display: false },
-          { label: label('currencyId'), controlName: 'currencyId', type: 'number', display: false },
-          { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
-          { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
-          { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
-          {
-            label: label('typeCode'), controlName: 'typeCode',
-            type: 'select', options: typeOptions, required: true
-          },
-          { label: label('comment'), controlName: 'comment', type: 'textarea', }
-        ]
-      }
-    ];
-
-    return controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
+  onPhoneEdit(phone: IPhone): void {
+    this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
   }
 
-  private getFormData(): Partial<IPledgeContract> {
-    return {
-      typeCode: 1
-    };
+  onAddressAdd(): void {
+    this.router.navigate([ 'address/create' ], { relativeTo: this.route });
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onIdentityAdd(): void {
+    this.router.navigate([ 'identity/create' ], { relativeTo: this.route });
+  }
+
+  onIdentityEdit(document: IIdentityDoc): void {
+    this.router.navigate([ `identity/${document.id}` ], { relativeTo: this.route });
+  }
+
+  onEmploymentAdd(): void {
+    this.router.navigate([ 'employment/create' ], { relativeTo: this.route });
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.router.navigate([ `employment/${employment.id}` ], { relativeTo: this.route });
+  }
+
+  private fetchContract(): void {
+    this.pledgeService
+      .fetch(this.debtId, this.contractId)
+      .subscribe(contract => this.contractForm.formGroup.patchValue(contract));
+  }
+
+  private fetchPledgor(): void {
+    this.personService
+      .fetch(this.pledgorId)
+      .subscribe(person => this.pledgorForm.formGroup.patchValue(person));
+  }
+
+  private fetchProperty(): void {
+    this.propertyService
+      .fetch(this.pledgorId, this.propertyId)
+      .subscribe(property => this.propertyForm.formGroup.patchValue(property));
+  }
+
+  private onSuccess(): void {
+    this.pledgeService.dispatchPledgeSavedMessage();
+    this.onBack();
+  }
+
+  private openPersonSearch(): void {
+    this.popupOutletService.open(this.modules, 'select-person', this.injector);
+  }
+
+  private openPropertySearch(): void {
+    this.popupOutletService.open(this.modules, 'select-property', this.injector);
   }
 }

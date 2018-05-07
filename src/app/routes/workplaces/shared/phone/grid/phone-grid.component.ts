@@ -17,16 +17,17 @@ import { of } from 'rxjs/observable/of';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
-import { IPhone } from '../phone.interface';
-import { ISMSSchedule } from '../phone.interface';
+import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IPerson } from '@app/routes/workplaces/core/person/person.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PhoneService } from '../phone.service';
+import { PersonService } from '@app/routes/workplaces/core/person/person.service';
+import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -130,6 +131,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private activeCallPhoneId: number;
 
+  private person: IPerson;
+
   private canViewSubscription: Subscription;
   private contactDetailsChangeSub: Subscription;
   private debtSubscription: Subscription;
@@ -153,6 +156,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
     private notificationsService: NotificationsService,
+    private personService: PersonService,
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -217,6 +221,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .contactPersonChange$
       .filter(Boolean)
       .subscribe(_ => this.fetch());
+
+    this.personId$
+      .filter(Boolean)
+      .flatMap(personId => this.personService.fetch(personId))
+      .pipe(first())
+      .subscribe(person => {
+        this.person = person;
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
@@ -409,7 +422,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private onMakeCall(): void {
     this.selectedPhone$
       .pipe(first())
-      .subscribe(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole));
+      .subscribe(phone => this.callService.makeCall({
+        phoneId: phone.id,
+        debtId: this._debtId$.value,
+        personId: this._personId$.value,
+        personRole: this.personRole,
+        phone: phone.phone,
+        lastName: this.person.lastName,
+        firstName: this.person.firstName,
+        middleName: this.person.middleName
+      }));
   }
 
   private fetch(): void {

@@ -6,6 +6,11 @@
 ></app-phone-operator-dialog>
 
 <ul class="flex">
+  <li class="flex-item" *ngIf="hasActiveCall$ | async">
+    <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)" (click)="onHoldCall()">
+      <span>{{ activeCallNumber$ | async }} - <b>{{ activeCallPersonName$ | async }}</b></span>
+    </span>
+  </li>
   <li class="flex-item" *ngIf="showHoldCall$ | async">
     <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)" (click)="onHoldCall()">
       <i class="icon co-call-pause"></i>

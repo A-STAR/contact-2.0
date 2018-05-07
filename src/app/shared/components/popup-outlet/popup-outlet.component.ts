@@ -10,10 +10,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { IPopup } from './popup-outlet.interface';
+import { IPopup } from '@app/core/dynamic-loader/popup-outlet.interface';
 
 import { DynamicLoaderService } from '@app/core/dynamic-loader/dynamic-loader.service';
-import { PopupOutletService } from './popup-outlet.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
 import { fade, fly, withChildren } from '@app/shared/animations';
 
@@ -47,12 +47,13 @@ export class PopupOutletComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.popupService.popup.subscribe((popup: IPopup) => {
-      if (popup && popup.outlet === this.name) {
+    this.popupService.data.subscribe((popup: IPopup) => {
+      if (popup) {
+        const { id, modules, injector } = popup;
         this.isOpen = true;
         this.cdRef.detectChanges();
         this.dynamicLoaderService
-          .getComponentFactory(popup.id)
+          .getComponentFactory(modules, id, injector)
           .subscribe(componentFactory => {
             this.current = this.outlet.createComponent(componentFactory, 0);
             this.cdRef.markForCheck();

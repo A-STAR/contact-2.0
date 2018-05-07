@@ -3,7 +3,7 @@
 li .menu-item {
   padding: 0;
 
-  i {
+  i, span {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     font-size: 14px;
@@ -12,6 +12,10 @@ li .menu-item {
     margin: 8px 4px;
     text-align: center;
     width: 32px;
+  }
+
+  span {
+    padding: 7px 12px;
   }
 
   &.disabled {

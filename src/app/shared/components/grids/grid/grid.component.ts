@@ -10,9 +10,11 @@ import {
   SimpleChanges,
   ViewChild,
   OnInit,
+  forwardRef,
 } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { Router, ActivatedRoute, ActivationEnd } from '@angular/router';
+import { Validator, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
 
 import {
   ColDef,
@@ -48,10 +50,20 @@ import { isEmpty } from '@app/core/utils/index';
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html',
   providers: [
-    GridsDefaultsService
+    GridsDefaultsService,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SimpleGridComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => SimpleGridComponent),
+      multi: true,
+    },
   ],
 })
-export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
+export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, ControlValueAccessor, Validator {
   @ViewChild(GridToolbarComponent) gridToolbar: GridToolbarComponent;
 
   @Input() actions: IMetadataAction[] = [];
@@ -63,6 +75,11 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
   @Input() showToolbar = false;
   @Input() toolbar: IToolbarItem[];
   @Input() treeData: boolean;
+
+  // Form Control's Properties
+  @Input() required = false;
+  @Input() readonly = false;
+  @Input() disabled = false;
 
   @Input()
   set rows(rowData: T[]) {
@@ -148,7 +165,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
   autoGroupColumnDef: ColDef;
 
   colDefs: ColDef[];
-  rowData: T[] | (T & IGridTreePath)[];
+  rowData: Array<T | (T & IGridTreePath)>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -194,6 +211,36 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
       this.autoGroupColumnDef = this.gridsService.getRowGrouping(this.columns);
       this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey, this.gridsDefaultsService);
       this.cdRef.markForCheck();
+    }
+  }
+
+  writeValue(value: T[]): void {
+    this.selection = value;
+    this.cdRef.markForCheck();
+  }
+
+  onChange(value: T[]): void {
+    this.propagateChange(value);
+  }
+
+  registerOnChange(fn: Function): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: Function): void {
+    this.propagateTouch = fn;
+  }
+
+  onTouch(): void {
+    this.propagateTouch();
+  }
+
+  validate(): any {
+    switch (true) {
+      case this.selection == null || !this.selection.length && this.required:
+        return { required: true };
+      default:
+        return null;
     }
   }
 
@@ -254,4 +301,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
     this.gridsDefaultsService.reset(this.gridApi, this.columnApi);
     this.settingsReseted = true;
   }
+
+  private propagateChange: Function = () => {};
+  private propagateTouch: Function = () => {};
 }

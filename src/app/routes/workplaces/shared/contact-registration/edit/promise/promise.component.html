@@ -24,7 +24,7 @@
         [max]="promiseMaxAmount$ | async"
         [positive]="true"
         [required]="true"
-        (input)="onPromiseAmountInput($event)"
+        [precision]="2"
       ></app-number>
     </div>
 
@@ -35,11 +35,11 @@
         label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.percentage"
         [isReadonly]="fullPromiseMode$ | async"
         [ngModel]="promisePercentage$ | async"
-        [min]="percentageMinPercentage$ | async"
+        [min]="promiseMinPercentage$ | async"
         [max]="100"
         [positive]="true"
         [required]="true"
-        (input)="onPromisePercentageInput($event)"
+        [precision]="5"
       ></app-number>
     </div>
 

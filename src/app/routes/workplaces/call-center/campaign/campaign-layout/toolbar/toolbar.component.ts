@@ -95,7 +95,7 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => this.debtService.openByDebtId(debt.debtId));
+      .subscribe(debt => this.debtService.openByDebtId(debt.debtId, debt.personId));
   }
 
   private registerSpecial(): void {
