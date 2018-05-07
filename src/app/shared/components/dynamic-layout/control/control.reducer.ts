@@ -20,4 +20,4 @@ export function formReducer(
     default:
       return state;
   }
-};
+}
