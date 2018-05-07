@@ -148,7 +148,7 @@ export class ScheduleEventService extends AbstractActionService {
       case 'personRoles':
       case 'phoneTypes':
       case 'emailTypes':
-        return param.value.split(',');
+        return param.value.split(',').map(Number);
       default:
         return +param.value || param.value;
     }
