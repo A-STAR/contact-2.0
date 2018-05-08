@@ -31,7 +31,7 @@
       [columns]="columns"
       [rows]="employees$ | async"
       (dblClick)="onEdit($event)"
-      (select)="onSelect($event)"
+      (selectRow)="onSelect($event)"
     ></app-simple-grid>
   </div>
 </div>

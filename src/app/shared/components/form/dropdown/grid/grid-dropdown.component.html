@@ -18,7 +18,7 @@
           [columns]="columns"
           [rows]="rows"
           [selection]="selection"
-          (select)="onSelect($event)"
+          (selectRow)="onSelectRow($event)"
         ></app-simple-grid>
         <div class="panel-footer text-right">
           <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">

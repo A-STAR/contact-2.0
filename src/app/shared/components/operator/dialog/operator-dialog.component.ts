@@ -13,7 +13,7 @@ import { addGridLabel, isEmpty } from '@app/core/utils';
 })
 export class OperatorDialogComponent implements OnInit {
   @Output() close = new EventEmitter<null>();
-  @Output() select = new EventEmitter<number>();
+  @Output() onSelect = new EventEmitter<number>();
 
   columns: ISimpleGridColumn<IOperator>[] = [
     { prop: 'id', width: 50 },
@@ -37,14 +37,14 @@ export class OperatorDialogComponent implements OnInit {
     this.fetch();
   }
 
-  onSelect(operators: IOperator[]): void {
+  onSelectRow(operators: IOperator[]): void {
     this.selection = isEmpty(operators)
       ? null
       : operators[0];
   }
 
   onSubmit(): void {
-    this.select.emit(this.selectedOperator.id);
+    this.onSelect.emit(this.selectedOperator.id);
   }
 
   onClose(): void {

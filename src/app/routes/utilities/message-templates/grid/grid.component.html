@@ -30,6 +30,6 @@
   [rows]="templates"
   [selection]="selection$ | async"
   [toolbar]="toolbarItems"
-  (select)="onSelect($event)"
+  (selectRow)="onSelect($event)"
   (dblClick)="onDblClick($event)">
 </app-simple-grid>

@@ -8,7 +8,7 @@
       [columns]="columns"
       [rows]="campaigns$ | async"
       (dblClick)="onAction($event)"
-      (select)="onSelect($event)"
+      (selectRow)="onSelect($event)"
     ></app-simple-grid>
   </div>
   <div class="flex-item">

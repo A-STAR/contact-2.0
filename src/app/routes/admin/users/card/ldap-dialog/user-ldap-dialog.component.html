@@ -6,7 +6,7 @@
         selectionType="single"
         [columns]="groupsColumns"
         [rows]="groups$ | async"
-        (select)="onGroupSelect($event)">
+        (selectRow)="onGroupSelect($event)">
       </app-simple-grid>
     </div>
   </div>
@@ -18,7 +18,7 @@
         [columns]="usersColumns"
         [rows]="users$ | async"
         (onDblClick)="onSubmit($event)"
-        (select)="onUserSelect($event)">
+        (selectRow)="onUserSelect($event)">
       </app-simple-grid>
     </div>
   </div>

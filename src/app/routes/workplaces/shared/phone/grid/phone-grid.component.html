@@ -41,7 +41,7 @@
 
 <app-phone-operator-dialog
   *ngIf="isDialog('operator')"
-  (select)="onPhoneOperatorSelect($event)"
+  (onSelect)="onPhoneOperatorSelect($event)"
   (close)="onDialogClose()"
 ></app-phone-operator-dialog>
 
@@ -52,6 +52,6 @@
   [rows]="phones"
   [rowClass]="getRowClass()"
   [toolbar]="gridToolbarItems"
-  (select)="onSelect($event)"
+  (selectRow)="onSelectRow($event)"
   (dblClick)="onDoubleClick($event)"
 ></app-simple-grid>

@@ -9,7 +9,7 @@
       persistenceKey="[grid] admin/organizations/employees/add"
       [columns]="columns"
       [rows]="notAddedEmployees | async"
-      (select)="onSelectEmployees($event)"
+      (selectRow)="onSelectEmployees($event)"
     ></app-simple-grid>
   </div>
 

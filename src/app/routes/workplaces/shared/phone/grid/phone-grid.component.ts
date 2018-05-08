@@ -65,7 +65,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   @Output() dblClick = new EventEmitter<IPhone>();
   @Output() edit = new EventEmitter<IPhone>();
   @Output() register = new EventEmitter<IPhone>();
-  @Output() select = new EventEmitter<IPhone>();
+  @Output() onSelect = new EventEmitter<IPhone>();
 
   private _debtId$ = new BehaviorSubject<number>(null);
   private _personId$ = new BehaviorSubject<number>(null);
@@ -274,11 +274,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.dblClick.emit(phone);
   }
 
-  onSelect(phones: IPhone[]): void {
+  onSelectRow(phones: IPhone[]): void {
     const phone = isEmpty(phones)
       ? null
       : phones[0];
-    this.select.emit(phone);
+    this.onSelect.emit(phone);
     this.selectedPhoneId$.next(phone.id);
   }
 
