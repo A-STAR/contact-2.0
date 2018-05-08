@@ -4,20 +4,23 @@ import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IUser, IUsersState } from './users.interface';
 
-import { AbstractActionService } from '../../../core/state/action.service';
-import { DataService } from '../../../core/data/data.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { DataService } from '@app/core/data/data.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class UsersService extends AbstractActionService {
   static USER_SELECT          = 'USER_SELECT';
   static USER_TOGGLE_INACTIVE = 'USER_TOGGLE_INACTIVE';
   static USER_SAVED           = 'USER_SAVED';
+
+  readonly state: Observable<IUsersState> = this.store.select(state => state.users);
+  readonly agentAttributes$: Observable<IEntityAttributes> = this.entityAttributesService.getAttributes([87, 88, 89]);
 
   constructor(
     protected actions: Actions,
@@ -27,14 +30,6 @@ export class UsersService extends AbstractActionService {
     protected store: Store<IAppState>,
   ) {
     super();
-  }
-
-  get state(): Observable<IUsersState> {
-    return this.store.select(state => state.users);
-  }
-
-  get agentAttributes$(): Observable<IEntityAttributes> {
-    return this.entityAttributesService.getAttributes([87, 88, 89]);
   }
 
   fetch(): Observable<Array<IUser>> {

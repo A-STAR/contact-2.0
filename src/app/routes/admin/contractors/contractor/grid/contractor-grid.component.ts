@@ -32,6 +32,11 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 export class ContractorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IContractor>;
 
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_VIEW');
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_ADD');
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_EDIT');
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_DELETE');
+
   titlebar: ITitlebar = {
     title: 'contractors.title',
     items: [
@@ -115,22 +120,6 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
   ngOnDestroy(): void {
     this.actionsSub.unsubscribe();
     this.canViewSubscription.unsubscribe();
-  }
-
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_DELETE');
   }
 
   onAdd(): void {

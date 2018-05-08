@@ -12,23 +12,15 @@ export class ObjectsService {
   private baseUrl = '/contractors/{contractorId}/objects';
   private errorMessage = 'entities.object.gen.plural';
 
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW');
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('OBJECT_CONTRACTOR_EDIT');
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('OBJECT_CONTRACTOR_EDIT');
+
   constructor(
     private dataService: DataService,
     private userPermissionsService: UserPermissionsService,
     private notificationsService: NotificationsService,
   ) {}
-
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('OBJECT_CONTRACTOR_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('OBJECT_CONTRACTOR_EDIT');
-  }
 
   fetchAll(contractorId: number, typeCode: number): Observable<IObject[]> {
     return this.dataService

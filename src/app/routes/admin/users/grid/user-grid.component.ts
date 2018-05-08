@@ -26,6 +26,8 @@ export class UserGridComponent implements OnInit, OnDestroy {
   private _users: Array<IUser> = [];
   private selectedUserId: number;
 
+  readonly state: Observable<IUsersState> = this.usersService.state;
+
   columns: ISimpleGridColumn<IUser>[] = [
     { prop: 'id', minWidth: 50, maxWidth: 70 /*, disabled: true */ },
     { prop: 'login', minWidth: 120 },
@@ -125,10 +127,6 @@ export class UserGridComponent implements OnInit, OnDestroy {
     this.selectedUserSubscription.unsubscribe();
     this.filterUserSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
-  }
-
-  get state(): Observable<IUsersState> {
-    return this.usersService.state;
   }
 
   get users(): IUser[] {
