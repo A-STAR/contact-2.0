@@ -42,7 +42,7 @@ export class ContactLogDetailsComponent {
 
   @Input()
   set rowData(row: any) {
-    this.contactFullName = row.personFullName || '';
+    this.contactFullName = (row && row.personFullName) || '';
   }
 
   columnIds = [
