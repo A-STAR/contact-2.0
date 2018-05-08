@@ -12,7 +12,7 @@
 
     <!-- Group with splitters -->
     <split
-      *ngIf="group.splitters"
+      *ngIf="hasSplitters"
       gutterColor="transparent"
       gutterSize="25"
       [direction]="splitDirection"
@@ -26,7 +26,7 @@
     </split>
 
     <!-- Group without splitters -->
-    <div *ngIf="!group.splitters" [ngClass]="groupClass">
+    <div *ngIf="!hasSplitters" [ngClass]="groupClass">
       <div *ngFor="let item of group.children" [ngClass]="itemClass" [ngStyle]="getItemStyle(item)">
         <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
       </div>

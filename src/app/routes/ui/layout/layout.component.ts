@@ -3,9 +3,11 @@ import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } fr
 import {
   ContextOperator,
   DynamicLayoutControlType,
-  DynamicLayoutItemType,
-  IDynamicLayoutConfig,
   DynamicLayoutGroupType,
+  DynamicLayoutHorizontalGroupMode,
+  DynamicLayoutItemType,
+  DynamicLayoutVerticalGroupMode,
+  IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 @Component({
@@ -33,7 +35,7 @@ export class LayoutComponent implements OnInit {
       {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
-        splitters: true,
+        mode: DynamicLayoutHorizontalGroupMode.SPLITTERS,
         children: [
           {
             type: DynamicLayoutItemType.TEMPLATE,
@@ -50,32 +52,40 @@ export class LayoutComponent implements OnInit {
           {
             type: DynamicLayoutItemType.GROUP,
             groupType: DynamicLayoutGroupType.VERTICAL,
+            mode: DynamicLayoutVerticalGroupMode.SPLITTERS,
             size: 50,
             children: [
               {
-                type: DynamicLayoutItemType.CONTROL,
-                controlType: DynamicLayoutControlType.TEXT,
-                form: 'custom',
-                label: 'Text Control',
-                name: 'text',
-                display: {
-                  operator: ContextOperator.AND,
-                  value: [
-                    {
-                      operator: ContextOperator.EVAL,
-                      value: 'userPermissions.permissions.CONST_VALUE_VIEW.valueB',
+                type: DynamicLayoutItemType.GROUP,
+                groupType: DynamicLayoutGroupType.VERTICAL,
+                mode: DynamicLayoutVerticalGroupMode.LINE,
+                children: [
+                  {
+                    type: DynamicLayoutItemType.CONTROL,
+                    controlType: DynamicLayoutControlType.TEXT,
+                    form: 'custom',
+                    label: 'Text Control',
+                    name: 'text',
+                    display: {
+                      operator: ContextOperator.AND,
+                      value: [
+                        {
+                          operator: ContextOperator.EVAL,
+                          value: 'userPermissions.permissions.CONST_VALUE_VIEW.valueB',
+                        },
+                        {
+                          operator: ContextOperator.EVAL,
+                          value: 'userPermissions.permissions.CONST_VALUE_EDIT.valueB',
+                        },
+                      ],
                     },
-                    {
-                      operator: ContextOperator.EVAL,
-                      value: 'userPermissions.permissions.CONST_VALUE_EDIT.valueB',
-                    },
-                  ],
-                },
-              },
-              {
-                type: DynamicLayoutItemType.ATTRIBUTE,
-                key: 'ctx.debt.id',
-                formula: 1,
+                  },
+                  {
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    key: 'ctx.debt.id',
+                    formula: 1,
+                  },
+                ]
               },
               {
                 type: DynamicLayoutItemType.GROUP,
