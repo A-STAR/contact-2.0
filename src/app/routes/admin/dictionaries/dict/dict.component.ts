@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { first } from 'rxjs/operators/first';
-import { filter } from 'rxjs/operators/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { switchMap } from 'rxjs/operators';
+import { map, first, filter, switchMap } from 'rxjs/operators';
 
 import { IDictionary, ITerm } from '../dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -25,6 +23,14 @@ import { addGridLabel, isEmpty } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DictComponent extends DialogFunctions implements OnDestroy, OnInit {
+  readonly dictionaries: Observable<IDictionary[]> = this.dictionariesService.dictionaries;
+  readonly dictionaryTermTypes: Observable<ITerm[]> = this.dictionariesService.dictionaryTermTypes;
+  readonly selectedDictionary: Observable<IDictionary> = this.dictionariesService.selectedDictionary;
+  readonly hasDictionaryRelations: Observable<boolean> = combineLatestAnd([
+      this.selectedDictionary.pipe(map(Boolean)),
+      this.dictionaryTermTypes.pipe(map(Boolean))
+    ]);
+  readonly canEdit: Observable<boolean> = this.userPermissionsService.has('DICT_EDIT');
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -91,29 +97,6 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
-  }
-
-  get dictionaries(): Observable<IDictionary[]> {
-    return this.dictionariesService.dictionaries;
-  }
-
-  get dictionaryTermTypes(): Observable<ITerm[]> {
-    return this.dictionariesService.dictionaryTermTypes;
-  }
-
-  get hasDictionaryRelations(): Observable<boolean> {
-    return combineLatestAnd([
-      this.selectedDictionary.map(Boolean),
-      this.dictionaryTermTypes.map(Boolean)
-    ]);
-  }
-
-  get selectedDictionary(): Observable<IDictionary> {
-    return this.dictionariesService.selectedDictionary;
-  }
-
-  get canEdit(): Observable<boolean> {
-    return this.userPermissionsService.has('DICT_EDIT');
   }
 
   edit(): void {

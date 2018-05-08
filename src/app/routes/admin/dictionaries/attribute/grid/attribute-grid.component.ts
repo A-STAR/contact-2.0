@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulatio
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 
 import { IAttribute } from '../attribute.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
@@ -40,6 +40,13 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   isTreeSubtypeDisabled = true;
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
+
+  readonly selectedAttributeId$: Observable<number> = this.selectedAttribute$.pipe(
+    map(attribute => attribute.id)
+  );
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('ATTRIBUTE_TYPE_ADD');
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('ATTRIBUTE_TYPE_EDIT');
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
 
   columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
     { dataType: TYPE_CODES.STRING, name: 'name', label: labelKey('names'), isDataPath: true },
@@ -105,22 +112,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
         this.cdRef.markForCheck();
       }
     });
-  }
-
-  get selectedAttributeId$(): Observable<number> {
-    return this.selectedAttribute$.map(attribute => attribute.id);
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('ATTRIBUTE_TYPE_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('ATTRIBUTE_TYPE_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
   }
 
   onTreeTypeChange(selection: number): void {
