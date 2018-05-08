@@ -1,9 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { ISegmentedInputValue, ISegmentedInputOption } from './segmented-input.interface';
+import { ISegmentedInputValue, ISegmentedInputOption, ISegmentedInputMask } from './segmented-input.interface';
 
-import { DropdownComponent } from '../../dropdown/dropdown.component';
+import { DropdownComponent } from '@app/shared/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-segmented-input',
@@ -22,14 +29,18 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   @ViewChild(DropdownComponent) dropdown: DropdownComponent;
 
   @Input() options: ISegmentedInputOption[];
+  maskedArray: ISegmentedInputMask;
 
   private _value: ISegmentedInputValue;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+  ) {}
 
   writeValue(value: ISegmentedInputValue): void {
     const name = value && value.name || this.options[0].name;
     this._value = { ...value, name };
+    this.maskedArray = this.options[0].mask;
     this.cdRef.markForCheck();
   }
 
@@ -54,6 +65,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
       ...(this._value || { value: '' }),
       name: option.name
     };
+    this.maskedArray = option.mask;
     this.propagateChange(this._value);
     this.dropdown.close();
   }
