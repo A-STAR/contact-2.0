@@ -18,7 +18,9 @@
       [direction]="splitDirection"
       (dragEnd)="onDragEnd($event)"
     >
-      <split-area *ngFor="let item of group.children; let i = index;" [size]="getAreaSize(item, i)">
+      <split-area *ngFor="let item of group.children; let i = index;"
+        [size]="getAreaSize(item, i)"
+        [visible]="isSplitVisible(item) | async">
         <ng-container *ngTemplateOutlet="content; context: { $implicit: item }"></ng-container>
       </split-area>
     </split>
