@@ -79,6 +79,7 @@ export class ReportCardComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_NAME,
           entityId: this.reportId
         },
+        createMode: !this.reportId,
         required: true,
         disabled: !canEdit
       },
