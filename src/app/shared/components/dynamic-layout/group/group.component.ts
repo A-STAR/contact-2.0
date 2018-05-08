@@ -4,6 +4,8 @@ import { of } from 'rxjs/observable/of';
 
 import {
   DynamicLayoutGroupType,
+  DynamicLayoutHorizontalGroupMode,
+  DynamicLayoutVerticalGroupMode,
   IDynamicLayoutGroup,
   IDynamicLayoutItem,
 } from '../dynamic-layout.interface';
@@ -28,11 +30,24 @@ export class GroupComponent implements OnInit {
     private layoutService: DynamicLayoutService,
   ) {}
 
+  get hasSplitters(): boolean {
+    const { group } = this;
+    const h = group.groupType === DynamicLayoutGroupType.HORIZONTAL && group.mode === DynamicLayoutHorizontalGroupMode.SPLITTERS;
+    const v = group.groupType === DynamicLayoutGroupType.VERTICAL && group.mode === DynamicLayoutVerticalGroupMode.SPLITTERS;
+    return h || v;
+  }
+
   get groupClass(): Record<string, boolean> {
+    const { group } = this;
+    const isHorizontal = group.groupType === DynamicLayoutGroupType.HORIZONTAL;
+    const isVertical = group.groupType === DynamicLayoutGroupType.VERTICAL;
+    const isLine = group.groupType === DynamicLayoutGroupType.VERTICAL && group.mode === DynamicLayoutVerticalGroupMode.LINE;
     return {
-      'grow': this.group.grow,
-      'flex vertical': this.group.groupType === DynamicLayoutGroupType.VERTICAL,
-      'flex horizontal horizontal-group': this.group.groupType === DynamicLayoutGroupType.HORIZONTAL,
+      'grow': isHorizontal || !isLine,
+      'flex': isHorizontal || isVertical,
+      'vertical': isVertical,
+      'horizontal horizontal-group': isHorizontal,
+      'auto-height': isLine,
     };
   }
 

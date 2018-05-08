@@ -4,11 +4,12 @@
     {
       "type": "group",
       "groupType": "vertical",
-      "splitters": true,
+      "mode": "splitters",
       "children": [
         {
           "type": "group",
           "groupType": "vertical",
+          "mode": "line",
           "children": [
             {
               "type": "group",

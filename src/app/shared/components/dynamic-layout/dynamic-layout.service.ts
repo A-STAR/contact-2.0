@@ -65,8 +65,6 @@ export class DynamicLayoutService {
     this._group = {
       type: DynamicLayoutItemType.GROUP,
       groupType: DynamicLayoutGroupType.VERTICAL,
-      splitters: true,
-      // grow: true,
       children: items,
     };
     this._key = key || config.key;
