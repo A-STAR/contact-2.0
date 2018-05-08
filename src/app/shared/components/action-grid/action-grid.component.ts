@@ -359,7 +359,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onSelect(selected: number[]): void {
-    if (this.currentSelectionAction) {
+    if (this.currentSelectionAction && selected && selected.length) {
       this.onSelectionAction(selected);
     }
     this.select.emit(selected);
