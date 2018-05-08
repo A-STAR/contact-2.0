@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
@@ -15,7 +15,7 @@ import { doOnceIf, invert } from '@app/core/utils';
   styleUrls: ['./map-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapToolbarComponent implements OnDestroy {
+export class MapToolbarComponent {
   @Input() context: IControlCmpContext<IMapToolbarItem[]>;
 
   constructor(private store: Store<IAppState>) {}
@@ -33,11 +33,6 @@ export class MapToolbarComponent implements OnDestroy {
         this.store.dispatch(item.action);
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    // tslint:disable-next-line:no-console
-    console.log('I was removed!');
   }
 
 }
