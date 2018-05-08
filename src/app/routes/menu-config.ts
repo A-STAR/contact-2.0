@@ -213,13 +213,13 @@ export const menuConfig: IMenuConfig = {
     text: 'sidebar.nav.menu.REPORTS',
     link: '/app/reports',
     icon: '',
-    docs: null,
+    docs: 'reports',
   },
   anyReports: {
     text: 'sidebar.nav.menu.REPORTS',
     link: '/app/reports',
     icon: 'co-m-action-log',
-    docs: null,
+    docs: 'reports',
   },
 
   // Справка
