@@ -40,7 +40,7 @@ const routes: Routes = [
         loadChildren: './forms/forms.module#FormsModule',
       },
       {
-        path: 'layout/:layoutId',
+        path: 'layout/:debtId',
         loadChildren: './layout/layout.module#LayoutModule',
       },
       {

@@ -14,12 +14,12 @@ import { of } from 'rxjs/observable/of';
 import { Validators } from '@angular/forms';
 
 import { IAttribute } from './contact-property-tree-edit.interface';
-import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { IContactTreeAttribute } from '../../contact-properties.interface';
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserAttributeType } from '@app/core/user/attribute-types/user-attribute-types.interface';
 
@@ -29,13 +29,11 @@ import { UserAttributeTypesService } from '@app/core/user/attribute-types/user-a
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
+import { ActionCheckboxRendererComponent } from '@app/shared/components/grids/renderers';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers';
-
-import { flatten, isEmpty, makeKey, range, TYPE_CODES, valuesToOptions } from '@app/core/utils';
-
-const label = makeKey('widgets.contactProperty.dialogs.edit.attributes');
+import { isEmpty, range, valuesToOptions, addGridLabel } from '@app/core/utils';
+import { CellValueChangedEvent } from 'ag-grid';
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -59,18 +57,49 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   };
   controls: IDynamicFormItem[];
   attributeTypes: ITreeNode[] = [];
+  attributes: any[] = [];
   data = {};
   tabs = [
     { isInitialised: true },
     { isInitialised: false },
   ];
 
-  columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
-    { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
-    { dataType: TYPE_CODES.STRING, name: 'name' },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed', cellRendererFramework: CheckboxRendererComponent },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory', cellRendererFramework: CheckboxRendererComponent },
-  ].map(col => ({ ...col, label: label(col.name)}));
+  columns: Array<ISimpleGridColumn<IAttribute>> = [
+    {
+      prop: 'code', minWidth: 50, maxWidth: 80,
+    },
+    {
+      prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
+    },
+    {
+      prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
+      actionParams: {
+        dataKeys: [ 'isDisplayed', 'isMandatory' ],
+        mask: [
+          [ 3, 1, 0 ],
+          [ 0, 1, 3 ]
+        ],
+        parentsMask: [
+          [ 0, 2, 0, 2 ],
+          [ 0, 2, 1, 2 ],
+          [ 0, 3, 0, 2 ],
+          [ 0, 3, 1, 2 ],
+        ],
+        childrenMask: [
+          [ 2, 1, 2, 0 ],
+          [ 2, 1, 3, 0 ],
+          [ 3, 2, 2, 0 ],
+          [ 3, 2, 3, 0 ],
+          [ 2, 0, 2, 0 ],
+          [ 2, 0, 3, 0 ],
+        ],
+      }
+    },
+    {
+      prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
+      rendererParams: { isDisplayed: data => data.disabledValue !== 1 },
+    },
+  ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
   private attributeTypesChanged = false;
 
@@ -120,16 +149,13 @@ export class ContactPropertyTreeEditComponent implements OnInit {
         const hasChildren = children && children.length > 0;
         const attributeDataItem = attributeData ? attributeData.find(item => item.code === attribute.code) : null;
         return {
-          data: {
             ...data,
             isMandatory: !!attributeDataItem && !!attributeDataItem.mandatory,
             isDisplayed: !!attributeDataItem,
-          },
-          ...(hasChildren ? { children: this.convertToNodes(children, attributeDataItem && attributeDataItem.children) } : {}),
-          expanded: hasChildren,
+            ...(hasChildren ? { children: this.convertToNodes(children, attributeDataItem && attributeDataItem.children) } : {}),
         };
       })
-      .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+      .sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
   get canSubmit(): boolean {
@@ -139,7 +165,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   onSubmit(): void {
     const { autoCommentIds, template, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
 
-    const attributes = flatten(this.attributeTypes, 'data')
+    const attributes = this.attributes
       .filter(attr => attr.isDisplayed)
       .map(attr => ({ code: attr.code, mandatory: Number(attr.isMandatory) }));
 
@@ -158,86 +184,18 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  updateDisplayedField(nodes: any[], code: number, value: boolean): any[] {
-    return nodes.reduce((acc, node) => {
-      const isMatch = node.data.code === code;
-      const { isDisplayed, isMandatory } = node.data;
-      return [
-        ...acc,
-        {
-          ...node,
-          data: {
-            ...node.data,
-            isDisplayed: isMatch ? value : isDisplayed,
-            isMandatory: isMatch ? isMandatory && value : isMandatory,
-          },
-          ...(node.children ? { children: this.updateDisplayedField(node.children, code, value) } : {}),
-        }
-      ];
-    }, []);
-  }
-
-  onIsDisplayedChange(event: any): void {
-    const codes = event.data.code;
-    this.attributeTypes = this.updateDisplayedField(this.attributeTypes, codes[codes.length - 1], event.newValue);
-
-    // TODO(d.maltsev): traverse the tree and update ancestors' and descendants' attributes
-    // this.attributeTypesChanged = true;
-    // node.data.isDisplayed = value;
-    // if (!value && node.data.isMandatory) {
-    //   node.data.isMandatory = false;
-    // }
-    // if (traverseUp && !!node.parent) {
-    //   const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || !!child.data.isDisplayed, false);
-    //   this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
-    // }
-    // if (traverseDown && !!node.children) {
-    //   node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
-    // }
-    // if (traverseUp && traverseDown) {
-    //   this.cdRef.markForCheck();
-    // }
-  }
-
-  updateMandatoryField(nodes: any[], code: number, value: boolean): any[] {
-    return nodes.reduce((acc, node) => {
-      const isMatch = node.data.code === code;
-      const { isDisplayed, isMandatory } = node.data;
-      return [
-        ...acc,
-        {
-          ...node,
-          data: {
-            ...node.data,
-            isMandatory: isMatch ? value : isMandatory,
-            isDisplayed: isMatch ? isDisplayed || value : isDisplayed,
-          },
-          ...(node.children ? { children: this.updateMandatoryField(node.children, code, value) } : {}),
-        }
-      ];
-    }, []);
-  }
-
-  onIsMandatoryChange(event: any): void {
-    const codes = event.data.code;
-    this.attributeTypes = this.updateMandatoryField(this.attributeTypes, codes[codes.length - 1], event.newValue);
-  }
-
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
   }
 
-  onCellValueChanged(event: any): void {
-    this.attributeTypesChanged = true;
-    switch (event.colDef.field) {
-      case 'isDisplayed':
-        this.onIsDisplayedChange(event);
-        break;
-      case 'isMandatory':
-        this.onIsMandatoryChange(event);
-        break;
+  onCellValueChanged($event: CellValueChangedEvent): void {
+    const index = this.attributes.findIndex(a => a.code === $event.data.code);
+    if (index === -1) {
+      this.attributes.push($event.data);
+    } else {
+      this.attributes[index] = $event.data;
     }
-    this.cdRef.markForCheck();
+    this.attributeTypesChanged = !!this.attributes.length;
   }
 
   private buildControls(

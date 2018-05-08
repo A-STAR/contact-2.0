@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import {
   DynamicLayoutGroupType,
@@ -49,6 +50,10 @@ export class GroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.sizes = this.groupService.getSplittersConfig(this.layoutService.key, this.group.uid);
+  }
+
+  isSplitVisible(item: IDynamicLayoutItem): Observable<boolean> {
+    return item.displaySplit ? item.displaySplit : of(true);
   }
 
   isDisplayed(item: IDynamicLayoutItem): Observable<boolean> {

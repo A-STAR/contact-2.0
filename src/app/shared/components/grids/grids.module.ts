@@ -22,6 +22,7 @@ import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
 import {
+  ActionCheckboxRendererComponent,
   CallbackRendererComponent,
   CheckboxRendererComponent,
   DateRendererComponent,
@@ -48,6 +49,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
 @NgModule({
   imports: [
     AgGridModule.withComponents([
+      ActionCheckboxRendererComponent,
       CallbackRendererComponent,
       CheckboxRendererComponent,
       DateRendererComponent,
@@ -75,9 +77,11 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
   ],
   exports: [
     CheckboxRendererComponent,
+    ActionCheckboxRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
+    ActionCheckboxRendererComponent,
     CallbackRendererComponent,
     CheckboxRendererComponent,
     DateRendererComponent,
@@ -96,6 +100,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
+    ActionCheckboxRendererComponent,
     CheckboxRendererComponent,
   ],
   providers: [

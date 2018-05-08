@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
 import { AngularSplitModule } from 'angular-split';
 
 import { CheckModule } from '@app/shared/components/form/check/check.module';
@@ -20,6 +21,8 @@ import { DynamicLayoutComponent } from './dynamic-layout.component';
 import { GroupComponent } from './group/group.component';
 import { TemplateComponent } from './template/template.component';
 
+import { formReducer } from './control/control.reducer';
+
 @NgModule({
   imports: [
     AngularSplitModule,
@@ -30,6 +33,7 @@ import { TemplateComponent } from './template/template.component';
     InputModule,
     ReactiveFormsModule,
     SelectModule,
+    StoreModule.forFeature('form', formReducer),
     TabViewModule,
   ],
   exports: [
