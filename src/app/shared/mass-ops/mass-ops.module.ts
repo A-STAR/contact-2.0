@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AddressModule } from './address/address.module';
 import { AttributesModule } from './attributes/attributes.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
+import { CustomOperationModule } from './custom-operation/custom-operation.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtStatusModule } from './debt-status/debt-status.module';
 import { EmailModule } from './email/email.module';
@@ -28,6 +29,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     AttributesModule,
     CommonModule,
     ContactLogModule,
+    CustomOperationModule,
     DebtResponsibleModule,
     DebtStatusModule,
     EmailModule,
@@ -48,6 +50,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     AddressModule,
     AttributesModule,
     ContactLogModule,
+    CustomOperationModule,
     DebtResponsibleModule,
     DebtStatusModule,
     EmailModule,
