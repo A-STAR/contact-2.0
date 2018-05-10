@@ -1,4 +1,11 @@
+@import "../../../styles/app/variables.scss";
+
 :host {
   display: block;
-  position: relative;
+}
+
+.group-titlebar {
+  border-bottom: 1px solid $gray-light;
+  margin-bottom: 5px;
+  padding: 5px 0;
 }

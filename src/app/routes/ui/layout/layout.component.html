@@ -6,5 +6,8 @@
 ></app-dynamic-layout>
 
 <ng-template #foo>
-  I am a template. Nice to have you here.
+  <app-simple-grid
+    [columns]="columns"
+    [rows]="rows"
+  ></app-simple-grid>
 </ng-template>

@@ -60,6 +60,13 @@ export class GroupComponent implements OnInit {
       : `0 0 auto`;
   }
 
+  get contentClass(): Record<string, boolean> {
+    return {
+      'flex-item': true,
+      'grow': Boolean(this.group.size),
+    };
+  }
+
   ngOnInit(): void {
     this.sizes = this.groupService.getSplittersConfig(this.layoutService.key, this.group.uid);
   }
