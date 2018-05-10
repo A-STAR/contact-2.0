@@ -1,9 +1,8 @@
-<div [ngStyle]="style">
-  <p>Attribute:</p>
-  <div>
-    {{ attribute.label }}
+<label class="m0">
+  <div *ngIf="attribute.label" class="form-label">
+    {{ attribute.label | translate }}
   </div>
   <div>
     {{ value }}
   </div>
-</div>
+</label>

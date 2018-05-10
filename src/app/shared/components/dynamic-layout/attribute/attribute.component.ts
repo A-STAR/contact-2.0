@@ -13,7 +13,7 @@ import { AttributeService } from '../attribute/attribute.service';
 export class AttributeComponent implements OnInit, OnDestroy {
   @Input() attribute: IDynamicLayoutAttribute;
 
-  value: any;
+  value = '';
 
   private attributesSubscription: Subscription;
 
@@ -29,15 +29,9 @@ export class AttributeComponent implements OnInit, OnDestroy {
       : `0 0 auto`;
   }
 
-  get style(): Partial<CSSStyleDeclaration> {
-    return {
-      flex: this.attribute.size ? `${this.attribute.size} 0` : `0 0 auto`,
-    };
-  }
-
   ngOnInit(): void {
     this.attributesSubscription = this.attributeService.attributes$.subscribe(attributes => {
-      this.value = attributes ? attributes[this.attribute.key] : null;
+      this.value = attributes ? attributes[this.attribute.uid] : null;
       this.cdRef.markForCheck();
     });
   }

@@ -14,6 +14,5 @@ export interface IAttributePayload {
 
 export interface IDynamicLayoutAttribute extends IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType.ATTRIBUTE;
-  key: string;
   formula: number;
 }

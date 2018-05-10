@@ -57,22 +57,22 @@ export class LayoutComponent implements OnInit {
                 children: [
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
+                    label: 'Formula #1',
                     formula: 1,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
+                    label: 'Formula #2',
                     formula: 2,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
+                    label: 'Formula #3',
                     formula: 3,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
+                    label: 'Formula #4',
                     formula: 4,
                   },
                 ]
@@ -96,23 +96,23 @@ export class LayoutComponent implements OnInit {
                 children: [
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
-                    formula: 1,
+                    label: 'Formula #5',
+                    formula: 5,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
-                    formula: 2,
+                    label: 'Formula #6',
+                    formula: 6,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
-                    formula: 3,
+                    label: 'Formula #7',
+                    formula: 7,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
-                    formula: 4,
+                    label: 'Formula #10',
+                    formula: 10,
                   },
                 ]
               },
