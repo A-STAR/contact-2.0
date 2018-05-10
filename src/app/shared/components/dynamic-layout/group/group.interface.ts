@@ -11,9 +11,11 @@ export interface IDynamicLayoutGenericGroup extends IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType.GROUP;
   groupType: DynamicLayoutGroupType;
   children: IDynamicLayoutItem[];
+  // Optional:
+  collapsible?: boolean;
 }
 
-export enum DynamicLayoutHorizontalGroupMode {
+export enum DynamicLayoutGroupMode {
   NONE      = 'none',
   SPLITTERS = 'splitters',
 }
@@ -21,19 +23,13 @@ export enum DynamicLayoutHorizontalGroupMode {
 export interface IDynamicLayoutHorizontalGroup extends IDynamicLayoutGenericGroup {
   groupType: DynamicLayoutGroupType.HORIZONTAL;
   // Optional:
-  mode?: DynamicLayoutHorizontalGroupMode;
-}
-
-export enum DynamicLayoutVerticalGroupMode {
-  COLLAPSIBLE = 'collapsible',
-  NONE        = 'none',
-  SPLITTERS   = 'splitters',
+  mode?: DynamicLayoutGroupMode;
 }
 
 export interface IDynamicLayoutVerticalGroup extends IDynamicLayoutGenericGroup {
   groupType: DynamicLayoutGroupType.VERTICAL;
   // Optional:
-  mode?: DynamicLayoutVerticalGroupMode;
+  mode?: DynamicLayoutGroupMode;
 }
 
 export interface IDynamicLayoutTabsGroup extends IDynamicLayoutGenericGroup {

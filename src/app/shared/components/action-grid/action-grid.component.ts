@@ -19,7 +19,7 @@ import { of } from 'rxjs/observable/of';
 
 import {
   DynamicLayoutGroupType,
-  DynamicLayoutHorizontalGroupMode,
+  DynamicLayoutGroupMode,
   DynamicLayoutItemType,
   IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
@@ -159,7 +159,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
-        mode: DynamicLayoutHorizontalGroupMode.SPLITTERS,
+        mode: DynamicLayoutGroupMode.SPLITTERS,
         children: [
           {
             type: DynamicLayoutItemType.TEMPLATE,

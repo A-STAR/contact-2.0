@@ -3,10 +3,9 @@ import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } fr
 import {
   ContextOperator,
   DynamicLayoutControlType,
+  DynamicLayoutGroupMode,
   DynamicLayoutGroupType,
-  DynamicLayoutHorizontalGroupMode,
   DynamicLayoutItemType,
-  DynamicLayoutVerticalGroupMode,
   IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
@@ -35,7 +34,7 @@ export class LayoutComponent implements OnInit {
       {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
-        mode: DynamicLayoutHorizontalGroupMode.SPLITTERS,
+        mode: DynamicLayoutGroupMode.SPLITTERS,
         size: 100,
         children: [
           {
@@ -53,7 +52,7 @@ export class LayoutComponent implements OnInit {
           {
             type: DynamicLayoutItemType.GROUP,
             groupType: DynamicLayoutGroupType.VERTICAL,
-            mode: DynamicLayoutVerticalGroupMode.SPLITTERS,
+            mode: DynamicLayoutGroupMode.SPLITTERS,
             size: 50,
             children: [
               {
