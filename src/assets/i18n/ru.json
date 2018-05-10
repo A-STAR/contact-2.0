@@ -2749,6 +2749,11 @@
       "errors": {
         "start": "Произошла ошибка при попытке стартовать мероприятия с ID {{ eventId }}"
       }
+    },
+    "customOperation": {
+      "dialog": {
+        "title": "Введите параметры"
+      }
     }
   },
   "entities": {

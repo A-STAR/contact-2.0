@@ -2749,6 +2749,11 @@
       "errors": {
         "start": "Error has been occurred when tried to start schedule events with the ID {{ eventId }}"
       }
+    },
+    "customOperation": {
+      "dialog": {
+        "title": "Введите параметры"
+      }
     }
   },
   "entities": {
