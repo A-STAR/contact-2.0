@@ -42,10 +42,10 @@ export interface IDynamicLayoutGenericItem {
   type: DynamicLayoutItemType;
   // Optional:
   display?: IContext;
+  displaySplit?: Observable<boolean>;
   enabled?: IContext;
   label?: string;
   size?: number;
-  displaySplit?: Observable<boolean>;
   uid?: string;
   validators?: Record<string, IContext>;
 }

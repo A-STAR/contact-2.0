@@ -12,6 +12,7 @@ import {
 
 import { DynamicLayoutService } from '../dynamic-layout.service';
 import { GroupService } from './group.service';
+import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +66,10 @@ export class GroupComponent implements OnInit {
   }
 
   isSplitVisible(item: IDynamicLayoutItem): Observable<boolean> {
-    return item.displaySplit ? item.displaySplit : of(true);
+    const displaySplit = item.displaySplit
+      ? item.displaySplit
+      : of(true);
+    return combineLatestAnd([ item.display && displaySplit ]);
   }
 
   isDisplayed(item: IDynamicLayoutItem): Observable<boolean> {
