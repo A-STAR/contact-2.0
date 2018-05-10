@@ -91,6 +91,7 @@ export class LayoutComponent implements OnInit {
               {
                 type: DynamicLayoutItemType.GROUP,
                 groupType: DynamicLayoutGroupType.TABS,
+                size: 1,
                 children: [
                   {
                     type: DynamicLayoutItemType.CONTROL,
