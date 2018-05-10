@@ -58,7 +58,7 @@ export class LayoutComponent implements OnInit {
               {
                 type: DynamicLayoutItemType.GROUP,
                 groupType: DynamicLayoutGroupType.VERTICAL,
-                // mode: DynamicLayoutVerticalGroupMode.LINE,
+                collapsible: true,
                 children: [
                   {
                     type: DynamicLayoutItemType.CONTROL,

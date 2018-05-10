@@ -21,7 +21,7 @@ import { DynamicLayoutComponent } from './dynamic-layout.component';
 import { GroupComponent } from './group/group.component';
 import { TemplateComponent } from './template/template.component';
 
-import { formReducer } from './control/control.reducer';
+import { dynamicLayoutReducer } from './dynamic-layout.reducer';
 
 @NgModule({
   imports: [
@@ -33,7 +33,7 @@ import { formReducer } from './control/control.reducer';
     InputModule,
     ReactiveFormsModule,
     SelectModule,
-    StoreModule.forFeature('form', formReducer),
+    StoreModule.forFeature('layout', dynamicLayoutReducer),
     TabViewModule,
   ],
   exports: [

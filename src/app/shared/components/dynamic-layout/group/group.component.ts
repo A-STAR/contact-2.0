@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
@@ -25,7 +25,10 @@ export class GroupComponent implements OnInit {
 
   private sizes: number[];
 
+  expanded = true;
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private groupService: GroupService,
     private layoutService: DynamicLayoutService,
   ) {}
@@ -89,5 +92,10 @@ export class GroupComponent implements OnInit {
 
   onDragEnd(event: any): void {
     this.groupService.setSplittersConfig(this.layoutService.key, this.group.uid, event.sizes);
+  }
+
+  toggle(): void {
+    this.expanded = !this.expanded;
+    this.cdRef.markForCheck();
   }
 }

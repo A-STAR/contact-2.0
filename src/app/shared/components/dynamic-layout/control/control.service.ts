@@ -11,11 +11,11 @@ import { equals } from 'ramda';
 import { IAppState } from '@app/core/state/state.interface';
 import {
   DynamicLayoutControlType,
-  DynamicLayoutFormAction,
+  DynamicLayoutAction,
   DynamicLayoutItemType,
   IDynamicLayoutControl,
-  IDynamicLayoutFormChangeValidAction,
-  IDynamicLayoutFormChangeValueAction,
+  IDynamicLayoutChangeValidAction,
+  IDynamicLayoutChangeValueAction,
   IDynamicLayoutItem,
   IDynamicLayoutItemProperties,
   IDynamicLayoutPlugin,
@@ -92,7 +92,7 @@ export class ControlService implements OnDestroy {
 
   canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
     return this.store.select(state => {
-      const { dirty, valid } = getIn(state, [ 'form', this.key, form, 'status' ], {});
+      const { dirty, valid } = getIn(state, [ 'layout', this.key, 'forms', form, 'status' ], {});
       return dirty && valid;
     });
   }
@@ -116,8 +116,8 @@ export class ControlService implements OnDestroy {
 
   dispatchChangeStatusAction(form: string, valid: boolean, dirty: boolean): void {
     const { key } = this;
-    const action: IDynamicLayoutFormChangeValidAction = {
-      type: DynamicLayoutFormAction.CHANGE_VALID,
+    const action: IDynamicLayoutChangeValidAction = {
+      type: DynamicLayoutAction.CHANGE_VALID,
       payload: { key, form, valid, dirty },
     };
     this.store.dispatch(action);
@@ -125,8 +125,8 @@ export class ControlService implements OnDestroy {
 
   dispatchChangeValueAction(form: string, value: Record<string, any>): void {
     const { key } = this;
-    const action: IDynamicLayoutFormChangeValueAction = {
-      type: DynamicLayoutFormAction.CHANGE_VALUE,
+    const action: IDynamicLayoutChangeValueAction = {
+      type: DynamicLayoutAction.CHANGE_VALUE,
       payload: { key, form, value },
     };
     this.store.dispatch(action);

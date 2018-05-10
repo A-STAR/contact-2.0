@@ -72,3 +72,50 @@ export interface IDynamicLayoutItemProperties<T> {
     validators: Record<string, Observable<any>>;
   };
 }
+
+export interface IDynamicLayoutState {
+  [key: string]: {
+    forms: {
+      [key: string]: {
+        status: {
+          dirty: boolean;
+          valid: boolean;
+        };
+        value: Record<string, any>;
+      };
+    };
+  };
+}
+
+export enum DynamicLayoutAction {
+  CHANGE_VALID = '[form] change valid',
+  CHANGE_VALUE = '[form] change value',
+}
+
+export interface IDynamicLayoutGenericAction {
+  type: DynamicLayoutAction;
+}
+
+export interface IDynamicLayoutChangeValidAction extends IDynamicLayoutGenericAction {
+  type: DynamicLayoutAction.CHANGE_VALID;
+  payload: {
+    key: string;
+    form: string;
+    valid: boolean;
+    dirty: boolean;
+  };
+}
+
+export interface IDynamicLayoutChangeValueAction extends IDynamicLayoutGenericAction {
+  type: DynamicLayoutAction.CHANGE_VALUE;
+  payload: {
+    key: string;
+    form: string;
+    value: any;
+  };
+}
+
+export type IDynamicLayoutAction =
+  | IDynamicLayoutChangeValidAction
+  | IDynamicLayoutChangeValueAction
+;
