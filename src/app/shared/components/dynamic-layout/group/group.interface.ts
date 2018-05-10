@@ -26,7 +26,6 @@ export interface IDynamicLayoutHorizontalGroup extends IDynamicLayoutGenericGrou
 
 export enum DynamicLayoutVerticalGroupMode {
   COLLAPSIBLE = 'collapsible',
-  LINE        = 'line',
   NONE        = 'none',
   SPLITTERS   = 'splitters',
 }

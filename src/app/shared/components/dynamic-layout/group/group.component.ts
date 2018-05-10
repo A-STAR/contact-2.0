@@ -41,13 +41,10 @@ export class GroupComponent implements OnInit {
     const { group } = this;
     const isHorizontal = group.groupType === DynamicLayoutGroupType.HORIZONTAL;
     const isVertical = group.groupType === DynamicLayoutGroupType.VERTICAL;
-    const isLine = group.groupType === DynamicLayoutGroupType.VERTICAL && group.mode === DynamicLayoutVerticalGroupMode.LINE;
     return {
-      'grow': isHorizontal || !isLine,
-      'flex': isHorizontal || isVertical,
+      'grow flex': true,
       'vertical': isVertical,
       'horizontal horizontal-group': isHorizontal,
-      'auto-height': isLine,
     };
   }
 
@@ -78,17 +75,13 @@ export class GroupComponent implements OnInit {
   getAreaSize(item: IDynamicLayoutItem, i: number): number {
     return this.sizes
       ? this.sizes[i]
-      : this.getItemSize(item);
+      : item.size || (100 / this.group.children.length);
   }
 
   getItemStyle(item: IDynamicLayoutItem): Partial<CSSStyleDeclaration> {
     return {
-      flex: `${this.getItemSize(item)} 0`,
+      flex: item.size ? `${item.size} 0` : `0 0 auto`,
     };
-  }
-
-  getItemSize(item: IDynamicLayoutItem): number {
-    return item.size || (100 / this.group.children.length);
   }
 
   onDragEnd(event: any): void {
