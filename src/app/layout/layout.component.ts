@@ -34,6 +34,8 @@ export class LayoutComponent {
       const itemKey = Object.keys(menuConfig).find(k => menuConfig[k].link === menuLinkUrl);
       if (itemKey) {
         this.helpService.open(menuConfig[itemKey].docs);
+      } else if (menuLinkUrl.startsWith('/app/workplaces/debtor')) {
+        this.helpService.open('debt_card');
       }
       event.preventDefault();
     }

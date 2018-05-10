@@ -9,7 +9,7 @@
     "useProvider": "google",
     "providers": {
       "google": {
-        "apiKey": "AIzaSyByUIeIkANdXYNGK58qoItJUtLBjPp65P8"
+        "apiKey": "google api key"
       },
       "yandex": {
         "apiKey": "yandex api key"
