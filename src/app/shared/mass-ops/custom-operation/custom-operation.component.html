@@ -1,4 +1,4 @@
-<app-dialog (close)="onClose()">
+<app-dialog (close)="onClose()" *ngIf="actionData.paramsOptions">
   <div dialog-header>
     <h3>{{ 'widgets.customOperation.dialog.title' | translate }}</h3>
   </div>

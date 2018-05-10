@@ -181,6 +181,14 @@
   (close)="onCloseAction($event)"
 ></app-mass-person-type>
 
+<ng-container *ngFor="let action of customActions">
+  <app-mass-custom-operation
+    *ngIf="isDialog(action.action)"
+    [actionData]="dialogData"
+    (close)="onCloseAction($event)"
+  ></app-mass-custom-operation>
+</ng-container>
+
 <!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader

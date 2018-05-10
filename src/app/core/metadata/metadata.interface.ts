@@ -10,6 +10,21 @@ export interface IMetadataActionOption {
   value: Array<number|string>;
 }
 
+export interface IMetadataCustomActionParam {
+  id?: number;
+  name: string;
+  paramTypeCode: number;
+  sortOrder: number;
+  systemName: string;
+  isMandatory: number;
+  multiSelect: number;
+  dictNameCode: number;
+}
+
+export interface IMetadataCustomAction {
+  params: IMetadataCustomActionParam[];
+}
+
 export interface IMetadataAction {
   action: string;
   // for custom actions, translates label path + action
@@ -25,6 +40,8 @@ export interface IMetadataAction {
   };
   children?: IMetadataAction[];
   type?: MetadataActionType;
+  operationId?: number;
+  operationData?: IMetadataCustomAction;
 }
 
 export enum MetadataActionType {

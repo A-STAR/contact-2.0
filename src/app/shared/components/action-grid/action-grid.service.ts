@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
+import { IMetadataAction, MetadataActionType, IMetadataCustomAction } from '@app/core/metadata/metadata.interface';
+import {
+  IMetadataFormConfig,
+  IMetadataFormControlType,
+  IMetadataFormControl
+} from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
 import {
   IMetadataActionSetter,
@@ -181,6 +186,47 @@ export class ActionGridService {
 
   isFilterAction(actionData: IGridActionPayload): boolean {
     return actionData.type === MetadataActionType.ALL;
+  }
+
+  getCustomOperationConfig(operation: IMetadataCustomAction): IMetadataFormConfig {
+    return {
+      editable: true,
+      items: operation.params.map(param => ({
+        disabled: false,
+        display: true,
+        label: param.name,
+        name: param.systemName,
+        type: this.getCustomOperationControlType(param.paramTypeCode),
+        validators: {
+          required: !!param.isMandatory,
+        },
+        width: 1
+      }) as IMetadataFormControl),
+      plugins: []
+    };
+  }
+
+  private getCustomOperationControlType(typeCode: number): IMetadataFormControlType {
+    switch (typeCode) {
+      case 1:
+      case 2:
+        return IMetadataFormControlType.DATE;
+      case 2:
+      case 6:
+        return IMetadataFormControlType.TEXT;
+      case 3:
+      case 4:
+      case 5:
+      case 7:
+      case 8:
+      case 11:
+      case 13:
+        return IMetadataFormControlType.GRIDSELECT;
+      case 9:
+        return IMetadataFormControlType.CHECKBOX;
+      case 12:
+        return IMetadataFormControlType.SELECT;
+    }
   }
 
   private getSingleSelection(action: IActionGridAction, selection: any): any {

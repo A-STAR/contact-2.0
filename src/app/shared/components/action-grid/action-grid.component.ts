@@ -228,6 +228,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return !!this.metadataKey;
   }
 
+  get customActions(): IMetadataAction[] {
+    return (this.actions || []).filter(action => !!action.operationId);
+  }
+
   isAttrChangeDictionaryDlg(): boolean {
     return [
       'changeRegionAttr',
@@ -416,7 +420,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         metadataKey: this.metadataKey,
         filters: this.getFilters()
       }),
-      selection: this.actionGridService.getGridSelection(action, this.selection)
+      selection: this.actionGridService.getGridSelection(action, this.selection),
+      ...(action.metadataAction.operationId
+        ? {
+          operationId: action.metadataAction.operationId,
+          operationConfig: this.actionGridService.getCustomOperationConfig(action.metadataAction.operationData)
+        } : {}
+      )
     };
   }
 
