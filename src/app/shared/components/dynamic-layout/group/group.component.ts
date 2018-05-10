@@ -69,7 +69,11 @@ export class GroupComponent implements OnInit {
     const displaySplit = item.displaySplit
       ? item.displaySplit
       : of(true);
-    return combineLatestAnd([ item.display && displaySplit ]);
+    // TODO(i.lobanov): create this stream once at init stage
+    return combineLatestAnd([
+      this.layoutService.getItem(item.uid).streams.display,
+      displaySplit,
+    ]);
   }
 
   isDisplayed(item: IDynamicLayoutItem): Observable<boolean> {
