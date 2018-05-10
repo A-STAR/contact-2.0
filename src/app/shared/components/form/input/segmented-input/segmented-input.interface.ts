@@ -10,7 +10,7 @@ export interface ISegmentedInputOption {
 }
 
 export interface ISegmentedInputMask {
-  delimeter?: string;
+  delimeter: string;
   maxNumbers?: number;
   maxNumberLength?: number;
 }

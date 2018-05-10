@@ -206,7 +206,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     const debtStatusOptions = debtStatusDict.filter(option => option.value > 20000);
     const templateInputOptions = {
       segmentedInputOptions: [
-        { name: 'templateId', label: 'widgets.contactProperty.dialogs.edit.value', mask: { maxNumbers: 5, maxNumberLength: 5 } },
+        { name: 'templateId', label: 'widgets.contactProperty.dialogs.edit.value', mask: { delimeter: ',' } },
         { name: 'templateFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
       ]
     };
