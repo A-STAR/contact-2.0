@@ -102,6 +102,7 @@ export class LayoutComponent implements OnInit {
               {
                 type: DynamicLayoutItemType.TEMPLATE,
                 value: 'foo',
+                size: 1,
               },
             ],
           },

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
@@ -11,11 +11,11 @@ import {
 
 import { DynamicLayoutService } from '../dynamic-layout.service';
 import { GroupService } from './group.service';
+
 import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-size' },
   selector: 'app-dynamic-layout-group',
   styleUrls: [ './group.component.scss' ],
   templateUrl: './group.component.html'
@@ -43,7 +43,7 @@ export class GroupComponent implements OnInit {
     return {
       'grow flex': true,
       'vertical': this.group.groupType === DynamicLayoutGroupType.VERTICAL,
-      'horizontal horizontal-group': this.group.groupType === DynamicLayoutGroupType.HORIZONTAL,
+      'horizontal': this.group.groupType === DynamicLayoutGroupType.HORIZONTAL,
     };
   }
 
@@ -53,10 +53,11 @@ export class GroupComponent implements OnInit {
       : 'horizontal';
   }
 
-  get itemClass(): string {
-    return this.group.groupType === DynamicLayoutGroupType.HORIZONTAL
-      ? 'horizontal-group-item'
-      : null;
+  @HostBinding('style.flex')
+  get flex(): string {
+    return this.group.size && this.expanded
+      ? `${this.group.size} 0`
+      : `0 0 auto`;
   }
 
   ngOnInit(): void {
@@ -82,12 +83,6 @@ export class GroupComponent implements OnInit {
     return this.sizes
       ? this.sizes[i]
       : item.size || (100 / this.group.children.length);
-  }
-
-  getItemStyle(item: IDynamicLayoutItem): Partial<CSSStyleDeclaration> {
-    return {
-      flex: item.size ? `${item.size} 0` : `0 0 auto`,
-    };
   }
 
   onDragEnd(event: any): void {

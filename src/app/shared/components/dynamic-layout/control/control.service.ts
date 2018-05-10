@@ -117,7 +117,7 @@ export class ControlService implements OnDestroy {
   dispatchChangeStatusAction(form: string, valid: boolean, dirty: boolean): void {
     const { key } = this;
     const action: IDynamicLayoutChangeValidAction = {
-      type: DynamicLayoutAction.CHANGE_VALID,
+      type: DynamicLayoutAction.CHANGE_FORM_VALID,
       payload: { key, form, valid, dirty },
     };
     this.store.dispatch(action);
@@ -126,7 +126,7 @@ export class ControlService implements OnDestroy {
   dispatchChangeValueAction(form: string, value: Record<string, any>): void {
     const { key } = this;
     const action: IDynamicLayoutChangeValueAction = {
-      type: DynamicLayoutAction.CHANGE_VALUE,
+      type: DynamicLayoutAction.CHANGE_FORM_VALUE,
       payload: { key, form, value },
     };
     this.store.dispatch(action);

@@ -88,8 +88,8 @@ export interface IDynamicLayoutState {
 }
 
 export enum DynamicLayoutAction {
-  CHANGE_VALID = '[form] change valid',
-  CHANGE_VALUE = '[form] change value',
+  CHANGE_FORM_VALID = '[layout] change form valid',
+  CHANGE_FORM_VALUE = '[layout] change form value',
 }
 
 export interface IDynamicLayoutGenericAction {
@@ -97,7 +97,7 @@ export interface IDynamicLayoutGenericAction {
 }
 
 export interface IDynamicLayoutChangeValidAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_VALID;
+  type: DynamicLayoutAction.CHANGE_FORM_VALID;
   payload: {
     key: string;
     form: string;
@@ -107,7 +107,7 @@ export interface IDynamicLayoutChangeValidAction extends IDynamicLayoutGenericAc
 }
 
 export interface IDynamicLayoutChangeValueAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_VALUE;
+  type: DynamicLayoutAction.CHANGE_FORM_VALUE;
   payload: {
     key: string;
     form: string;

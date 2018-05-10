@@ -9,11 +9,11 @@ export function dynamicLayoutReducer(
   action: IDynamicLayoutAction,
 ): IDynamicLayoutState {
   switch (action.type) {
-    case DynamicLayoutAction.CHANGE_VALID: {
+    case DynamicLayoutAction.CHANGE_FORM_VALID: {
       const { form, key, valid, dirty } = action.payload;
       return setIn(state, [ key, 'forms', form, 'status' ], { valid, dirty });
     }
-    case DynamicLayoutAction.CHANGE_VALUE: {
+    case DynamicLayoutAction.CHANGE_FORM_VALUE: {
       const { form, key, value } = action.payload;
       return setIn(state, [ key, 'forms', form, 'value' ], value);
     }

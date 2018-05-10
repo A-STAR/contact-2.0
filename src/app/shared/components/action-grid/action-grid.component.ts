@@ -160,6 +160,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
         mode: DynamicLayoutGroupMode.SPLITTERS,
+        size: 100,
         children: [
           {
             type: DynamicLayoutItemType.TEMPLATE,

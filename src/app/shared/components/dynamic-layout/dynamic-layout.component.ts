@@ -11,7 +11,7 @@ import { TemplateService } from './template/template.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-size' },
+  host: { class: 'flex vertical' },
   providers: [
     AttributeService,
     ControlService,

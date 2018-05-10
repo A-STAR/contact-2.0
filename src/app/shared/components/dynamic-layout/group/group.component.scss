@@ -1,7 +1,4 @@
-.horizontal-group {
-  margin: 0 -10px;
-}
-
-.horizontal-group-item {
-  margin: 0 10px;
+:host {
+  display: block;
+  position: relative;
 }

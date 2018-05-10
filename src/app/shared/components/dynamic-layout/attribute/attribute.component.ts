@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicLayoutAttribute } from '../dynamic-layout.interface';
@@ -21,6 +21,19 @@ export class AttributeComponent implements OnInit, OnDestroy {
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
   ) {}
+
+  @HostBinding('style.flex')
+  get flex(): string {
+    return this.attribute.size
+      ? `${this.attribute.size} 0`
+      : `0 0 auto`;
+  }
+
+  get style(): Partial<CSSStyleDeclaration> {
+    return {
+      flex: this.attribute.size ? `${this.attribute.size} 0` : `0 0 auto`,
+    };
+  }
 
   ngOnInit(): void {
     this.attributesSubscription = this.attributeService.attributes$.subscribe(attributes => {
