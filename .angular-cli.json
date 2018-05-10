@@ -19,6 +19,11 @@
           "glob": "worker-tern.js",
           "input": "../node_modules/ng-ace-tern/ace-builds/src-noconflict/",
           "output": "./"
+        },
+        {
+          "glob": "groovy.js",
+          "input": "../node_modules/ng-ace-tern/ace-builds/src-noconflict/snippets/",
+          "output": "./snippets/javascript.js"
         }
       ],
       "index": "index.html",
@@ -42,7 +47,6 @@
         "../node_modules/summernote/dist/summernote.js",
         "../node_modules/leaflet/dist/leaflet.js",
         "../node_modules/ng-ace-tern/ace-builds/src-noconflict/ace.js",
-        "../node_modules/ng-ace-tern/ace-builds/src-noconflict/snippets/javascript.js",
         "../node_modules/ng-ace-tern/ace-builds/src-noconflict/theme-eclipse.js",
         "./app/shared/components/form/script-editor/mode-groovy-tern.js"
       ],
