@@ -36,6 +36,7 @@ export class LayoutComponent implements OnInit {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
         mode: DynamicLayoutHorizontalGroupMode.SPLITTERS,
+        size: 100,
         children: [
           {
             type: DynamicLayoutItemType.TEMPLATE,
