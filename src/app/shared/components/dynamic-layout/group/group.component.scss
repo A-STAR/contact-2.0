@@ -1,11 +1,11 @@
-.horizontal-group {
-  margin: 0 -10px;
+@import "../../../styles/app/variables.scss";
+
+:host {
+  display: block;
 }
 
-.horizontal-group-item {
-  margin: 0 10px;
-}
-
-.auto-height {
-  height: auto;
+.group-titlebar {
+  border-bottom: 1px solid $gray-light;
+  margin-bottom: 5px;
+  padding: 5px 0;
 }

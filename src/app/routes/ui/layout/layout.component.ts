@@ -1,14 +1,20 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import {
-  ContextOperator,
-  DynamicLayoutControlType,
+  DynamicLayoutGroupMode,
   DynamicLayoutGroupType,
-  DynamicLayoutHorizontalGroupMode,
   DynamicLayoutItemType,
-  DynamicLayoutVerticalGroupMode,
   IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import { IGridFilterType } from '@app/shared/components/grids/grids.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
+interface IRow {
+  id: number;
+  foo: string;
+  bar: string;
+  dict: number;
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,73 +41,85 @@ export class LayoutComponent implements OnInit {
       {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
-        mode: DynamicLayoutHorizontalGroupMode.SPLITTERS,
+        mode: DynamicLayoutGroupMode.SPLITTERS,
+        size: 100,
         children: [
-          {
-            type: DynamicLayoutItemType.TEMPLATE,
-            value: 'foo',
-            size: 25,
-          },
-          {
-            type: DynamicLayoutItemType.CONTROL,
-            controlType: DynamicLayoutControlType.TEXT,
-            label: 'Foo',
-            name: 'foo',
-            size: 25,
-          },
           {
             type: DynamicLayoutItemType.GROUP,
             groupType: DynamicLayoutGroupType.VERTICAL,
-            mode: DynamicLayoutVerticalGroupMode.SPLITTERS,
-            size: 50,
+            size: 100,
             children: [
               {
                 type: DynamicLayoutItemType.GROUP,
                 groupType: DynamicLayoutGroupType.VERTICAL,
-                mode: DynamicLayoutVerticalGroupMode.LINE,
+                label: 'Collapse Me!',
+                collapsible: true,
                 children: [
                   {
-                    type: DynamicLayoutItemType.CONTROL,
-                    controlType: DynamicLayoutControlType.TEXT,
-                    form: 'custom',
-                    label: 'Text Control',
-                    name: 'text',
-                    display: {
-                      operator: ContextOperator.AND,
-                      value: [
-                        {
-                          operator: ContextOperator.EVAL,
-                          value: 'userPermissions.permissions.CONST_VALUE_VIEW.valueB',
-                        },
-                        {
-                          operator: ContextOperator.EVAL,
-                          value: 'userPermissions.permissions.CONST_VALUE_EDIT.valueB',
-                        },
-                      ],
-                    },
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #1',
+                    formula: 1,
                   },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
-                    key: 'ctx.debt.id',
-                    formula: 1,
+                    label: 'Formula #2',
+                    formula: 2,
+                  },
+                  {
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #3',
+                    formula: 3,
+                  },
+                  {
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #4',
+                    formula: 4,
                   },
                 ]
               },
               {
+                type: DynamicLayoutItemType.TEMPLATE,
+                value: 'foo',
+                size: 50,
+              },
+            ],
+          },
+          {
+            type: DynamicLayoutItemType.GROUP,
+            groupType: DynamicLayoutGroupType.VERTICAL,
+            mode: DynamicLayoutGroupMode.SPLITTERS,
+            size: 100,
+            children: [
+              {
                 type: DynamicLayoutItemType.GROUP,
-                groupType: DynamicLayoutGroupType.TABS,
+                groupType: DynamicLayoutGroupType.VERTICAL,
                 children: [
                   {
-                    type: DynamicLayoutItemType.CONTROL,
-                    controlType: DynamicLayoutControlType.TEXT,
-                    label: 'Bar',
-                    name: 'bar',
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #5',
+                    formula: 5,
                   },
-                ],
+                  {
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #6',
+                    formula: 6,
+                  },
+                  {
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #7',
+                    formula: 7,
+                  },
+                  {
+                    type: DynamicLayoutItemType.ATTRIBUTE,
+                    label: 'Formula #10',
+                    formula: 10,
+                  },
+                ]
               },
               {
                 type: DynamicLayoutItemType.TEMPLATE,
                 value: 'foo',
+                size: 50,
               },
             ],
           },
@@ -109,6 +127,36 @@ export class LayoutComponent implements OnInit {
       },
     ],
   };
+
+  readonly columns: ISimpleGridColumn<IRow>[] = [
+    {
+      label: 'ID',
+      prop: 'id',
+      filter: IGridFilterType.NUMBER,
+    },
+    {
+      label: 'Foo',
+      prop: 'foo',
+      filter: IGridFilterType.TEXT,
+    },
+    {
+      label: 'Bar',
+      prop: 'bar',
+      filter: IGridFilterType.TEXT,
+    },
+    {
+      label: 'Dict',
+      prop: 'dict',
+      dictCode: 1,
+    }
+  ];
+
+  readonly rows: IRow[] = Array(900).fill(null).map((_, i) => i + 1).map(id => ({
+    id,
+    foo: `Foo ${id}`,
+    bar: `Bar ${id}`,
+    dict: id % 4 + 1,
+  }));
 
   templates: Record<string, TemplateRef<any>>;
 
