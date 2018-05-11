@@ -1,7 +1,7 @@
 <div class="contact-log-detail-container" [ngStyle]="{ paddingBottom: offset.y, paddingTop: offset.x }">
-  <div class="contact-log-detail-header">
+  <app-titlebar [titlebar]="titlebar">
       {{ 'widgets.contactLog.grid.fullName' | translate }}: {{ contactFullName }}
-  </div>
+  </app-titlebar>
   <div class="contact-log-detail-list">
     <div class="contact-log-detail" *ngFor="let contact of contacts$ | async"
     >

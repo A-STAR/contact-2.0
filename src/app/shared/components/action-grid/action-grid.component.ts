@@ -393,6 +393,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  onDetailsClose(): void {
+    this.gridDetails$.next(false);
+    this.grid.deselectAll();
+  }
+
   get gridOptions(): GridOptions {
     return this.grid && this.gridOptions;
   }
@@ -495,21 +500,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           map(active => active ? 'button-active' : null)
         ),
       }),
-      hideDetails: (_) => ({
-        type: TitlebarItemTypeEnum.BUTTON_CLOSE,
-        action: () => {
-          this.gridDetails$.next(false);
-          this.grid.deselectAll();
-        },
-        enabled: this.gridDetails$
-      })
     };
     return {
       title: config.title,
       items: config.items
         .concat([
           { name: 'filter', permissions: null },
-          { name: 'hideDetails', permissions: null }
         ])
         .map(item => titlebarItems[item.name](item.permissions)),
     };
