@@ -128,7 +128,7 @@
     [required]="control.required"
     [rows]="control.gridRows"
     [valueGetter]="control.gridValueGetter"
-    (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
+    (onSelect)="control.gridOnSelect ? control.gridOnSelect($event) : null">
   </app-grid-dropdown>
 
   <app-grid-select

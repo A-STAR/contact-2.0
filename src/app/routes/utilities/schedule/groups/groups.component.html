@@ -1,6 +1,6 @@
 <app-area layout="column">
   <app-area>
-    <app-group-grid (select)="onGroupSelect($event)"></app-group-grid>
+    <app-group-grid (onSelect)="onGroupSelect($event)"></app-group-grid>
   </app-area>
   <app-area>
     <app-tabview [fullHeight]="true" [noMargin]="true" *ngIf="showEvents$ | async">

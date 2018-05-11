@@ -48,7 +48,6 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   };
 
   private static readonly MAX_LENGTH = 12;
-
   @Input() errors: any;
   @Input() label: string;
   @Input() min: number;

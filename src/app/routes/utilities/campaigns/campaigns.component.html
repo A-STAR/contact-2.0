@@ -34,14 +34,14 @@
           [columns]="columns"
           [rows]="campaigns"
           [toolbar]="toolbarItems"
-          (select)="onSelectCampaign($event)"
+          (selectRow)="onSelectCampaign($event)"
           (dblClick)="onCampaignDblClick()">
         </app-simple-grid>
       </div>
     </div>
   </app-area>
   <app-area>
-    <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
+    <app-tabview [fullHeight]="true" [noMargin]="true" (selectTab)="onTabSelect($event)">
       <app-tabview-tab [title]="'utilities.campaigns.tabs.participants'">
         <app-participants *ngIf="tabs[0].isInitialised"></app-participants>
       </app-tabview-tab>

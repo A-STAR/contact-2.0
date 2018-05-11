@@ -135,7 +135,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
           : { name: 'nextCallDays', value: data && data.nextCallDays },
         template: data && data.templateFormula
           ? { name: 'templateFormula', value: data && data.templateFormula }
-          : { name: 'templateId', value: data && data.templateId },
+          : { name: 'templateIdList', value: data && data.templateIdList },
       };
       this.controls = this.buildControls(debtStatusDict, templates, attributes);
       this.cdRef.markForCheck();
@@ -206,7 +206,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     const debtStatusOptions = debtStatusDict.filter(option => option.value > 20000);
     const templateInputOptions = {
       segmentedInputOptions: [
-        { name: 'templateId', label: 'widgets.contactProperty.dialogs.edit.value' },
+        { name: 'templateIdList', label: 'widgets.contactProperty.dialogs.edit.values', mask: { delimeter: ',' } },
         { name: 'templateFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
       ]
     };
