@@ -91,9 +91,7 @@ export class MaskedArrayDirective implements OnChanges {
   }
 
   private replaceValue(value: string): string {
-    return value.replace(/[\D]*([\d]+)/g, (_, b, __) => {
-      return b + `${this._mask.delimeter} `;
-    });
+    return value.match(/[\d]+(?=([\D])+)/g).join(`${this._mask.delimeter} `);
   }
 
   private formatViewValue(code: string, value: string, pos: number): string {
