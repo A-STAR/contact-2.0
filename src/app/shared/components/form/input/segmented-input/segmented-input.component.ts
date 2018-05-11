@@ -42,7 +42,6 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   };
   private _value: ISegmentedInputValue;
   private _mask: ISegmentedInputMask;
-  private regex: RegExp;
   private _strValue: string;
   value: string;
 
@@ -53,8 +52,10 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   writeValue(value: ISegmentedInputValue): void {
     const name = value && value.name || this.options[0].name;
     this._value = { ...value, name };
+    if (this.options[0].mask) {
+      this.maskedArray = this.options[0].mask;
+    }
     this.value = this.toViewValue(this._value.value);
-    this.maskedArray = this.options[0].mask;
     this._strValue = this.value;
     this.cdRef.markForCheck();
   }
@@ -100,15 +101,15 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   }
 
   validate(): any {
-    if (this._strValue && this.regex && !this._validate(this._strValue)) {
+    if (this._strValue && this._mask && !this._validate(this._strValue)) {
       return { invalid: true };
     }
     return null;
   }
 
   private _validate(value: string): boolean {
-    const arr = value.split(this._mask.delimeter + ' ');
-    const re = /[1-9][0-9]*/g;
+    const arr = value.replace(/[\s]+/g, '').split(this._mask.delimeter);
+    const re = /[1-9][0-9]*/;
     return arr.length <= this._mask.maxNumbers &&
       arr.every(p => re.test(p) && p.length <= this._mask.maxNumberLength);
   }
@@ -122,7 +123,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   }
 
   private toViewValue(value: any): string {
-    return typeof value === 'number' || typeof value === 'string' ? value : value.join(this._mask.delimeter + ' ');
+    return Array.isArray(value) && this._mask ? value.join(this._mask.delimeter + ' ') : value;
   }
 
   private propagateChange: Function = () => {};

@@ -1912,6 +1912,7 @@
           "title": "Результат контакта",
           "mainSettings": "Основные настройки",
           "attributesSettings": "Настройки атрибутов",
+          "values": "Значения",
           "value": "Значение",
           "formula": "Формула",
           "attributes": {

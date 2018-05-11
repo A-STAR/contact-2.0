@@ -4,6 +4,8 @@ import {
   SimpleChanges,
   OnChanges,
   ElementRef,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 
 import { ISegmentedInputMask } from '../segmented-input/segmented-input.interface';
@@ -13,10 +15,13 @@ import { range } from '@app/core/utils';
 @Directive({
   selector: '[appMaskedArray]',
   host: {
-    '(keydown)': 'onKeyDown($event)'
+    '(keydown)': 'onKeyDown($event)',
+    '(paste)': 'onPaste($event)'
   },
 })
 export class MaskedArrayDirective implements OnChanges {
+
+  @Output() ngModelChange = new EventEmitter<string>();
 
   private static readonly ALLOWED_KEYS = {
     main: [
@@ -57,17 +62,38 @@ export class MaskedArrayDirective implements OnChanges {
     if (this._mask) {
       const { ctrlKey, key, target, code } = event;
       const { value, selectionEnd } = target as HTMLInputElement;
-      const { main, actions, aux } = MaskedArrayDirective.ALLOWED_KEYS;
-      if (actions.includes(code) || key === this._mask.delimeter) {
+      const { main, aux } = MaskedArrayDirective.ALLOWED_KEYS;
+      if (this.isAction(code, key)) {
         this._value = this.formatViewValue(code, value, selectionEnd);
         this.el.nativeElement.value = this._value;
         event.preventDefault();
       } else if (main.includes(key)) {
         this._value = value + key;
-      } else if (!(aux.includes(key) || ctrlKey)) {
+      } else if (!ctrlKey && !aux.includes(key)) {
         event.preventDefault();
       }
     }
+  }
+
+  onPaste(event: ClipboardEvent): void {
+    if (this._mask && event.clipboardData) {
+      event.preventDefault();
+      const value = event.clipboardData.getData('Text');
+      this._value = this.replaceValue(value);
+      this.el.nativeElement.value = this._value;
+      this.ngModelChange.emit(this._value);
+    }
+  }
+
+  private isAction(code: string, key: string): boolean {
+    return MaskedArrayDirective.ALLOWED_KEYS.actions.includes(code)
+      || key === this._mask.delimeter;
+  }
+
+  private replaceValue(value: string): string {
+    return value.replace(/[\D]*([\d]+)/g, (_, b, __) => {
+      return b + `${this._mask.delimeter} `;
+    });
   }
 
   private formatViewValue(code: string, value: string, pos: number): string {

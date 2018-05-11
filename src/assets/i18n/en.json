@@ -1906,9 +1906,13 @@
       "treeType": "Tree Type",
       "dialogs": {
         "add": {
-          "title": "Create Contact Outcome",
+          "title": "Create Contact Outcome"
+        },
+        "edit": {
+          "title": "Contact Outcome",
           "mainSettings": "Main Settings",
           "attributesSettings": "Attribtues Settings",
+          "values": "Values",
           "value": "Value",
           "formula": "Formula",
           "attributes": {
@@ -1917,9 +1921,6 @@
             "isDisplayed": "Display",
             "isMandatory": "Required"
           }
-        },
-        "edit": {
-          "title": "Contact Outcome"
         },
         "delete": {
           "title": "Delete Contact Outcome",
