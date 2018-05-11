@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { ICustomOperationGridAction } from './custom-operation.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
+
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 @Component({
   selector: 'app-mass-custom-operation',
@@ -10,20 +13,27 @@ import { ICustomOperationGridAction } from './custom-operation.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomOperationComponent {
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
-  @Input() actionData: ICustomOperationGridAction;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
-  get canSubmit(): boolean {
-    return false;
-  }
+  readonly canSubmit$ = this.layout.canSubmit();
+
+  constructor(
+    private customOperationService: CustomOperationService
+  ) { }
 
   onSubmit(): void {
-    this.close.emit();
+    this.customOperationService
+      .run(this.actionData.operation, this.actionData.payload, this.layout.data)
+      .subscribe(() => {
+        this.close.emit();
+      });
   }
 
-  cancel(): void {
+  onClose(): void {
     this.close.emit();
   }
 }

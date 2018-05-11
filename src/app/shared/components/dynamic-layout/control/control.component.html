@@ -27,6 +27,14 @@
       (select)="onGridSelect(control, $event)"
     ></app-grid-select>
 
+    <!-- Multiselect dialog -->
+    <app-dialog-multi-select
+      *ngSwitchCase="'dialogmultiselect'"
+      [filterType]="control.filterType"
+      [filterParams]="control.filterParams"
+      [formControlName]="control.controlName"
+    ></app-dialog-multi-select>
+
     <!-- Password -->
     <app-password-input
       *ngSwitchCase="'password'"
@@ -44,6 +52,16 @@
       [label]="control.label"
       [lookupKey]="control.lookupKey"
     ></app-select>
+
+    <!-- Multiselect -->
+    <app-multi-select
+      *ngSwitchCase="'multiselect'"
+      [dictCode]="control.dictCode"
+      [formControlName]="control.controlName"
+      [label]="control.label"
+      [lookupKey]="control.lookupKey"
+      [required]="control.required"
+    ></app-multi-select>
 
     <!-- Text -->
     <app-text

@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 
-import { IMetadataAction, MetadataActionType, IMetadataCustomAction } from '@app/core/metadata/metadata.interface';
 import {
-  IMetadataFormConfig,
-  IMetadataFormControlType,
-  IMetadataFormControl
-} from '@app/shared/components/form/metadata-form/metadata-form.interface';
+  IMetadataAction,
+  MetadataActionType,
+  IMetadataCustomAction,
+  IMetadataCustomActionParam
+} from '@app/core/metadata/metadata.interface';
+
+import {
+  IDynamicLayoutConfig,
+  IDynamicLayoutItem,
+  DynamicLayoutItemType,
+  DynamicLayoutControlType
+} from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 import {
   IMetadataActionSetter,
@@ -188,44 +195,66 @@ export class ActionGridService {
     return actionData.type === MetadataActionType.ALL;
   }
 
-  getCustomOperationConfig(operation: IMetadataCustomAction): IMetadataFormConfig {
+  getCustomOperationConfig(operation: IMetadataCustomAction): IDynamicLayoutConfig {
     return {
-      editable: true,
       items: operation.params.map(param => ({
-        disabled: false,
-        display: true,
         label: param.name,
         name: param.systemName,
-        type: this.getCustomOperationControlType(param.paramTypeCode),
+        type: DynamicLayoutItemType.CONTROL,
+        ...this.getCustomOperationControlOptions(param),
         validators: {
           required: !!param.isMandatory,
         },
-        width: 1
-      }) as IMetadataFormControl),
-      plugins: []
+      }) as IDynamicLayoutItem),
     };
   }
 
-  private getCustomOperationControlType(typeCode: number): IMetadataFormControlType {
-    switch (typeCode) {
+  private getCustomOperationControlOptions(param: IMetadataCustomActionParam): Partial<IDynamicLayoutItem> {
+    switch (param.paramTypeCode) {
       case 1:
-      case 2:
-        return IMetadataFormControlType.DATE;
+      case 10:
+        return {
+          controlType: DynamicLayoutControlType.DATE
+        };
       case 2:
       case 6:
-        return IMetadataFormControlType.TEXT;
+        return {
+          controlType: DynamicLayoutControlType.TEXT
+        };
       case 3:
-      case 4:
-      case 5:
-      case 7:
       case 8:
-      case 11:
-      case 13:
-        return IMetadataFormControlType.GRIDSELECT;
+        return {
+          controlType: param.multiSelect
+            ? DynamicLayoutControlType.DIALOGSELECT
+            : DynamicLayoutControlType.GRIDSELECT,
+          filterType: 'portfolios',
+          filterParams: { directionCodes: [ 1 ] }
+        } as Partial<IDynamicLayoutItem>;
+      case 4:
+        return {
+          controlType: param.multiSelect
+            ? DynamicLayoutControlType.DIALOGSELECT
+            : DynamicLayoutControlType.GRIDSELECT,
+          filterType: 'users'
+        } as Partial<IDynamicLayoutItem>;
+      case 5:
+        return {
+          controlType: param.multiSelect
+            ? DynamicLayoutControlType.DIALOGSELECT
+            : DynamicLayoutControlType.GRIDSELECT,
+          filterType: 'contractors'
+        } as Partial<IDynamicLayoutItem>;
+      case 7:
+        return {
+          controlType: param.multiSelect
+            ? DynamicLayoutControlType.DIALOGSELECT
+            : DynamicLayoutControlType.GRIDSELECT,
+          dictCode: param.dictNameCode
+        } as Partial<IDynamicLayoutItem>;
       case 9:
-        return IMetadataFormControlType.CHECKBOX;
-      case 12:
-        return IMetadataFormControlType.SELECT;
+        return {
+          controlType: DynamicLayoutControlType.CHECKBOX
+        };
     }
   }
 

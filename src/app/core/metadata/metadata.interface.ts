@@ -22,7 +22,9 @@ export interface IMetadataCustomActionParam {
 }
 
 export interface IMetadataCustomAction {
-  params: IMetadataCustomActionParam[];
+  id: number;
+  params?: IMetadataCustomActionParam[];
+  asyncMode?: boolean;
 }
 
 export interface IMetadataAction {
@@ -40,8 +42,7 @@ export interface IMetadataAction {
   };
   children?: IMetadataAction[];
   type?: MetadataActionType;
-  operationId?: number;
-  operationData?: IMetadataCustomAction;
+  operation?: IMetadataCustomAction;
 }
 
 export enum MetadataActionType {

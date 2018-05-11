@@ -1,7 +1,7 @@
 import { MetadataActionType, IMetadataAction } from '@app/core/metadata/metadata.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
-import { IMetadataFormConfig } from '@app/shared/components/form/metadata-form/metadata-form.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 export interface IGridActionPayload {
   data: IGridActionData;
@@ -47,6 +47,12 @@ export interface IGridActionContext {
 
 export type IMetadataActionSetter = (action: IMetadataAction) => IMetadataAction;
 
+export interface ICustomGridAction {
+  id: number;
+  config?: IDynamicLayoutConfig;
+  asyncMode?: boolean;
+}
+
 export interface IGridAction {
   name: string;
   addOptions: IAddOption[];
@@ -55,6 +61,5 @@ export interface IGridAction {
   // this is initial selection, filtered by params,
   // but it can contain undefined or null values
   selection?: number[][];
-  operationId?: number;
-  operationConfig?: IMetadataFormConfig;
+  operation?: ICustomGridAction;
 }

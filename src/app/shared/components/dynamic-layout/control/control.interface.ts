@@ -1,13 +1,15 @@
 import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-layout.interface';
 
 export enum DynamicLayoutControlType {
-  CHECKBOX   = 'checkbox',
-  DATE       = 'date',
-  GRIDSELECT = 'gridselect',
-  PASSWORD   = 'password',
-  SELECT     = 'select',
-  TEXT       = 'text',
-  TEXTAREA   = 'textarea',
+  CHECKBOX        = 'checkbox',
+  DATE            = 'date',
+  DIALOGSELECT    = 'dialogmultiselect',
+  GRIDSELECT      = 'gridselect',
+  PASSWORD        = 'password',
+  SELECT          = 'select',
+  MULTISELECT     = 'multiselect',
+  TEXT            = 'text',
+  TEXTAREA        = 'textarea',
 }
 
 export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem {
@@ -16,6 +18,10 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
   name: string;
   // Optional:
   form?: string;
+}
+
+export interface IDynamicLayoutDialogSelectControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.GRIDSELECT;
 }
 
 export interface IDynamicLayoutGridSelectControl extends IDynamicLayoutGenericControl {
@@ -31,6 +37,7 @@ export interface IDynamicLayoutTextareaControl extends IDynamicLayoutGenericCont
 }
 
 export type IDynamicLayoutControl =
+  | IDynamicLayoutDialogSelectControl
   | IDynamicLayoutGridSelectControl
   | IDynamicLayoutTextControl
   | IDynamicLayoutTextareaControl

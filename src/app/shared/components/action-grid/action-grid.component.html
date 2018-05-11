@@ -181,7 +181,7 @@
   (close)="onCloseAction($event)"
 ></app-mass-person-type>
 
-<ng-container *ngFor="let action of customActions">
+<ng-container *ngFor="let action of customActions$ | async">
   <app-mass-custom-operation
     *ngIf="isDialog(action.action)"
     [actionData]="dialogData"

@@ -228,8 +228,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return !!this.metadataKey;
   }
 
-  get customActions(): IMetadataAction[] {
-    return (this.actions || []).filter(action => !!action.operationId);
+  get customActions$(): Observable<IMetadataAction[]> {
+    return this.actions$
+      .pipe(
+        filter(Boolean),
+        map(actions => actions.filter(action => !!action.operation))
+      );
   }
 
   isAttrChangeDictionaryDlg(): boolean {
@@ -421,12 +425,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         filters: this.getFilters()
       }),
       selection: this.actionGridService.getGridSelection(action, this.selection),
-      ...(action.metadataAction.operationId
+      operation: action.metadataAction.operation
         ? {
-          operationId: action.metadataAction.operationId,
-          operationConfig: this.actionGridService.getCustomOperationConfig(action.metadataAction.operationData)
-        } : {}
-      )
+          id: action.metadataAction.operation.id,
+          asyncMode: action.metadataAction.operation.asyncMode,
+          config: this.actionGridService.getCustomOperationConfig(action.metadataAction.operation)
+        }
+        : null
     };
   }
 

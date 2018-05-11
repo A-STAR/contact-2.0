@@ -1,5 +1,3 @@
-import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-
 export interface ICustomOperationParam {
   id?: number;
   name: string;
@@ -11,6 +9,6 @@ export interface ICustomOperationParam {
   dictNameCode: number;
 }
 
-export interface ICustomOperationGridAction extends IGridAction {
-  paramsData?: ICustomOperationParam[];
+export interface ICustomOperationData {
+  [paramName: string]: any;
 }
