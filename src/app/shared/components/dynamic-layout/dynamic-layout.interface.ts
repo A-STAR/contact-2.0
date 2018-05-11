@@ -84,12 +84,15 @@ export interface IDynamicLayoutState {
         value: Record<string, any>;
       };
     };
+    config: IDynamicLayoutConfig
   };
 }
 
 export enum DynamicLayoutAction {
   CHANGE_FORM_VALID = '[layout] change form valid',
   CHANGE_FORM_VALUE = '[layout] change form value',
+  FETCH_CONFIG = '[layout] fetch config',
+  FETCH_CONFIG_SUCCESS = '[layout] fetch config success',
 }
 
 export interface IDynamicLayoutGenericAction {
@@ -115,7 +118,23 @@ export interface IDynamicLayoutChangeValueAction extends IDynamicLayoutGenericAc
   };
 }
 
+export interface IDynamicLayoutFetchConfigAction extends IDynamicLayoutGenericAction {
+  type: DynamicLayoutAction.FETCH_CONFIG;
+  payload: {
+    key: string;
+  };
+}
+
+export interface IDynamicLayoutFetchConfigSuccessAction extends IDynamicLayoutGenericAction {
+  type: DynamicLayoutAction.FETCH_CONFIG_SUCCESS;
+  payload: {
+    key: string;
+    config: IDynamicLayoutConfig
+  };
+}
+
 export type IDynamicLayoutAction =
   | IDynamicLayoutChangeValidAction
   | IDynamicLayoutChangeValueAction
+  | IDynamicLayoutFetchConfigSuccessAction
 ;

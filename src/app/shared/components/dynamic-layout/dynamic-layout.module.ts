@@ -22,7 +22,7 @@ import { DynamicLayoutComponent } from './dynamic-layout.component';
 import { GroupComponent } from './group/group.component';
 import { TemplateComponent } from './template/template.component';
 
-import { dynamicLayoutReducer } from './dynamic-layout.reducer';
+import { reducer as dynamicLayoutReducer } from './dynamic-layout.reducer';
 
 @NgModule({
   imports: [

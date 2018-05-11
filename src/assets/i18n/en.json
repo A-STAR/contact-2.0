@@ -282,6 +282,15 @@
             "scenario": "Scenario",
             "selectOutcome": "Select Outcome"
           }
+        },
+        "components": {
+          "dynamic-layout": {
+            "metadata": {
+              "errors": {
+                "fetch": "Failed to fetch dynamic layout form config."
+              }
+            }
+          }
         }
       }
     },
