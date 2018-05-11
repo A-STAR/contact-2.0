@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import { Subscription } from 'rxjs/Subscription';
 
 import {
   IEmployee,
@@ -33,6 +33,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   @Input() employees: Array<IEmployee>;
 
   dialog: string;
+
+  readonly state: Observable<IOrganizationsState> = this.organizationsService.state;
 
   titlebar: ITitlebar = {
     title: 'organizations.employees.title',
@@ -128,10 +130,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   ngOnDestroy(): void {
     this.selectedEmployeeSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
-  }
-
-  get state(): Observable<IOrganizationsState> {
-    return this.organizationsService.state;
   }
 
   onSelect(employees: IEmployee[]): void {

@@ -18,9 +18,10 @@ import { never } from 'rxjs/observable/never';
 import { of } from 'rxjs/observable/of';
 
 import {
-  IDynamicLayoutConfig,
-  DynamicLayoutItemType,
   DynamicLayoutGroupType,
+  DynamicLayoutGroupMode,
+  DynamicLayoutItemType,
+  IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import {
   ICloseAction,
@@ -158,7 +159,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       {
         type: DynamicLayoutItemType.GROUP,
         groupType: DynamicLayoutGroupType.HORIZONTAL,
-        splitters: true,
+        mode: DynamicLayoutGroupMode.SPLITTERS,
+        size: 100,
         children: [
           {
             type: DynamicLayoutItemType.TEMPLATE,

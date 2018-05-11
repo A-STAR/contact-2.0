@@ -21,6 +21,9 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 @Injectable()
 export class ContractorsAndPortfoliosService {
+  readonly state: Observable<IContractorsAndPortfoliosState> = this.store.pipe(
+    select(state => state.contractorsAndPortfolios),
+  );
 
   constructor(
     private actions$: Actions,
@@ -240,12 +243,6 @@ export class ContractorsAndPortfoliosService {
     this.dispatch(
       IActionType.PORTFOLIO_SELECT,
       { selectedPortfolio: portfolio }
-    );
-  }
-
-  get state(): Observable<IContractorsAndPortfoliosState> {
-    return this.store.pipe(
-      select(state => state.contractorsAndPortfolios),
     );
   }
 

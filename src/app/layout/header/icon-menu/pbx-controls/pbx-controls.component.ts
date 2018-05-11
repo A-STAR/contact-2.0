@@ -77,11 +77,11 @@ export class PbxControlsComponent extends DialogFunctions {
   }
 
   get activeCallNumber$(): Observable<string> {
-    return this.callService.activeCall$.map(call => call.phone);
+    return this.callService.activeCall$.map(call => call ? call.phone : '');
   }
 
   get activeCallPersonName$(): Observable<string> {
-    return this.callService.activeCall$.map(call => `${call.lastName} ${call.firstName} ${call.middleName[0]}.`);
+    return this.callService.activeCall$.map(call => call ? `${call.lastName} ${call.firstName} ${call.middleName[0]}.` : '');
   }
 
   onDropCall(): void {

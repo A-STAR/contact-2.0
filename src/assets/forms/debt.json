@@ -4,11 +4,13 @@
     {
       "type": "group",
       "groupType": "vertical",
-      "splitters": true,
+      "mode": "splitters",
+      "size": 100,
       "children": [
         {
           "type": "group",
           "groupType": "vertical",
+          "size": 100,
           "children": [
             {
               "type": "group",
@@ -64,26 +66,30 @@
                   "label": "widgets.debt.grid.creditName",
                   "name": "creditName",
                   "type": "control",
-                  "controlType": "text"
+                  "controlType": "text",
+                  "size": 25
                 },
                 {
                   "dictCode": 3,
                   "label": "widgets.debt.grid.creditTypeCode",
                   "name": "creditTypeCode",
                   "type": "control",
-                  "controlType": "select"
+                  "controlType": "select",
+                  "size": 25
                 },
                 {
                   "label": "widgets.debt.grid.creditStartDate",
                   "name": "creditStartDate",
                   "type": "control",
-                  "controlType": "date"
+                  "controlType": "date",
+                  "size": 25
                 },
                 {
                   "label": "widgets.debt.grid.creditEndDate",
                   "name": "creditEndDate",
                   "type": "control",
-                  "controlType": "date"
+                  "controlType": "date",
+                  "size": 25
                 }
               ]
             },
@@ -96,19 +102,22 @@
                   "label": "widgets.debt.grid.debtReasonCode",
                   "name": "debtReasonCode",
                   "type": "control",
-                  "controlType": "select"
+                  "controlType": "select",
+                  "size": 16.66
                 },
                 {
                   "label": "widgets.debt.grid.startDate",
                   "name": "startDate",
                   "type": "control",
-                  "controlType": "date"
+                  "controlType": "date",
+                  "size": 16.66
                 },
                 {
                   "label": "widgets.debt.grid.dpd",
                   "name": "dpd",
                   "type": "control",
-                  "controlType": "text"
+                  "controlType": "text",
+                  "size": 16.66
                 },
                 {
                   "label": "widgets.debt.grid.currencyId",
@@ -118,7 +127,8 @@
                   "controlType": "select",
                   "validators": {
                     "required": true
-                  }
+                  },
+                  "size": 16.66
                 },
                 {
                   "label": "widgets.debt.grid.debtAmount",
@@ -127,13 +137,15 @@
                   "controlType": "text",
                   "validators": {
                     "required": true
-                  }
+                  },
+                  "size": 16.66
                 },
                 {
                   "label": "widgets.debt.grid.totalAmount",
                   "name": "totalAmount",
                   "type": "control",
-                  "controlType": "text"
+                  "controlType": "text",
+                  "size": 16.66
                 }
               ]
             },
@@ -146,33 +158,38 @@
                   "label": "widgets.debt.grid.stageCode",
                   "name": "stageCode",
                   "type": "control",
-                  "controlType": "select"
+                  "controlType": "select",
+                  "size": 20
                 },
                 {
                   "label": "widgets.debt.grid.debtDate",
                   "name": "debtDate",
                   "type": "control",
-                  "controlType": "date"
+                  "controlType": "date",
+                  "size": 20
                 },
                 {
                   "label": "widgets.debt.grid.account",
                   "name": "account",
                   "type": "control",
-                  "controlType": "text"
+                  "controlType": "text",
+                  "size": 20
                 },
                 {
                   "dictCode": 26,
                   "label": "widgets.debt.grid.regionCode",
                   "name": "regionCode",
                   "type": "control",
-                  "controlType": "select"
+                  "controlType": "select",
+                  "size": 20
                 },
                 {
                   "dictCode": 6,
                   "label": "widgets.debt.grid.branchCode",
                   "name": "branchCode",
                   "type": "control",
-                  "controlType": "select"
+                  "controlType": "select",
+                  "size": 20
                 }
               ]
             },
@@ -199,7 +216,8 @@
                       "operator": "entityIsMandatory",
                       "value": 198
                     }
-                  }
+                  },
+                  "size": 25
                 },
                 {
                   "enabled": {
@@ -220,7 +238,8 @@
                       "operator": "entityIsMandatory",
                       "value": 199
                     }
-                  }
+                  },
+                  "size": 25
                 },
                 {
                   "enabled": {
@@ -241,7 +260,8 @@
                       "operator": "entityIsMandatory",
                       "value": 200
                     }
-                  }
+                  },
+                  "size": 25
                 },
                 {
                   "enabled": {
@@ -262,7 +282,8 @@
                       "operator": "entityIsMandatory",
                       "value": 201
                     }
-                  }
+                  },
+                  "size": 25
                 }
               ]
             },

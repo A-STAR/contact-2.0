@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import {
   IDictionary,
   IDictionariesState,
@@ -37,56 +37,45 @@ export class DictionariesService {
   static TERMS_PARENT_CLEAR                     = 'TERMS_PARENT_CLEAR';
   static TERMS_CLEAR                            = 'TERMS_CLEAR';
 
+  readonly state: Observable<IDictionariesState> = this.store.select(state => state.dictionaries);
+  readonly selectedDictionary: Observable<IDictionary> = this.state.pipe(
+    map(dictionaries => dictionaries.selectedDictionary),
+    distinctUntilChanged(),
+  );
+  readonly selectedTerm: Observable<ITerm> = this.state.pipe(
+    map(dictionaries => dictionaries.selectedTerm),
+    distinctUntilChanged(),
+  );
+  readonly hasSelectedDictionary: Observable<boolean> = this.selectedDictionary.pipe(
+    map(selectedDictionary => !!selectedDictionary),
+  );
+  readonly hasSelectedTerm: Observable<boolean> = this.selectedTerm.pipe(
+    map(term => !!term),
+  );
+  readonly dictionaries: Observable<IDictionary[]> = this.state.pipe(
+    map(dictionaries => dictionaries.dictionaries),
+    distinctUntilChanged(),
+  );
+  readonly terms: Observable<ITerm[]> = this.state.pipe(
+    map(dictionaries => dictionaries.terms),
+    distinctUntilChanged(),
+  );
+  readonly parentTerms: Observable<ITerm[]> = this.state.pipe(
+    map(dictionaries => dictionaries.parentTerms),
+    distinctUntilChanged(),
+  );
+  readonly dropdownTerms: Observable<ITerm[]> = this.state.pipe(
+    map(dictionaries => dictionaries.parentTerms),
+    distinctUntilChanged(),
+  );
+  readonly dictionaryTermTypes: Observable<ITerm[]> = this.state.pipe(
+    map(dictionaries => dictionaries.dictionaryTermTypes),
+    distinctUntilChanged(),
+  );
+
   constructor(
     private store: Store<IAppState>
   ) {}
-
-  get state(): Observable<IDictionariesState> {
-    return this.store.select(state => state.dictionaries);
-  }
-
-  get selectedDictionary(): Observable<IDictionary> {
-    return this.state.map(dictionaries => dictionaries.selectedDictionary)
-      .pipe(distinctUntilChanged());
-  }
-
-  get selectedTerm(): Observable<ITerm> {
-    return this.state.map(dictionaries => dictionaries.selectedTerm)
-      .pipe(distinctUntilChanged());
-  }
-
-  get hasSelectedDictionary(): Observable<boolean> {
-    return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary);
-  }
-
-  get hasSelectedTerm(): Observable<boolean> {
-    return this.selectedTerm.map(term => !!term);
-  }
-
-  get dictionaries(): Observable<IDictionary[]> {
-    return this.state.map(dictionaries => dictionaries.dictionaries)
-      .pipe(distinctUntilChanged());
-  }
-
-  get terms(): Observable<ITerm[]> {
-    return this.state.map(dictionaries => dictionaries.terms)
-      .pipe(distinctUntilChanged());
-  }
-
-  get parentTerms(): Observable<ITerm[]> {
-    return this.state.map(dictionaries => dictionaries.parentTerms)
-      .pipe(distinctUntilChanged());
-  }
-
-  get dropdownTerms(): Observable<ITerm[]> {
-    return this.state.map(dictionaries => dictionaries.parentTerms)
-      .pipe(distinctUntilChanged());
-  }
-
-  get dictionaryTermTypes(): Observable<ITerm[]> {
-    return this.state.map(dictionaries => dictionaries.dictionaryTermTypes)
-      .pipe(distinctUntilChanged());
-  }
 
   fetchDictionaries(): void {
     this.store.dispatch({ type: DictionariesService.DICTIONARIES_FETCH });

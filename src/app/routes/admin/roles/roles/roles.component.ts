@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
@@ -31,6 +31,10 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
   editedEntity: IPermissionRole = null;
 
   roles$: Observable<Array<IPermissionRole>>;
+
+  readonly hasCurrentRole$: Observable<boolean> = this.permissionsService.permissions.pipe(
+    map(permissions => !!permissions.currentRole),
+  );
 
   titlebar: ITitlebar = {
     title: 'roles.roles.title',
@@ -121,10 +125,6 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
   ngOnDestroy(): void {
     this.permissionsServiceSubscription.unsubscribe();
     this.hasViewPermissionSubscription.unsubscribe();
-  }
-
-  get hasCurrentRole$(): Observable<boolean> {
-    return this.permissionsService.permissions.map(permissions => !!permissions.currentRole);
   }
 
   onDblClick(): void {

@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { distinctUntilChanged, first } from 'rxjs/operators';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { of } from 'rxjs/observable/of';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import {
   IOrganization,
   IOrganizationsState,
@@ -16,11 +16,11 @@ import {
   IEmployeeSelectState,
   IOrganizationSelectState,
 } from './organizations.interface';
-import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
+import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
-import { DataService } from '../../../core/data/data.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { OrganizationsTreeService } from 'app/routes/admin/organizations/organizations-tree/organizations-tree.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { OrganizationsTreeService } from '@app/routes/admin/organizations/organizations-tree/organizations-tree.service';
 
 @Injectable()
 export class OrganizationsService {
@@ -29,40 +29,26 @@ export class OrganizationsService {
 
   public baseUrl = '/organizations';
 
+  readonly state: Observable<IOrganizationsState> = this.store
+    .select(state => state.organizations)
+    .pipe(distinctUntilChanged());
+  readonly organizations: Observable<ITreeNode[]> = this.store
+    .select(state => state.organizations.organizations)
+    .pipe(distinctUntilChanged());
+  readonly selectedOrganization: Observable<ITreeNode> = this.store
+    .select(state => state.organizations.selectedOrganization);
+  readonly employees: Observable<IEmployee[]> = this.store
+    .select(state => state.organizations.employees)
+    .pipe(distinctUntilChanged());
+  readonly selectedEmployeeId: Observable<number> = this.store
+    .select(state => state.organizations.selectedEmployeeUserId);
+
   constructor(
     private store: Store<IAppState>,
     private dataService: DataService,
     private treeService: OrganizationsTreeService,
     private notificationsService: NotificationsService,
   ) {}
-
-  get state(): Observable<IOrganizationsState> {
-    return this.store
-      .select(state => state.organizations)
-      .distinctUntilChanged();
-  }
-
-  get organizations(): Observable<ITreeNode[]> {
-    return this.store
-      .select(state => state.organizations.organizations)
-      .distinctUntilChanged();
-  }
-
-  get selectedOrganization(): Observable<ITreeNode> {
-    return this.store
-      .select(state => state.organizations.selectedOrganization);
-  }
-
-  get employees(): Observable<IEmployee[]> {
-    return this.store
-      .select(state => state.organizations.employees)
-      .distinctUntilChanged();
-  }
-
-  get selectedEmployeeId(): Observable<number> {
-    return this.store
-    .select(state => state.organizations.selectedEmployeeUserId);
-  }
 
   fetchOrganizations(): Observable<ITreeNode[]> {
     return this.readOrganizations()
