@@ -27,8 +27,12 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
   templateUrl: './manager-grid.component.html',
 })
 export class ManagerGridComponent extends DialogFunctions implements OnDestroy, OnInit {
-
   dialog: string;
+
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW');
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_MANAGER_ADD');
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_MANAGER_EDIT');
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_MANAGER_DELETE');
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -118,22 +122,6 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
   clearManagers (): void {
     this.contractorsAndPortfoliosService.selectManager(null);
     this.managers = [];
-  }
-
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_DELETE');
   }
 
   onAdd(): void {

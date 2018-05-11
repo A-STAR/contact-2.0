@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
 
@@ -10,13 +10,13 @@ import { IPermissionRole } from '../permissions.interface';
 import {
   IToolbarItem,
   ToolbarItemTypeEnum
-} from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
+} from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
-import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
+import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 import { PermissionsTreeService } from './permissions-tree.service';
 import { PermissionsService } from '../permissions.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
   host: { class: 'full-size' },
@@ -29,6 +29,9 @@ export class PermissionsTreeComponent implements OnDestroy {
   value: ITreeNode[];
 
   private changes: Subject<boolean> = new BehaviorSubject(false);
+
+  readonly hasViewPermission: Observable<boolean> = this.userPermissionsService.has('GUI_TREE_VIEW');
+  readonly hasEditPermission: Observable<boolean> = this.userPermissionsService.has('GUI_TREE_EDIT');
 
   toolbarActions: Array<IToolbarItem> = [
     {
@@ -99,13 +102,5 @@ export class PermissionsTreeComponent implements OnDestroy {
 
   private get getAddedItems(): ITreeNode[] {
     return this.permissionsTreeService.getDiff(this.selection, this.initialSelection);
-  }
-
-  get hasViewPermission(): Observable<boolean> {
-    return this.userPermissionsService.has('GUI_TREE_VIEW');
-  }
-
-  get hasEditPermission(): Observable<boolean> {
-    return this.userPermissionsService.has('GUI_TREE_EDIT');
   }
 }

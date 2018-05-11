@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -28,6 +28,13 @@ export class ControlComponent {
 
   get formGroup(): FormGroup {
     return this.controlService.getFormGroup(this.control);
+  }
+
+  @HostBinding('style.flex')
+  get flex(): string {
+    return this.control.size
+      ? `${this.control.size} 0`
+      : `0 0 auto`;
   }
 
   isRequired(control: IDynamicLayoutControl): Observable<boolean> {

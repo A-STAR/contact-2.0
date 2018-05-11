@@ -83,7 +83,11 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
     addressByContact: (config: ILayerIconConfig[], data, params?: number) => {
       if (data.addressLatitude && data.addressLongitude) {
         const result = { ...config[data.addressTypeCode] };
-        result.fillColor = data.distance <= params ? 'fad732' : '37bc9b';
+        if (data.distance) {
+          result.fillColor = data.distance <= params ? 'fad732' : '37bc9b';
+        } else {
+          result.fillColor = '23b7e5';
+        }
         return result;
       }
       return {
@@ -164,7 +168,11 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
   setIcon(layer: ILayer<T>, configKey: string, params?: any): void {
     if (layer.type === LayerType.MARKER) {
       const iconConfig = this.getIconConfig(configKey, layer.data, params);
-      (layer.layer as google.maps.Marker).setIcon(this.createMarkerIcon(iconConfig));
+      const oldIcon = (layer.layer as google.maps.Marker).getIcon();
+      const newIcon = this.createMarkerIcon(iconConfig);
+      if (oldIcon !== newIcon) {
+        (layer.layer as google.maps.Marker).setIcon(newIcon);
+      }
     }
   }
 

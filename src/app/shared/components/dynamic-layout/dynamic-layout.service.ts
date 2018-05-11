@@ -63,11 +63,10 @@ export class DynamicLayoutService {
   private onInit(config: IDynamicLayoutConfig, key: string = null): void {
     const items = this.addUids(config.items);
     this._group = {
-      type: DynamicLayoutItemType.GROUP,
-      groupType: DynamicLayoutGroupType.VERTICAL,
-      splitters: true,
-      // grow: true,
       children: items,
+      groupType: DynamicLayoutGroupType.VERTICAL,
+      size: 100,
+      type: DynamicLayoutItemType.GROUP,
     };
     this._key = key || config.key;
     this._items = this.flattenItems(items);

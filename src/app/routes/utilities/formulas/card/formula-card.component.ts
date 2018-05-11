@@ -29,7 +29,7 @@ export class FormulaCardComponent implements OnInit {
   formula: Partial<IFormula>;
   formulaId = Number(this.route.snapshot.paramMap.get('formulaId'));
 
-  private editorDefs: IScriptEditorDefs[];
+  private editorDefs: IScriptEditorDefs;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -82,7 +82,7 @@ export class FormulaCardComponent implements OnInit {
         required: true,
         options: {
           enableTern: {
-            defs: this.editorDefs
+            defs: [ this.editorDefs ]
           },
           enableSnippets: this.formulasService.formulaSnippets
         }
