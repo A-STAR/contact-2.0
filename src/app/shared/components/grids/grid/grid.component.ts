@@ -102,7 +102,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     }
   }
 
-  @Output() select = new EventEmitter<T[]>();
+  @Output() selectRow = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() cellValueChanged = new EventEmitter<CellValueChangedEvent>();
@@ -263,7 +263,8 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
 
   private onSelectionChanged(): void {
     const selection = this.gridApi.getSelectedRows();
-    this.select.emit(selection);
+    this.
+    selectRow.emit(selection);
     this.updateToolbar();
   }
 

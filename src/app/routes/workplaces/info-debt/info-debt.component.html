@@ -1,18 +1,18 @@
 <app-area layout="column">
   <app-area initialSize="2">
-    <app-tabview [fullHeight]="true" (select)="onTabSelect($event)">
+    <app-tabview [fullHeight]="true" (selectTab)="onTabSelect($event)">
       <app-tabview-tab *ngFor="let grid of grids" [title]="grid.title" >
         <app-info-debt-grid
           *ngIf="grid.isInitialised"
           [gridKey]="grid.gridKey$ | async"
           [rowIdKey]="grid.rowIdKey"
-          (select)="onSelect($event)"
+          (onSelect)="onSelect($event)"
         ></app-info-debt-grid>
       </app-tabview-tab>
     </app-tabview>
   </app-area>
   <app-area initialSize="1">
-    <app-tabview [fullHeight]="true" (select)="onDetailTabSelect($event)">
+    <app-tabview [fullHeight]="true" (selectTab)="onDetailTabSelect($event)">
       <app-tabview-tab *ngFor="let grid of detailGrids" [title]="grid.title" >
         <app-info-debt-detail-grid
           *ngIf="grid.isInitialised"

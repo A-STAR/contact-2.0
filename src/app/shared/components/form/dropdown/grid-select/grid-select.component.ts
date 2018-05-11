@@ -35,7 +35,7 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
   @Input() label: string;
   @Input() required: boolean;
 
-  @Output() select = new EventEmitter<T>();
+  @Output() onSelect = new EventEmitter<T>();
 
   rows: T[];
   selection: number;
@@ -81,8 +81,8 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
     this.propagateChange(value);
   }
 
-  onSelect(row: T): void {
-    this.select.emit(row);
+  onSelectRow(row: T): void {
+    this.onSelect.emit(row);
     this.propagateTouch();
   }
 

@@ -1,7 +1,7 @@
 
 <app-phone-operator-dialog
   *ngIf="isDialog('operator')"
-  (select)="onPhoneOperatorSelect($event)"
+  (onSelect)="onPhoneOperatorSelect($event)"
   (close)="onCloseDialog()"
 ></app-phone-operator-dialog>
 

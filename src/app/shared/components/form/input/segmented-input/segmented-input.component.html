@@ -20,5 +20,10 @@
       </div>
     </app-dropdown>
   </div>
-  <input type="text" class="form-control" [ngModel]="value" (ngModelChange)="onChange($event)">
+  <input
+    type="text"
+    class="form-control"
+    [appMaskedArray]="maskedArray"
+    [ngModel]="value"
+    (ngModelChange)="onChange($event)">
 </div>

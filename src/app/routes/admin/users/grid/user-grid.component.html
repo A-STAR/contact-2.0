@@ -6,7 +6,7 @@
       persistenceKey="[grid] admin/users"
       [columns]="columns"
       [rows]="users"
-      (select)="onSelect($event)"
+      (selectRow)="onSelect($event)"
       (dblClick)="onEdit($event)"
     ></app-simple-grid>
   </div>

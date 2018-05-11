@@ -120,7 +120,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
-  @Output() select = new EventEmitter<IAGridSelected>();
+  @Output() selectRow = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridAction>();
   // emits when dialog closes
   @Output() close = new EventEmitter<ICloseAction | IActionGridAction>();
@@ -364,7 +364,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.currentSelectionAction && selected && selected.length) {
       this.onSelectionAction(selected);
     }
-    this.select.emit(selected);
+    this.selectRow.emit(selected);
   }
 
   getExportableColumns(): IAGridExportableColumn[] {

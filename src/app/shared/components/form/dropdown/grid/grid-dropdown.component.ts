@@ -35,7 +35,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this.setDisabledState(value);
   }
 
-  @Output() select = new EventEmitter<T>();
+  @Output() onSelect = new EventEmitter<T>();
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
@@ -91,7 +91,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this._isDisabled = isDisabled;
   }
 
-  onSelect(rows: T[]): void {
+  onSelectRow(rows: T[]): void {
     if (!isEmpty(rows)) {
       const [ row ] = rows;
       this.setRow(row, this.dropdown.opened);
@@ -108,7 +108,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
       this.propagateChange(this.value);
     }
     this.dropdown.close();
-    this.select.emit(row);
+    this.onSelect.emit(row);
   }
 
   private propagateChange: Function = () => {};

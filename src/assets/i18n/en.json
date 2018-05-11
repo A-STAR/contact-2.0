@@ -575,6 +575,7 @@
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
     "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "invalid": "The value is invalid",
     "multilanguageRequired": "The field in main language is required",
     "oneOfGroupRequired": "At least one group field must not be empty",
     "timepicker": "Invalid time format"
@@ -1905,9 +1906,13 @@
       "treeType": "Tree Type",
       "dialogs": {
         "add": {
-          "title": "Create Contact Outcome",
+          "title": "Create Contact Outcome"
+        },
+        "edit": {
+          "title": "Contact Outcome",
           "mainSettings": "Main Settings",
           "attributesSettings": "Attribtues Settings",
+          "values": "Values",
           "value": "Value",
           "formula": "Formula",
           "attributes": {
@@ -1916,9 +1921,6 @@
             "isDisplayed": "Display",
             "isMandatory": "Required"
           }
-        },
-        "edit": {
-          "title": "Contact Outcome"
         },
         "delete": {
           "title": "Delete Contact Outcome",

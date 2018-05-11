@@ -1,4 +1,4 @@
-<app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
+<app-tabview [fullHeight]="true" [noMargin]="true" (selectTab)="onTabSelect($event)">
   <app-tabview-tab *ngFor="let tab of tabs" [title]="tab.title">
     <app-message-template-grid
       *ngIf="tab.isInitialised"
