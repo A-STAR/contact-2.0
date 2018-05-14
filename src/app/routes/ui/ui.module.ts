@@ -56,6 +56,10 @@ const routes: Routes = [
         loadChildren: './ws/ws.module#WSModule',
       },
       {
+        path: 'repository',
+        loadChildren: './repository/repository.module#RepositoryModule',
+      },
+      {
         path: 'maps',
         loadChildren: './maps/maps.module#MapsModule',
       },

@@ -17,6 +17,7 @@ import { INotificationsState } from '../notifications/notifications.interface';
 import { IOrganizationsState } from '../../routes/admin/organizations/organizations.interface';
 import { IPermissionsState } from '../../routes/admin/roles/permissions.interface';
 import { IPersistenceState } from '../persistence/persistence.interface';
+import { IRepositoryState } from '../repository/repository.interface';
 import { IUserAttributeTypesState } from '../user/attribute-types/user-attribute-types.interface';
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserDictionariesState } from '../user/dictionaries/user-dictionaries.interface';
@@ -39,6 +40,7 @@ export interface IAppState {
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;
   readonly persistence: IPersistenceState;
+  readonly repository: IRepositoryState;
   readonly userAttributeTypes: IUserAttributeTypesState;
   readonly userConstants: IUserConstantsState;
   readonly userDictionaries: IUserDictionariesState;
