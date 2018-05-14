@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { catchError, filter, first, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, first, map, mergeMap, publishReplay, refCount } from 'rxjs/operators';
 
 import {
   IContactRegistrationData,
@@ -144,6 +144,8 @@ export class ContactRegistrationService {
 
   readonly debt$ = this.debtId$.pipe(
       mergeMap(debtId => debtId ? this.debtsService.getDebt(debtId) : of(null)),
+      publishReplay(1),
+      refCount()
   );
 
   readonly limit$ = this._limit$.asObservable();

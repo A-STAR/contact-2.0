@@ -128,8 +128,14 @@ export class ContactRegistrationPromiseComponent implements AfterViewInit, OnDes
     const data = { promise: { } as any };
     if (isNumber(amount)) {
       data.promise.amount = amount;
+      if (this.amountControl.pristine) {
+        this.amountControl.markAsDirty();
+      }
     } else if (isNumber(percentage)) {
       data.promise.percentage = percentage;
+      if (this.percentageControl.pristine) {
+        this.percentageControl.markAsDirty();
+      }
     }
     this.formGroup.patchValue(data, { emitEvent: false });
     this.cdRef.markForCheck();

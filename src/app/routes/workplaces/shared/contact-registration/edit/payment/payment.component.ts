@@ -114,11 +114,17 @@ export class ContactRegistrationPaymentComponent implements AfterViewInit, OnDes
   }
 
   private setPaymentAmount(amount: number, percentage: number): void {
-    const data = { promise: { } as any };
+    const data = { payment: { } as any };
     if (isNumber(amount)) {
-      data.promise.amount = amount;
+      data.payment.amount = amount;
+      if (this.amountControl.pristine) {
+        this.amountControl.markAsDirty();
+      }
     } else if (isNumber(percentage)) {
-      data.promise.percentage = percentage;
+      data.payment.percentage = percentage;
+      if (this.percentageControl.pristine) {
+        this.percentageControl.markAsDirty();
+      }
     }
     this.formGroup.patchValue(data, { emitEvent: false });
     this.cdRef.markForCheck();

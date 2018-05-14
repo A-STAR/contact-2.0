@@ -42,7 +42,13 @@ export class AttachmentEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.form.serializedUpdates);
+    if (this.canSubmit) {
+      this.submit.emit(this.form.serializedUpdates);
+    }
+  }
+
+  get canSubmit(): boolean {
+    return this.form && this.form.isValid;
   }
 
   onClose(): void {
@@ -76,6 +82,7 @@ export class AttachmentEditComponent implements OnInit {
         label: labelKey('file'),
         controlName: 'file',
         type: 'file',
+        required: true,
         validators: [ maxFileSize(1e3 * maxSize.valueN) ],
       },
     ];
