@@ -7,6 +7,8 @@ import { SharedModule } from '@app/shared/shared.module';
 import { RepositoryComponent } from './repository.component';
 
 import { User } from './entities/user';
+import { Person } from '@app/routes/ui/repository/entities/person';
+import { Debt } from '@app/routes/ui/repository/entities/debt';
 
 const routes: Routes = [
   {
@@ -21,6 +23,14 @@ const routes: Routes = [
     RepoModule.withEntity({
       entityClass: User,
       urls: [ '/users/{id}' ],
+    }),
+    RepoModule.withEntity({
+      entityClass: Person,
+      urls: [ '/persons/{id}' ],
+    }),
+    RepoModule.withEntity({
+      entityClass: Debt,
+      urls: [ '/persons/{personId}/debts' ],
     }),
     RouterModule.forChild(routes),
     SharedModule,
