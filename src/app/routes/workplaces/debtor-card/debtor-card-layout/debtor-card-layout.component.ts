@@ -22,7 +22,6 @@ import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.inte
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { DebtorService } from '../debtor.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -74,7 +73,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
     private repositoryService: RepositoryService,
@@ -125,7 +123,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   get isCompany$(): Observable<boolean> {
-    return this.debtorCardService.isCompany$;
+    return this.debtorService.isCompany$;
   }
 
   get canSubmit(): boolean {
@@ -139,7 +137,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   get isContactRegistrationDisabled$(): Observable<boolean> {
-    return this.debtorCardService.selectedDebt$
+    return this.debtorService.debtId$
       .pipe(
         mergeMap(debt => this.debtService.canRegisterContactForDebt$(debt)),
         map(invert),

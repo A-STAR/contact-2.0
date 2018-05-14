@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 @Component({
   selector: 'app-debtor-promise',
@@ -10,12 +10,12 @@ import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card
 })
 export class DebtorPromiseComponent {
   constructor(
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
   ) {}
 
   get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
+    return this.debtorService.debtId$;
   }
 
   get promiseId(): number {

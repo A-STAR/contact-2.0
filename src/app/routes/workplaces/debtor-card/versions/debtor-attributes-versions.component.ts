@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   private paramsSub: Subscription;
 
   constructor(
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) { }
@@ -29,8 +29,8 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
 
     this.paramsSub = combineLatest(
       this.route.paramMap,
-      this.debtorCardService.entityId$,
-      this.debtorCardService.entityTypeId$
+      this.debtorService.entityId$,
+      this.debtorService.entityTypeId$
     )
       .subscribe(([params, entityId, entityTypeId]: [ParamMap, number, number]) => {
         if (params) {

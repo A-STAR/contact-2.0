@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
 import { IDebt } from '@app/core/debt/debt.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -39,7 +39,7 @@ export class DebtComponent implements AfterViewInit, OnInit {
 
   isDisabled$ = of(true);
 
-  readonly displayDebtData = this.debtorCardService.selectedDebt$.pipe(map(Boolean));
+  readonly displayDebtData = this.debtorService.debtId$.pipe(map(Boolean));
 
   readonly canViewComponentLog$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
   readonly canViewPortfolioLog$ = this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
@@ -50,7 +50,7 @@ export class DebtComponent implements AfterViewInit, OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
@@ -84,14 +84,14 @@ export class DebtComponent implements AfterViewInit, OnInit {
       this.debtService
         .update(this.debtorId, this.debtId, this.layout.getData())
         .subscribe(() => {
-          this.debtorCardService.refreshDebts();
+          this.debtorService.refreshDebts();
           this.onBack();
         });
     } else {
       this.debtService
         .create(this.debtorId, this.layout.getData())
         .subscribe(() => {
-          this.debtorCardService.refreshDebts();
+          this.debtorService.refreshDebts();
           this.onBack();
         });
     }

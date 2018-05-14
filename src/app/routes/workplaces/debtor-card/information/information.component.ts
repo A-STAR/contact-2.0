@@ -9,7 +9,7 @@ import { IDebt } from '@app/core/app-modules/app-modules.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 import { CompanyComponent } from '@app/routes/workplaces/debtor-card/information/company/company.component';
@@ -34,21 +34,21 @@ export class DebtorInformationComponent {
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {}
 
   get debt$(): Observable<IDebt> {
-    return this.debtorCardService.selectedDebt$;
+    return this.debtorService.debtId$;
   }
 
   get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
+    return this.debtorService.debtId$;
   }
 
   get personId$(): Observable<number> {
-    return this.debtorCardService.personId$;
+    return this.debtorService.debtorId$;
   }
 
   get form(): DynamicFormComponent {
@@ -57,15 +57,15 @@ export class DebtorInformationComponent {
   }
 
   get debtorTypeCode$(): Observable<number> {
-    return this.debtorCardService.person$.map(person => person && person.typeCode);
+    return this.debtorService.person$.map(person => person && person.typeCode);
   }
 
   get isPerson$(): Observable<boolean> {
-    return this.debtorCardService.isPerson$;
+    return this.debtorService.isPerson$;
   }
 
   get isCompany$(): Observable<boolean> {
-    return this.debtorCardService.isCompany$;
+    return this.debtorService.isCompany$;
   }
 
   get phoneContactType(): number {

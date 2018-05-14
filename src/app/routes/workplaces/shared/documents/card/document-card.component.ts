@@ -7,7 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { IDocument } from '@app/routes/workplaces/core/document/document.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -39,7 +39,7 @@ export class DocumentCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorCardService: DebtorService,
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private routingService: RoutingService,

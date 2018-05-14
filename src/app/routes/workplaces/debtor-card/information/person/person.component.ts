@@ -8,7 +8,7 @@ import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-
 import { IPerson } from '../../debtor.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -34,7 +34,7 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private entityAttributesService: EntityAttributesService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -58,7 +58,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   get debtor$(): Observable<IPerson> {
-    return this.debtorCardService.person$;
+    return this.debtorService.person$;
   }
 
   protected getControls(

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { DebtService } from '@app/core/debt/debt.service';
 
 import { AddressGridComponent } from './address/address.component';
@@ -22,7 +22,7 @@ export class RegisterContactComponent {
   @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
 
   constructor(
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private debtService: DebtService,
   ) {}
 
@@ -31,7 +31,7 @@ export class RegisterContactComponent {
   }
 
   get entityId$(): Observable<number> {
-    return this.debtorCardService.personId$;
+    return this.debtorService.debtorId$;
   }
 
   get canRegisterPhones$(): Observable<boolean> {

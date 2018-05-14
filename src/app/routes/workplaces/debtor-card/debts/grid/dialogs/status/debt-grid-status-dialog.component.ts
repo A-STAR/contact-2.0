@@ -22,7 +22,7 @@ import {
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -55,7 +55,7 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private debtService: DebtService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -167,7 +167,7 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
       ...rest,
       statusCode: customStatusCode || statusCode,
     };
-    this.debtorCardService.personId$
+    this.debtorService.debtorId$
       .switchMap(personId => {
         return this.debtService.changeStatus(personId, this.debt.id, value, false);
       })

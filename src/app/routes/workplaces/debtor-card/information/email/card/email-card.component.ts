@@ -7,7 +7,7 @@ import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { EmailService } from '../email.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -34,7 +34,7 @@ export class DebtorEmailCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private emailService: EmailService,
     private route: ActivatedRoute,
     private router: Router,
@@ -76,7 +76,7 @@ export class DebtorEmailCardComponent implements OnInit {
   }
 
   get entityId$(): Observable<number> {
-    return combineLatest(this.debtorCardService.personId$, this.route.params)
+    return combineLatest(this.debtorService.debtorId$, this.route.params)
       .map(([ personId, params ]) => params.contactId || personId);
   }
 
