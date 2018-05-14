@@ -57,5 +57,6 @@ export interface IGridAction {
   // but it can contain undefined or null values
   selection?: number[][];
   asyncMode?: boolean;
-  config?: IDynamicLayoutConfig;
+  inputConfig?: IDynamicLayoutConfig;
+  outputConfig?: IDynamicLayoutConfig;
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 
-import { ICustomOperationData } from './custom-operation.interface';
+import { ICustomActionData } from './custom-operation.interface';
 import { IGridActionPayload, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
@@ -18,13 +18,13 @@ export class CustomOperationService {
     private notificationsService: NotificationsService
   ) {}
 
-  run(operation: IGridAction, idData: IGridActionPayload, actionData: ICustomOperationData): Observable<void> {
+  run(operation: IGridAction, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return operation.asyncMode
       ? this.schedule(operation.id, idData, actionData)
       : this.execute(operation.id, idData, actionData);
   }
 
-  execute(operationId: number, idData: IGridActionPayload, actionData: ICustomOperationData): Observable<void> {
+  execute(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return this.dataService.create('synch/mass/customOperation', {}, {
       operationId,
       idData: this.actionGridService.buildRequest(idData),
@@ -35,7 +35,7 @@ export class CustomOperationService {
     );
   }
 
-  schedule(operationId: number, idData: IGridActionPayload, actionData: ICustomOperationData): Observable<void> {
+  schedule(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return this.dataService.create('asynch/mass/customOperation', {}, {
       operationId,
       idData: this.actionGridService.buildRequest(idData),

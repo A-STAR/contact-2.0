@@ -2752,7 +2752,12 @@
     },
     "customOperation": {
       "dialog": {
-        "title": "Введите параметры"
+        "input": {
+          "title": "Enter parameters"
+        },
+        "output": {
+          "title": "Operations result"
+        }
       }
     }
   },

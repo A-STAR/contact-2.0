@@ -463,7 +463,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       asyncMode: action.metadataAction.asyncMode,
       ...(
         action.metadataAction.id
-          ? { config: this.actionGridService.getActionInputParamsConfig(action.metadataAction) }
+          ? {
+            inputConfig: this.actionGridService
+              .getActionParamsConfig(action.metadataAction.id, action.metadataAction.inputParams),
+            outputConfig: this.actionGridService
+              .getActionParamsConfig(action.metadataAction.id, action.metadataAction.outputParams)
+          }
           : {}
       )
     };

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewCh
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
+import { ICustomActionData } from './custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
@@ -25,6 +26,8 @@ export class CustomOperationComponent implements AfterViewInit {
 
   isDisabled$ = of(true);
 
+  result: ICustomActionData;
+
   constructor(
     private customOperationService: CustomOperationService
   ) { }
@@ -38,8 +41,12 @@ export class CustomOperationComponent implements AfterViewInit {
   onSubmit(): void {
     this.customOperationService
       .run(this.actionData, this.actionData.payload, this.layout.getData())
-      .subscribe(() => {
-        this.close.emit();
+      .subscribe(result => {
+        if (result) {
+          this.result = result;
+        } else {
+          this.close.emit();
+        }
       });
   }
 

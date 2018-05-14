@@ -10,7 +10,7 @@ export interface IMetadataActionOption {
   value: Array<number|string>;
 }
 
-export interface IMetadataActionInputParam {
+export interface IMetadataActionParam {
   id?: number;
   name: string;
   paramTypeCode: number;
@@ -40,7 +40,8 @@ export interface IMetadataAction {
   children?: IMetadataAction[];
   type?: MetadataActionType;
   asyncMode?: boolean;
-  inputParams?: IMetadataActionInputParam[];
+  inputParams?: IMetadataActionParam[];
+  outputParams?: IMetadataActionParam[];
 }
 
 export enum MetadataActionType {
