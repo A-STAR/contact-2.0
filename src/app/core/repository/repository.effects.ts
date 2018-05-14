@@ -12,7 +12,9 @@ import {
 
 import { DataService } from '@app/core/data/data.service';
 
-import { REPOSITORY_ENTITY } from '@app/core/repository/repository.service';
+import { REPOSITORY_ENTITY } from './repository.service';
+
+import { getPrimaryKey, serializeKeys, serializeParams } from './repository.utils';
 
 @Injectable()
 export class RepositoryEffects {
@@ -21,16 +23,17 @@ export class RepositoryEffects {
   readonly fetchEntity$: Observable<IRepositoryFetchSuccessAction> = this.actions$.pipe(
     ofType(RepositoryActionType.FETCH),
     mergeMap((action: IRepositoryFetchAction) => {
-      const entityDef = this.entityDefs.find(e => e.entityKey === action.payload.entityKey);
+      const { entityName } = action.payload;
+      const entityDef = this.entityDefs.find(e => e.entityClass.name === entityName);
       return this.fetch(entityDef, action.payload.params).pipe(
         map(data => {
           return {
             type: RepositoryActionType.FETCH_SUCCESS,
             payload: {
-              entityKey: action.payload.entityKey,
+              entityName,
               data,
-              primaryKey: entityDef.primaryKey,
-              serializedParams: JSON.stringify(action.payload.params),
+              primaryKey: getPrimaryKey(entityDef.entityClass),
+              serializedParams: serializeParams(action.payload.params),
             }
           } as IRepositoryFetchSuccessAction;
         }),
@@ -45,15 +48,11 @@ export class RepositoryEffects {
   ) {}
 
   private fetch(entityDef: IEntityDef, params: Record<string, any>): Observable<any[]> {
-    const serializedParamKeys = this.serializeKeys(Object.keys(params));
+    const serializedParamKeys = serializeKeys(Object.keys(params));
     const url = entityDef.urls.find(u => {
       const urlParams = u.match(/\{.+?\}/gi).map(i => i.slice(1, -1));
-      return this.serializeKeys(urlParams) === serializedParamKeys;
+      return serializeKeys(urlParams) === serializedParamKeys;
     });
     return this.dataService.readAll(url, params);
-  }
-
-  private serializeKeys(keys: string[]): string {
-    return keys.sort().join(',');
   }
 }

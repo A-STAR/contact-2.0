@@ -1,6 +1,7 @@
+import { Type } from '@angular/core';
+
 export interface IEntityDef {
-  entityKey: string;
-  primaryKey: string;
+  entityClass: Type<any>;
   urls: string[];
 }
 
@@ -39,7 +40,7 @@ export interface IRepositoryGenericAction {
 export interface IRepositoryFetchAction extends IRepositoryGenericAction {
   type: RepositoryActionType.FETCH;
   payload: {
-    entityKey: string;
+    entityName: string;
     params: Record<string, any>;
   };
 }
@@ -47,7 +48,7 @@ export interface IRepositoryFetchAction extends IRepositoryGenericAction {
 export interface IRepositoryFetchSuccessAction extends IRepositoryGenericAction {
   type: RepositoryActionType.FETCH_SUCCESS;
   payload: {
-    entityKey: string;
+    entityName: string;
     data: any[];
     primaryKey: string;
     serializedParams: string;

@@ -6,6 +6,8 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { RepositoryComponent } from './repository.component';
 
+import { User } from './entities/user';
+
 const routes: Routes = [
   {
     path: '',
@@ -16,7 +18,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RepoModule.forRoot(),
-    RepoModule.withEntity({ entityKey: 'user', primaryKey: 'id', urls: [ '/users/{id}' ] }),
+    RepoModule.withEntity({ entityClass: User, urls: [ '/users/{id}' ] }),
     RouterModule.forChild(routes),
     SharedModule,
   ],
