@@ -11,6 +11,8 @@ import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
+import { Debt } from '@app/entities';
 
 @Injectable()
 export class DebtService {
@@ -31,6 +33,7 @@ export class DebtService {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private routingService: RoutingService,
+    private repo: RepositoryService,
     private userPermissionsService: UserPermissionsService
   ) {}
 
@@ -127,16 +130,18 @@ export class DebtService {
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  getFirstDebtsByUserId(payload: any): Observable<any> {
-    return this.dataService.read(this.baseUrl, payload)
-      .map(res => res && res.id)
-      .catch(this.notificationsService.deleteError().entity('entities.debts.gen.plural').dispatchCallback());
+  getFirstDebtsByUserId(payload: any): Observable<number> {
+    return this.repo.fetch(Debt, { personId: payload.personId })
+      .pipe(
+        map(res => res && res[0].id)
+      );
   }
 
   getDebtorIdByDebtId(debtId: number): Observable<number> {
-    return this.fetch(null, debtId).pipe(
-      map(response => response && response.personId),
-    );
+    return this.repo.fetch(Debt, { id: debtId })
+      .pipe(
+        map(response => response && response[0].personId)
+      );
   }
 
   openByDebtId(debtId: number, debtorId: number): Promise<boolean> {

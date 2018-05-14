@@ -35,7 +35,7 @@ import { WSService } from './ws/ws.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
 import { environment } from '../../environments/environment';
-import { Debt, Person, User } from '@app/entities';
+import { Debt, Debtor, User } from '@app/entities';
 
 @NgModule({
   imports: [
@@ -51,7 +51,7 @@ import { Debt, Person, User } from '@app/entities';
       urls: [ '/users/{id}' ],
     }),
     RepositoryModule.withEntity({
-      entityClass: Person,
+      entityClass: Debtor,
       urls: [ '/persons/{id}' ],
     }),
     RepositoryModule.withEntity({

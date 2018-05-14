@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { first } from 'rxjs/operators';
 
 @Injectable()
 export class MassOperationsService {
@@ -35,8 +36,12 @@ export class MassOperationsService {
       ? this.openCard(debtorId, debtId, onClose)
       : this.debtService
           .getDebtorIdByDebtId(debtId)
+          // see https://github.com/ReactiveX/rxjs/issues/2536
+          .pipe(first())
           .toPromise()
-          .then(id => this.openCard(id, debtId, onClose));
+          .then(id => {
+            this.openCard(id, debtId, onClose);
+          });
   }
 
   openIncomingCall(actionData: any): Promise<boolean> {

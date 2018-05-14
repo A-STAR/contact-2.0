@@ -2835,7 +2835,16 @@
         "gen": { "plural": "debtor general information" }
       }
     },
+    "debtor": {
+      "gen": { "singular": "debtor", "plural": "debtors" },
+      "info": {
+        "gen": { "plural": "debtor general information" }
+      }
+    },
     "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
+    },
+    "debt": {
       "gen": { "singular": "debt", "plural": "debts" }
     },
     "massOps": {

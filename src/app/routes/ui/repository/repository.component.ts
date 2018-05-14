@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { RepositoryService } from '@app/core/repository/repository.service';
-import { User, Person, Debt } from '@app/entities';
+import { User, Debtor, Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,7 +11,7 @@ import { User, Person, Debt } from '@app/entities';
 })
 export class RepositoryComponent {
   readonly users$ = this.repositoryService.fetch(User, { id: 1 });
-  readonly persons$ = this.repositoryService.fetch(Person, { id: 1 });
+  readonly persons$ = this.repositoryService.fetch(Debtor, { id: 1 });
   readonly debts$ = this.repositoryService.fetch(Debt, { personId: 2 });
 
   constructor(

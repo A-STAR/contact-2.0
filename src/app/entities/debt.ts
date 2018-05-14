@@ -43,6 +43,10 @@ export class Debt {
   regionCode: number;
   @Field()
   responsibleId: number;
+  @Field()
+  shortInfo: string;
+  @Field()
+  responsibleFullName: string;
   @Field({ type: FieldType.DATETIME })
   startDate: Date;
   @Field()

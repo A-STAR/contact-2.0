@@ -1,6 +1,6 @@
 import { Field, FieldType } from '@app/core/repository/repository.utils';
 
-export class Person {
+export class Debtor {
   @Field({ type: FieldType.DATE })
   birthDate: Date;
   @Field()
