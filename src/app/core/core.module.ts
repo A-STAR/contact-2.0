@@ -7,6 +7,7 @@ import { DebtModule } from './debt/debt.module';
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { MapLayersModule } from '@app/core/map-providers/layers/map-layers.module';
 import { MapProvidersModule } from '@app/core/map-providers/map-providers.module';
+import { RepositoryModule } from '@app/core/repository/repository.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
@@ -34,6 +35,7 @@ import { WSService } from './ws/ws.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
 import { environment } from '../../environments/environment';
+import { Debt, Person, User } from '@app/entities';
 
 @NgModule({
   imports: [
@@ -43,6 +45,19 @@ import { environment } from '../../environments/environment';
     MapLayersModule,
     MapProvidersModule,
     RoutingModule,
+    RepositoryModule.forRoot(),
+    RepositoryModule.withEntity({
+      entityClass: User,
+      urls: [ '/users/{id}' ],
+    }),
+    RepositoryModule.withEntity({
+      entityClass: Person,
+      urls: [ '/persons/{id}' ],
+    }),
+    RepositoryModule.withEntity({
+      entityClass: Debt,
+      urls: [ '/debts/{id}', '/persons/{personId}/debts' ],
+    }),
     UserModule,
   ],
   providers: [

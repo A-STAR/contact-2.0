@@ -6,6 +6,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   AfterViewInit,
+  OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -32,6 +33,8 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 
 import { DialogFunctions } from '@app/core/dialog';
 import { invert } from '@app/core/utils';
+import { RepositoryService } from '@app/core/repository/repository.service';
+import { Person, Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +43,7 @@ import { invert } from '@app/core/utils';
   selector: 'app-debtor-card-layout',
   templateUrl: './debtor-card-layout.component.html',
 })
-export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
+export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
@@ -72,10 +75,36 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
+    private repositoryService: RepositoryService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    const debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
+    const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
+    if (debtorId && debtId) {
+      combineLatest(
+        this.repositoryService.fetch(Person, { id: debtorId}),
+        this.repositoryService.fetch(Debt, { id: debtId })
+      )
+      .pipe(
+        map(([person, debt]) => ({
+            ...person[0],
+            // TODO(i.lobanov): total mess with IDebt interfaces!
+            responsibleFullName: (debt as any)[0].responsibleFullName,
+            utc: debt[0].utc,
+            shortInfo: (debt as any)[0].shortInfo,
+          }),
+        )
+      )
+      .subscribe(data => {
+        this.data = data;
+        this.cdRef.markForCheck();
+      });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -85,23 +114,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         this.controls = this.buildControls(canEdit);
         this.cdRef.markForCheck();
       });
-
-    this.personSubscription = combineLatest(
-      this.debtorCardService.person$.filter(Boolean),
-      this.debtorCardService.selectedDebt$.filter(Boolean),
-    )
-    .map(([person, debt]) => ({
-        ...person,
-        responsibleFullName: debt.responsibleFullName,
-        utc: debt.utc,
-        shortInfo: debt.shortInfo,
-      })
-    )
-    .distinctUntilChanged()
-    .subscribe(data => {
-      this.data = data;
-      this.cdRef.markForCheck();
-    });
   }
 
   ngOnDestroy(): void {
@@ -139,19 +151,21 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   onSubmit(): void {
-    const value = {
-      ...this.form.serializedUpdates,
-      ...this.information.form.serializedUpdates,
-    };
+    if (this.canSubmit) {
+      const value = {
+        ...this.form.serializedUpdates,
+        ...this.information.form.serializedUpdates,
+      };
 
-    this.personId$
-      .flatMap(personId => this.debtorService.update(personId, value))
-      .pipe(first())
-      .subscribe(() => {
-        this.form.form.markAsPristine();
-        this.information.form.form.markAsPristine();
-        this.cdRef.markForCheck();
-      });
+      this.personId$
+        .flatMap(personId => this.debtorService.update(personId, value))
+        .pipe(first())
+        .subscribe(() => {
+          this.form.form.markAsPristine();
+          this.information.form.form.markAsPristine();
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   onRegisterContactClick(): void {
