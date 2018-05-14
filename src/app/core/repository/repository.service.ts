@@ -46,23 +46,23 @@ export class RepositoryService {
   }
 
   private buildEntity<T>(entityClass: Type<T>, data: any): T {
-    const r = new entityClass();
-    Object.keys(data).forEach(k => {
-      const options = getOptions(entityClass, k);
-      switch (options.type) {
+    const entity = new entityClass();
+    const options = getOptions(entityClass);
+    Object.keys(options).forEach(key => {
+      switch (options[key].type) {
         case FieldType.BOOLEAN:
-          r[k] = Boolean(data[k]);
+          entity[key] = Boolean(data[key]);
           break;
         case FieldType.DATETIME:
         case FieldType.DATE:
-          r[k] = this.valueConverterService.fromISO(data[k]);
+          entity[key] = this.valueConverterService.fromISO(data[key]);
           break;
         default:
-          r[k] = data[k];
+          entity[key] = data[key];
           break;
       }
     });
-    return r;
+    return entity;
   }
 
   private dispatchFetchAction(entityName: string, params: Record<string, any>): void {

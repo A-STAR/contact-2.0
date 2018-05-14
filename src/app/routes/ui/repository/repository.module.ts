@@ -18,7 +18,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RepoModule.forRoot(),
-    RepoModule.withEntity({ entityClass: User, urls: [ '/users/{id}' ] }),
+    RepoModule.withEntity({
+      entityClass: User,
+      urls: [ '/users/{id}' ],
+    }),
     RouterModule.forChild(routes),
     SharedModule,
   ],

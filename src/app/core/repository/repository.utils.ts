@@ -24,8 +24,8 @@ export const getPrimaryKey = (entityClass: Type<any>): string => {
   return entityClass.prototype.__ENTITY_METADATA__.primaryKey;
 };
 
-export const getOptions = (entityClass: Type<any>, key: string): IFieldOptions => {
-  return entityClass.prototype.__ENTITY_METADATA__.options[key];
+export const getOptions = (entityClass: Type<any>): Record<string, IFieldOptions> => {
+  return entityClass.prototype.__ENTITY_METADATA__.options;
 };
 
 export const serializeKeys = (keys: string[]): string => {
