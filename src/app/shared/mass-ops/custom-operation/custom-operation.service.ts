@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 
 import { ICustomOperationData } from './custom-operation.interface';
-import { IGridActionPayload, ICustomGridAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridActionPayload, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
@@ -18,7 +18,7 @@ export class CustomOperationService {
     private notificationsService: NotificationsService
   ) {}
 
-  run(operation: ICustomGridAction, idData: IGridActionPayload, actionData: ICustomOperationData): Observable<void> {
+  run(operation: IGridAction, idData: IGridActionPayload, actionData: ICustomOperationData): Observable<void> {
     return operation.asyncMode
       ? this.schedule(operation.id, idData, actionData)
       : this.execute(operation.id, idData, actionData);

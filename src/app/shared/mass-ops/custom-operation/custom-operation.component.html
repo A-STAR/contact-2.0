@@ -1,11 +1,11 @@
-<app-dialog (close)="onClose()" *ngIf="actionData.operation.config">
+<app-dialog (close)="onClose()" *ngIf="actionData.config">
   <div dialog-header>
     <h3>{{ 'widgets.customOperation.dialog.title' | translate }}</h3>
   </div>
 
   <app-dynamic-layout
     style="height: 70vh"
-    [layout]="actionData.operation.config"
+    [layout]="actionData.config"
     [data]="{ default: {} }"
   ></app-dynamic-layout>
 

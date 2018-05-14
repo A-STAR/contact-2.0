@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import {
   IMetadataAction,
   MetadataActionType,
-  IMetadataCustomAction,
-  IMetadataCustomActionParam
+  IMetadataActionInputParam
 } from '@app/core/metadata/metadata.interface';
 
 import {
@@ -195,14 +194,14 @@ export class ActionGridService {
     return actionData.type === MetadataActionType.ALL;
   }
 
-  getCustomOperationConfig(operation: IMetadataCustomAction): IDynamicLayoutConfig {
+  getActionInputParamsConfig(action: IMetadataAction): IDynamicLayoutConfig {
     return {
-      key: `mass/${operation.id}`,
-      items: operation.params.map(param => ({
+      key: `mass/${action.id}`,
+      items: action.inputParams.map(param => ({
         label: param.name,
         name: param.systemName,
         type: DynamicLayoutItemType.CONTROL,
-        ...this.getCustomOperationControlOptions(param),
+        ...this.getActionInputParamOptions(param),
         validators: {
           required: !!param.isMandatory,
         },
@@ -210,7 +209,7 @@ export class ActionGridService {
     };
   }
 
-  private getCustomOperationControlOptions(param: IMetadataCustomActionParam): Partial<IDynamicLayoutItem> {
+  private getActionInputParamOptions(param: IMetadataActionInputParam): Partial<IDynamicLayoutItem> {
     switch (param.paramTypeCode) {
       case 1:
         return {

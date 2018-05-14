@@ -268,7 +268,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this.actions$
       .pipe(
         filter(Boolean),
-        map(actions => actions.filter(action => !!action.operation))
+        map(actions => actions.filter(action => !!action.id))
       );
   }
 
@@ -450,6 +450,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   private setDialogData(action: IActionGridAction): IGridAction {
     return {
+      id: action.metadataAction.id,
       name: action.metadataAction.action,
       addOptions: action.metadataAction.addOptions,
       params: action.metadataAction.params,
@@ -459,13 +460,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         filters: this.getFilters()
       }),
       selection: this.actionGridService.getGridSelection(action, this.selection),
-      operation: action.metadataAction.operation
-        ? {
-          id: action.metadataAction.operation.id,
-          asyncMode: action.metadataAction.operation.asyncMode,
-          config: this.actionGridService.getCustomOperationConfig(action.metadataAction.operation)
-        }
-        : null
+      asyncMode: action.metadataAction.asyncMode,
+      ...(
+        action.metadataAction.id
+          ? { config: this.actionGridService.getActionInputParamsConfig(action.metadataAction) }
+          : {}
+      )
     };
   }
 

@@ -10,7 +10,7 @@ export interface IMetadataActionOption {
   value: Array<number|string>;
 }
 
-export interface IMetadataCustomActionParam {
+export interface IMetadataActionInputParam {
   id?: number;
   name: string;
   paramTypeCode: number;
@@ -23,13 +23,8 @@ export interface IMetadataCustomActionParam {
   lookupKey: number;
 }
 
-export interface IMetadataCustomAction {
-  id: number;
-  params?: IMetadataCustomActionParam[];
-  asyncMode?: boolean;
-}
-
 export interface IMetadataAction {
+  id?: number;
   action: string;
   // for custom actions, translates label path + action
   label?: string;
@@ -44,7 +39,8 @@ export interface IMetadataAction {
   };
   children?: IMetadataAction[];
   type?: MetadataActionType;
-  operation?: IMetadataCustomAction;
+  asyncMode?: boolean;
+  inputParams?: IMetadataActionInputParam[];
 }
 
 export enum MetadataActionType {

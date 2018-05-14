@@ -47,13 +47,8 @@ export interface IGridActionContext {
 
 export type IMetadataActionSetter = (action: IMetadataAction) => IMetadataAction;
 
-export interface ICustomGridAction {
-  id: number;
-  config?: IDynamicLayoutConfig;
-  asyncMode?: boolean;
-}
-
 export interface IGridAction {
+  id?: number;
   name: string;
   addOptions: IAddOption[];
   params?: string[];
@@ -61,5 +56,6 @@ export interface IGridAction {
   // this is initial selection, filtered by params,
   // but it can contain undefined or null values
   selection?: number[][];
-  operation?: ICustomGridAction;
+  asyncMode?: boolean;
+  config?: IDynamicLayoutConfig;
 }

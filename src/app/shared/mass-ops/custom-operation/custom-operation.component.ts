@@ -37,7 +37,7 @@ export class CustomOperationComponent implements AfterViewInit {
 
   onSubmit(): void {
     this.customOperationService
-      .run(this.actionData.operation, this.actionData.payload, this.layout.getData())
+      .run(this.actionData, this.actionData.payload, this.layout.getData())
       .subscribe(() => {
         this.close.emit();
       });
