@@ -1,8 +1,9 @@
 import { Injectable, InjectionToken, Type } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { getIn } from 'immutable';
+import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IEntityDef, IRepositoryFetchAction, RepositoryActionType } from './repository.interface';
@@ -26,7 +27,7 @@ export class RepositoryService {
     const entityName = entityClass.name;
     const serializedParams = serializeParams(params);
     return this.store.pipe(
-      distinctUntilKeyChanged('repository'),
+      distinctUntilChanged((a, b) => equals(a.repository[entityName], b.repository[entityName])),
       select(state => {
         const entity = getIn(state, [ 'repository', entityName ], {});
         const status = getIn(entity, [ 'index', serializedParams, 'status' ], null);
