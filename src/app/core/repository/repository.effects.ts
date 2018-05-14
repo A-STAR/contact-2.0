@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import {
   IEntityDef,
@@ -11,6 +11,7 @@ import {
 } from './repository.interface';
 
 import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { REPOSITORY_ENTITY } from './repository.service';
 
@@ -44,15 +45,19 @@ export class RepositoryEffects {
   constructor(
     private actions$: Actions,
     private dataService: DataService,
+    private notificationsService: NotificationsService,
     @Inject(REPOSITORY_ENTITY) private entityDefs: IEntityDef[],
   ) {}
 
   private fetch(entityDef: IEntityDef, params: Record<string, any>): Observable<any[]> {
+    const entityName = entityDef.entityClass.name.toLowerCase();
     const serializedParamKeys = serializeKeys(Object.keys(params));
     const url = entityDef.urls.find(u => {
       const urlParams = u.match(/\{.+?\}/gi).map(i => i.slice(1, -1));
       return serializeKeys(urlParams) === serializedParamKeys;
     });
-    return this.dataService.readAll(url, params);
+    return this.dataService.readAll(url, params).pipe(
+      catchError(this.notificationsService.fetchError().entity(entityName).dispatchCallback()),
+    );
   }
 }
