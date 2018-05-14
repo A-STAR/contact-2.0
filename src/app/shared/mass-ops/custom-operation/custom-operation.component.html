@@ -1,32 +1,12 @@
-<app-dialog (close)="onClose()" *ngIf="actionData.inputConfig">
-  <div dialog-header>
-    <h3>{{ 'widgets.customOperation.dialog.input.title' | translate }}</h3>
-  </div>
+<app-custom-operation-input
+  *ngIf="actionData.inputConfig"
+  [config]="actionData.inputConfig"
+  (submit)="onSubmit($event)"
+  (close)="onClose()"
+></app-custom-operation-input>
 
-  <app-dynamic-layout
-    style="height: 70vh"
-    [layout]="actionData.inputConfig"
-    [data]="{ default: {} }"
-  ></app-dynamic-layout>
-
-  <div dialog-footer>
-    <app-button color="primary" type="start" (click)="onSubmit()" [disabled]="isDisabled$ | async"></app-button>
-    <app-button type="close" (click)="onClose()"></app-button>
-  </div>
-</app-dialog>
-
-<app-dialog (close)="onClose()" *ngIf="actionData.outputConfig && result">
-  <div dialog-header>
-    <h3>{{ 'widgets.customOperation.dialog.output.title' | translate }}</h3>
-  </div>
-
-  <app-dynamic-layout
-    style="height: 70vh"
-    [layout]="actionData.outputConfig"
-    [data]="{ default: result }"
-  ></app-dynamic-layout>
-
-  <div dialog-footer>
-    <app-button type="close" (click)="onClose()"></app-button>
-  </div>
-</app-dialog>
+<app-custom-operation-output
+  *ngIf="actionData.outputConfig && result"
+  [config]="actionData.outputConfig"
+  (close)="onClose()"
+></app-custom-operation-output>

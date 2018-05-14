@@ -3,35 +3,26 @@ import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { CustomOperationInputModule } from './input/custom-operation-input.module';
-import { CustomOperationOutputModule } from './output/custom-operation-output.module';
 import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynamic-layout.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 
-import { CustomOperationService } from './custom-operation.service';
-
-import { CustomOperationComponent } from './custom-operation.component';
+import { CustomOperationOutputComponent } from './custom-operation-output.component';
 
 @NgModule({
   imports: [
     ButtonModule,
     CommonModule,
-    CustomOperationInputModule,
-    CustomOperationOutputModule,
     DynamicLayoutModule,
     DialogModule,
     GridsModule,
     TranslateModule,
   ],
   declarations: [
-    CustomOperationComponent
+    CustomOperationOutputComponent
   ],
   exports: [
-    CustomOperationComponent
+    CustomOperationOutputComponent
   ],
-  providers: [
-    CustomOperationService
-  ]
 })
-export class CustomOperationModule { }
+export class CustomOperationOutputModule { }
