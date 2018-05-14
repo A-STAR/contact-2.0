@@ -44,6 +44,18 @@ export class GridSelectService {
       labelGetter: row => row.name,
       valueGetter: row => row.id,
     },
+    users: {
+      gridColumns: [
+        { prop: 'id', maxWidth: 70 },
+        { prop: 'fullName' },
+        { prop: 'organization' },
+        { prop: 'position' },
+      ]
+      .map(addGridLabel('default.filters.users.grid')),
+      fetchCallback: () => this.gridFiltersService.fetchUsers(0),
+      labelGetter: row => row.fullName,
+      valueGetter: row => row.id,
+    },
   };
 
   constructor(
