@@ -2,7 +2,7 @@ import { Field, FieldType } from '@app/core/repository/repository.utils';
 
 export class Person {
   @Field({ type: FieldType.DATE })
-  birthDate: Date | string;
+  birthDate: Date;
   @Field()
   birthPlace: string;
   @Field()
@@ -15,6 +15,8 @@ export class Person {
   firstName: string;
   @Field()
   genderCode: number;
+  @Field({ primaryKey: true })
+  id: number;
   @Field()
   lastName: string;
   @Field()
@@ -43,6 +45,4 @@ export class Person {
   stringValue9: string;
   @Field()
   typeCode: number;
-  @Field({ primaryKey: true })
-  id: number;
 }

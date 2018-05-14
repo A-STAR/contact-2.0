@@ -10,11 +10,11 @@ export class Debt {
   @Field()
   contract: string;
   @Field({ type: FieldType.DATETIME })
-  creditEndDate: Date | string;
+  creditEndDate: Date;
   @Field()
   creditName: string;
   @Field({ type: FieldType.DATETIME })
-  creditStartDate: Date | string;
+  creditStartDate: Date;
   @Field()
   creditTypeCode: number;
   @Field()
@@ -44,7 +44,7 @@ export class Debt {
   @Field()
   responsibleId: number;
   @Field({ type: FieldType.DATETIME })
-  startDate: Date | string;
+  startDate: Date;
   @Field()
   statusCode: number;
   @Field()
