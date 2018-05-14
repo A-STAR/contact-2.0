@@ -10,7 +10,7 @@
         {
           "type": "group",
           "groupType": "vertical",
-          "size": 100,
+          "size": 60,
           "children": [
             {
               "type": "group",
@@ -298,6 +298,7 @@
         {
           "type": "group",
           "groupType": "tabs",
+          "size": 40,
           "children": [
             {
               "type": "template",

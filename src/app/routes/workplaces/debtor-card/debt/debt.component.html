@@ -15,20 +15,20 @@
 
 <ng-template #debtComponents>
   <app-debt-component-grid
-    [debtId]="debtId$ | async"
+    [debtId]="debtId"
   ></app-debt-component-grid>
 </ng-template>
 
 <ng-template #portfolioLog>
   <app-portfolio-log-grid
     *ngIf="canViewPortfolioLog$ | async"
-    [debtId]="debtId$ | async"
+    [debtId]="debtId"
   ></app-portfolio-log-grid>
 </ng-template>
 
 <ng-template #componentLog>
   <app-component-log-grid
     *ngIf="canViewComponentLog$ | async"
-    [debtId]="debtId$ | async"
+    [debtId]="debtId"
   ></app-component-log-grid>
 </ng-template>
