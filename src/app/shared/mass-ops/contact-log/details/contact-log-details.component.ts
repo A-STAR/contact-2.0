@@ -1,6 +1,7 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact-log.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
@@ -9,6 +10,7 @@ import { IUserTerm, IUserDictionaries } from '@app/core/user/dictionaries/user-d
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { ContactLogDetailsService } from './contact-log-details.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   selector: 'app-contact-log-details',
@@ -45,6 +47,10 @@ export class ContactLogDetailsComponent {
     this.contactFullName = (row && row.personFullName) || '';
   }
 
+  @Output() close = new EventEmitter<boolean>();
+
+  contactFullName: string;
+
   columnIds = [
     'contactDateTime',
     'contactType',
@@ -59,7 +65,15 @@ export class ContactLogDetailsComponent {
 
   dicts: IUserDictionaries;
 
-  contactFullName;
+  titlebar: ITitlebar = {
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_CLOSE,
+        enabled: of(true),
+        action: () => this.close.emit()
+      }
+    ]
+  };
 
   constructor(
     private actionGridService: ActionGridService,
