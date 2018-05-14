@@ -270,6 +270,13 @@ export class ActionGridService {
             entityTypeIds: param.entityTypeIds
           }
         } as Partial<IDynamicLayoutItem>;
+      case 12:
+        return {
+          controlType: param.multiSelect
+            ? DynamicLayoutControlType.MULTISELECT
+            : DynamicLayoutControlType.SELECT,
+          lookupKey: param.lookupKey
+        } as Partial<IDynamicLayoutItem>;
     }
   }
 

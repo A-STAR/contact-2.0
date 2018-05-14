@@ -20,6 +20,7 @@ export interface IMetadataCustomActionParam {
   multiSelect: number;
   dictNameCode: number;
   entityTypeIds: number;
+  lookupKey: number;
 }
 
 export interface IMetadataCustomAction {
