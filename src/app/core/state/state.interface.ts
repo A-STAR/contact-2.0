@@ -40,7 +40,7 @@ export interface IAppState {
   readonly organizations: IOrganizationsState;
   readonly permissions: IPermissionsState;
   readonly persistence: IPersistenceState;
-  readonly repository: IRepositoryState,
+  readonly repository: IRepositoryState;
   readonly userAttributeTypes: IUserAttributeTypesState;
   readonly userConstants: IUserConstantsState;
   readonly userDictionaries: IUserDictionariesState;
