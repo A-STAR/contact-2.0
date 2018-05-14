@@ -8,10 +8,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { first, flatMap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/debt/debt.interface';
 
@@ -41,24 +39,32 @@ export class DebtComponent implements AfterViewInit, OnInit {
 
   isDisabled$ = of(true);
 
+  readonly displayDebtData = this.debtorCardService.selectedDebt$.pipe(map(Boolean));
+
+  readonly canViewComponentLog$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
+  readonly canViewPortfolioLog$ = this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
+
+  readonly debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
+  readonly debtId   = Number(this.route.snapshot.paramMap.get('debtId'));
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
-    this.debtId$.pipe(
-      flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null)),
-      first(),
-    )
-    .subscribe(debt => {
-      this.debt = debt;
-      this.cdRef.markForCheck();
-    });
+    if (this.isEditMode) {
+      this.debtService
+        .fetch(null, this.debtId)
+        .subscribe(debt => {
+          this.debt = debt;
+          this.cdRef.markForCheck();
+        });
+    }
 
     this.templates = {
       debtComponents: this.debtComponents,
@@ -73,29 +79,22 @@ export class DebtComponent implements AfterViewInit, OnInit {
     );
   }
 
-  get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$.pipe(
-      map(debtId => this.isRoute('create') ? null : debtId),
-    );
-  }
-
   onSubmit(): void {
-    combineLatest(
-      this.debtorCardService.personId$,
-      this.debtId$,
-    )
-    .pipe(
-      first(),
-      flatMap(([personId, debtId]) => {
-        return debtId
-          ? this.debtService.update(personId, debtId, this.layout.getData())
-          : this.debtService.create(personId, this.layout.getData());
-      })
-    )
-    .subscribe(() => {
-      this.debtorCardService.refreshDebts();
-      this.onBack();
-    });
+    if (this.isEditMode) {
+      this.debtService
+        .update(this.debtorId, this.debtId, this.layout.getData())
+        .subscribe(() => {
+          this.debtorCardService.refreshDebts();
+          this.onBack();
+        });
+    } else {
+      this.debtService
+        .create(this.debtorId, this.layout.getData())
+        .subscribe(() => {
+          this.debtorCardService.refreshDebts();
+          this.onBack();
+        });
+    }
   }
 
   onBack(): void {
@@ -106,19 +105,7 @@ export class DebtComponent implements AfterViewInit, OnInit {
     }
   }
 
-  get displayDebtData(): Observable<boolean> {
-    return this.debtorCardService.selectedDebt$.pipe(map(Boolean));
-  }
-
-  get canViewComponentLog$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
-  }
-
-  get canViewPortfolioLog$(): Observable<boolean> {
-    return this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
-  }
-
-  private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
+  private get isEditMode(): boolean {
+    return this.route.snapshot.url.join('/').indexOf('create') === -1;
   }
 }
