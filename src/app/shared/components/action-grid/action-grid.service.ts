@@ -262,6 +262,14 @@ export class ActionGridService {
         return {
           controlType: DynamicLayoutControlType.DATETIME
         };
+      case 11:
+        return {
+          controlType: DynamicLayoutControlType.GRIDSELECT,
+          filterType: 'entityGroups',
+          filterParams: {
+            entityTypeIds: param.entityTypeIds
+          }
+        } as Partial<IDynamicLayoutItem>;
     }
   }
 

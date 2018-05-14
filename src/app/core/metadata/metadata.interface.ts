@@ -19,6 +19,7 @@ export interface IMetadataCustomActionParam {
   isMandatory: number;
   multiSelect: number;
   dictNameCode: number;
+  entityTypeIds: number;
 }
 
 export interface IMetadataCustomAction {
