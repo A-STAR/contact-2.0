@@ -251,8 +251,8 @@ export class ActionGridService {
       case 7:
         return {
           controlType: param.multiSelect
-            ? DynamicLayoutControlType.DIALOGSELECT
-            : DynamicLayoutControlType.GRIDSELECT,
+            ? DynamicLayoutControlType.MULTISELECT
+            : DynamicLayoutControlType.SELECT,
           dictCode: param.dictNameCode
         } as Partial<IDynamicLayoutItem>;
       case 9:
