@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicLayoutAttribute } from '../dynamic-layout.interface';
@@ -13,7 +13,7 @@ import { AttributeService } from '../attribute/attribute.service';
 export class AttributeComponent implements OnInit, OnDestroy {
   @Input() attribute: IDynamicLayoutAttribute;
 
-  value: any;
+  value = '';
 
   private attributesSubscription: Subscription;
 
@@ -22,9 +22,16 @@ export class AttributeComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
   ) {}
 
+  @HostBinding('style.flex')
+  get flex(): string {
+    return this.attribute.size
+      ? `${this.attribute.size} 0`
+      : `0 0 auto`;
+  }
+
   ngOnInit(): void {
     this.attributesSubscription = this.attributeService.attributes$.subscribe(attributes => {
-      this.value = attributes ? attributes[this.attribute.key] : null;
+      this.value = attributes ? attributes[this.attribute.uid] : null;
       this.cdRef.markForCheck();
     });
   }

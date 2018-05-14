@@ -29,6 +29,10 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   organizations: Observable<ITreeNode[]>;
   dialog: string;
 
+  readonly selectedOrganization: Observable<ITreeNode> = this.organizationsService.selectedOrganization;
+  readonly canViewOrganization: Observable<boolean> = this.userPermissionsService.has('ORGANIZATION_VIEW');
+  readonly canEditOrganization: Observable<boolean> = this.userPermissionsService.has('ORGANIZATION_EDIT');
+
   titlebar: ITitlebar = {
     title: 'organizations.title',
     items: [
@@ -84,18 +88,6 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   ngOnDestroy(): void {
     this.permissionSub.unsubscribe();
     this.organizationsService.clearAll();
-  }
-
-  get selectedOrganization(): Observable<ITreeNode> {
-    return this.organizationsService.selectedOrganization;
-  }
-
-  get canViewOrganization(): Observable<boolean> {
-    return this.userPermissionsService.has('ORGANIZATION_VIEW');
-  }
-
-  get canEditOrganization(): Observable<boolean> {
-    return this.userPermissionsService.has('ORGANIZATION_EDIT');
   }
 
   onChangeNodesLocation(payload: ITreeNodeInfo[]): void {

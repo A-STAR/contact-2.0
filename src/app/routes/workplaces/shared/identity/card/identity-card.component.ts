@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -8,6 +8,7 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { IdentityService } from '@app/routes/workplaces/core/identity/identity.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -41,7 +42,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {
@@ -99,8 +100,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
-    this.router.navigate([ url ]);
+    this.routingService.navigateToParent(this.route);
   }
 
   private onSubmit(data: any): void {

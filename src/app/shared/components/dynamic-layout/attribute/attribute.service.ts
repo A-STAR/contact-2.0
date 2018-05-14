@@ -27,7 +27,7 @@ export class AttributeService {
     const attributes = Object.keys(items)
       .map(key => items[key].item)
       .filter(item => item.type === DynamicLayoutItemType.ATTRIBUTE)
-      .reduce((acc, attribute: IDynamicLayoutAttribute) => ({ ...acc, [attribute.key]: attribute.formula }), {});
+      .reduce((acc, attribute: IDynamicLayoutAttribute) => ({ ...acc, [attribute.uid]: attribute.formula }), {});
 
     const { debtId, debtorId } = this.route.snapshot.params;
     const data = {

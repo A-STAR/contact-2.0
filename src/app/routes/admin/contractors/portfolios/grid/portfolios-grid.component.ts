@@ -39,6 +39,16 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 export class PortfoliosGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IPortfolio>;
 
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('PORTFOLIO_VIEW');
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('PORTFOLIO_ADD');
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('PORTFOLIO_EDIT');
+  readonly canMove$: Observable<boolean> = this.userPermissionsService.has('PORTFOLIO_MOVE');
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('PORTFOLIO_DELETE');
+  readonly selectedPortfolio$: Observable<IPortfolio> =
+    this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio);
+  readonly selectedContractor$: Observable<IContractor> =
+    this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
+
   titlebar: ITitlebar = {
     title: 'portfolios.title',
     items: [
@@ -205,26 +215,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
     }
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PORTFOLIO_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PORTFOLIO_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('PORTFOLIO_EDIT');
-  }
-
-  get canMove$(): Observable<boolean> {
-    return this.userPermissionsService.has('PORTFOLIO_MOVE');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PORTFOLIO_DELETE');
-  }
-
   get canView(): boolean {
     return this.permissions.has('PORTFOLIO_VIEW');
   }
@@ -255,14 +245,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
 
   get canReturn(): boolean {
     return this.permissions.has('PORTFOLIO_OUTSOURCING_RETURN');
-  }
-
-  get selectedPortfolio$(): Observable<IPortfolio> {
-    return this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio);
-  }
-
-  get selectedContractor$(): Observable<IContractor> {
-    return this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
   }
 
   canFormPortfolio(portfolio: IPortfolio): boolean {

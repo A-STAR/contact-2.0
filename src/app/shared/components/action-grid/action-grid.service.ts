@@ -197,6 +197,7 @@ export class ActionGridService {
 
   getCustomOperationConfig(operation: IMetadataCustomAction): IDynamicLayoutConfig {
     return {
+      key: `mass/${operation.id}`,
       items: operation.params.map(param => ({
         label: param.name,
         name: param.systemName,

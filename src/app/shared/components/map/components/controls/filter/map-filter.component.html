@@ -45,7 +45,7 @@
           [label]="child.label"
           [ngModel]="child.value"
           [isDisabled]="isDisabled(child) | async"
-          [debounce]="400"
+          [debounce]="200"
           [min]="10"
           [max]="100000"
           (ngModelChange)="onChildSelect($event, child)"

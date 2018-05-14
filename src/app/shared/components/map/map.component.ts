@@ -36,7 +36,6 @@ import { tap, delay } from 'rxjs/operators';
 export class MapComponent<T> implements AfterViewInit, OnDestroy {
   @ViewChild('container') private mapEl: ElementRef;
 
-  @Input() layers: ILayerDef<T>[][];
   @Input() options: IMapOptions = {
     zoom: 6,
     center: {
@@ -45,13 +44,33 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
     },
   };
 
-  @Input() controls: IControlDef<T>[];
+  @Input() set controls(config: IControlDef<T>[])  {
+    if (config && config.length) {
+      if (this.map) {
+        this.addControls(config);
+      } else {
+        this._controls = config;
+      }
+    }
+  }
+
+  @Input() set layers(config: ILayerDef<T>[][])  {
+    if (config && config.length) {
+      if (this.map) {
+        this.addLayers(config);
+      } else {
+        this._layers = config;
+      }
+    }
+  }
 
   @Input() styles: CSSStyleDeclaration;
 
-  static MAX_MAP_ZOOM: 8;
+  static MAX_MAP_ZOOM = 8;
   map: any;
   private bounds;
+  private _controls: IControlDef<T>[];
+  private _layers: ILayerDef<T>[][];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
@@ -77,8 +96,14 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
           if (map) {
             this.map = map;
             this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-            this.addLayers(this.layers);
-            this.addControls(this.controls);
+            if (this._controls) {
+              this.addControls(this._controls);
+              this._controls = null;
+            }
+            if (this._layers) {
+              this.addLayers(this._layers);
+              this._layers = null;
+            }
             this.cdRef.markForCheck();
           }
         }),
@@ -90,6 +115,8 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._layers = null;
+    this._controls = null;
     this.layersService.clear();
     this.mapService.removeMap();
   }
@@ -119,7 +146,9 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
 
   private fitBounds(): void {
     if (this.options.fitToData && this.map) {
-      this.map.fitBounds(this.bounds);
+      if (this.bounds) {
+        this.map.fitBounds(this.bounds);
+      }
       if (this.map.getZoom() > MapComponent.MAX_MAP_ZOOM) {
         this.map.setZoom(MapComponent.MAX_MAP_ZOOM);
       }

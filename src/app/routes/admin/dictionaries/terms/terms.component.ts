@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first, filter, switchMap } from 'rxjs/operators';
+import { map, first, filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -24,6 +24,16 @@ import { DialogFunctions } from '@app/core/dialog';
   templateUrl: './terms.component.html'
 })
 export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy {
+  readonly canEdit: Observable<boolean> = this.userPermissionsService.has('DICT_TERM_EDIT');
+  readonly disableParentSelection: Observable<boolean> = this.dictionariesService.selectedDictionary.pipe(
+    map(dict => !dict.parentCode),
+  );
+  readonly selectedTerm: Observable<ITerm> = this.dictionariesService.selectedTerm;
+  readonly terms: Observable<ITerm[]> = this.dictionariesService.terms;
+  readonly dropdownTerms: Observable<ITerm[]> = this.dictionariesService.dropdownTerms;
+  readonly hasDropdownTerms: Observable<boolean> = this.dropdownTerms.pipe(
+    map(terms => !!terms),
+  );
 
   titlebar: ITitlebar = {
     title: 'terms.title',
@@ -108,31 +118,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   ngOnDestroy(): void {
     this.dictionariesServiceSubscription.unsubscribe();
     this.viewPermissionsSubscription.unsubscribe();
-  }
-
-  get canEdit(): Observable<boolean> {
-    return this.userPermissionsService.has('DICT_TERM_EDIT');
-  }
-
-  get disableParentSelection(): Observable<boolean> {
-    return this.dictionariesService.selectedDictionary
-      .map(dict => !dict.parentCode);
-  }
-
-  get selectedTerm(): Observable<ITerm> {
-    return this.dictionariesService.selectedTerm;
-  }
-
-  get terms(): Observable<ITerm[]> {
-    return this.dictionariesService.terms;
-  }
-
-  get dropdownTerms(): Observable<ITerm[]> {
-    return this.dictionariesService.dropdownTerms;
-  }
-
-  get hasDropdownTerms(): Observable<boolean> {
-    return this.dropdownTerms.map(terms => !!terms);
   }
 
   onRemove(): void {

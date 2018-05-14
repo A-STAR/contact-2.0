@@ -30,6 +30,8 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
   selectedObject$ = new BehaviorSubject<IObject>(null);
   masterRoleId$ = new BehaviorSubject<number>(null);
 
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('OBJECT_ROLE_EDIT');
+
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -91,10 +93,6 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
   ngOnDestroy(): void {
     this._dictionarySubscription.unsubscribe();
     this._masterRoleSubscription.unsubscribe();
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('OBJECT_ROLE_EDIT');
   }
 
   onSelectType(typeCode: number): void {

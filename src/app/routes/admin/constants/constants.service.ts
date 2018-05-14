@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IConstant, IConstantsState } from './constants.interface';
 
-import { DataService } from '../../../core/data/data.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class ConstantsService {
@@ -17,16 +17,15 @@ export class ConstantsService {
 
   private baseUrl = '/constants';
 
+  readonly state: Observable<IConstantsState> = this.store
+    .select(state => state.constants)
+    .pipe(filter(Boolean));
+
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
   ) {}
-
-  get state(): Observable<IConstantsState> {
-    return this.store.select(state => state.constants)
-      .filter(Boolean);
-  }
 
   fetchAll(): Observable<IConstant[]> {
     return this.dataService.readAll(this.baseUrl)

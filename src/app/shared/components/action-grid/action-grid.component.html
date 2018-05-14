@@ -216,56 +216,60 @@
       (close)="onExcelFilterClose()"
     ></app-action-grid-excel-filter>
   </div>
-
-  <div class="grid-container">
-    <div class="flex-item grow" [ngClass]="{'grid-has-details': isGridDetails}">
-        <ng-container
-          *ngIf="!isSimple; else simpleGrid"
-        >
-          <app-grid2
-            #grid
-            *ngIf="initialized"
-            [actions]="gridActions$ | async"
-            [columnIds]="columnIds"
-            [columns]="columnsDef"
-            [fullHeight]="fullHeight"
-            [ngClass]="ngClass"
-            [persistenceKey]="persistenceKey"
-            [rowCount]="rowCount"
-            [rowIdKey]="rowIdKey"
-            [rows]="rows"
-            (action)="onAction($event)"
-            (onDblClick)="onDblClick($event)"
-            (onFilter)="onRequest()"
-            (onPage)="onRequest()"
-            (onPageSize)="onRequest()"
-            (onSort)="onRequest()"
-            (onSelect)="onSelect($event)"
-          ></app-grid2>
-        </ng-container>
-
-        <ng-template #simpleGrid>
-          <app-simple-grid
-            #grid
-            *ngIf="initialized"
-            [actions]="gridActions$ | async"
-            [persistenceKey]="persistenceKey"
-            [selectionType]="selectionType"
-            [columns]="columns"
-            [rows]="rows"
-            [toolbar]="toolbarItems"
-            (action)="onAction($event)"
-            (select)="onSelect($event)"
-            (dblClick)="onDblClick($event)">
-          </app-simple-grid>
-        </ng-template>
-      </div>
-      <div class="grid-details" *ngIf="isGridDetails" [ngClass]="{ 'grid-details-with-footer': hasPagination }">
-        <app-contact-log-details
-          *ngIf="selectionActionName === 'showContactHistory'"
-          [actionData]="selectionActionData"
-          [rowData]="selection[0]"
-        ></app-contact-log-details>
-      </div>
+  <div class="flex-item grow">
+    <app-dynamic-layout
+      *ngIf="templates && initialized"
+      [layout]="layoutConfig"
+      [templates]="templates"
+    ></app-dynamic-layout>
   </div>
+</div>
 
+<ng-template #gridTpl>
+  <ng-container *ngIf="!isSimple">
+    <app-grid2
+      #grid
+      *ngIf="initialized"
+      [actions]="gridActions$ | async"
+      [columnIds]="columnIds"
+      [columns]="columnsDef"
+      [fullHeight]="fullHeight"
+      [ngClass]="ngClass"
+      [persistenceKey]="persistenceKey"
+      [rowCount]="rowCount"
+      [rowIdKey]="rowIdKey"
+      [rows]="rows"
+      (action)="onAction($event)"
+      (onDblClick)="onDblClick($event)"
+      (onFilter)="onRequest()"
+      (onPage)="onRequest()"
+      (onPageSize)="onRequest()"
+      (onSort)="onRequest()"
+      (onSelect)="onSelect($event)"
+    ></app-grid2>
+  </ng-container>
+  <ng-container *ngIf="isSimple">
+    <app-simple-grid
+      #grid
+      *ngIf="initialized"
+      [actions]="gridActions$ | async"
+      [persistenceKey]="persistenceKey"
+      [selectionType]="selectionType"
+      [columns]="columns"
+      [rows]="rows"
+      [toolbar]="toolbarItems"
+      (action)="onAction($event)"
+      (select)="onSelect($event)"
+      (dblClick)="onDblClick($event)">
+    </app-simple-grid>
+  </ng-container>
+</ng-template>
+
+<ng-template #details>
+  <app-contact-log-details
+    *ngIf="isGridDetails('showContactHistory')"
+    [offset]="{ x: '0px', y: hasPagination ? '39px' : '0px' }"
+    [actionData]="selectionActionData"
+    [rowData]="selection[0]">
+  </app-contact-log-details>
+</ng-template>

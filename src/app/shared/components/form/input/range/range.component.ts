@@ -37,8 +37,8 @@ import { defaultTo } from 'ramda';
   styleUrls: ['./range.component.scss'],
 })
 export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  @Input() min: number;
-  @Input() max: number;
+  @Input() min = 0;
+  @Input() max = 100;
   @Input() label: string;
   @Input() required = false;
   @Input() errors: any;
@@ -79,7 +79,7 @@ export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
   }
 
   writeValue(value: number): void {
-    this.value = value;
+    this.value = value || (this.max - this.min) / 2;
     this.cdRef.markForCheck();
   }
 

@@ -1,16 +1,16 @@
-import { Actions } from '@ngrx/effects';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
+import { Observable } from 'rxjs/Observable';
+import { filter, map, distinctUntilChanged } from 'rxjs/operators';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import {
   IPermissionModel, IPermissionRole,
   IPermissionsState, IValueEntity
 } from './permissions.interface';
 
-import { AbstractActionService } from '../../../core/state/action.service';
+import { AbstractActionService } from '@app/core/state/action.service';
 
 @Injectable()
 export class PermissionsService extends AbstractActionService {
@@ -41,21 +41,19 @@ export class PermissionsService extends AbstractActionService {
   static PERMISSION_DELETE_SUCCESS  = 'PERMISSION_DELETE_SUCCESS';
   static PERMISSION_SELECTED        = 'PERMISSION_SELECTED';
 
+  readonly permissions: Observable<IPermissionsState> = this.store
+    .select(state => state.permissions)
+    .pipe(filter(Boolean));
+  readonly roles: Observable<IPermissionRole[]> = this.permissions.pipe(
+    map(state => state.roles),
+    distinctUntilChanged(),
+  );
+
   constructor(
     protected actions: Actions,
     protected store: Store<IAppState>
   ) {
     super();
-  }
-
-  get permissions(): Observable<IPermissionsState> {
-    return this.store.select(state => state.permissions)
-      .filter(Boolean);
-  }
-
-  get roles(): Observable<IPermissionRole[]> {
-    return this.permissions.map(state => state.roles)
-      .pipe(distinctUntilChanged());
   }
 
   fetchRoles(): void {

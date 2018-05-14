@@ -159,7 +159,7 @@ export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setSize(size: number, relative: boolean = true): void {
-    if (size > 0) {
+    if (size >= 0) {
       const value = relative ? size : `0 0 ${size}px`;
       this.renderer.setStyle(this.elRef.nativeElement, 'flex', value);
     }

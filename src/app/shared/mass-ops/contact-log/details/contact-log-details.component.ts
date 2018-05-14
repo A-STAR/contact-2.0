@@ -18,6 +18,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 })
 export class ContactLogDetailsComponent {
 
+  @Input() offset: { x: string, y: string };
+
   @Input()
   set actionData(action: IGridAction) {
     const payload = this.actionGridService.buildRequest(action.payload);
@@ -40,7 +42,7 @@ export class ContactLogDetailsComponent {
 
   @Input()
   set rowData(row: any) {
-    this.contactFullName = row.personFullName || '';
+    this.contactFullName = (row && row.personFullName) || '';
   }
 
   columnIds = [

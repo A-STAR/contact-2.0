@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSplitModule } from 'angular-split';
 
 import { CheckModule } from '@app/shared/components/form/check/check.module';
@@ -23,7 +24,7 @@ import { DynamicLayoutComponent } from './dynamic-layout.component';
 import { GroupComponent } from './group/group.component';
 import { TemplateComponent } from './template/template.component';
 
-import { formReducer } from './control/control.reducer';
+import { dynamicLayoutReducer } from './dynamic-layout.reducer';
 
 @NgModule({
   imports: [
@@ -36,9 +37,10 @@ import { formReducer } from './control/control.reducer';
     InputModule,
     ReactiveFormsModule,
     SelectModule,
+    StoreModule.forFeature('layout', dynamicLayoutReducer),
     MultiSelectModule,
-    StoreModule.forFeature('form', formReducer),
     TabViewModule,
+    TranslateModule,
   ],
   exports: [
     DynamicLayoutComponent,
