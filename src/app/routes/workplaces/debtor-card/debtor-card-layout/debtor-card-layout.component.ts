@@ -34,7 +34,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 import { DialogFunctions } from '@app/core/dialog';
 import { invert } from '@app/core/utils';
 import { RepositoryService } from '@app/core/repository/repository.service';
-import { Person, Debt } from '@app/entities';
+import { Debtor, Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,6 +65,8 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     { isInitialised: false },
     { isInitialised: false },
   ];
+  debtorId: number;
+  debtId: number;
 
   private personSubscription: Subscription;
 
@@ -83,12 +85,12 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   ngOnInit(): void {
-    const debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
-    const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
-    if (debtorId && debtId) {
-      combineLatest(
-        this.repositoryService.fetch(Person, { id: debtorId}),
-        this.repositoryService.fetch(Debt, { id: debtId })
+    this.debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
+    this.debtId = Number(this.route.snapshot.paramMap.get('debtId'));
+    if (this.debtorId && this.debtId) {
+      this.personSubscription = combineLatest(
+        this.repositoryService.fetch(Debtor, { id: this.debtorId}).pipe(first()),
+        this.repositoryService.fetch(Debt, { id: this.debtId }).pipe(first())
       )
       .pipe(
         map(([person, debt]) => ({
@@ -117,15 +119,9 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   ngOnDestroy(): void {
-    this.personSubscription.unsubscribe();
-  }
-
-  get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
-  }
-
-  get personId$(): Observable<number> {
-    return this.debtorCardService.personId$;
+    if (this.personSubscription) {
+      this.personSubscription.unsubscribe();
+    }
   }
 
   get isCompany$(): Observable<boolean> {
@@ -157,8 +153,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         ...this.information.form.serializedUpdates,
       };
 
-      this.personId$
-        .flatMap(personId => this.debtorService.update(personId, value))
+      this.debtorService.update(this.debtorId, value)
         .pipe(first())
         .subscribe(() => {
           this.form.form.markAsPristine();
@@ -174,17 +169,13 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    combineLatest(this.personId$, this.debtId$)
-      .pipe(first())
-      .subscribe(([ personId, debtId ]) => {
-        this.setDialog();
-        this.contactRegistrationService.startRegistration({
-          contactId,
-          contactType,
-          debtId,
-          personId,
-          personRole: 1,
-        });
+    this.setDialog();
+      this.contactRegistrationService.startRegistration({
+        contactId,
+        contactType,
+        debtId: this.debtId,
+        personId: this.debtorId,
+        personRole: 1,
       });
   }
 
