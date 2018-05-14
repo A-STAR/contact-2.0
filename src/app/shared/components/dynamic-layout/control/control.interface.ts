@@ -9,6 +9,7 @@ export enum DynamicLayoutControlType {
   SELECT          = 'select',
   MULTISELECT     = 'multiselect',
   TEXT            = 'text',
+  NUMBER          = 'number',
   TEXTAREA        = 'textarea',
 }
 

@@ -71,6 +71,14 @@
       [required]="isRequired(control) | async"
     ></app-text>
 
+    <!-- Number -->
+    <app-number
+      *ngSwitchCase="'number'"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [required]="control.required"
+    ></app-number>
+
     <!-- Textarea -->
     <app-textarea
       *ngSwitchCase="'textarea'"

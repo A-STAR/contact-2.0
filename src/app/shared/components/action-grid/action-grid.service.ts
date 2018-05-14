@@ -218,6 +218,9 @@ export class ActionGridService {
           controlType: DynamicLayoutControlType.DATE
         };
       case 2:
+        return {
+          controlType: DynamicLayoutControlType.NUMBER
+        };
       case 6:
         return {
           controlType: DynamicLayoutControlType.TEXT
