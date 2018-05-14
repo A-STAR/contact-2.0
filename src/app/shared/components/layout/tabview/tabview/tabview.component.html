@@ -6,7 +6,7 @@
       <li
         #tabHeader
         *ngFor="let tab of visibleTabs"
-        (click)="selectTab($event, tab)"
+        (click)="onSelectTab($event, tab)"
         [class.active]="tab.active"
         [class.disabled]="tab.disabled"
       >
@@ -24,7 +24,7 @@
                 *ngFor="let tab of hiddenTabs"
                 class="list-group-item b0 clickable"
                 [class.active]="tab.active"
-                (click)="selectTab($event, tab)"
+                (click)="onSelectTab($event, tab)"
               >
                 {{ tab.title | translate }}
               </li>

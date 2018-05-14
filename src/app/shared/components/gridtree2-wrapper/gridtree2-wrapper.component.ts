@@ -24,7 +24,7 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
   @Input() rowHeight = 36;
 
   @Output() cellValueChanged = new EventEmitter<any>();
-  @Output() select = new EventEmitter<IGridTreeRow<T> | null>();
+  @Output() selectRow = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() move = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
@@ -76,7 +76,7 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
   }
 
   onSelect(row: any): void {
-    this.select.emit(this.gridTree2WrapperService.findSrcRowByUniqueId(this.rows, row.uniqueId));
+    this.selectRow.emit(this.gridTree2WrapperService.findSrcRowByUniqueId(this.rows, row.uniqueId));
   }
 
   onMove(row: any): void {

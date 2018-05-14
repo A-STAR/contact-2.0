@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.email.dialogs.schedule.title' | translate }}</h3>
   </div>
   <div>
-    <app-tabview (select)="onTabSelect($event)">
+    <app-tabview (selectTab)="onTabSelect($event)">
       <app-tabview-tab [title]="'widgets.email.dialogs.schedule.text'"  [disabled]="isTextTabDisabled$ | async">
         <div class="mt-lg">
           <app-email-grid-schedule-form

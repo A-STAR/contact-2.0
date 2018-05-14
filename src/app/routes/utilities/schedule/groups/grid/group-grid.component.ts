@@ -37,7 +37,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private forCurrentUser = false;
 
-  @Output() select = new EventEmitter<number>();
+  @Output() onSelect = new EventEmitter<number>();
 
   columns: ISimpleGridColumn<IGroup>[] = [
     { prop: 'id', width: 70 },
@@ -113,7 +113,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
     this.groupSubscription = this.selectedGroup$
       .filter(Boolean)
-      .subscribe(group => this.select.emit(group.id));
+      .subscribe(group => this.onSelect.emit(group.id));
   }
 
   ngOnDestroy(): void {
@@ -136,7 +136,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     this.fetch();
   }
 
-  onSelect(groups: IGroup[]): void {
+  onSelectRow(groups: IGroup[]): void {
     const group = isEmpty(groups)
       ? null
       : groups[0];

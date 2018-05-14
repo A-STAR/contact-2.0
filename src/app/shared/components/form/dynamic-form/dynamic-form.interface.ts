@@ -5,7 +5,7 @@ import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMultiLanguageConfig } from '@app/shared/components/form/multilanguage/multilanguage.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
-import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
+import { ISegmentedInputOption } from '@app/shared/components/form/input/segmented-input/segmented-input.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IScriptEditorConfig } from '@app/shared/components/form/script-editor/script-editor.interface';
 

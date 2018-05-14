@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -9,6 +9,7 @@ import { IEmployment } from '@app/routes/workplaces/core/employment/employment.i
 
 import { EmploymentService } from '@app/routes/workplaces/core/employment/employment.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -41,7 +42,7 @@ export class EmploymentCardComponent implements OnInit {
     private employmentService: EmploymentService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -78,8 +79,7 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
-    this.router.navigate([ url ]);
+    this.routingService.navigateToParent(this.route);
   }
 
   onSubmit(): void {

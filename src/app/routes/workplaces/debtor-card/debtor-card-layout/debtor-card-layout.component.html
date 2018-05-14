@@ -16,7 +16,7 @@
 
   <!-- Tabstrip -->
   <div class="flex-item grow">
-    <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
+    <app-tabview [fullHeight]="true" [noMargin]="true" (selectTab)="onTabSelect($event)">
       <app-tabview-tab [title]="'debtor.information.title'">
         <app-debtor-information *ngIf="tabs[0].isInitialised"></app-debtor-information>
       </app-tabview-tab>

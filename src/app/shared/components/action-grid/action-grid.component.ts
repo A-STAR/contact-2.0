@@ -120,7 +120,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
-  @Output() select = new EventEmitter<IAGridSelected>();
+  @Output() selectRow = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridAction>();
   // emits when dialog closes
   @Output() close = new EventEmitter<ICloseAction | IActionGridAction>();
@@ -364,7 +364,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.currentSelectionAction && selected && selected.length) {
       this.onSelectionAction(selected);
     }
-    this.select.emit(selected);
+    this.selectRow.emit(selected);
   }
 
   getExportableColumns(): IAGridExportableColumn[] {
@@ -391,6 +391,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   onExcelFilterClose(): void {
     this.displayExcelFilter = false;
     this.cdRef.markForCheck();
+  }
+
+  onDetailsClose(): void {
+    this.gridDetails$.next(false);
+    this.grid.deselectAll();
   }
 
   get gridOptions(): GridOptions {
@@ -495,21 +500,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           map(active => active ? 'button-active' : null)
         ),
       }),
-      hideDetails: (_) => ({
-        type: TitlebarItemTypeEnum.BUTTON_CLOSE,
-        action: () => {
-          this.gridDetails$.next(false);
-          this.grid.deselectAll();
-        },
-        enabled: this.gridDetails$
-      })
     };
     return {
       title: config.title,
       items: config.items
         .concat([
           { name: 'filter', permissions: null },
-          { name: 'hideDetails', permissions: null }
         ])
         .map(item => titlebarItems[item.name](item.permissions)),
     };

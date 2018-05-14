@@ -1,4 +1,4 @@
-<app-tabview [fullHeight]="true" (select)="onTabSelect($event)">
+<app-tabview [fullHeight]="true" (selectTab)="onTabSelect($event)">
   <app-tabview-tab *ngFor="let grid of grids" [title]="grid.title" >
     <app-work-task-grid
       *ngIf="grid.isInitialised"

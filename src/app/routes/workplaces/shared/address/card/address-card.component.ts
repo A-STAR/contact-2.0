@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -10,6 +10,7 @@ import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form-2/dy
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { AddressService } from '@app/routes/workplaces/core/address/address.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -39,7 +40,7 @@ export class AddressCardComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -76,8 +77,7 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
-    this.router.navigate([ url ]);
+    this.routingService.navigateToParent(this.route);
   }
 
   get canSubmit(): boolean {

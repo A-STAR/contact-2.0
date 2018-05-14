@@ -11,7 +11,7 @@
         [columns]="columnsFrom"
         [rows]="rowsFrom"
         (dblClick)="onFromDoubleClick($event)"
-        (select)="onFromSelect()"
+        (selectRow)="onFromSelect()"
       ></app-simple-grid>
     </div>
     <div class="buttons-container">
@@ -35,7 +35,7 @@
         [columns]="columnsTo"
         [rows]="rowsTo"
         (dblClick)="onToDoubleClick($event)"
-        (select)="onToSelect()"
+        (selectRow)="onToSelect()"
       ></app-simple-grid>
     </div>
   </div>

@@ -4,9 +4,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-  align-items: flex-start;
+  justify-content: space-around;
   border-bottom: 1px solid $form-toolbar-border-color;
   padding-top: 5px;
   padding-bottom: 3px;
@@ -25,7 +23,7 @@
  */
 .titlebar-zone {
   order: 0;
-  flex: 1 0 40%;
+  flex: 0 0 auto;
   align-self: auto;
   overflow: hidden;
   // The title itself
