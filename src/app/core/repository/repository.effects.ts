@@ -21,13 +21,15 @@ export class RepositoryEffects {
   readonly fetchEntity$: Observable<IRepositoryFetchSuccessAction> = this.actions$.pipe(
     ofType(RepositoryActionType.FETCH),
     mergeMap((action: IRepositoryFetchAction) => {
-      return this.fetch(action.payload.entityKey, action.payload.params).pipe(
+      const entityDef = this.entityDefs.find(e => e.entityKey === action.payload.entityKey);
+      return this.fetch(entityDef, action.payload.params).pipe(
         map(data => {
           return {
             type: RepositoryActionType.FETCH_SUCCESS,
             payload: {
               entityKey: action.payload.entityKey,
               data,
+              primaryKey: entityDef.primaryKey,
               serializedParams: JSON.stringify(action.payload.params),
             }
           } as IRepositoryFetchSuccessAction;
@@ -42,8 +44,7 @@ export class RepositoryEffects {
     @Inject(REPOSITORY_ENTITY) private entityDefs: IEntityDef[],
   ) {}
 
-  private fetch(entity: string, params: Record<string, any>): Observable<any[]> {
-    const entityDef = this.entityDefs.find(e => e.entityKey === entity);
+  private fetch(entityDef: IEntityDef, params: Record<string, any>): Observable<any[]> {
     const serializedParamKeys = this.serializeKeys(Object.keys(params));
     const url = entityDef.urls.find(u => {
       const urlParams = u.match(/\{.+?\}/gi).map(i => i.slice(1, -1));

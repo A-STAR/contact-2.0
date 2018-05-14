@@ -1,5 +1,6 @@
 export interface IEntityDef {
   entityKey: string;
+  primaryKey: string;
   urls: string[];
 }
 
@@ -10,16 +11,16 @@ export enum RepositoryStatus {
 }
 
 export interface IRepositoryState {
-  // Entity ID
+  // Entity Name
   [key: string]: {
     data: {
-      // Record ID
+      // Record Primary Key
       [key: number]: any;
     };
     index: {
       // Serialized Params
       [key: string]: {
-        ids: number[];
+        primaryKeys: number[];
         status: RepositoryStatus;
       };
     };
@@ -48,6 +49,7 @@ export interface IRepositoryFetchSuccessAction extends IRepositoryGenericAction 
   payload: {
     entityKey: string;
     data: any[];
+    primaryKey: string;
     serializedParams: string;
   };
 }

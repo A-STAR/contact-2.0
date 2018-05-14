@@ -16,7 +16,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RepoModule.forRoot(),
-    RepoModule.withEntity({ entityKey: 'user', urls: [ '/users/{id}' ] }),
+    RepoModule.withEntity({ entityKey: 'user', primaryKey: 'id', urls: [ '/users/{id}' ] }),
     RouterModule.forChild(routes),
     SharedModule,
   ],
