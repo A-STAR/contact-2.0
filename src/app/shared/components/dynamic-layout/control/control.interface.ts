@@ -3,6 +3,7 @@ import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-lay
 export enum DynamicLayoutControlType {
   CHECKBOX        = 'checkbox',
   DATE            = 'date',
+  DATETIME        = 'datetimepicker',
   DIALOGSELECT    = 'dialogmultiselect',
   GRIDSELECT      = 'gridselect',
   PASSWORD        = 'password',

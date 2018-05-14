@@ -213,7 +213,6 @@ export class ActionGridService {
   private getCustomOperationControlOptions(param: IMetadataCustomActionParam): Partial<IDynamicLayoutItem> {
     switch (param.paramTypeCode) {
       case 1:
-      case 10:
         return {
           controlType: DynamicLayoutControlType.DATE
         };
@@ -258,6 +257,10 @@ export class ActionGridService {
       case 9:
         return {
           controlType: DynamicLayoutControlType.CHECKBOX
+        };
+      case 10:
+        return {
+          controlType: DynamicLayoutControlType.DATETIME
         };
     }
   }

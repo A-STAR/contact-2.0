@@ -16,6 +16,14 @@
       [required]="isRequired(control) | async"
     ></app-datepicker>
 
+    <!-- Date time -->
+    <app-datetimepicker
+      *ngSwitchCase="'datetimepicker'"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [required]="control.required"
+    ></app-datetimepicker>
+
     <!-- Grid Select -->
     <app-grid-select
       *ngSwitchCase="'gridselect'"
