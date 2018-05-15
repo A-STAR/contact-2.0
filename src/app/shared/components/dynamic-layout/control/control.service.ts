@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged, first, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map } from 'rxjs/operators';
 import { getIn } from 'immutable';
 import { equals } from 'ramda';
 
@@ -156,6 +156,7 @@ export class ControlService implements OnDestroy {
       const valueSubscription = group.valueChanges
         .pipe(
           distinctUntilChanged(equals),
+          debounceTime(100),
         )
         .subscribe(value => this.dispatchChangeValueAction(name, value));
       const statusSubscription = combineLatest(
@@ -167,6 +168,9 @@ export class ControlService implements OnDestroy {
           .pipe(
             distinctUntilChanged(equals)
           )
+      )
+      .pipe(
+        debounceTime(100),
       )
       .subscribe(([ status ]) => this.dispatchChangeStatusAction(name, status === 'VALID', group.dirty));
       this.formSubscription.add(valueSubscription);

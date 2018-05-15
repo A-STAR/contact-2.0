@@ -3,6 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { ContextOperator, IAppContext, IContext, IContextExpression } from './dynamic-layout.interface';
@@ -38,7 +39,11 @@ export class ContextService {
   calculate(context: IContext): Observable<any> {
     const storeReferences = this.findStoreReferences(context);
     return combineLatest(
-      this.store,
+      this.store.pipe(
+        // TODO(d.maltsev): remove ContextOperator.EVAL
+        // For now, only changes in layout will be reflected here for performance reasons
+        distinctUntilChanged((a: any, b: any) => equals(a.layout, b.layout)),
+      ),
       this.entityAttributesService.bag$,
       this.userConstantsService.bag(),
       this.userPermissionsService.bag(),
