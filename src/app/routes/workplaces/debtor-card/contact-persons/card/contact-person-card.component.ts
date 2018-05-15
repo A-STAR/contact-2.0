@@ -9,6 +9,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
@@ -25,11 +27,11 @@ import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
+
 import { invert } from '@app/core/utils';
 
 import { layout } from './contact-person-card.layout';
-import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,6 +116,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
 
+  private subscription = new Subscription();
+
   templates: Record<string, TemplateRef<any>>;
 
   constructor(
@@ -156,7 +160,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
           this.layout.setData({ default: rest, link: { linkTypeCode } });
         });
     }
-    this.layout.canSubmit().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    this.subscription.add(subscription);
   }
 
   onContactPersonFormClear(): void {

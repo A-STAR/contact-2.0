@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -47,6 +47,7 @@ export class ControlService implements OnDestroy {
 
   private controls: IDynamicLayoutItemProperties<IDynamicLayoutControl>[];
   private data: Record<string, any> = {};
+  private groupNames: Set<string>;
   private groups = new Map<string, FormGroup>();
   private key: string;
 
@@ -75,8 +76,8 @@ export class ControlService implements OnDestroy {
 
     this.key = key;
 
-    const forms = new Set(this.controls.map(control => this.getControlForm(control.item)));
-    forms.forEach(form => this.createFormGroup(form, key));
+    this.groupNames = new Set(this.controls.map(control => this.getControlForm(control.item)));
+    this.groupNames.forEach(form => this.createFormGroup(form, key));
 
     this.controls.forEach(control => {
       const { enabled, display } = control.streams;
@@ -95,6 +96,18 @@ export class ControlService implements OnDestroy {
       const { dirty, valid } = getIn(state, [ 'layout', this.key, 'forms', form, 'status' ], {});
       return dirty && valid;
     });
+  }
+
+  canSubmitAll(): Observable<boolean> {
+    return this.store.pipe(
+      select((state: any) => getIn(state, [ 'layout', this.key, 'forms' ], {})),
+      select(forms => {
+        const groups = Array.from(this.groupNames);
+        const valid = groups.reduce((acc, name) => acc && getIn(forms, [ name, 'status', 'valid' ], false), true);
+        const dirty = groups.reduce((acc, name) => acc || getIn(forms, [ name, 'status', 'dirty' ], false), false);
+        return valid && dirty;
+      })
+    );
   }
 
   reset(form: string = ControlService.DEFAULT_GROUP_NAME): void {

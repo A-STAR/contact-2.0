@@ -55,6 +55,10 @@ export class DynamicLayoutComponent implements OnInit {
     return this.controlService.canSubmit(form);
   }
 
+  canSubmitAll(): Observable<boolean> {
+    return this.controlService.canSubmitAll();
+  }
+
   resetForm(form?: string): void {
     this.formService.reset(form);
   }
