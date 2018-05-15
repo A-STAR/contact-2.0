@@ -25,7 +25,7 @@ export class CustomOperationService {
   }
 
   execute(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
-    return this.dataService.create('synch/mass/customOperation', {}, {
+    return this.dataService.create('/synch/mass/customOperation', {}, {
       operationId,
       idData: this.actionGridService.buildRequest(idData),
       actionData
@@ -36,7 +36,7 @@ export class CustomOperationService {
   }
 
   schedule(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
-    return this.dataService.create('asynch/mass/customOperation', {}, {
+    return this.dataService.create('/asynch/mass/customOperation', {}, {
       operationId,
       idData: this.actionGridService.buildRequest(idData),
       actionData

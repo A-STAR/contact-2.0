@@ -197,7 +197,7 @@ export class ActionGridService {
   getActionParamsConfig(actionId: number, params: IMetadataActionParam[]): IDynamicLayoutConfig {
     return {
       key: `mass/${actionId}`,
-      items: params.map(param => ({
+      items: params.sort((p1, p2) => p1.sortOrder - p2.sortOrder).map(param => ({
         label: param.name,
         name: param.systemName,
         type: DynamicLayoutItemType.CONTROL,
