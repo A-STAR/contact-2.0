@@ -47,6 +47,7 @@ import {
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { ILookupOperation } from '@app/core/lookup/lookup.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ExcelFilteringService } from './excel-filtering.service';
@@ -144,6 +145,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentSelectionAction: IMetadataAction;
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
+  private customOperations: ILookupOperation[];
 
   dialog: string;
   dialogData: IGridAction;
@@ -208,6 +210,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
     this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
+
+    // TODO (i.kibisov): remove mock
+    of([ { id: 1, name: 'customOperation' } ])
+    .subscribe(operations => {
+      this.customOperations = operations;
+    });
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
@@ -666,6 +674,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         of(true) : selection.length && of(true),
       changePersonType: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('PERSON_INFO_EDIT') : selection.length && permissions.has('PERSON_INFO_EDIT'),
+      ...actions
+        .filter(action => !!action.id)
+        .reduce((acc, action) => ({
+          ...acc,
+          [action.action]: () => !!this.customOperations.find(o => o.id === action.id)
+        }), {})
     };
   }
 }
