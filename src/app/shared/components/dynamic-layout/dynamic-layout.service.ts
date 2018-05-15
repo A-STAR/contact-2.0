@@ -32,7 +32,7 @@ export class DynamicLayoutService {
     private contextService: ContextService,
     private formService: ControlService,
     private metadataService: MetadataService,
-  ) {}
+  ) { }
 
   get key(): string {
     return this._key;

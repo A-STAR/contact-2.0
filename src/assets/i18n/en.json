@@ -364,6 +364,13 @@
           "rowsSelected": "selected",
           "rowsTotal": "total"
         }
+      },
+      "dynamic-layout": {
+        "metadata": {
+          "errors": {
+            "fetch": "Failed to fetch dynamic layout form config."
+          }
+        }
       }
     }
   },

@@ -2,8 +2,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSplitModule } from 'angular-split';
+
+import { reducer as dynamicLayoutReducer } from './dynamic-layout.reducer';
+import { DynamicLayoutEffects } from '@app/shared/components/dynamic-layout/dynamic-layout.effects';
 
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { DateTimeModule } from '@app/shared/components/form/datetime/datetime.module';
@@ -22,8 +26,6 @@ import { DynamicLayoutComponent } from './dynamic-layout.component';
 import { GroupComponent } from './group/group.component';
 import { TemplateComponent } from './template/template.component';
 
-import { dynamicLayoutReducer } from './dynamic-layout.reducer';
-
 @NgModule({
   imports: [
     AngularSplitModule,
@@ -35,6 +37,7 @@ import { dynamicLayoutReducer } from './dynamic-layout.reducer';
     ReactiveFormsModule,
     SelectModule,
     StoreModule.forFeature('layout', dynamicLayoutReducer),
+    EffectsModule.forFeature([DynamicLayoutEffects]),
     TabViewModule,
     TranslateModule,
   ],

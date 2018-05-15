@@ -43,12 +43,32 @@ export class DynamicLayoutComponent implements OnInit {
     return this.layoutService.group;
   }
 
+  enableFormGroup(groupName?: string): void {
+    this.controlService.enableFormGroup(groupName);
+  }
+
+  disableFormGroup(groupName?: string): void {
+    this.controlService.disableFormGroup(groupName);
+  }
+
   canSubmit(form?: string): Observable<boolean> {
     return this.controlService.canSubmit(form);
   }
 
+  canSubmitAll(): Observable<boolean> {
+    return this.controlService.canSubmitAll();
+  }
+
+  resetForm(form?: string): void {
+    this.formService.reset(form);
+  }
+
   getData(form?: string): any {
     return this.formService.getData(form);
+  }
+
+  setData(data: Record<string, any>): void {
+    this.formService.setData(data);
   }
 
   ngOnInit(): void {

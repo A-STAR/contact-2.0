@@ -1,4 +1,5 @@
 import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-layout.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export enum DynamicLayoutControlType {
   CHECKBOX   = 'checkbox',
@@ -20,6 +21,9 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
 
 export interface IDynamicLayoutGridSelectControl extends IDynamicLayoutGenericControl {
   controlType: DynamicLayoutControlType.GRIDSELECT;
+  // Optional:
+  dictCode?: number;
+  lookupKey?: ILookupKey;
 }
 
 export interface IDynamicLayoutTextControl extends IDynamicLayoutGenericControl {

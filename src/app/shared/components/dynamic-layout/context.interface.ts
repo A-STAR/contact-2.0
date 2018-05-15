@@ -12,10 +12,12 @@ export enum ContextOperator {
   NOT                  = 'not',
   PERMISSION_IS_TRUE   = 'permissionIsTrue',
   PERMISSION_NOT_EMPTY = 'permissionNotEmpty',
+  PERSON_ATTRIBUTES    = 'personAttributes',
 
   // Binary
-  CONTAINS = 'contains',
-  EQUALS   = 'equals',
+  CONSTANT_CONTAINS   = 'constantContains',
+  EQUALS              = 'equals',
+  PERMISSION_CONTAINS = 'permissionContains',
 
   // Arbitrary arguments list length
   AND = 'and',
@@ -30,11 +32,13 @@ export type IContextUnaryOperator =
   | ContextOperator.NOT
   | ContextOperator.PERMISSION_IS_TRUE
   | ContextOperator.PERMISSION_NOT_EMPTY
+  | ContextOperator.PERSON_ATTRIBUTES
 ;
 
 export type IContextBinaryOperator =
-  | ContextOperator.CONTAINS
+  | ContextOperator.CONSTANT_CONTAINS
   | ContextOperator.EQUALS
+  | ContextOperator.PERMISSION_CONTAINS
 ;
 
 export type IContextVariadicOperator =
