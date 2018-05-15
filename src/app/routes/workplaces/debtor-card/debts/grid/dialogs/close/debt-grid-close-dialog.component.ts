@@ -10,8 +10,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators/first';
-import { switchMap } from 'rxjs/operators/switchMap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -20,9 +18,9 @@ import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/comp
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -51,8 +49,8 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
     private debtorService: DebtorService,
+    private workplacesService: WorkplacesService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -87,7 +85,7 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
     };
     const debtorId = this.debtorService.debtorId$.value;
     if (debtorId) {
-      this.debtService.changeStatus(debtorId, this.debt.id, data, false)
+      this.workplacesService.changeStatus(debtorId, this.debt.id, data, false)
       .subscribe(() => {
         this.submit.emit();
         this.onClose();

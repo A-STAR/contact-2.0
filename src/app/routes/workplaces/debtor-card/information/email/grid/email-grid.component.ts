@@ -14,12 +14,12 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolba
 
 import { EmailService } from '../email.service';
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
@@ -75,13 +75,13 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
-    private debtService: DebtService,
     private debtorService: DebtorService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private workplacesService: WorkplacesService,
   ) {
     super();
   }
@@ -221,7 +221,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
           map(hasPermission => hasPermission || this.ignorePermissions),
         ),
       this.debtorService.debt$.pipe(
-        map(debt => this.debtService.isDebtActive(debt)),
+        map(debt => this.workplacesService.isDebtActive(debt)),
       ),
       this.selectedEmail$.flatMap(email => email
         ? this.userPermissionsService

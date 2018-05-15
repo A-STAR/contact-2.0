@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs/Observable';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,13 +20,12 @@ export class DebtsComponent {
     private debtorService: DebtorService,
   ) {}
 
-  get debtId$(): Observable<number> {
-    return this.debtorService.debtId$;
-  }
+  readonly debtId$: Observable<number> = this.debtorService.debtId$;
 
-  get debtStatusCode$(): Observable<number> {
-    return this.debtorService.debtId$.map(debt => debt && debt.statusCode);
-  }
+  readonly debtStatusCode$: Observable<number> = this.debtorService.debt$
+    .pipe(
+      map(debt => debt && debt.statusCode)
+    );
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;

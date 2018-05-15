@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Debt } from './mark.interface';
-
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+
+import { Debt } from '@app/entities';
 
 @Injectable()
 export class MarkService {

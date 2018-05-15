@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
-import { Debt } from '@app/entities';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -17,6 +16,7 @@ import { DateRendererComponent, NumberRendererComponent } from '@app/shared/comp
 import { DialogFunctions } from '@app/core/dialog';
 
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +24,9 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
   selector: 'app-debt-grid',
   templateUrl: './debt-grid.component.html',
 })
-export class DebtGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class DebtGridComponent extends DialogFunctions implements OnDestroy {
+
+  readonly debts$ = this.debtorService.debts$;
 
   readonly selectedDebt$ = this.debtorService.debt$;
 
@@ -148,12 +150,6 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    this.debtUpdateSub = this.debtorService
-      .getAction('DEBTOR_DEBT_UPDATED')
-      .subscribe(_ => this.fetch());
   }
 
   ngOnDestroy(): void {

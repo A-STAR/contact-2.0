@@ -1,6 +1,6 @@
 import { Field, FieldType } from '@app/core/repository/repository.utils';
 
-export class Debtor {
+export class Person {
   @Field({ type: FieldType.DATE })
   birthDate: Date;
   @Field()
@@ -22,9 +22,9 @@ export class Debtor {
   @Field()
   middleName: string;
   @Field()
-  stageCode: number;
+  personId: number;
   @Field()
-  stringValue10: string;
+  stageCode: number;
   @Field()
   stringValue1: string;
   @Field()
@@ -43,6 +43,8 @@ export class Debtor {
   stringValue8: string;
   @Field()
   stringValue9: string;
+  @Field()
+  stringValue10: string;
   @Field()
   typeCode: number;
 }

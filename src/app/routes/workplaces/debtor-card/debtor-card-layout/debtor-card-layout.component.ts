@@ -17,12 +17,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IPerson } from '../debtor.interface';
-import { Debt } from '../../debt-processing/debt-processing.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from '../debtor.service';
-import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -32,6 +30,8 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 
 import { DialogFunctions } from '@app/core/dialog';
 import { invert } from '@app/core/utils';
+
+import { Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +70,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
     private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
@@ -136,7 +135,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
 
  readonly isContactRegistrationDisabled$: Observable<boolean> = this.debtorService.debt$
     .pipe(
-      mergeMap(debt => this.debtService.canRegisterContactForDebt$(debt)),
+      mergeMap(debt => this.debtorService.canRegisterContactForDebt$(debt)),
       map(invert),
     );
 
@@ -147,7 +146,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         ...this.information.form.serializedUpdates,
       };
 
-      this.debtorService.update(this.debtorId, value)
+      this.debtorService.updateDebtor(value)
         .pipe(first())
         .subscribe(() => {
           this.form.form.markAsPristine();

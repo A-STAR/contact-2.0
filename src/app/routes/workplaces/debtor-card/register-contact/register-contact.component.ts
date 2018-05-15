@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } f
 import { Observable } from 'rxjs/Observable';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { DebtService } from '@app/core/debt/debt.service';
 
 import { AddressGridComponent } from './address/address.component';
 import { MiscComponent } from './misc/misc.component';
@@ -23,28 +22,17 @@ export class RegisterContactComponent {
 
   constructor(
     private debtorService: DebtorService,
-    private debtService: DebtService,
   ) {}
 
-  get entityType(): number {
-    return 18;
-  }
+  entityType = 18;
 
-  get entityId$(): Observable<number> {
-    return this.debtorService.debtorId$;
-  }
+  readonly entityId$: Observable<number> = this.debtorService.debtorId$;
 
-  get canRegisterPhones$(): Observable<boolean> {
-    return this.debtService.canRegisterIncomingCalls$;
-  }
+  readonly canRegisterPhones$: Observable<boolean> = this.debtorService.canRegisterIncomingCalls$;
 
-  get canRegisterAddresses$(): Observable<boolean> {
-    return this.debtService.canRegisterAddressVisits$;
-  }
+  readonly canRegisterAddresses$: Observable<boolean> = this.debtorService.canRegisterAddressVisits$;
 
-  get canRegisterMisc$(): Observable<boolean> {
-    return this.debtService.canRegisterSpecialOrOfficeVisit$;
-  }
+  readonly canRegisterMisc$: Observable<boolean> = this.debtorService.canRegisterSpecialOrOfficeVisit$;
 
   onAddressAction(contactId: number): void {
     this.submit.emit({ contactType: 3, contactId });

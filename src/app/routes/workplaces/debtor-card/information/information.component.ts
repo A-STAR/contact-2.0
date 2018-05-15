@@ -5,7 +5,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
-import { Debt } from '@app/core/app-modules/app-modules.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -15,6 +14,8 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { CompanyComponent } from '@app/routes/workplaces/debtor-card/information/company/company.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { PersonComponent } from '@app/routes/workplaces/debtor-card/information/person/person.component';
+
+import { Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,42 +40,26 @@ export class DebtorInformationComponent {
     private routingService: RoutingService
   ) {}
 
-  get debt$(): Observable<Debt> {
-    return this.debtorService.debtId$;
-  }
+  readonly debt$: Observable<Debt> = this.debtorService.debt$;
 
-  get debtId$(): Observable<number> {
-    return this.debtorService.debtId$;
-  }
+  readonly debtId$: Observable<number> = this.debtorService.debtId$;
 
-  get personId$(): Observable<number> {
-    return this.debtorService.debtorId$;
-  }
+  readonly personId$: Observable<number> = this.debtorService.debtorId$;
 
   get form(): DynamicFormComponent {
     const component = this.companyComponent || this.personComponent;
     return component && component.form;
   }
 
-  get debtorTypeCode$(): Observable<number> {
-    return this.debtorService.person$.map(person => person && person.typeCode);
-  }
+  readonly debtorTypeCode$: Observable<number> = this.debtorService.debtor$.map(debtor => debtor && debtor.typeCode);
 
-  get isPerson$(): Observable<boolean> {
-    return this.debtorService.isPerson$;
-  }
+  readonly isPerson$: Observable<boolean> = this.debtorService.isPerson$;
 
-  get isCompany$(): Observable<boolean> {
-    return this.debtorService.isCompany$;
-  }
+  readonly isCompany$: Observable<boolean> = this.debtorService.isCompany$;
 
-  get phoneContactType(): number {
-    return 1;
-  }
+  readonly phoneContactType = 1;
 
-  get personRole(): number {
-    return 1;
-  }
+  readonly personRole = 1;
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;

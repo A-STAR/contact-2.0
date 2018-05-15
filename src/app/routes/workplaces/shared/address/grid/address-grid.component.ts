@@ -15,12 +15,10 @@ import { first, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
-import { Debt } from '@app/routes/workplaces/shared/debt/debt.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '@app/routes/workplaces/core/address/address.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -28,6 +26,8 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd, combineLatestOr, isEmpty } from '@app/core/utils';
+import { Debt } from '@app/entities';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -223,14 +223,14 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
+    private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
     this.debtSubscription = this._debtId$
-      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null))
+      .flatMap(debtId => debtId ? this.workplacesService.fetchDebt(debtId) : of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();

@@ -23,10 +23,10 @@ import {
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -56,10 +56,10 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
-    private debtService: DebtService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private workplacesService: WorkplacesService,
   ) {}
 
   ngOnInit(): void {
@@ -169,7 +169,7 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
     };
     this.debtorService.debtorId$
       .switchMap(personId => {
-        return this.debtService.changeStatus(personId, this.debt.id, value, false);
+        return this.workplacesService.changeStatus(personId, this.debt.id, value, false);
       })
       .pipe(first())
       .subscribe(() => {

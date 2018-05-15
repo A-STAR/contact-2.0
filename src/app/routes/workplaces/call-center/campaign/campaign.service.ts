@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 
 import { ICampaignDebt, ICampaignProcessedDebt } from './campaign.interface';
 
 import { DataService } from '@app/core/data/data.service';
-import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 interface ICampaignRouteParams {
   campaignId: number;
@@ -19,14 +20,14 @@ export class CampaignService {
 
   constructor(
     private dataService: DataService,
-    private debtService: DebtService,
+    private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
   ) {}
 
-  get isCampaignDebtActive$(): Observable<boolean> {
-    return this._campaignDebt$.map(debt => this.debtService.isDebtActive(debt));
-  }
+  readonly isCampaignDebtActive$: Observable<boolean> = this._campaignDebt$.pipe(
+    map(debt => this.workplacesService.isDebtActive(debt))
+  );
 
   get campaignDebt$(): Observable<ICampaignDebt> {
     return this._campaignDebt$;
@@ -48,7 +49,7 @@ export class CampaignService {
 
   changeStatusToProblematic(data: any): any {
     const { debtId, personId } = this._campaignDebt$.value;
-    return this.debtService.changeStatus(personId, debtId, { ...data, statusCode: 9 }, true);
+    return this.workplacesService.changeStatus(personId, debtId, { ...data, statusCode: 9 }, true);
   }
 
   fetchProcessedDebtsForCurrentCampaign(): Observable<ICampaignProcessedDebt[]> {

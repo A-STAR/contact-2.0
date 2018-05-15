@@ -33,7 +33,7 @@ import { WSService } from './ws/ws.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
 import { environment } from '../../environments/environment';
-import { Debt, Debtor, User } from '@app/entities';
+import { Debt, Person, User } from '@app/entities';
 
 /**
  * NOTE: this is a quick patch that places the operators
@@ -66,7 +66,7 @@ import 'rxjs/add/operator/withLatestFrom';
       urls: [ '/users/{id}' ],
     }),
     RepositoryModule.withEntity({
-      entityClass: Debtor,
+      entityClass: Person,
       urls: [ '/persons/{id}' ],
     }),
     RepositoryModule.withEntity({
