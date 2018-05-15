@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/operators';
 
-import { IDebt, IDebtsActionType, IDebtsState } from './debts.interface';
+import { Debt, IDebtsActionType, IDebtsState } from './debts.interface';
 
 @Injectable()
 export class DebtsService {
@@ -15,7 +15,7 @@ export class DebtsService {
     private store: Store<IDebtsState>,
   ) {}
 
-  getDebt(debtId: number): Observable<IDebt> {
+  getDebt(debtId: number): Observable<Debt> {
     return this.store
       .select(state => state.debts && state.debts[debtId])
       .pipe(

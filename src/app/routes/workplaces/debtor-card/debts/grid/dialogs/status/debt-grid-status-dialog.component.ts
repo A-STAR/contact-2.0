@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilChanged, first, startWith } from 'rxjs/operators';
 
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 import {
   IDynamicFormControl,
   IDynamicFormRadioControl,
@@ -36,7 +36,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() debt: IDebt;
+  @Input() debt: Debt;
 
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();

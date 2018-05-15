@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs/operators/switchMap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
@@ -36,7 +36,7 @@ import { toOption } from '@app/core/utils';
 export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() debt: IDebt;
+  @Input() debt: Debt;
   @Input() statusCode: number;
 
   @Output() close = new EventEmitter<void>();

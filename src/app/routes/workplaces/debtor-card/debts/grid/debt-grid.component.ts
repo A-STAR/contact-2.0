@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -25,8 +25,8 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
   templateUrl: './debt-grid.component.html',
 })
 export class DebtGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  readonly debts$ = this.debtorService.debts$;
-  readonly selectedDebt$ = this.debtorService.debtId$;
+
+  readonly selectedDebt$ = this.debtorService.debt$;
 
   readonly selection$ = this.debtorService.debtId$.pipe(
     map(debt => debt ? [ debt ] : []),
@@ -118,7 +118,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     },
   ];
 
-  columns: ISimpleGridColumn<IDebt>[] = [
+  columns: ISimpleGridColumn<Debt>[] = [
     { prop: 'id' },
     { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
     { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
@@ -160,12 +160,12 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     this.debtUpdateSub.unsubscribe();
   }
 
-  onDoubleClick(debt: IDebt): void {
+  onDoubleClick(debt: Debt): void {
     this.debtorService.debtId$.next(debt.id);
     this.onEdit();
   }
 
-  onSelect(debts: IDebt[]): void {
+  onSelect(debts: Debt[]): void {
     const debtId = isEmpty(debts)
       ? null
       : debts[0].id;

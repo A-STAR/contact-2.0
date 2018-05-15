@@ -11,19 +11,19 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IPerson } from '../../debtor.interface';
-import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtorService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { DebtorService } from '../../debtor.service';
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { range } from '../../../../../core/utils';
+import { range } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,9 +65,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
     this.personSubscription.unsubscribe();
   }
 
-  get debtor$(): Observable<IPerson> {
-    return this.debtorService.person$;
-  }
+  readonly debtor$: Observable<IPerson> = this.debtorService.debtor$;
 
   protected getControls(stringValues: IUserConstant, _: boolean, attributes: IEntityAttributes): IDynamicFormControl[] {
     const displayedStringValues = stringValues.valueS.split(',').map(Number);

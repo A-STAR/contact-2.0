@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
 
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
@@ -34,7 +34,7 @@ export class DebtComponent implements AfterViewInit, OnInit {
   @ViewChild('portfolioLog', { read: TemplateRef }) portfolioLog: TemplateRef<any>;
   @ViewChild('componentLog', { read: TemplateRef }) componentLog: TemplateRef<any>;
 
-  debt: IDebt;
+  debt: Debt;
   templates: Record<string, TemplateRef<any>>;
 
   isDisabled$ = of(true);

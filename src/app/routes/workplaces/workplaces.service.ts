@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError, map } from 'rxjs/operators';
 
-import { IDebt } from './workplaces.interface';
+import { Debt } from './workplaces.interface';
 import { ITreeNode } from '../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../core/data/data.service';
@@ -18,7 +18,7 @@ export class WorkplacesService {
   ) {}
 
   // TODO(d.maltsev): store debts cache for call center, contact registration and debtor card
-  fetchDebtsForPerson(personId: number): Observable<IDebt[]> {
+  fetchDebtsForPerson(personId: number): Observable<Debt[]> {
     return this.dataService
       .readAll('/persons/{personId}/debts', { personId })
       .pipe(
@@ -27,7 +27,7 @@ export class WorkplacesService {
   }
 
   // TODO(d.maltsev): store debts cache for call center, contact registration and debtor card
-  fetchDebt(debtId: number): Observable<IDebt> {
+  fetchDebt(debtId: number): Observable<Debt> {
     return this.dataService
       .read('/debts/{debtId}', { debtId })
       .pipe(

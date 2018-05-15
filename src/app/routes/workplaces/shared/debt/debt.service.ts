@@ -4,11 +4,13 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { map, catchError } from 'rxjs/operators';
 
-import { IAddress, IPhone, IDebt, IDebtNextCall } from './debt.interface';
+import { IAddressOrPhone, IDebtNextCall } from './debt.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { Debt } from '@app/entities';
 
 @Injectable()
 export class DebtService {
@@ -32,14 +34,14 @@ export class DebtService {
   readonly canRegisterIncomingCalls$ = this.userPermissionsService
     .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_INCOMING_CALL);
 
-  canRegisterIncomingCall$(phone: IPhone): Observable<boolean> {
+  canRegisterIncomingCall$(phone: IAddressOrPhone): Observable<boolean> {
     return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : of(false);
   }
 
   readonly canRegisterAddressVisits$ = this.userPermissionsService
     .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_ADDRESS_VISIT);
 
-  canRegisterAddressVisit$(address: IAddress): Observable<boolean> {
+  canRegisterAddressVisit$(address: IAddressOrPhone): Observable<boolean> {
     return address && !address.isInactive ? this.canRegisterAddressVisits$ : of(false);
   }
 
@@ -76,7 +78,7 @@ export class DebtService {
    * @deprecated
    * Use /routes/workplaces/workplaces.service instead
    */
-  fetchAll(personId: number): Observable<Array<IDebt>> {
+  fetchAll(personId: number): Observable<Array<Debt>> {
     return this.dataService
       .readAll(this.baseUrl, { personId })
       .pipe(
@@ -88,25 +90,25 @@ export class DebtService {
    * @deprecated
    * Use /routes/workplaces/workplaces.service instead
    */
-  fetch(personId: number, debtId: number): Observable<IDebt> {
+  fetch(personId: number, debtId: number): Observable<Debt> {
     return this.dataService
       .read('/debts/{debtId}', { personId, debtId })
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, debt: Partial<IDebt>): Observable<void> {
+  create(personId: number, debt: Partial<Debt>): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { personId }, debt)
       .catch(this.notificationsService.createError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  update(personId: number, debtId: number, debt: Partial<IDebt>): Observable<void> {
+  update(personId: number, debtId: number, debt: Partial<Debt>): Observable<void> {
     return this.dataService
       .update(this.extUrl, { debtId, personId }, debt)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  changeStatus(personId: number, debtId: number, debt: Partial<IDebt>, callCenter: boolean): Observable<any> {
+  changeStatus(personId: number, debtId: number, debt: Partial<Debt>, callCenter: boolean): Observable<any> {
     return this.dataService
       .update(`${this.extUrl}/statuschange`, { debtId, personId }, debt, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());

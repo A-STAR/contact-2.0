@@ -15,7 +15,7 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IDynamicFormControl, IDynamicFormDateControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPromise, IPromiseLimit } from '../promise.interface';
 
@@ -39,7 +39,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   @Input() promiseId: number;
 
   private canAddInsufficientAmount: boolean;
-  private debt: IDebt;
+  private debt: Debt;
   private promiseLimit: IPromiseLimit;
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
@@ -98,7 +98,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       canAdd, promiseLimit, debt, promise
     ]) => {
       this.promiseLimit = promiseLimit;
-      this.debt = <IDebt>debt;
+      this.debt = <Debt>debt;
       const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
       // Calculate the minimum promise amount
       const minAmount = Math.round((minAmountPercent / 100) * debt.debtAmount * 100) / 100;

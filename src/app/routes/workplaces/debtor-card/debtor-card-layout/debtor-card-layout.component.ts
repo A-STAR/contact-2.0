@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IPerson } from '../debtor.interface';
-import { IDebt } from '../../debt-processing/debt-processing.interface';
+import { Debt } from '../../debt-processing/debt-processing.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -45,7 +45,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
   controls: IDynamicFormItem[];
-  data: Partial<IDebt & IPerson>;
+  data: Partial<Debt & IPerson>;
   dialog: 'registerContact' = null;
   // nice, isn't it?
   tabs = [

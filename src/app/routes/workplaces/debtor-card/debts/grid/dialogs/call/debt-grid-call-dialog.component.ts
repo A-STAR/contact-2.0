@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';
@@ -14,7 +14,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtGridCallDialogComponent {
-  @Input() debt: IDebt;
+  @Input() debt: Debt;
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;

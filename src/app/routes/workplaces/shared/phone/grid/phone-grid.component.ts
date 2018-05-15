@@ -16,7 +16,7 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -24,7 +24,7 @@ import { IPerson } from '@app/routes/workplaces/core/person/person.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
+import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
@@ -127,7 +127,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   phones: IPhone[] = [];
 
-  debt: IDebt;
+  debt: Debt;
 
   private activeCallPhoneId: number;
 

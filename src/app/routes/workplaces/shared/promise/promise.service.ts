@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IPromise, IPromiseLimit } from './promise.interface';
-import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { Debt } from '@app/entities';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -68,7 +68,7 @@ export class PromiseService extends AbstractActionService {
       .catch(this.notificationsService.fetchError().entity('entities.promisesLimit.gen.plural').dispatchCallback());
   }
 
-  fetchDebt(debtId: number, callCenter: boolean): Observable<IDebt> {
+  fetchDebt(debtId: number, callCenter: boolean): Observable<Debt> {
     return this.dataService
       .read('/debts/{debtId}', { debtId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());

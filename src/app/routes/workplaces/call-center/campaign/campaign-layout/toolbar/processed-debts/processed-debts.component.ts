@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaignProcessedDebt } from '../../../campaign.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IContactRegistrationParams } from '@app/routes/workplaces/shared/debt/debt.interface';
+import { IContactRegistrationParams } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 

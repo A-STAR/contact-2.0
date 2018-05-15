@@ -14,6 +14,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { RepositoryService } from '@app/core/repository/repository.service';
 
 import { Debtor, Debt } from '@app/entities';
+import { Debt } from '@app/routes/workplaces/core/debts/debts.interface';
 
 @Injectable()
 export class DebtorService {
@@ -30,6 +31,10 @@ export class DebtorService {
       .pipe(
         catchError(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback())
       );
+  }
+
+  fetch(debtId: number, debtorId: number): Observable<Debt[]> {
+    return this.repo.fetch(Debt, { id: debtId, personId: debtorId });
   }
 
   readonly debtId$ = new BehaviorSubject<number>(null);

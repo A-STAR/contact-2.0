@@ -11,13 +11,3 @@ export interface IPerson {
   city?: string;
   typeCode: number;
 }
-
-export interface IDebt {
-  id: number;
-  personId: number;
-  responsibleFullName: string;
-  shortInfo: string;
-  statusCode: number;
-  typeCode: number;
-  utc: string;
-}

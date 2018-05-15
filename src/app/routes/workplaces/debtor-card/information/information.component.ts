@@ -5,7 +5,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
-import { IDebt } from '@app/core/app-modules/app-modules.interface';
+import { Debt } from '@app/core/app-modules/app-modules.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -39,7 +39,7 @@ export class DebtorInformationComponent {
     private routingService: RoutingService
   ) {}
 
-  get debt$(): Observable<IDebt> {
+  get debt$(): Observable<Debt> {
     return this.debtorService.debtId$;
   }
 
