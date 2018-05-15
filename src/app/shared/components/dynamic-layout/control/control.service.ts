@@ -240,7 +240,7 @@ export class ControlService implements OnDestroy {
       case DynamicLayoutControlType.CHECKBOX:
         return Number(value);
       default:
-        return value;
+        return value === '' ? null : value;
     }
   }
 }
