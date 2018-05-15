@@ -227,7 +227,7 @@ export class PledgeCardComponent implements AfterViewInit {
   }
 
   onAddressEdit(address: IAddress): void {
-    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+    this.router.navigate([ `address/${address.id}` ], { relativeTo: this.route });
   }
 
   onIdentityAdd(): void {
