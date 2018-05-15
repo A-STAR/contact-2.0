@@ -184,7 +184,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
         }),
       )
       .subscribe(personId => {
-        const linkTypeCode = this.layout.getData('link');
+        const { linkTypeCode } = this.layout.getData('link');
         if (linkTypeCode) {
           if (this.editing) {
             this.contactPersonsService
