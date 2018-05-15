@@ -222,7 +222,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         this.entityAttributesService.getDictValueAttributes()
       )
       .pipe(
-          first(),
           map(([actions, constants, permissions, entityPermissions]) => {
 
             const actionsWithPermissions = this.processActions(actions, constants, permissions, entityPermissions);
