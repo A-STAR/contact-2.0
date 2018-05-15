@@ -122,9 +122,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     }
   }
 
-  get isCompany$(): Observable<boolean> {
-    return this.debtorService.isCompany$;
-  }
+  readonly isCompany$: Observable<boolean> = this.debtorService.isCompany$;
 
   get canSubmit(): boolean {
     const mainForm = this.form;

@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
-import { IAddress, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from '@app/core/debt/debt.interface';
+import { IAddress, IPhone, IDebt, IDebtNextCall } from './debt.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { RepositoryService } from '@app/core/repository/repository.service';
-import { Debt } from '@app/entities';
 
 @Injectable()
 export class DebtService {
@@ -27,13 +23,9 @@ export class DebtService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
-  private _incomingCallSearchParams$ = new BehaviorSubject<IDebtOpenIncomingCallData>(null);
-
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private routingService: RoutingService,
-    private repo: RepositoryService,
     private userPermissionsService: UserPermissionsService
   ) {}
 
@@ -62,14 +54,6 @@ export class DebtService {
   readonly canRegisterOfficeVisit$ = this.userPermissionsService
     .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
 
-  get incomingCallSearchParams(): any {
-    return this._incomingCallSearchParams$;
-  }
-
-  set incomingCallSearchParams(data: any) {
-    this._incomingCallSearchParams$.next(data);
-  }
-
   canRegisterContactForDebt$(debt: { statusCode: number }): Observable<boolean> {
     return combineLatest(
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG'),
@@ -79,7 +63,9 @@ export class DebtService {
         DebtService.CONTACT_TYPE_SPECIAL,
         DebtService.CONTACT_TYPE_OFFICE_VISIT,
       ]),
-    ).map(([ canRegisterClosed, canRegister ]) => (this.isDebtActive(debt) || canRegisterClosed) && canRegister);
+    ).pipe(
+      map(([ canRegisterClosed, canRegister ]) => (this.isDebtActive(debt) || canRegisterClosed) && canRegister)
+    );
   }
 
   isDebtActive(debt: { statusCode: number }): boolean {
@@ -93,7 +79,9 @@ export class DebtService {
   fetchAll(personId: number): Observable<Array<IDebt>> {
     return this.dataService
       .readAll(this.baseUrl, { personId })
-      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback())
+      );
   }
 
   /**
@@ -128,28 +116,5 @@ export class DebtService {
     return this.dataService
       .update('/debts/{debtId}/nextCall', { debtId }, call)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
-  }
-
-  getFirstDebtsByUserId(payload: any): Observable<number> {
-    return this.repo.fetch(Debt, { personId: payload.personId })
-      .pipe(
-        map(res => res && res[0].id)
-      );
-  }
-
-  getDebtorIdByDebtId(debtId: number): Observable<number> {
-    return this.repo.fetch(Debt, { id: debtId })
-      .pipe(
-        map(response => response && response[0].personId)
-      );
-  }
-
-  openByDebtId(debtId: number, debtorId: number): Promise<boolean> {
-    return this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
-  }
-
-  openIncomingCall(data: any): Promise<boolean> {
-    return this.routingService.navigate([ '/app/workplaces/incoming-call' ])
-      .then(success => success ? (this.incomingCallSearchParams = data) : null);
   }
 }

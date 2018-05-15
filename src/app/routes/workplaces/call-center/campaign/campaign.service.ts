@@ -5,9 +5,9 @@ import { Observable } from 'rxjs/Observable';
 
 import { ICampaignDebt, ICampaignProcessedDebt } from './campaign.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { DebtService } from '../../../../core/debt/debt.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 interface ICampaignRouteParams {
   campaignId: number;

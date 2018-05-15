@@ -14,12 +14,8 @@ export class DebtorPromiseComponent {
     private route: ActivatedRoute,
   ) {}
 
-  get debtId$(): Observable<number> {
-    return this.debtorService.debtId$;
-  }
+  readonly debtId$: Observable<number> = this.debtorService.debtId$;
 
-  get promiseId(): number {
-    return Number(this.route.snapshot.paramMap.get('promiseId'));
-  }
+  readonly promiseId = Number(this.route.snapshot.paramMap.get('promiseId'));
 
 }
