@@ -145,7 +145,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentSelectionAction: IMetadataAction;
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
-  private customOperations: ILookupOperation[];
+  private customActions: ILookupOperation[];
 
   dialog: string;
   dialogData: IGridAction;
@@ -214,7 +214,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     // TODO (i.kibisov): remove mock
     of([ { id: 1, name: 'customOperation' } ])
     .subscribe(operations => {
-      this.customOperations = operations;
+      this.customActions = operations;
     });
   }
 
@@ -473,9 +473,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         action.metadataAction.id
           ? {
             inputConfig: this.actionGridService
-              .getActionParamsConfig(action.metadataAction.id, action.metadataAction.inputParams),
+              .getActionParamsConfig(action.metadataAction.id, action.metadataAction.inputParams, true),
             outputConfig: this.actionGridService
-              .getActionParamsConfig(action.metadataAction.id, action.metadataAction.outputParams)
+              .getActionParamsConfig(action.metadataAction.id, action.metadataAction.outputParams, false)
           }
           : {}
       )
@@ -678,7 +678,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         .filter(action => !!action.id)
         .reduce((acc, action) => ({
           ...acc,
-          [action.action]: () => !!this.customOperations.find(o => o.id === action.id)
+          [action.action]: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL
+            ? !!this.customActions.find(o => o.id === action.id)
+            : !!this.customActions.find(o => o.id === action.id) && selection.length
         }), {})
     };
   }

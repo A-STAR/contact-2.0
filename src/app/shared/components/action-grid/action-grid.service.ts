@@ -194,17 +194,18 @@ export class ActionGridService {
     return actionData.type === MetadataActionType.ALL;
   }
 
-  getActionParamsConfig(actionId: number, params: IMetadataActionParam[]): IDynamicLayoutConfig {
+  getActionParamsConfig(actionId: number, params: IMetadataActionParam[], enabled: boolean): IDynamicLayoutConfig {
     return {
       key: `mass/${actionId}`,
       items: params.sort((p1, p2) => p1.sortOrder - p2.sortOrder).map(param => ({
         label: param.name,
         name: param.systemName,
         type: DynamicLayoutItemType.CONTROL,
-        ...this.getActionParamControlOptions(param),
+        enabled,
         validators: {
           required: !!param.isMandatory,
         },
+        ...this.getActionParamControlOptions(param)
       }) as IDynamicLayoutItem),
     };
   }
