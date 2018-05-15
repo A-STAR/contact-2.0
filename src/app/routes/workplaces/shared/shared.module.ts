@@ -4,7 +4,6 @@ import { AddressGridModule } from './address/grid/address-grid.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
 import { ContactRegistrationModule } from './contact-registration/contact-registration.module';
 import { DebtComponentModule } from './debt-component/debt-component.module';
-import { DebtModule } from './debt/debt.module';
 import { DocumentGridModule } from './documents/grid/document-grid.module';
 import { EmploymentGridModule } from './employment/grid/employment-grid.module';
 import { IdentityGridModule } from './identity/grid/identity-grid.module';
@@ -18,7 +17,6 @@ import { PromiseModule } from './promise/promise.module';
     ContactLogModule,
     ContactRegistrationModule,
     DebtComponentModule,
-    DebtModule,
     DocumentGridModule,
     EmploymentGridModule,
     IdentityGridModule,
@@ -31,7 +29,6 @@ import { PromiseModule } from './promise/promise.module';
     ContactLogModule,
     ContactRegistrationModule,
     DebtComponentModule,
-    DebtModule,
     DocumentGridModule,
     EmploymentGridModule,
     IdentityGridModule,

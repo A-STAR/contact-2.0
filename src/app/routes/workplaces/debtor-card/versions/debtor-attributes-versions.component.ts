@@ -29,7 +29,7 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
 
     this.paramsSub = combineLatest(
       this.route.paramMap,
-      this.debtorService.entityId$,
+      this.debtorService.debtorId$,
       this.debtorService.entityTypeId$
     )
       .subscribe(([params, entityId, entityTypeId]: [ParamMap, number, number]) => {

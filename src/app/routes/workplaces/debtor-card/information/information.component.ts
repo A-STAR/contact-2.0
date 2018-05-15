@@ -44,7 +44,7 @@ export class DebtorInformationComponent {
 
   readonly debtId$: Observable<number> = this.debtorService.debtId$;
 
-  readonly personId$: Observable<number> = this.debtorService.debtorId$;
+  readonly debtorId$: Observable<number> = this.debtorService.debtorId$;
 
   get form(): DynamicFormComponent {
     const component = this.companyComponent || this.personComponent;
@@ -74,7 +74,7 @@ export class DebtorInformationComponent {
   }
 
   onAddressRegister(address: IAddress): void {
-    combineLatest(this.personId$, this.debtId$)
+    combineLatest(this.debtorId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => this.contactRegistrationService.startRegistration({
         contactId: address.id,
@@ -94,7 +94,7 @@ export class DebtorInformationComponent {
   }
 
   onPhoneRegister(phone: IPhone): void {
-    combineLatest(this.personId$, this.debtId$)
+    combineLatest(this.debtorId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => this.contactRegistrationService.startRegistration({
         contactId: phone.id,

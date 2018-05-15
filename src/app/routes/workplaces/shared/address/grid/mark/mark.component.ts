@@ -9,7 +9,6 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { Debt } from './mark.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
@@ -19,6 +18,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey, addGridLabel, isEmpty } from '@app/core/utils';
+import { Debt } from '@app/entities';
 
 const labelKey = makeKey('widgets.address.dialogs.mark.form');
 

@@ -5,7 +5,6 @@ import { catchError, map } from 'rxjs/operators';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '@app/core/data/data.service';
-import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -18,6 +17,8 @@ export class WorkplacesService {
 
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
+
+  static CONTACT_TYPE_OFFICE_VISIT  = 8;
 
   constructor(
     private dataService: DataService,
@@ -71,5 +72,5 @@ export class WorkplacesService {
   }
 
   readonly canRegisterOfficeVisit$ = this.userPermissionsService
-    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtorService.CONTACT_TYPE_OFFICE_VISIT);
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', WorkplacesService.CONTACT_TYPE_OFFICE_VISIT);
 }

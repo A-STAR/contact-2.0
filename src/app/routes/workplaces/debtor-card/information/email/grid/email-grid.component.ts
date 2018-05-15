@@ -13,7 +13,6 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmailService } from '../email.service';
-import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -25,6 +24,7 @@ import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/co
 
 import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { Debt } from '@app/entities';
 
 @Component({
   selector: 'app-email-grid',
@@ -33,11 +33,11 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 })
 export class EmailGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() campaignId: number;
-
   @Input() entityId: number;
   @Input() entityType = 18;
   @Input() ignorePermissions = false;
   @Input() personRole = 1;
+  @Input() debt: Debt;
 
   private selectedEmailId: number;
   selectedEmail$ = new BehaviorSubject<IEmail>(null);
@@ -75,7 +75,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
-    private debtorService: DebtorService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -117,8 +116,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   get canDisplayGrid(): boolean {
     return this.columns.length > 0;
   }
-
-  readonly debtId$ = this.debtorService.debtId$;
 
   get blockDialogDictionaryId(): number {
     return UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING;
@@ -166,7 +163,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       personRole: this.personRole,
       emailId: this.selectedEmailId
     };
-    this.emailService.scheduleEmail(this.debtId$.value, data).subscribe(() => this.onSubmitSuccess());
+    this.emailService.scheduleEmail(this.debt.id, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
@@ -220,9 +217,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
         .pipe(
           map(hasPermission => hasPermission || this.ignorePermissions),
         ),
-      this.debtorService.debt$.pipe(
-        map(debt => this.workplacesService.isDebtActive(debt)),
-      ),
+      of(this.workplacesService.isDebtActive(this.debt)),
       this.selectedEmail$.flatMap(email => email
         ? this.userPermissionsService
             .contains('EMAIL_SINGLE_ADDRESS_TYPE_LIST', email.typeCode)
