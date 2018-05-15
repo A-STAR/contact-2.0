@@ -16,6 +16,7 @@ import * as notifications from '@app/core/notifications/notifications.reducer';
 import * as organizations from '@app/routes/admin/organizations/organizations.reducer';
 import * as permissions from '@app/routes/admin/roles/permissions.reducer';
 import * as persistence from '@app/core/persistence/persistence.reducer';
+import * as repository from '@app/core/repository/repository.reducer';
 import * as userAttributeTypes from '@app/core/user/attribute-types/user-attribute-types.reducer';
 import * as userConstants from '@app/core/user/constants/user-constants.reducer';
 import * as userDictionaries from '@app/core/user/dictionaries/user-dictionaries.reducer';
@@ -40,6 +41,7 @@ export const reducers = {
   organizations: organizations.reducer,
   permissions: permissions.reducer,
   persistence: persistence.reducer,
+  repository: repository.reducer,
   users: users.reducer,
   userAttributeTypes: userAttributeTypes.reducer,
   userConstants: userConstants.reducer,
@@ -64,6 +66,7 @@ export const initialState: Partial<IAppState> = {
   organizations: organizations.defaultState,
   permissions: permissions.defaultState,
   persistence: persistence.defaultState,
+  repository: repository.defaultState,
   userAttributeTypes: userAttributeTypes.defaultState,
   userConstants: userConstants.defaultState,
   userDictionaries: userDictionaries.defaultState,
