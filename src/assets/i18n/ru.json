@@ -282,15 +282,6 @@
             "scenario": "Сценарий разговора",
             "selectOutcome": "Выберите исход"
           }
-        },
-        "components": {
-          "dynamic-layout": {
-            "metadata": {
-              "errors": {
-                "fetch": "Не удалось получить конфигурацию динамической формы."
-              }
-            }
-          }
         }
       }
     },
@@ -372,6 +363,13 @@
         "toolbar": {
           "rowsSelected": "выбрано",
           "rowsTotal": "всего"
+        }
+      },
+      "dynamic-layout": {
+        "metadata": {
+          "errors": {
+            "fetch": "Не удалось получить конфигурацию динамической формы."
+          }
         }
       }
     }

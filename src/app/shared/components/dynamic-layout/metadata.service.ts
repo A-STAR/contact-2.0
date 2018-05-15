@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { tap, take, filter } from 'rxjs/operators';
@@ -6,7 +7,7 @@ import { tap, take, filter } from 'rxjs/operators';
 import { IAppState } from '@app/core/state/state.interface';
 import { DynamicLayoutAction, IDynamicLayoutConfig, IDynamicLayoutFetchConfigAction } from './dynamic-layout.interface';
 
-import { DataService } from '@app/core/data/data.service';
+// import { DataService } from '@app/core/data/data.service';
 import { ConfigService } from '@app/core/config/config.service';
 
 @Injectable()
@@ -14,7 +15,8 @@ export class MetadataService {
   constructor(
     private store: Store<IAppState>,
     private configService: ConfigService,
-    private dataService: DataService
+    // private dataService: DataService,
+    private httpClient: HttpClient
   ) { }
 
   getConfig(layout: string): Observable<IDynamicLayoutConfig> {
@@ -32,7 +34,8 @@ export class MetadataService {
 
   fetchConfig(key: string): Observable<IDynamicLayoutConfig> {
     const { assets } = this.configService.config;
-    return this.dataService.get(`${assets}/forms/${key}.json`);
+    // return this.dataService.get(`${assets}/forms/${key}.json`);
+    return this.httpClient.get<IDynamicLayoutConfig>(`${assets}/forms/${key}.json`);
   }
 
   private dispatchFetchConfigAction(key: string): void {
