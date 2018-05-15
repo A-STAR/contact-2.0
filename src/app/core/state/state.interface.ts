@@ -9,6 +9,7 @@ import {
 } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorCardState } from '../app-modules/debtor-card/debtor-card.interface';
 import { IDictionariesState } from '../../routes/admin/dictionaries/dictionaries.interface';
+import { IDynamicLayoutState } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
 import { ILookupState } from '../lookup/lookup.interface';
@@ -34,6 +35,7 @@ export interface IAppState {
   readonly dictionaries: IDictionariesState;
   readonly entityAttributes: IEntityAttributesState;
   readonly guiObjects: IGuiObjectsState;
+  readonly layout: IDynamicLayoutState;
   readonly lookup: ILookupState;
   readonly metadata: IMetadataState;
   readonly notifications: INotificationsState;

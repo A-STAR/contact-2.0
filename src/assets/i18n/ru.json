@@ -364,6 +364,13 @@
           "rowsSelected": "выбрано",
           "rowsTotal": "всего"
         }
+      },
+      "dynamic-layout": {
+        "metadata": {
+          "errors": {
+            "fetch": "Не удалось получить конфигурацию динамической формы."
+          }
+        }
       }
     }
   },
