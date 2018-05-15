@@ -29,6 +29,7 @@ import { invert } from '@app/core/utils';
 
 import { layout } from './contact-person-card.layout';
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -108,7 +109,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
     map(person => ({ default: person })),
   );
 
-  canSubmit$ = of(false);
+  readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
 
   templates: Record<string, TemplateRef<any>>;
 
@@ -141,7 +142,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
         .fetch(this.debtorId, this.personId)
         .subscribe(person => this.layout.setData({ default: person }));
     }
-    this.canSubmit$ = this.layout.canSubmit();
+    this.layout.canSubmit().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
   }
 
   onContactPersonFormClear(): void {

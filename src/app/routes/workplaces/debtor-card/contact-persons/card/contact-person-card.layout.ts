@@ -34,7 +34,6 @@ export const layout: IDynamicLayoutConfig = {
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
-              form: 'link',
               label: 'Тип связи',
               name: 'linkTypeCode',
               validators: {
@@ -61,60 +60,80 @@ export const layout: IDynamicLayoutConfig = {
               },
             },
             {
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ]
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.TEXT,
               label: 'Имя',
               name: 'firstName',
             },
             {
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ]
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.TEXT,
               label: 'Отчество',
               name: 'middleName',
             },
             {
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ]
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.DATE,
               label: 'Дата рождения',
               name: 'birthDate',
             },
             {
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ]
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.TEXT,
               label: 'Место рождения',
               name: 'birthPlace',
             },
             {
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ]
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_GENDER,
@@ -123,12 +142,16 @@ export const layout: IDynamicLayoutConfig = {
             },
             {
               dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ]
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               label: 'Семейное положение',
@@ -136,12 +159,16 @@ export const layout: IDynamicLayoutConfig = {
             },
             {
               dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
-              // display: {
-              //   type: IContextConfigItemType.STATE,
-              //   method: IContextByStateMethod.EQUALS,
-              //   key: 'contactPersonCardPersonForm.value.typeCode',
-              //   value: 1,
-              // },
+              display: {
+                operator: ContextOperator.EQUALS,
+                value: [
+                  {
+                    operator: ContextOperator.EVAL,
+                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                  },
+                  1,
+                ],
+              },
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               label: 'Образование',
@@ -157,11 +184,20 @@ export const layout: IDynamicLayoutConfig = {
                     operator: ContextOperator.ENTITY_IS_USED,
                     value: 363 + i,
                   },
-                  // {
-                  //   operator: ContextOperator.ATTRIBUTE_LIST,
-                  //   value: key: 'contactPersonCardPersonForm.value.typeCode',
-                  // },
-                ]
+                  {
+                    operator: ContextOperator.CONSTANT_CONTAINS,
+                    value: [
+                      {
+                        operator: ContextOperator.PERSON_ATTRIBUTES,
+                        value: {
+                          operator: ContextOperator.EVAL,
+                          value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                        }
+                      },
+                      363 + i,
+                    ],
+                  },
+                ],
               },
               label: `Строковый атрибут ${i}`,
               name: `stringValue${i}`,
@@ -181,22 +217,27 @@ export const layout: IDynamicLayoutConfig = {
           children: [
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              label: 'Удостоверения личности',
               value: 'identification',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              label: 'История трудоустройства',
               value: 'employment',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              label: 'Адреса',
               value: 'addresses',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              label: 'Телефоны',
               value: 'phones',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              label: 'Документы',
               value: 'documents',
             },
           ],
