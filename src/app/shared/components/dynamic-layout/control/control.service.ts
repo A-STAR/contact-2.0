@@ -139,6 +139,20 @@ export class ControlService implements OnDestroy {
     this.store.dispatch(action);
   }
 
+  enableFormGroup(formGroupName: string = ControlService.DEFAULT_GROUP_NAME): void {
+    const formGroup = this.groups.get(formGroupName);
+    if (formGroup) {
+      formGroup.enable();
+    }
+  }
+
+  disableFormGroup(formGroupName: string = ControlService.DEFAULT_GROUP_NAME): void {
+    const formGroup = this.groups.get(formGroupName);
+    if (formGroup) {
+      formGroup.disable();
+    }
+  }
+
   private createFormGroup(name: string, key: string): void {
     const controls = this.controls
       .filter(control => this.getControlForm(control.item) === name)

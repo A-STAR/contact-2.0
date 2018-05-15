@@ -80,10 +80,6 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
 
   readonly contactPerson$ = this.contactPersonCardService.contactPerson$;
 
-  readonly isContactPersonFormDisabled$ = this.contactPerson$.pipe(
-    map(Boolean),
-  );
-
   readonly edit$ = this.route.data.pipe(
     map(data => data.edit),
   );
@@ -106,7 +102,14 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
   };
 
   readonly formData$ = this.contactPerson$.pipe(
-    map(person => ({ default: person })),
+    map(person => {
+      if (person) {
+        const { linkTypeCode, ...rest } = person;
+        return { default: rest, link: { linkTypeCode } };
+      } else {
+        return { default: {}, link: {} };
+      }
+    }),
   );
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
@@ -134,13 +137,24 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
       personTitlebar: this.personTitlebarTemplate,
       personClearButton: this.personClearButtonTemplate,
     };
+
+    this.contactPerson$.subscribe(person => {
+      if (person) {
+        this.layout.disableFormGroup();
+      } else {
+        this.layout.enableFormGroup();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
     if (this.editing) {
       this.contactPersonsService
         .fetch(this.debtorId, this.personId)
-        .subscribe(person => this.layout.setData({ default: person }));
+        .subscribe(person => {
+          const { linkTypeCode, ...rest } = person;
+          this.layout.setData({ default: rest, link: { linkTypeCode } });
+        });
     }
     this.layout.canSubmit().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
   }
@@ -151,7 +165,6 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
   }
 
   onSave(): void {
-    const { linkTypeCode, ...person } = this.layout.getData();
     this.contactPerson$
       .pipe(
         first(),
@@ -159,12 +172,14 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
           if (selectedPerson) {
             return of(selectedPerson.id);
           }
+          const person = this.layout.getData();
           return this.editing
             ? this.personService.update(this.personId, person).pipe(mapTo(this.personId))
             : this.personService.create(person);
         }),
       )
       .subscribe(personId => {
+        const linkTypeCode = this.layout.getData('link');
         if (linkTypeCode) {
           if (this.editing) {
             this.contactPersonsService

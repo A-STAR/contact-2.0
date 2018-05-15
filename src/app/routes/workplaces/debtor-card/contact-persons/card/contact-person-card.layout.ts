@@ -34,6 +34,7 @@ export const layout: IDynamicLayoutConfig = {
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
+              form: 'link',
               enabled: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'CONTACT_PERSON_EDIT',
@@ -255,6 +256,10 @@ export const layout: IDynamicLayoutConfig = {
               },
               label: 'Комментарий',
               name: 'comment',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              value: 'personClearButton',
             },
           ],
         },
