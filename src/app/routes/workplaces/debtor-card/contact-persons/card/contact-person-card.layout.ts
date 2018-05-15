@@ -34,6 +34,10 @@ export const layout: IDynamicLayoutConfig = {
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'CONTACT_PERSON_EDIT',
+              },
               label: 'Тип связи',
               name: 'linkTypeCode',
               validators: {
@@ -44,6 +48,10 @@ export const layout: IDynamicLayoutConfig = {
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Тип',
               name: 'typeCode',
               validators: {
@@ -53,6 +61,10 @@ export const layout: IDynamicLayoutConfig = {
             {
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.TEXT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Фамилия/Название',
               name: 'lastName',
               validators: {
@@ -60,6 +72,8 @@ export const layout: IDynamicLayoutConfig = {
               },
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.TEXT,
               display: {
                 operator: ContextOperator.EQUALS,
                 value: [
@@ -70,12 +84,16 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ]
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.TEXT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Имя',
               name: 'firstName',
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.TEXT,
               display: {
                 operator: ContextOperator.EQUALS,
                 value: [
@@ -86,12 +104,16 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ]
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.TEXT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Отчество',
               name: 'middleName',
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.DATE,
               display: {
                 operator: ContextOperator.EQUALS,
                 value: [
@@ -102,12 +124,16 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ]
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.DATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Дата рождения',
               name: 'birthDate',
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.TEXT,
               display: {
                 operator: ContextOperator.EQUALS,
                 value: [
@@ -118,12 +144,16 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ]
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.TEXT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Место рождения',
               name: 'birthPlace',
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.SELECT,
               display: {
                 operator: ContextOperator.EQUALS,
                 value: [
@@ -134,13 +164,17 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ]
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.SELECT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               dictCode: UserDictionariesService.DICTIONARY_GENDER,
               label: 'Пол',
               name: 'genderCode',
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
               display: {
                 operator: ContextOperator.EQUALS,
@@ -152,12 +186,16 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ]
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.SELECT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Семейное положение',
               name: 'familyStatusCode',
             },
             {
+              type: DynamicLayoutItemType.CONTROL,
+              controlType: DynamicLayoutControlType.SELECT,
               dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
               display: {
                 operator: ContextOperator.EQUALS,
@@ -169,8 +207,10 @@ export const layout: IDynamicLayoutConfig = {
                   1,
                 ],
               },
-              type: DynamicLayoutItemType.CONTROL,
-              controlType: DynamicLayoutControlType.SELECT,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: 'Образование',
               name: 'educationCode',
             },
@@ -199,12 +239,20 @@ export const layout: IDynamicLayoutConfig = {
                   },
                 ],
               },
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_INFO_EDIT',
+              },
               label: `Строковый атрибут ${i}`,
               name: `stringValue${i}`,
             }) as IDynamicLayoutTextControl),
             {
               type: DynamicLayoutItemType.CONTROL,
               controlType: DynamicLayoutControlType.TEXTAREA,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PERSON_COMMENT_EDIT',
+              },
               label: 'Комментарий',
               name: 'comment',
             },

@@ -16,7 +16,8 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
     },
   ],
   selector: 'app-textarea',
-  templateUrl: 'textarea.component.html',
+  styleUrls: [ './textarea.component.scss' ],
+  templateUrl: './textarea.component.html',
 })
 export class TextareaComponent implements ControlValueAccessor, Validator {
   @Input() errors: any;
@@ -51,6 +52,7 @@ export class TextareaComponent implements ControlValueAccessor, Validator {
 
   setDisabledState(disabled: boolean): void {
     this.disabled = disabled;
+    this.cdRef.markForCheck();
   }
 
   validate(): any {
