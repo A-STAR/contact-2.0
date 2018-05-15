@@ -47,8 +47,16 @@ export class DynamicLayoutComponent implements OnInit {
     return this.controlService.canSubmit(form);
   }
 
+  resetForm(form?: string): void {
+    this.formService.reset(form);
+  }
+
   getData(form?: string): any {
     return this.formService.getData(form);
+  }
+
+  setData(data: Record<string, any>): void {
+    this.formService.setData(data);
   }
 
   ngOnInit(): void {

@@ -97,6 +97,13 @@ export class ControlService implements OnDestroy {
     });
   }
 
+  reset(form: string = ControlService.DEFAULT_GROUP_NAME): void {
+    const group = this.groups.get(form);
+    if (group) {
+      group.reset();
+    }
+  }
+
   getData(form: string = ControlService.DEFAULT_GROUP_NAME): any {
     const group = this.groups.get(form);
     return group
@@ -109,7 +116,7 @@ export class ControlService implements OnDestroy {
     this.patchFormGroups();
   }
 
-  getFormGroup(control: IDynamicLayoutControl): FormGroup {
+  getFormGroupForControl(control: IDynamicLayoutControl): FormGroup {
     const form = this.getControlForm(control);
     return this.groups.get(form);
   }
@@ -180,7 +187,7 @@ export class ControlService implements OnDestroy {
   }
 
   private enable(control: IDynamicLayoutControl, enabled: boolean): void {
-    const formGroup = this.getFormGroup(control);
+    const formGroup = this.getFormGroupForControl(control);
     const c = formGroup.get(control.name);
     if (enabled) {
       c.enable();

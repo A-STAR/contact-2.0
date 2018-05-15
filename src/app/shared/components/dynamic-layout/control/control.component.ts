@@ -27,7 +27,7 @@ export class ControlComponent {
   ) {}
 
   get formGroup(): FormGroup {
-    return this.controlService.getFormGroup(this.control);
+    return this.controlService.getFormGroupForControl(this.control);
   }
 
   @HostBinding('style.flex')
@@ -46,7 +46,7 @@ export class ControlComponent {
   }
 
   getErrorMessage(control: IDynamicLayoutControl): string {
-    const formGroup = this.controlService.getFormGroup(control);
+    const formGroup = this.controlService.getFormGroupForControl(control);
     const c = formGroup.get(control.name);
     return c.errors && Object.keys(c.errors).length && (c.touched || c.dirty)
       ? this.getErrorMessageForControl(c)
