@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -161,7 +161,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   }
 
   onDoubleClick(debt: IDebt): void {
-    this.debtorService.selectDebt(debt.id);
+    this.debtorService.debtId$.next(debt.id);
     this.onEdit();
   }
 
@@ -169,7 +169,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     const debtId = isEmpty(debts)
       ? null
       : debts[0].id;
-    this.debtorService.selectDebt(debtId);
+      this.debtorService.debtId$.next(debtId);
   }
 
   onDialogClose(): void {

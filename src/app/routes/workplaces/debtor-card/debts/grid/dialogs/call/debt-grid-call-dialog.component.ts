@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';

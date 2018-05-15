@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IPromise, IPromiseLimit } from './promise.interface';
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';

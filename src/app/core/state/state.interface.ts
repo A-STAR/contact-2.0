@@ -7,7 +7,6 @@ import { IConstantsState } from '../../routes/admin/constants/constants.interfac
 import {
   IContractorsAndPortfoliosState
 } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
-import { IDebtorCardState } from '../app-modules/debtor-card/debtor-card.interface';
 import { IDictionariesState } from '../../routes/admin/dictionaries/dictionaries.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
@@ -30,7 +29,6 @@ export interface IAppState {
   readonly calls: ICallState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
-  readonly debtorCard: IDebtorCardState;
   readonly dictionaries: IDictionariesState;
   readonly entityAttributes: IEntityAttributesState;
   readonly guiObjects: IGuiObjectsState;

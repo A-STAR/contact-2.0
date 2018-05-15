@@ -21,8 +21,8 @@ import { IDebt } from '../../debt-processing/debt-processing.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { DebtorService } from '../debtor.service';
+import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -32,8 +32,6 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 
 import { DialogFunctions } from '@app/core/dialog';
 import { invert } from '@app/core/utils';
-import { RepositoryService } from '@app/core/repository/repository.service';
-import { Debtor, Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,7 +73,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     private debtService: DebtService,
     private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
-    private repositoryService: RepositoryService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
   ) {
@@ -86,9 +83,12 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     this.debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
     this.debtId = Number(this.route.snapshot.paramMap.get('debtId'));
     if (this.debtorId && this.debtId) {
+      this.debtorService.debtId$.next(this.debtId);
+      this.debtorService.debtorId$.next(this.debtorId);
+      // TODO(i.lobanov): ensure this works correctly
       this.personSubscription = combineLatest(
-        this.repositoryService.fetch(Debtor, { id: this.debtorId}).pipe(first()),
-        this.repositoryService.fetch(Debt, { id: this.debtId }).pipe(first())
+        this.debtorService.debtor$.pipe(first()),
+        this.debtorService.debt$.pipe(first()),
       )
       .pipe(
         map(([person, debt]) => ({
@@ -134,13 +134,11 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     return isValid && isDirty;
   }
 
-  get isContactRegistrationDisabled$(): Observable<boolean> {
-    return this.debtorService.debtId$
-      .pipe(
-        mergeMap(debt => this.debtService.canRegisterContactForDebt$(debt)),
-        map(invert),
-      );
-  }
+ readonly isContactRegistrationDisabled$: Observable<boolean> = this.debtorService.debt$
+    .pipe(
+      mergeMap(debt => this.debtService.canRegisterContactForDebt$(debt)),
+      map(invert),
+    );
 
   onSubmit(): void {
     if (this.canSubmit) {

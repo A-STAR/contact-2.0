@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs/operators/switchMap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 

@@ -1,1 +1,1 @@
-export { IDebt } from '@app/core/debt/debt.interface';
+export { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';

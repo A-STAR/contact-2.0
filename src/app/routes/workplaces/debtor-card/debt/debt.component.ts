@@ -11,10 +11,10 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 
-import { DebtService } from '@app/core/debt/debt.service';
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
+import { DebtService } from '@app/routes/workplaces/shared/debt/debt.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -84,14 +84,14 @@ export class DebtComponent implements AfterViewInit, OnInit {
       this.debtService
         .update(this.debtorId, this.debtId, this.layout.getData())
         .subscribe(() => {
-          this.debtorService.refreshDebts();
+          // this.debtorService.refreshDebts();
           this.onBack();
         });
     } else {
       this.debtService
         .create(this.debtorId, this.layout.getData())
         .subscribe(() => {
-          this.debtorService.refreshDebts();
+          // this.debtorService.refreshDebts();
           this.onBack();
         });
     }

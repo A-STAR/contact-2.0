@@ -15,7 +15,7 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 import { IDynamicFormControl, IDynamicFormDateControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPromise, IPromiseLimit } from '../promise.interface';
 

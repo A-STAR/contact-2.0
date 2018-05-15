@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilChanged, first, startWith } from 'rxjs/operators';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { IDebt } from '@app/routes/workplaces/shared/debt/debt.interface';
 import {
   IDynamicFormControl,
   IDynamicFormRadioControl,

@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, O
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
+import { first } from 'rxjs/operators/first';
+import { map } from 'rxjs/operators/map';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
-import { first, map } from 'rxjs/operators';
 
 import { IEmail, IEmailSchedule } from '../email.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -39,44 +41,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private selectedEmailId: number;
   selectedEmail$ = new BehaviorSubject<IEmail>(null);
-
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: combineLatestAnd([ this.canEdit$, this.selectedEmail$.map(Boolean) ]),
-      action: () => this.onEdit(this.selectedEmailId)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: combineLatestAnd([ this.canBlock$, this.selectedEmail$.map(email => email && !email.isInactive) ]),
-      action: () => this.setDialog('block')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: combineLatestAnd([ this.canBlock$, this.selectedEmail$.map(email => email && !!email.isInactive) ]),
-      action: () => this.setDialog('unblock')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
-      enabled: this.canSchedule$,
-      action: () => this.setDialog('schedule')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: combineLatestAnd([ this.canDelete$, this.selectedEmail$.map(Boolean) ]),
-      action: () => this.setDialog('delete')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
-      action: () => this.fetch()
-    },
-  ];
 
   columns: ISimpleGridColumn<IEmail>[] = [];
 
@@ -211,36 +175,42 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       .subscribe(() => this.onSubmitSuccess());
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMAIL_VIEW').distinctUntilChanged();
-  }
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('EMAIL_VIEW')
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMAIL_INACTIVE_VIEW').distinctUntilChanged();
-  }
+  readonly canViewBlock$: Observable<boolean> = this.userPermissionsService.has('EMAIL_INACTIVE_VIEW')
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMAIL_ADD').distinctUntilChanged();
-  }
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('EMAIL_ADD')
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.hasOne([ 'EMAIL_EDIT', 'EMAIL_COMMENT_EDIT' ]).distinctUntilChanged();
-  }
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.hasOne([ 'EMAIL_EDIT', 'EMAIL_COMMENT_EDIT' ])
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMAIL_DELETE').distinctUntilChanged();
-  }
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('EMAIL_DELETE')
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMAIL_SET_INACTIVE').distinctUntilChanged();
-  }
+  readonly canBlock$: Observable<boolean> = this.userPermissionsService.has('EMAIL_SET_INACTIVE')
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('EMAIL_SET_ACTIVE').distinctUntilChanged();
-  }
+  readonly canUnblock$: Observable<boolean> = this.userPermissionsService.has('EMAIL_SET_ACTIVE')
+    .pipe(
+      distinctUntilChanged()
+    );
 
-  get canSchedule$(): Observable<boolean> {
-    return combineLatestAnd([
+  readonly canSchedule$: Observable<boolean> = combineLatestAnd([
       this.userConstantsService.get('Email.Use')
       .pipe(
         map(constant => constant && constant.valueB)
@@ -265,7 +235,49 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
         map(email => email && !email.isInactive),
       )
     ]);
-  }
+
+  readonly isEmailActive$ = this.selectedEmail$
+    .pipe(
+      map(email => email && !email.isInactive)
+    );
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: this.canAdd$,
+      action: () => this.onAdd()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      enabled: combineLatestAnd([ this.canEdit$, this.selectedEmail$.pipe( map(Boolean) ) ]),
+      action: () => this.onEdit(this.selectedEmailId)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      enabled: combineLatestAnd([ this.canBlock$, this.isEmailActive$ ]),
+      action: () => this.setDialog('block')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      enabled: combineLatestAnd([ this.canBlock$, this.isEmailActive$ ]),
+      action: () => this.setDialog('unblock')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      enabled: this.canSchedule$,
+      action: () => this.setDialog('schedule')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      enabled: combineLatestAnd([ this.canDelete$, this.selectedEmail$.pipe(map(Boolean)) ]),
+      action: () => this.setDialog('delete')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      enabled: this.canView$,
+      action: () => this.fetch()
+    },
+  ];
 
   private onAdd(): void {
     this.routingService.navigate([ 'email/create' ], this.route);

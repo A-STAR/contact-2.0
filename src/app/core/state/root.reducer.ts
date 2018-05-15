@@ -5,7 +5,6 @@ import * as calls from '../calls/call.reducer';
 import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
-import * as debtorCard from '../app-modules/debtor-card/debtor-card.reducer';
 import * as dictionaries from '../../routes/admin/dictionaries/dictionaries.reducer';
 import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
 import * as guiObjects from '../gui-objects/gui-objects.reducer';
@@ -29,7 +28,6 @@ export const reducers = {
   campaigns: campaigns.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
   constants: constants.reducer,
-  debtorCard: debtorCard.reducer,
   dictionaries: dictionaries.reducer,
   entityAttributes: entityAttributes.reducer,
   guiObjects: guiObjects.reducer,
@@ -53,7 +51,6 @@ export const initialState: Partial<IAppState> = {
   campaigns: campaigns.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,
-  debtorCard: debtorCard.defaultState,
   dictionaries: dictionaries.defaultState,
   entityAttributes: entityAttributes.defaultState,
   guiObjects: guiObjects.defaultState,
