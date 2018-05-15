@@ -45,6 +45,11 @@ export class RepositoryService {
     );
   }
 
+  refresh<T>(entityClass: Type<T>, params: Record<string, any>): void {
+    const entityName = entityClass.name;
+    this.dispatchFetchAction(entityName, params);
+  }
+
   private buildEntity<T>(entityClass: Type<T>, data: any): T {
     const entity = new entityClass();
     const options = getOptions(entityClass);
