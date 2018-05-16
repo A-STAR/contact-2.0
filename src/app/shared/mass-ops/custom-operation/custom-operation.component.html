@@ -1,13 +1,15 @@
 <app-custom-operation-input
-  *ngIf="actionData.inputConfig && !result"
-  [config]="actionData.inputConfig"
+  *ngIf="actionData.inputParams && !result"
+  [key]="'mass/' + actionData.id + '/input'"
+  [inputParams]="actionData.inputParams"
   (submit)="onSubmit($event)"
   (close)="onClose()"
 ></app-custom-operation-input>
 
 <app-custom-operation-output
-  *ngIf="actionData.outputConfig && result"
-  [config]="actionData.outputConfig"
+  *ngIf="actionData.outputParams && result"
+  [key]="'mass/' + actionData.id + '/output'"
+  [outputParams]="actionData.outputParams"
   [result]="result"
   (close)="onClose()"
 ></app-custom-operation-output>

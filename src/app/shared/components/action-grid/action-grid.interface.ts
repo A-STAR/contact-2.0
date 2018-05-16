@@ -1,7 +1,6 @@
-import { MetadataActionType, IMetadataAction } from '@app/core/metadata/metadata.interface';
+import { MetadataActionType, IMetadataAction, IMetadataActionParam } from '@app/core/metadata/metadata.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
-import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 export interface IGridActionPayload {
   data: IGridActionData;
@@ -57,6 +56,6 @@ export interface IGridAction {
   // but it can contain undefined or null values
   selection?: number[][];
   asyncMode?: boolean;
-  inputConfig?: IDynamicLayoutConfig;
-  outputConfig?: IDynamicLayoutConfig;
+  inputParams?: IMetadataActionParam[];
+  outputParams?: IMetadataActionParam[];
 }

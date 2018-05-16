@@ -3,15 +3,7 @@ import { Injectable } from '@angular/core';
 import {
   IMetadataAction,
   MetadataActionType,
-  IMetadataActionParam
 } from '@app/core/metadata/metadata.interface';
-
-import {
-  IDynamicLayoutConfig,
-  IDynamicLayoutItem,
-  DynamicLayoutItemType,
-  DynamicLayoutControlType
-} from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 import {
   IMetadataActionSetter,
@@ -192,92 +184,6 @@ export class ActionGridService {
 
   isFilterAction(actionData: IGridActionPayload): boolean {
     return actionData.type === MetadataActionType.ALL;
-  }
-
-  getActionParamsConfig(actionId: number, params: IMetadataActionParam[], enabled: boolean): IDynamicLayoutConfig {
-    return {
-      key: `mass/${actionId}`,
-      items: params.sort((p1, p2) => p1.sortOrder - p2.sortOrder).map(param => ({
-        label: param.name,
-        name: param.systemName,
-        type: DynamicLayoutItemType.CONTROL,
-        enabled,
-        validators: {
-          required: !!param.isMandatory,
-        },
-        ...this.getActionParamControlOptions(param)
-      }) as IDynamicLayoutItem),
-    };
-  }
-
-  private getActionParamControlOptions(param: IMetadataActionParam): Partial<IDynamicLayoutItem> {
-    switch (param.paramTypeCode) {
-      case 1:
-        return {
-          controlType: DynamicLayoutControlType.DATE
-        };
-      case 2:
-        return {
-          controlType: DynamicLayoutControlType.NUMBER
-        };
-      case 6:
-        return {
-          controlType: DynamicLayoutControlType.TEXT
-        };
-      case 3:
-      case 8:
-        return {
-          controlType: param.multiSelect
-            ? DynamicLayoutControlType.DIALOGSELECT
-            : DynamicLayoutControlType.GRIDSELECT,
-          filterType: 'portfolios',
-          filterParams: { directionCodes: [ 1 ] }
-        } as Partial<IDynamicLayoutItem>;
-      case 4:
-        return {
-          controlType: param.multiSelect
-            ? DynamicLayoutControlType.DIALOGSELECT
-            : DynamicLayoutControlType.GRIDSELECT,
-          filterType: 'users'
-        } as Partial<IDynamicLayoutItem>;
-      case 5:
-        return {
-          controlType: param.multiSelect
-            ? DynamicLayoutControlType.DIALOGSELECT
-            : DynamicLayoutControlType.GRIDSELECT,
-          filterType: 'contractors'
-        } as Partial<IDynamicLayoutItem>;
-      case 7:
-        return {
-          controlType: param.multiSelect
-            ? DynamicLayoutControlType.MULTISELECT
-            : DynamicLayoutControlType.SELECT,
-          dictCode: param.dictNameCode
-        } as Partial<IDynamicLayoutItem>;
-      case 9:
-        return {
-          controlType: DynamicLayoutControlType.CHECKBOX
-        };
-      case 10:
-        return {
-          controlType: DynamicLayoutControlType.DATETIME
-        };
-      case 11:
-        return {
-          controlType: DynamicLayoutControlType.GRIDSELECT,
-          filterType: 'entityGroups',
-          filterParams: {
-            entityTypeIds: param.entityTypeIds
-          }
-        } as Partial<IDynamicLayoutItem>;
-      case 12:
-        return {
-          controlType: param.multiSelect
-            ? DynamicLayoutControlType.MULTISELECT
-            : DynamicLayoutControlType.SELECT,
-          lookupKey: param.lookupKey
-        } as Partial<IDynamicLayoutItem>;
-    }
   }
 
   private getSingleSelection(action: IActionGridAction, selection: any): any {
