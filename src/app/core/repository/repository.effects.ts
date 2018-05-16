@@ -16,7 +16,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { REPOSITORY_ENTITY } from './repository.service';
 
 import { getPrimaryKey, serializeKeys, serializeParams, serializeParamsKeys } from './repository.utils';
-import { pickExisting, serializeBoolParams } from '@app/core/utils';
+import { serializeBoolParams } from '@app/core/utils';
 
 @Injectable()
 export class RepositoryEffects {
