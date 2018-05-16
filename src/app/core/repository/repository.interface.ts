@@ -42,6 +42,7 @@ export interface IRepositoryFetchAction extends IRepositoryGenericAction {
   payload: {
     entityName: string;
     params: Record<string, any>;
+    serializedParams: string;
   };
 }
 

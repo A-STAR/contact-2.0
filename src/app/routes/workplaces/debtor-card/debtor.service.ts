@@ -47,14 +47,12 @@ export class DebtorService {
     .pipe(
       filter(Boolean),
       switchMap(debtorId => this.workplacesService.fetchDebtor(debtorId)),
-      map(debtors => debtors && debtors[0])
     );
 
   readonly debt$ = this.debtId$
     .pipe(
       filter(Boolean),
       switchMap(debtId => this.workplacesService.fetchDebt(debtId)),
-      map(debts => debts && debts[0])
     );
 
   readonly debts$ = this.debtorId$
@@ -65,12 +63,14 @@ export class DebtorService {
 
   readonly isCompany$ = this.debtor$
     .pipe(
+      filter(Boolean),
       map(debtor => [2, 3].includes(debtor.typeCode)),
       distinctUntilChanged()
     );
 
   readonly isPerson$ = this.debtor$
     .pipe(
+      filter(Boolean),
       map(debtor => debtor.typeCode === 1),
       distinctUntilChanged()
     );

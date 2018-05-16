@@ -20,12 +20,10 @@ import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { IPerson } from '@app/routes/workplaces/core/person/person.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -35,7 +33,7 @@ import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
-import { Debt } from '@app/entities';
+import { Debt, Person } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,7 +81,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private activeCallPhoneId: number;
 
-  private person: IPerson;
+  private person: Person;
 
   private canViewSubscription: Subscription;
   private contactDetailsChangeSub: Subscription;
@@ -108,7 +106,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private contactRegistrationService: ContactRegistrationService,
     private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
-    private personService: PersonService,
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -176,7 +173,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
     this.personId$
       .filter(Boolean)
-      .flatMap(personId => this.personService.fetch(personId))
+      .flatMap(personId => this.workplacesService.fetchDebtor(personId))
       .pipe(first())
       .subscribe(person => {
         this.person = person;

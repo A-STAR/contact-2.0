@@ -11,7 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, mergeMap, map } from 'rxjs/operators';
+import { first, mergeMap, map, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -90,12 +90,14 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         this.debtorService.debt$.pipe(first()),
       )
       .pipe(
+        tap(([person, debt]) => {
+          console.log('Person: ', person.id, 'Debt: ', debt.id);
+        }),
         map(([person, debt]) => ({
-            ...person[0],
-            // TODO(i.lobanov): total mess with IDebt interfaces!
-            responsibleFullName: (debt as any)[0].responsibleFullName,
-            utc: debt[0].utc,
-            shortInfo: (debt as any)[0].shortInfo,
+            ...person,
+            responsibleFullName: debt.responsibleFullName,
+            utc: debt.utc,
+            shortInfo: debt.shortInfo,
           }),
         )
       )
