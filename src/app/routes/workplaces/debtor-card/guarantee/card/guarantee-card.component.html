@@ -40,8 +40,9 @@
     [personId]="contactId"
     [personRole]="contactPersonRole"
     (add)="onPhoneAdd()"
-    (dblClick)="onPhoneEdit($event)"
+    (dblClick)="onPhoneRegister($event)"
     (edit)="onPhoneEdit($event)"
+    (register)="onPhoneRegister($event)"
   ></app-phone-grid>
 </ng-template>
 
@@ -51,8 +52,9 @@
     [personId]="contactId"
     [personRole]="contactPersonRole"
     (add)="onAddressAdd()"
-    (dblClick)="onAddressEdit($event)"
+    (dblClick)="onAddressRegister($event)"
     (edit)="onAddressEdit($event)"
+    (register)="onAddressRegister($event)"
   ></app-address-grid>
 </ng-template>
 
