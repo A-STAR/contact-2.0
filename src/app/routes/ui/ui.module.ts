@@ -36,10 +36,6 @@ const routes: Routes = [
         loadChildren: './grids/grids.module#GridsModule',
       },
       {
-        path: 'forms',
-        loadChildren: './forms/forms.module#FormsModule',
-      },
-      {
         path: 'layout/:debtId',
         loadChildren: './layout/layout.module#LayoutModule',
       },
