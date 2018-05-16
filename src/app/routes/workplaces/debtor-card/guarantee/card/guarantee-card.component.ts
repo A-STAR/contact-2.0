@@ -12,6 +12,7 @@ import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.inte
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
@@ -63,7 +64,9 @@ export class GuarantorCardComponent implements AfterViewInit {
   /**
    * Guarantor role (according to dictionary 44)
    */
-  readonly guaarantorRole = 2;
+  readonly guarantorRole = 2;
+
+  readonly phoneContactType = 1;
 
   readonly editing = Boolean(this.guarantorId);
 
@@ -97,6 +100,7 @@ export class GuarantorCardComponent implements AfterViewInit {
   };
 
   constructor(
+    private contactRegistrationService: ContactRegistrationService,
     private guaranteeCardService: GuaranteeCardService,
     private guaranteeService: GuaranteeService,
     private injector: Injector,
@@ -174,12 +178,32 @@ export class GuarantorCardComponent implements AfterViewInit {
     this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
   }
 
+  onPhoneRegister(phone: IPhone): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: phone.id,
+      contactType: this.phoneContactType,
+      debtId: this.debtId,
+      personId: this.guarantorId,
+      personRole: this.guarantorRole,
+    });
+  }
+
   onAddressAdd(): void {
     this.router.navigate([ 'address/create' ], { relativeTo: this.route });
   }
 
   onAddressEdit(address: IAddress): void {
     this.router.navigate([ `address/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressRegister(address: IAddress): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: address.id,
+      contactType: 3,
+      debtId: this.debtId,
+      personId: this.guarantorId,
+      personRole: this.guarantorRole,
+    });
   }
 
   onIdentityAdd(): void {

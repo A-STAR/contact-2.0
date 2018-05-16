@@ -10,6 +10,7 @@ import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.inte
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
@@ -75,6 +76,8 @@ export class PledgeCardComponent implements AfterViewInit {
    */
   readonly pledgorRole = 3;
 
+  readonly phoneContactType = 1;
+
   /**
    * ID of property that is linked via contractId
    */
@@ -115,6 +118,7 @@ export class PledgeCardComponent implements AfterViewInit {
   };
 
   constructor(
+    private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
     private personService: PersonService,
     private pledgeCardService: PledgeCardService,
@@ -222,12 +226,32 @@ export class PledgeCardComponent implements AfterViewInit {
     this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
   }
 
+  onPhoneRegister(phone: IPhone): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: phone.id,
+      contactType: this.phoneContactType,
+      debtId: this.debtId,
+      personId: this.pledgorId,
+      personRole: this.pledgorRole,
+    });
+  }
+
   onAddressAdd(): void {
     this.router.navigate([ 'address/create' ], { relativeTo: this.route });
   }
 
   onAddressEdit(address: IAddress): void {
     this.router.navigate([ `address/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressRegister(address: IAddress): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: address.id,
+      contactType: 3,
+      debtId: this.debtId,
+      personId: this.pledgorId,
+      personRole: this.pledgorRole,
+    });
   }
 
   onIdentityAdd(): void {
