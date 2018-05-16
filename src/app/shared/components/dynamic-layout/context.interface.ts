@@ -10,6 +10,7 @@ export enum ContextOperator {
   ENTITY_IS_USED       = 'entityIsUsed',
   EVAL                 = 'eval',
   NOT                  = 'not',
+  NOT_NULL             = 'notNull',
   PERMISSION_IS_TRUE   = 'permissionIsTrue',
   PERMISSION_NOT_EMPTY = 'permissionNotEmpty',
   PERSON_ATTRIBUTES    = 'personAttributes',
@@ -30,6 +31,7 @@ export type IContextUnaryOperator =
   | ContextOperator.ENTITY_IS_MANDATORY
   | ContextOperator.ENTITY_IS_USED
   | ContextOperator.NOT
+  | ContextOperator.NOT_NULL
   | ContextOperator.PERMISSION_IS_TRUE
   | ContextOperator.PERMISSION_NOT_EMPTY
   | ContextOperator.PERSON_ATTRIBUTES
