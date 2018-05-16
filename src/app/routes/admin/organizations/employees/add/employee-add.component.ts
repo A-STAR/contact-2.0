@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/cor
 import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 
-import { IDynamicFormControl, ISelectItemsPayload } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee } from '../../organizations.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
@@ -72,7 +72,7 @@ export class EmployeeAddComponent implements OnInit {
     this.selectedEmployees = employees;
   }
 
-  onSelectRole(payload: ISelectItemsPayload): void {
+  onSelectRole(): void {
     this.selectedRole = true;
   }
 
