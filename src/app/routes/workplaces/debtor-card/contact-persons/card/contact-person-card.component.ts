@@ -4,6 +4,7 @@ import {
   Component,
   Inject,
   Injector,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -39,7 +40,7 @@ import { layout } from './contact-person-card.layout';
   selector: 'app-contact-person-card',
   templateUrl: 'contact-person-card.component.html',
 })
-export class ContactPersonCardComponent implements OnInit, AfterViewInit {
+export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
   @ViewChild('identification', { read: TemplateRef }) identificationTemplate: TemplateRef<any>;
@@ -142,13 +143,14 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
       personClearButton: this.personClearButtonTemplate,
     };
 
-    this.contactPerson$.subscribe(person => {
+    const subscription = this.contactPerson$.subscribe(person => {
       if (person) {
         this.layout.disableFormGroup();
       } else {
         this.layout.enableFormGroup();
       }
     });
+    this.subscription.add(subscription);
   }
 
   ngAfterViewInit(): void {
@@ -164,9 +166,14 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit {
     this.subscription.add(subscription);
   }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   onContactPersonFormClear(): void {
     this.contactPersonCardService.selectContactPerson(null);
     this.layout.resetForm();
+    this.layout.resetForm('link');
   }
 
   onSave(): void {
