@@ -1,6 +1,18 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
@@ -19,12 +31,11 @@ import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarante
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
-import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
-
-import { contractFormConfig } from './config/contract-form-config';
-import { guarantorFormConfig } from './config/guarantor-form-config';
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 import { invert } from '@app/core/utils';
+
+import { layout } from './guarantee-card.layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,12 +43,21 @@ import { invert } from '@app/core/utils';
   selector: 'app-guarantee-card',
   templateUrl: 'guarantee-card.component.html',
 })
-export class GuarantorCardComponent implements AfterViewInit {
-  @ViewChild('contractForm') contractForm: MetadataFormComponent<any>;
-  @ViewChild('guarantorForm') guarantorForm: MetadataFormComponent<any>;
+export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
-  readonly contractFormConfig = contractFormConfig;
-  readonly guarantorFormConfig = guarantorFormConfig;
+  @ViewChild('identification', { read: TemplateRef }) identificationTemplate: TemplateRef<any>;
+  @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
+  @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
+  @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
+
+  @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+
+  readonly layoutConfig = layout;
 
   readonly paramMap = this.route.snapshot.paramMap;
 
@@ -72,6 +92,10 @@ export class GuarantorCardComponent implements AfterViewInit {
 
   readonly guarantor$ = this.guaranteeCardService.guarantor$;
 
+  readonly formData$ = this.guarantor$.pipe(
+    map(person => person ? { default: person } : {}),
+  );
+
   readonly isGuarantorFormDisabled$ = this.guarantor$.pipe(
     map(Boolean),
   );
@@ -83,6 +107,8 @@ export class GuarantorCardComponent implements AfterViewInit {
   readonly showContractForm$ = this.route.data.pipe(
     map(data => data.showContractForm),
   );
+
+  readonly showContractForm = this.route.snapshot.data.showContractForm;
 
   readonly contractTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title',
@@ -99,6 +125,12 @@ export class GuarantorCardComponent implements AfterViewInit {
     ]
   };
 
+  readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
+
+  private subscription = new Subscription();
+
+  templates: Record<string, TemplateRef<any>>;
+
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private guaranteeCardService: GuaranteeCardService,
@@ -111,16 +143,28 @@ export class GuarantorCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
-  get canSubmit(): boolean {
-    const contractFormGroup = this.contractForm
-      ? this.contractForm.formGroup
-      : null;
-    const guarantorFormGroup = this.guarantorForm
-      ? this.guarantorForm.formGroup
-      : null;
-    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
-    const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
-    return contractFormValid && guarantorFormValid;
+  ngOnInit(): void {
+    this.templates = {
+      identification: this.identificationTemplate,
+      employment: this.employmentTemplate,
+      addresses: this.addressesTemplate,
+      phones: this.phonesTemplate,
+      documents: this.documentsTemplate,
+      contractTitlebar: this.contractTitlebarTemplate,
+      contractClearButton: this.contractClearButtonTemplate,
+      personTitlebar: this.personTitlebarTemplate,
+      personClearButton: this.personClearButtonTemplate,
+    };
+
+    const subscription = this.guarantor$.subscribe(person => {
+      if (person) {
+        this.layout.disableFormGroup();
+      } else {
+        this.layout.enableFormGroup();
+      }
+    });
+
+    this.subscription.add(subscription);
   }
 
   ngAfterViewInit(): void {
@@ -129,19 +173,27 @@ export class GuarantorCardComponent implements AfterViewInit {
         .fetch(this.debtId, this.contractId)
         .subscribe(response => {
           const { personIds, ...contract } = response;
-          this.contractForm.formGroup.patchValue(contract);
+          this.layout.setData({ contract });
         });
       this.personService
         .fetch(this.guarantorId)
         .subscribe(guarantor => {
-          this.guarantorForm.formGroup.patchValue(guarantor);
+          this.layout.setData({ default: guarantor });
         });
     }
+
+    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    this.subscription.add(subscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onGuarantorFormClear(): void {
     this.guaranteeCardService.selectGuarantor(null);
-    this.guarantorForm.formGroup.reset();
+    this.layout.resetForm();
+    this.layout.resetForm('contract');
   }
 
   onSave(): void {
@@ -223,10 +275,10 @@ export class GuarantorCardComponent implements AfterViewInit {
   }
 
   private saveContract(guarantorId: number): Observable<void> {
-    if (!this.contractForm) {
+    if (!this.showContractForm) {
       return this.guaranteeService.addGuarantor(this.debtId, this.contractId, guarantorId);
     }
-    const { data } = this.contractForm;
+    const data = this.layout.getData('contract');
     if (isEmpty(data)) {
       return of(null);
     }
@@ -236,7 +288,7 @@ export class GuarantorCardComponent implements AfterViewInit {
   }
 
   private saveGuarantor(): Observable<number> {
-    const { data } = this.guarantorForm;
+    const data = this.layout.getData();
     if (isEmpty(data)) {
       return of(null);
     }
