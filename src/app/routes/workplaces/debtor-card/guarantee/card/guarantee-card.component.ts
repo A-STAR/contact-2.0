@@ -1,6 +1,18 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
@@ -12,18 +24,18 @@ import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.inte
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
-import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
-
-import { contractFormConfig } from './config/contract-form-config';
-import { guarantorFormConfig } from './config/guarantor-form-config';
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 import { invert } from '@app/core/utils';
+
+import { layout } from './guarantee-card.layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,12 +43,21 @@ import { invert } from '@app/core/utils';
   selector: 'app-guarantee-card',
   templateUrl: 'guarantee-card.component.html',
 })
-export class GuarantorCardComponent implements AfterViewInit {
-  @ViewChild('contractForm') contractForm: MetadataFormComponent<any>;
-  @ViewChild('guarantorForm') guarantorForm: MetadataFormComponent<any>;
+export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
-  readonly contractFormConfig = contractFormConfig;
-  readonly guarantorFormConfig = guarantorFormConfig;
+  @ViewChild('identification', { read: TemplateRef }) identificationTemplate: TemplateRef<any>;
+  @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
+  @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
+  @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
+
+  @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+
+  readonly layoutConfig = layout;
 
   readonly paramMap = this.route.snapshot.paramMap;
 
@@ -63,11 +84,17 @@ export class GuarantorCardComponent implements AfterViewInit {
   /**
    * Guarantor role (according to dictionary 44)
    */
-  readonly guaarantorRole = 2;
+  readonly guarantorRole = 2;
+
+  readonly phoneContactType = 1;
 
   readonly editing = Boolean(this.guarantorId);
 
   readonly guarantor$ = this.guaranteeCardService.guarantor$;
+
+  readonly formData$ = this.guarantor$.pipe(
+    map(person => person ? { default: person } : {}),
+  );
 
   readonly isGuarantorFormDisabled$ = this.guarantor$.pipe(
     map(Boolean),
@@ -81,11 +108,13 @@ export class GuarantorCardComponent implements AfterViewInit {
     map(data => data.showContractForm),
   );
 
+  readonly showContractForm = this.route.snapshot.data.showContractForm;
+
   readonly contractTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title',
   };
 
-  readonly guarantorTitlebar: ITitlebar = {
+  readonly personTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
     items: [
       {
@@ -96,7 +125,14 @@ export class GuarantorCardComponent implements AfterViewInit {
     ]
   };
 
+  readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
+
+  private subscription = new Subscription();
+
+  templates: Record<string, TemplateRef<any>>;
+
   constructor(
+    private contactRegistrationService: ContactRegistrationService,
     private guaranteeCardService: GuaranteeCardService,
     private guaranteeService: GuaranteeService,
     private injector: Injector,
@@ -107,16 +143,28 @@ export class GuarantorCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
-  get canSubmit(): boolean {
-    const contractFormGroup = this.contractForm
-      ? this.contractForm.formGroup
-      : null;
-    const guarantorFormGroup = this.guarantorForm
-      ? this.guarantorForm.formGroup
-      : null;
-    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
-    const guarantorFormValid = guarantorFormGroup && (guarantorFormGroup.valid || guarantorFormGroup.disabled);
-    return contractFormValid && guarantorFormValid;
+  ngOnInit(): void {
+    this.templates = {
+      identification: this.identificationTemplate,
+      employment: this.employmentTemplate,
+      addresses: this.addressesTemplate,
+      phones: this.phonesTemplate,
+      documents: this.documentsTemplate,
+      contractTitlebar: this.contractTitlebarTemplate,
+      contractClearButton: this.contractClearButtonTemplate,
+      personTitlebar: this.personTitlebarTemplate,
+      personClearButton: this.personClearButtonTemplate,
+    };
+
+    const subscription = this.guarantor$.subscribe(person => {
+      if (person) {
+        this.layout.disableFormGroup();
+      } else {
+        this.layout.enableFormGroup();
+      }
+    });
+
+    this.subscription.add(subscription);
   }
 
   ngAfterViewInit(): void {
@@ -125,19 +173,27 @@ export class GuarantorCardComponent implements AfterViewInit {
         .fetch(this.debtId, this.contractId)
         .subscribe(response => {
           const { personIds, ...contract } = response;
-          this.contractForm.formGroup.patchValue(contract);
+          this.layout.setData({ contract });
         });
       this.personService
         .fetch(this.guarantorId)
         .subscribe(guarantor => {
-          this.guarantorForm.formGroup.patchValue(guarantor);
+          this.layout.setData({ default: guarantor });
         });
     }
+
+    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    this.subscription.add(subscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onGuarantorFormClear(): void {
     this.guaranteeCardService.selectGuarantor(null);
-    this.guarantorForm.formGroup.reset();
+    this.layout.resetForm();
+    this.layout.resetForm('contract');
   }
 
   onSave(): void {
@@ -174,12 +230,32 @@ export class GuarantorCardComponent implements AfterViewInit {
     this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
   }
 
+  onPhoneRegister(phone: IPhone): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: phone.id,
+      contactType: this.phoneContactType,
+      debtId: this.debtId,
+      personId: this.guarantorId,
+      personRole: this.guarantorRole,
+    });
+  }
+
   onAddressAdd(): void {
     this.router.navigate([ 'address/create' ], { relativeTo: this.route });
   }
 
   onAddressEdit(address: IAddress): void {
     this.router.navigate([ `address/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressRegister(address: IAddress): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: address.id,
+      contactType: 3,
+      debtId: this.debtId,
+      personId: this.guarantorId,
+      personRole: this.guarantorRole,
+    });
   }
 
   onIdentityAdd(): void {
@@ -199,10 +275,10 @@ export class GuarantorCardComponent implements AfterViewInit {
   }
 
   private saveContract(guarantorId: number): Observable<void> {
-    if (!this.contractForm) {
+    if (!this.showContractForm) {
       return this.guaranteeService.addGuarantor(this.debtId, this.contractId, guarantorId);
     }
-    const { data } = this.contractForm;
+    const data = this.layout.getData('contract');
     if (isEmpty(data)) {
       return of(null);
     }
@@ -212,7 +288,7 @@ export class GuarantorCardComponent implements AfterViewInit {
   }
 
   private saveGuarantor(): Observable<number> {
-    const { data } = this.guarantorForm;
+    const data = this.layout.getData();
     if (isEmpty(data)) {
       return of(null);
     }

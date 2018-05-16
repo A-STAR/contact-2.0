@@ -1,5 +1,18 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
 
@@ -10,6 +23,7 @@ import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.inte
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
@@ -17,11 +31,9 @@ import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 
-import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
-import { contractFormConfig } from './config/contract-form.config';
-import { pledgorFormConfig } from './config/pledgor-form.config';
-import { propertyFormConfig } from './config/property-form.config';
+import { layout } from './pledge-card.layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,14 +41,23 @@ import { propertyFormConfig } from './config/property-form.config';
   selector: 'app-pledge-card',
   templateUrl: 'pledge-card.component.html',
 })
-export class PledgeCardComponent implements AfterViewInit {
-  @ViewChild('contractForm') contractForm: MetadataFormComponent<any>;
-  @ViewChild('pledgorForm') pledgorForm: MetadataFormComponent<any>;
-  @ViewChild('propertyForm') propertyForm: MetadataFormComponent<any>;
+export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
-  readonly contractFormConfig = contractFormConfig;
-  readonly pledgorFormConfig = pledgorFormConfig;
-  readonly propertyFormConfig = propertyFormConfig;
+  @ViewChild('identification', { read: TemplateRef }) identificationTemplate: TemplateRef<any>;
+  @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
+  @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
+  @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
+
+  @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
+
+  readonly layoutConfig = layout;
 
   readonly pledgor$ = this.pledgeCardService.pledgor$;
   readonly isPledgorFormDisabled$ = this.pledgor$.pipe(
@@ -46,6 +67,15 @@ export class PledgeCardComponent implements AfterViewInit {
   readonly property$ = this.pledgeCardService.property$;
   readonly isPropertyFormDisabled$ = this.property$.pipe(
     map(Boolean),
+  );
+
+  readonly formData$ = combineLatest(this.pledgor$, this.property$).pipe(
+    map(([ person, property ]) => {
+      return {
+        default: person ? person : {},
+        property: property ? property : {},
+      };
+    }),
   );
 
   readonly paramMap = this.route.snapshot.paramMap;
@@ -74,6 +104,8 @@ export class PledgeCardComponent implements AfterViewInit {
    * Pledgor role (according to dictionary 44)
    */
   readonly pledgorRole = 3;
+
+  readonly phoneContactType = 1;
 
   /**
    * ID of property that is linked via contractId
@@ -114,7 +146,14 @@ export class PledgeCardComponent implements AfterViewInit {
     ]
   };
 
+  readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
+
+  private subscription = new Subscription();
+
+  templates: Record<string, TemplateRef<any>>;
+
   constructor(
+    private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
     private personService: PersonService,
     private pledgeCardService: PledgeCardService,
@@ -126,20 +165,57 @@ export class PledgeCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
-  get canSubmit(): boolean {
-    const contractFormGroup = this.contractForm
-      ? this.contractForm.formGroup
-      : null;
-    const pledgorFormGroup = this.pledgorForm
-      ? this.pledgorForm.formGroup
-      : null;
-    const propertyFormGroup = this.propertyForm
-      ? this.propertyForm.formGroup
-      : null;
-    const contractFormValid = !contractFormGroup || contractFormGroup.valid;
-    const pledgorFormValid = !pledgorFormGroup || pledgorFormGroup.valid;
-    const propertyFormValid = !propertyFormGroup || propertyFormGroup.valid;
-    return contractFormValid && pledgorFormValid && propertyFormValid;
+  ngOnInit(): void {
+    this.templates = {
+      identification: this.identificationTemplate,
+      employment: this.employmentTemplate,
+      addresses: this.addressesTemplate,
+      phones: this.phonesTemplate,
+      documents: this.documentsTemplate,
+      contractTitlebar: this.contractTitlebarTemplate,
+      contractClearButton: this.contractClearButtonTemplate,
+      personTitlebar: this.personTitlebarTemplate,
+      personClearButton: this.personClearButtonTemplate,
+      propertyTitlebar: this.propertyTitlebarTemplate,
+      propertyClearButton: this.propertyClearButtonTemplate,
+    };
+
+    const pledgorSubscription = this.pledgor$.subscribe(person => {
+      if (person) {
+        this.layout.disableFormGroup();
+      } else {
+        this.layout.enableFormGroup();
+      }
+    });
+    this.subscription.add(pledgorSubscription);
+
+    const propertySubscription = this.property$.subscribe(property => {
+      if (property) {
+        this.layout.disableFormGroup('property');
+      } else {
+        this.layout.enableFormGroup('property');
+      }
+    });
+    this.subscription.add(propertySubscription);
+  }
+
+  ngAfterViewInit(): void {
+    if (this.contractId) {
+      this.fetchContract();
+    }
+    if (this.pledgorId) {
+      this.fetchPledgor();
+    }
+    if (this.propertyId) {
+      this.fetchProperty();
+    }
+
+    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    this.subscription.add(subscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   get title(): string {
@@ -155,51 +231,37 @@ export class PledgeCardComponent implements AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    if (this.contractId) {
-      this.fetchContract();
-    }
-    if (this.pledgorId) {
-      this.fetchPledgor();
-    }
-    if (this.propertyId) {
-      this.fetchProperty();
-    }
-  }
-
   onPledgorFormClear(): void {
     this.pledgeCardService.selectPledgor(null);
-    this.pledgorForm.formGroup.reset();
+    this.layout.resetForm();
   }
 
   onPropertyFormClear(): void {
     this.pledgeCardService.selectProperty(null);
-    this.propertyForm.formGroup.reset();
+    this.layout.resetForm('property');
   }
 
   onSave(): void {
+    const contractData = this.layout.getData('contract');
+    const pledgorData = this.layout.getData();
+    const propertyData = this.layout.getData('property');
+
     if (this.createMode) {
-      const contractData = this.contractForm.data;
-      const pledgorData = this.pledgorForm.data;
-      const propertyData = this.propertyForm.data;
       this.pledgeCardService
         .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
         .subscribe(() => this.onSuccess());
     }
     if (this.addPledgorMode) {
       this.pledgeCardService
-        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.pledgorForm.data, this.propertyForm.data)
+        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, pledgorData, propertyData)
         .subscribe(() => this.onSuccess());
     }
     if (this.addPropertyMode) {
       this.pledgeCardService
-        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, this.propertyForm.data)
+        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, propertyData)
         .subscribe(() => this.onSuccess());
     }
     if (this.editMode) {
-      const contractData = this.contractForm.data;
-      const pledgorData = this.pledgorForm.data;
-      const propertyData = this.propertyForm.data;
       this.pledgeCardService
         .updatePledge(this.debtId, this.contractId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
         .subscribe(() => this.onSuccess());
@@ -222,12 +284,32 @@ export class PledgeCardComponent implements AfterViewInit {
     this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
   }
 
+  onPhoneRegister(phone: IPhone): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: phone.id,
+      contactType: this.phoneContactType,
+      debtId: this.debtId,
+      personId: this.pledgorId,
+      personRole: this.pledgorRole,
+    });
+  }
+
   onAddressAdd(): void {
     this.router.navigate([ 'address/create' ], { relativeTo: this.route });
   }
 
   onAddressEdit(address: IAddress): void {
     this.router.navigate([ `address/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressRegister(address: IAddress): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: address.id,
+      contactType: 3,
+      debtId: this.debtId,
+      personId: this.pledgorId,
+      personRole: this.pledgorRole,
+    });
   }
 
   onIdentityAdd(): void {
@@ -249,19 +331,19 @@ export class PledgeCardComponent implements AfterViewInit {
   private fetchContract(): void {
     this.pledgeService
       .fetch(this.debtId, this.contractId)
-      .subscribe(contract => this.contractForm.formGroup.patchValue(contract));
+      .subscribe(contract => this.layout.setData({ contract }));
   }
 
   private fetchPledgor(): void {
     this.personService
       .fetch(this.pledgorId)
-      .subscribe(person => this.pledgorForm.formGroup.patchValue(person));
+      .subscribe(pledgor => this.layout.setData({ default: pledgor }));
   }
 
   private fetchProperty(): void {
     this.propertyService
       .fetch(this.pledgorId, this.propertyId)
-      .subscribe(property => this.propertyForm.formGroup.patchValue(property));
+      .subscribe(property => this.layout.setData({ property }));
   }
 
   private onSuccess(): void {
