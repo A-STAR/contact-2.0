@@ -124,6 +124,8 @@ export class ContextService {
           return appContext.permissions.notEmpty(v);
         case ContextOperator.NOT:
           return !v;
+        case ContextOperator.NOT_NULL:
+          return Boolean(v);
         case ContextOperator.OR:
           return v.reduce((acc, item) => acc || item, false);
         case ContextOperator.PERSON_ATTRIBUTES:

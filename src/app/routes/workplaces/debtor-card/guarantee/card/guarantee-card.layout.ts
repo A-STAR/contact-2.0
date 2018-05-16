@@ -33,6 +33,10 @@ export const layout: IDynamicLayoutConfig = {
               size: 50,
               children: [
                 {
+                  type: DynamicLayoutItemType.TEMPLATE,
+                  value: 'contractTitlebar',
+                },
+                {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
                   form: 'contract',
@@ -70,6 +74,10 @@ export const layout: IDynamicLayoutConfig = {
                   form: 'contract',
                   label: 'Комментарий',
                   name: 'comment',
+                },
+                {
+                  type: DynamicLayoutItemType.TEMPLATE,
+                  value: 'contractClearButton',
                 },
               ],
             },
