@@ -21,6 +21,10 @@ export class AttributesService {
     UserDictionariesService.DICTIONARY_DEBT_LIST_2,
     UserDictionariesService.DICTIONARY_DEBT_LIST_3,
     UserDictionariesService.DICTIONARY_DEBT_LIST_4,
+    UserDictionariesService.DICTIONARY_DEBT_STAGE_CODE,
+    UserDictionariesService.DICTIONARY_REGIONS,
+    UserDictionariesService.DICTIONARY_BRANCHES,
+    UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
   ];
 
   constructor(

@@ -22,7 +22,7 @@ export class UserDictionariesEffects {
             type: UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS,
             payload: {
               dictionaryId,
-              terms
+              terms: terms.filter(t => !t.isClosed)
             }
           };
         })
