@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged, first } from 'rxjs/operators';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -15,7 +15,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DateRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
 import { DialogFunctions } from '@app/core/dialog';
 
-import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 import { Debt } from '@app/entities';
 
 @Component({
@@ -24,15 +24,13 @@ import { Debt } from '@app/entities';
   selector: 'app-debt-grid',
   templateUrl: './debt-grid.component.html',
 })
-export class DebtGridComponent extends DialogFunctions implements OnDestroy {
+export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnInit {
 
   readonly debts$ = this.debtorService.debts$;
 
-  readonly selectedDebt$ = this.debtorService.debt$;
+  selectedDebt$ = new BehaviorSubject<Debt>(null);
 
-  readonly selection$ = this.debtorService.debtId$.pipe(
-    map(debt => debt ? [ debt ] : []),
-  );
+  selection$ = new BehaviorSubject<Debt[]>(null);
 
   readonly canAdd$ = this.userPermissionsService.bag()
     .pipe(
@@ -144,6 +142,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy {
   private debtUpdateSub: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -152,20 +151,29 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy {
     super();
   }
 
+  ngOnInit(): void {
+    this.debts$
+      .pipe(first())
+      .subscribe(debts => {
+        this.selection$.next([ debts[0] ]);
+        this.selectedDebt$.next(debts[0]);
+        this.cdRef.markForCheck();
+      });
+  }
+
   ngOnDestroy(): void {
     this.debtUpdateSub.unsubscribe();
   }
 
   onDoubleClick(debt: Debt): void {
-    this.debtorService.debtId$.next(debt.id);
+    this.selectedDebt$.next(debt);
     this.onEdit();
   }
 
   onSelect(debts: Debt[]): void {
-    const debtId = isEmpty(debts)
-      ? null
-      : debts[0].id;
-      this.debtorService.debtId$.next(debtId);
+    if (debts && debts.length) {
+      this.selectedDebt$.next(debts[0]);
+    }
   }
 
   onDialogClose(): void {

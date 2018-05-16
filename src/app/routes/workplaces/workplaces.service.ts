@@ -37,8 +37,8 @@ export class WorkplacesService {
     return this.repo.fetch(Debt, { personId });
   }
 
-  fetchDebt(debtId: number): Observable<Debt> {
-    return this.repo.fetch(Debt, { id: debtId }).pipe(
+  fetchDebt(debtId: number, callCenter?: boolean): Observable<Debt> {
+    return this.repo.fetch(Debt, { id: debtId, callCenter }).pipe(
       map(debts => debts && debts[0])
     );
   }

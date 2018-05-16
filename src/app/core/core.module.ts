@@ -71,7 +71,7 @@ import 'rxjs/add/operator/withLatestFrom';
     }),
     RepositoryModule.withEntity({
       entityClass: Debt,
-      urls: [ '/debts/{id}', '/persons/{personId}/debts' ],
+      urls: [ '/debts/{id}', '/persons/{personId}/debts', '/debts/{id}?callCenter={callCenter}' ],
     }),
     UserModule,
   ],

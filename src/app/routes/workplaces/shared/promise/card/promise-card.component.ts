@@ -24,6 +24,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,7 +78,8 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     private promiseService: PromiseService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private workplacesService: WorkplacesService,
   ) {
 
     this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
@@ -88,7 +90,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
       this.promiseService.getPromiseLimit(this.debtId, this.callCenter),
-      this.promiseService.fetchDebt(this.debtId, this.callCenter),
+      this.workplacesService.fetchDebt(this.debtId, this.callCenter),
       this.promiseId
         ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
         : of(null),
