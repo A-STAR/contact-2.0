@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/cor
 import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 
-import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, ISelectItemsPayload } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee } from '../../organizations.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
@@ -25,6 +25,7 @@ export class EmployeeAddComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private selectedEmployees: Array<IEmployeeUser> = [];
+  private selectedRole: Boolean;
 
   notAddedEmployees: Observable<IEmployee[]>;
   controls: Array<IDynamicFormControl> = [];
@@ -71,8 +72,14 @@ export class EmployeeAddComponent implements OnInit {
     this.selectedEmployees = employees;
   }
 
+  onSelectRole(payload: ISelectItemsPayload): void {
+    this.selectedRole = true;
+  }
+
   canSubmit(): boolean {
-    return this.selectedEmployees && this.selectedEmployees.length > 0 && this.form && this.form.isValid;
+    return this.selectedEmployees && this.selectedEmployees.length > 0 &&
+    this.selectedRole &&
+    this.form && this.form.isValid;
   }
 
   onSubmit(): void {
