@@ -61,13 +61,14 @@
       <!-- Phones -->
       <app-tabview-tab title="Телефоны">
         <app-phone-grid
-          [contactType]="1"
+          [contactType]="phoneContactType"
           [debtId]="debtId"
           [personId]="guarantorId"
-          [personRole]="guaarantorRole"
+          [personRole]="guarantorRole"
           (add)="onPhoneAdd()"
-          (dblClick)="onPhoneEdit($event)"
+          (dblClick)="onPhoneRegister($event)"
           (edit)="onPhoneEdit($event)"
+          (register)="onPhoneRegister($event)"
         ></app-phone-grid>
       </app-tabview-tab>
 
@@ -76,10 +77,11 @@
         <app-address-grid
           [debtId]="debtId"
           [personId]="guarantorId"
-          [personRole]="guaarantorRole"
+          [personRole]="guarantorRole"
           (add)="onAddressAdd()"
-          (dblClick)="onAddressEdit($event)"
+          (dblClick)="onAddressRegister($event)"
           (edit)="onAddressEdit($event)"
+          (register)="onAddressRegister($event)"
         ></app-address-grid>
       </app-tabview-tab>
 
