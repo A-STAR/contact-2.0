@@ -7,6 +7,17 @@ import { ActivatedRoute } from '@angular/router';
 import { IOption, INamedValue } from '../converter/value-converter.interface';
 import { ILookupLanguage } from '../lookup/lookup.interface';
 import { IEntityTranslation, IEntitytTranslationValue } from '../entity/translations/entity-translations.interface';
+import {
+  is,
+  pickBy,
+  isNil,
+  ifElse,
+  identity,
+  mapObjIndexed,
+  complement,
+  equals,
+  compose,
+} from 'ramda';
 
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
 
@@ -211,3 +222,11 @@ export function deepFilterAndMap<T extends { children?: T[] }, V>(items: T[],
         deepFilterAndMap(item.children, filterKey, mapKey) : filterFn(item) ? [mapFn(item)] : []),
     ]), []);
 }
+
+export const pickExisting = ifElse(is(Object), pickBy(complement(isNil)), identity);
+
+export const filterFalse = pickBy(complement(equals(false)));
+
+export const convertBool = ifElse(is(Boolean), Number, identity);
+
+export const serializeBoolParams = compose(mapObjIndexed(convertBool), filterFalse);

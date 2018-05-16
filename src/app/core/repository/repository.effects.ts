@@ -15,7 +15,8 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 import { REPOSITORY_ENTITY } from './repository.service';
 
-import { getPrimaryKey, serializeKeys, serializeParams } from './repository.utils';
+import { getPrimaryKey, serializeKeys, serializeParams, serializeParamsKeys } from './repository.utils';
+import { pickExisting, serializeBoolParams } from '@app/core/utils';
 
 @Injectable()
 export class RepositoryEffects {
@@ -51,12 +52,12 @@ export class RepositoryEffects {
 
   private fetch(entityDef: IEntityDef, params: Record<string, any>): Observable<any[]> {
     const entityName = entityDef.entityClass.name.toLowerCase();
-    const serializedParamKeys = serializeKeys(Object.keys(params));
+    const serializedParamKeys = serializeParamsKeys(params);
     const url = entityDef.urls.find(u => {
       const urlParams = u.match(/\{.+?\}/gi).map(i => i.slice(1, -1));
       return serializeKeys(urlParams) === serializedParamKeys;
     });
-    return this.dataService.readAll(url, params).pipe(
+    return this.dataService.readAll(url, serializeBoolParams(params)).pipe(
       catchError(this.notificationsService.fetchError().entity(entityName).dispatchCallback()),
     );
   }
