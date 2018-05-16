@@ -120,11 +120,11 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly showContractForm = this.createMode || this.editMode;
   readonly showPledgorForm = this.createMode || this.addPledgorMode || this.editMode;
 
-  readonly contractTitlebar: ITitlebar = {
+  readonly contractTitlebarConfig: ITitlebar = {
     title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
   };
 
-  readonly pledgorTitlebar: ITitlebar = {
+  readonly pledgorTitlebarConfig: ITitlebar = {
     title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
     items: [
       {
@@ -135,7 +135,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     ]
   };
 
-  readonly propertyTitlebar: ITitlebar = {
+  readonly propertyTitlebarConfig: ITitlebar = {
     title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
