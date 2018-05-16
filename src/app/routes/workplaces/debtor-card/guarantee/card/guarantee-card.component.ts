@@ -114,7 +114,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title',
   };
 
-  readonly guarantorTitlebar: ITitlebar = {
+  readonly personTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
     items: [
       {
