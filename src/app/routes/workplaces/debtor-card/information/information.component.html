@@ -32,7 +32,6 @@
         <app-address-grid
           *ngIf="tabs[1].isInitialised"
           [debtId]="debtId$ | async"
-          [debtorId]="debtorId$ | async"
           [personId]="debtorId$ | async"
           [personRole]="personRole"
           (add)="onAddressAdd()"

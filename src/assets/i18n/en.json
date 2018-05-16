@@ -1281,6 +1281,7 @@
     "reward": "Remuneration",
     "shortInfo": "Short info",
     "stageCode": "Stage",
+    "successUpdate": "Successfully updated debtor with ID {{ id }}",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",

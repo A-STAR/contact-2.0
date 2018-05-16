@@ -14,9 +14,7 @@ export class DebtorPaymentComponent {
     private route: ActivatedRoute,
   ) {}
 
-  get debtId$(): Observable<number> {
-    return this.debtorService.debtId$;
-  }
+  readonly debtId$: Observable<number> = this.debtorService.debtId$;
 
   get paymentId(): number {
     return this.routeParams.paymentId;

@@ -11,19 +11,19 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, mergeMap, map, tap } from 'rxjs/operators';
+import { first, mergeMap, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
-import { IPerson } from '../debtor.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from '../debtor.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DebtorInformationComponent } from '../information/information.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
@@ -31,7 +31,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 import { DialogFunctions } from '@app/core/dialog';
 import { invert } from '@app/core/utils';
 
-import { Debt } from '@app/entities';
+import { Debt, Person } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,7 +45,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
   controls: IDynamicFormItem[];
-  data: Partial<Debt & IPerson>;
+  data: Partial<Debt & Person>;
   dialog: 'registerContact' = null;
   // nice, isn't it?
   tabs = [
@@ -71,6 +71,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private debtorService: DebtorService,
+    private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -84,15 +85,12 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     if (this.debtorId && this.debtId) {
       this.debtorService.debtId$.next(this.debtId);
       this.debtorService.debtorId$.next(this.debtorId);
-      // TODO(i.lobanov): ensure this works correctly
       this.personSubscription = combineLatest(
-        this.debtorService.debtor$.pipe(first()),
-        this.debtorService.debt$.pipe(first()),
+        this.debtorService.debtor$,
+        this.debtorService.debt$,
       )
       .pipe(
-        tap(([person, debt]) => {
-          console.log('Person: ', person.id, 'Debt: ', debt.id);
-        }),
+        first(),
         map(([person, debt]) => ({
             ...person,
             responsibleFullName: debt.responsibleFullName,
@@ -153,6 +151,9 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         .subscribe(() => {
           this.form.form.markAsPristine();
           this.information.form.form.markAsPristine();
+          this.notificationsService.info('debtor.successUpdate')
+            .params({ id: this.debtId.toString() })
+            .dispatch();
           this.cdRef.markForCheck();
         });
     }
