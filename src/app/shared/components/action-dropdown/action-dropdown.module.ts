@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { DropdownModule } from '@app/shared/components/dropdown/dropdown.module';
+import { MassOpsModule } from '@app/shared/mass-ops/mass-ops.module';
 
 import { ActionDropdownComponent } from './action-dropdown.component';
 
@@ -11,6 +12,7 @@ import { ActionDropdownComponent } from './action-dropdown.component';
     ButtonModule,
     CommonModule,
     DropdownModule,
+    MassOpsModule
   ],
   exports: [
     ActionDropdownComponent,
