@@ -1,4 +1,4 @@
-import { setIn } from 'immutable';
+import { mergeDeep, setIn } from 'immutable';
 
 import { DynamicLayoutAction, IDynamicLayoutState, IDynamicLayoutAction } from './dynamic-layout.interface';
 
@@ -13,13 +13,22 @@ export function reducer(
       const { key, config } = action.payload;
       return setIn(state, [ key, 'config' ], config);
     }
-    case DynamicLayoutAction.CHANGE_FORM_VALID: {
-      const { form, key, valid, dirty } = action.payload;
-      return setIn(state, [ key, 'forms', form, 'status' ], { valid, dirty });
+    case DynamicLayoutAction.CHANGE_FORM_STATUS: {
+      const { form, key, status } = action.payload;
+      return setIn(state, [ key, 'forms', form, 'status' ], status);
     }
     case DynamicLayoutAction.CHANGE_FORM_VALUE: {
-      const { form, key, value } = action.payload;
-      return setIn(state, [ key, 'forms', form, 'value' ], value);
+      const { form, key, value, dirty } = action.payload;
+      return mergeDeep(state, {
+        [key]: {
+          forms: {
+            [form]: {
+              value,
+              dirty,
+            }
+          }
+        }
+      });
     }
     default:
       return state;
