@@ -1281,6 +1281,7 @@
     "reward": "Remuneration",
     "shortInfo": "Short info",
     "stageCode": "Stage",
+    "successUpdate": "Successfully updated debtor with ID {{ id }}",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -2842,7 +2843,16 @@
         "gen": { "plural": "debtor general information" }
       }
     },
+    "debtor": {
+      "gen": { "singular": "debtor", "plural": "debtors" },
+      "info": {
+        "gen": { "plural": "debtor general information" }
+      }
+    },
     "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
+    },
+    "debt": {
       "gen": { "singular": "debt", "plural": "debts" }
     },
     "massOps": {

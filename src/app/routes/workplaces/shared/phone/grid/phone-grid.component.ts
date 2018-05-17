@@ -14,27 +14,26 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators/map';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
-import { IDebt } from '@app/core/debt/debt.interface';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { IPerson } from '@app/routes/workplaces/core/person/person.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { Debt, Person } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,66 +71,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
-  gridToolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.onEdit(),
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
-      enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(phone => phone && !phone.isInactive)]),
-      action: () => this.setDialog('block')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(phone => phone && !!phone.isInactive)]),
-      action: () => this.setDialog('unblock')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_SMS,
-      enabled: this.canSchedule$,
-      action: () => this.setDialog('schedule')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
-      enabled: this.canRegisterContact$,
-      action: () => this.registerContact()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.setDialog('delete')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
-      action: () => this.fetch()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_CALL,
-      align: 'right',
-      enabled: this.canMakeCall$,
-      action: () => this.onMakeCall()
-    },
-  ];
-
   columns: ISimpleGridColumn<IPhone>[] = [];
 
   dialog = null;
 
   phones: IPhone[] = [];
 
-  debt: IDebt;
+  debt: Debt;
 
   private activeCallPhoneId: number;
 
-  private person: IPerson;
+  private person: Person;
 
   private canViewSubscription: Subscription;
   private contactDetailsChangeSub: Subscription;
@@ -154,9 +104,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
+    private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
-    private personService: PersonService,
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -164,7 +113,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.debtSubscription = this._debtId$
-      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null))
+      .flatMap(debtId => debtId ? this.workplacesService.fetchDebt(debtId) : of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();
@@ -224,7 +173,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
     this.personId$
       .filter(Boolean)
-      .flatMap(personId => this.personService.fetch(personId))
+      .flatMap(personId => this.workplacesService.fetchDebtor(personId))
       .pipe(first())
       .subscribe(person => {
         this.person = person;
@@ -328,48 +277,32 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(phone => this.register.emit(phone));
   }
 
-  get selectedPhone$(): Observable<IPhone> {
-    return this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
-  }
+  readonly selectedPhone$: Observable<IPhone>  = this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
 
-  get selectedPhoneCall$(): Observable<ICall> {
-    return this.selectedPhone$
-      .flatMap(phone => this.callService.activeCall$
-        .map(call => phone && call && call.phoneId === phone.id ? call : null)
-      );
-  }
+  readonly selectedPhoneCall$: Observable<ICall> = this.selectedPhone$
+    .flatMap(phone => this.callService.activeCall$
+      .map(call => phone && call && call.phoneId === phone.id ? call : null)
+    );
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_VIEW')
-      .map(hasPermission => hasPermission || this.ignorePermissions);
-  }
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('PHONE_VIEW')
+    .pipe(
+      map(hasPermission => hasPermission || this.ignorePermissions)
+    );
 
-  get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_INACTIVE_VIEW');
-  }
+  readonly canViewBlock$: Observable<boolean> = this.userPermissionsService.has('PHONE_INACTIVE_VIEW');
 
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_ADD');
-  }
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('PHONE_ADD');
 
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.hasOne([ 'PHONE_EDIT', 'PHONE_COMMENT_EDIT' ]);
-  }
+  readonly canEdit$: Observable<boolean> = this.userPermissionsService.hasOne([ 'PHONE_EDIT', 'PHONE_COMMENT_EDIT' ]);
 
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_DELETE');
-  }
+  readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('PHONE_DELETE');
 
-  get canBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_SET_INACTIVE');
-  }
+  readonly canBlock$: Observable<boolean> = this.userPermissionsService.has('PHONE_SET_INACTIVE');
 
-  get canUnblock$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_SET_ACTIVE');
-  }
+  readonly canUnblock$: Observable<boolean> = this.userPermissionsService.has('PHONE_SET_ACTIVE');
 
-  get canSchedule$(): Observable<boolean> {
-    return this.selectedPhone$.mergeMap(phone => {
+  readonly canSchedule$: Observable<boolean> = this.selectedPhone$
+    .mergeMap(phone => {
       return phone && !phone.isInactive && !phone.stopAutoSms && this.isDebtOpen
         ? combineLatestAnd([
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
@@ -380,25 +313,69 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         ])
         : of(false);
     });
-  }
 
-  get canRegisterContact$(): Observable<boolean> {
-    // TODO(d.maltsev): use debtor service
-    return combineLatestAnd([
+  // TODO(d.maltsev): use debtor service
+  readonly canRegisterContact$: Observable<boolean> = combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1)
         .map(hasPermission => hasPermission || this.ignorePermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
-  }
 
-  get canMakeCall$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.callService.canMakeCall$,
-      this.selectedPhone$.map(phone => phone && !phone.isInactive),
-      this.selectedPhoneCall$.map(call => !call)
-    ]);
-  }
+  readonly canMakeCall$: Observable<boolean> = combineLatestAnd([
+    this.callService.canMakeCall$,
+    this.selectedPhone$.map(phone => phone && !phone.isInactive),
+    this.selectedPhoneCall$.map(call => !call)
+  ]);
+
+  gridToolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
+      action: () => this.onAdd()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
+      action: () => this.onEdit(),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(phone => phone && !phone.isInactive)]),
+      action: () => this.setDialog('block')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(phone => phone && !!phone.isInactive)]),
+      action: () => this.setDialog('unblock')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      enabled: this.canSchedule$,
+      action: () => this.setDialog('schedule')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      enabled: this.canRegisterContact$,
+      action: () => this.registerContact()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
+      action: () => this.setDialog('delete')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
+      action: () => this.fetch()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      align: 'right',
+      enabled: this.canMakeCall$,
+      action: () => this.onMakeCall()
+    },
+  ];
 
   private get isDebtOpen(): boolean {
     return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);

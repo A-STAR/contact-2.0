@@ -7,7 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { IDocument } from '@app/routes/workplaces/core/document/document.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -40,7 +40,7 @@ export class DocumentCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -50,7 +50,7 @@ export class DocumentCardComponent implements OnInit {
 
   ngOnInit(): void {
     const document$ = this.documentId
-      ? this.debtorCardService.personId$
+      ? this.debtorService.debtorId$
           .switchMap(personId => this.documentService.fetch(this.entityTypeCode, personId, this.documentId, this.callCenter))
       : of(null);
 
@@ -67,9 +67,10 @@ export class DocumentCardComponent implements OnInit {
         { controlName: 'docName', type: 'text' },
         { controlName: 'docNumber', type: 'text' },
         { controlName: 'comment', type: 'textarea' },
-        { controlName: 'file', type: 'file',
-          fileName: document && document.fileName,
+        { controlName: 'file',
+          type: 'file',
           required: true,
+          fileName: document && document.fileName,
           validators: [ fileSizeValidator ]
         },
       ].map(control => ({
@@ -85,11 +86,11 @@ export class DocumentCardComponent implements OnInit {
   onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
     const action$ = this.documentId
-    ? this.debtorCardService.personId$
+    ? this.debtorService.debtorId$
         .switchMap(personId =>
           this.documentService.update(this.entityTypeCode, personId, this.documentId, document, file, this.callCenter)
         )
-    : this.debtorCardService.personId$
+    : this.debtorService.debtorId$
         .switchMap(personId =>
           this.documentService.create(this.entityTypeCode, personId, document, file, this.callCenter)
         );

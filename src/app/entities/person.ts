@@ -22,9 +22,9 @@ export class Person {
   @Field()
   middleName: string;
   @Field()
-  stageCode: number;
+  personId: number;
   @Field()
-  stringValue10: string;
+  stageCode: number;
   @Field()
   stringValue1: string;
   @Field()
@@ -43,6 +43,8 @@ export class Person {
   stringValue8: string;
   @Field()
   stringValue9: string;
+  @Field()
+  stringValue10: string;
   @Field()
   typeCode: number;
 }
