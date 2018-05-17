@@ -26,13 +26,14 @@ export class DocumentCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParamMap = this.route.snapshot.paramMap;
+  private queryParamMap = this.route.snapshot.queryParamMap;
   private routeData = this.route.snapshot.data;
 
   private callCenter = this.routeData.callCenter;
   private readOnly = this.routeData.readOnly;
 
   private documentId = Number(this.routeParamMap.get('documentId'));
-  private entityTypeCode = Number(this.routeParamMap.get('entityType')) || 18;
+  private entityTypeCode = Number(this.queryParamMap.get('entityType')) || 18;
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
@@ -66,7 +67,11 @@ export class DocumentCardComponent implements OnInit {
         { controlName: 'docName', type: 'text' },
         { controlName: 'docNumber', type: 'text' },
         { controlName: 'comment', type: 'textarea' },
-        { controlName: 'file', type: 'file', fileName: document && document.fileName, validators: [ fileSizeValidator ] },
+        { controlName: 'file', type: 'file',
+          fileName: document && document.fileName,
+          required: true,
+          validators: [ fileSizeValidator ]
+        },
       ].map(control => ({
         ...control,
         label: `widgets.document.grid.${control.controlName}`,
