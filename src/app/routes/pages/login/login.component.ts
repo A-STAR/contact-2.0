@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { IMetadataFormConfig, IMetadataFormControlType } from '@app/shared/components/form/metadata-form/metadata-form.interface';
-
-import { AuthService } from '../../../core/auth/auth.service';
-import { PersistenceService } from '../../../core/persistence/persistence.service';
-import { SettingsService } from '../../../core/settings/settings.service';
-import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+import { AuthService } from '@app/core/auth/auth.service';
+import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,63 +14,40 @@ import { MetadataFormComponent } from '@app/shared/components/form/metadata-form
 export class LoginComponent {
   private static LOGIN_KEY = 'auth/login';
 
-  @ViewChild(MetadataFormComponent) form: MetadataFormComponent<any>;
-
-  readonly config: IMetadataFormConfig = {
-    editable: true,
-    items: [
-      {
-        disabled: false,
-        display: true,
-        label: 'login.login_placeholder',
-        name: 'login',
-        type: IMetadataFormControlType.TEXT,
-        validators: { required: true, minLength: 2 },
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'login.password_placeholder',
-        name: 'password',
-        type: IMetadataFormControlType.PASSWORD,
-        validators: { required: true },
-        width: 0,
-      },
-      {
-        disabled: false,
-        display: true,
-        label: 'login.remember_me',
-        name: 'remember_login',
-        type: IMetadataFormControlType.CHECKBOX,
-        validators: {},
-        width: 0,
-      },
-    ],
-    plugins: [],
-  };
-
-  readonly data = {
-    login: this.login,
-    remember_login: Boolean(this.login),
-  };
+  form: FormGroup;
 
   constructor(
     public settings: SettingsService,
     private authService: AuthService,
+    private formBuilder: FormBuilder,
     private persistenceService: PersistenceService,
-  ) {}
+  ) {
+    const login = this.login;
+    const remember = !!login;
 
-  get canSubmit(): boolean {
-    const { formGroup } = this.form;
-    return formGroup.valid && formGroup.dirty;
+    this.form = this.formBuilder.group({
+      login: [ login, Validators.required ],
+      password: [ null, Validators.required ],
+      remember_login: [ remember ],
+    });
   }
 
-  onSubmit(): void {
-    const { value } = this.form.formGroup;
+  isControlDirtyOrTouched(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return (control.dirty || control.touched);
+  }
+
+  submitForm(event: UIEvent, value: any): void {
+    event.preventDefault();
+
     this.login = value.remember_login ? value.login : null;
-    const { login, password } = value;
-    this.authService.dispatchLoginAction(login, password);
+
+    this.form.markAsTouched();
+
+    if (this.form.valid) {
+      const { login, password } = value;
+      this.authService.dispatchLoginAction(login, password);
+    }
   }
 
   private get login(): string {
