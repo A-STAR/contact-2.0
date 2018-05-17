@@ -101,9 +101,11 @@ export class PbxControlsComponent extends DialogFunctions implements OnInit, OnD
 
   get activeCallPersonName(): string {
     return this.activeCall
-      ? this.activeCall.lastName || '' +
-        this.activeCall.firstName || '' +
-        (this.activeCall.middleName ? this.activeCall.middleName[0] + '.' : '')
+      ? [
+        this.activeCall.lastName,
+        this.activeCall.firstName,
+        this.activeCall.middleName ? this.activeCall.middleName[0] + '.' : null
+      ].join(' ')
       : '';
   }
 
