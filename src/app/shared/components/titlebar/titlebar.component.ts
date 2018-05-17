@@ -57,21 +57,21 @@ export class TitlebarComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnChanges(): void {
-    this.title = this.titlebar.title;
+    this.title = this.titlebar && this.titlebar.title;
     this.cdRef.markForCheck();
   }
 
   ngOnInit(): void {
     const classesDefault = defaultTo(of(''));
     const enabledDefault = defaultTo(of(true));
-    this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
-    this.items = (this.titlebar.items || this.items).map(item => ({
+    this.borderCls = { 'no-border': this.titlebar && this.titlebar.suppressBorder === true };
+    this.items = ((this.titlebar && this.titlebar.items) || this.items).map(item => ({
       ...item,
       classes: classesDefault(item.classes),
       enabled: enabledDefault(item.enabled),
     }));
-    this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
-    this.title = this.titlebar.title;
+    this.suppressCenterZone = (this.titlebar && this.titlebar.suppressCenterZone) || false;
+    this.title = (this.titlebar && this.titlebar.title) || '';
   }
 
   getButtonType(item: ITitlebarItem): IButtonType {
