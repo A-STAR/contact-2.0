@@ -63,7 +63,7 @@
   [dnd]="canEdit$ | async"
   [rows]="attributes"
   [translateColumnLabels]="true"
-  (select)="onSelect($event)"
+  (selectRow)="onSelect($event)"
   (move)="onMove($event)"
   (dblclick)="onEdit($event)">
 </app-gridtree2-wrapper>

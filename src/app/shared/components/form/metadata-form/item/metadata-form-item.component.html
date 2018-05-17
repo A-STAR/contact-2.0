@@ -37,7 +37,7 @@
       [formControlName]="item.name"
       [label]="item.label"
       [required]="isRequired(item) | async"
-      (select)="onGridSelect(item, $event)"
+      (onSelect)="onGridSelect(item, $event)"
     ></app-grid-select>
 
     <!-- Password -->

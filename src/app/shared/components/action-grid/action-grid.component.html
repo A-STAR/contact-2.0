@@ -74,7 +74,7 @@
       [rows]="rows"
       [toolbar]="toolbarItems"
       (action)="onAction($event)"
-      (select)="onSelect($event)"
+      (selectRow)="onSelect($event)"
       (dblClick)="onDblClick($event)">
     </app-simple-grid>
   </ng-container>
@@ -85,6 +85,7 @@
     *ngIf="isGridDetails('showContactHistory')"
     [offset]="{ x: '0px', y: hasPagination ? '39px' : '0px' }"
     [actionData]="selectionActionData"
+    (close)="onDetailsClose()"
     [rowData]="selection[0]">
   </app-contact-log-details>
 </ng-template>

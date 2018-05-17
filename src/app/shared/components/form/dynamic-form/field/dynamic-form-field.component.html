@@ -128,7 +128,7 @@
     [required]="control.required"
     [rows]="control.gridRows"
     [valueGetter]="control.gridValueGetter"
-    (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
+    (onSelect)="control.gridOnSelect ? control.gridOnSelect($event) : null">
   </app-grid-dropdown>
 
   <app-grid-select
@@ -250,7 +250,11 @@
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
-    <app-file-upload [formControlName]="control.controlName" [fileName]="control.fileName"></app-file-upload>
+    <app-file-upload
+      [formControlName]="control.controlName"
+      [fileName]="control.fileName"
+      [required]="control.required">
+    </app-file-upload>
   </ng-container>
 
   <ng-container *ngSwitchCase="'button'">

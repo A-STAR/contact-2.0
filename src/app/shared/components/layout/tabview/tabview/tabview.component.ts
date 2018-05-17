@@ -40,7 +40,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
   @Input() fullHeight = false;
   @Input() noMargin = false;
 
-  @Output() select = new EventEmitter<number>();
+  @Output() selectTab = new EventEmitter<number>();
 
   private tabHeaderDimensions: Partial<ILayoutDimension>[] = [];
 
@@ -64,7 +64,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
 
     // if no active tab is set, activate the first
     if (!activeTabs.length) {
-      this.selectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
+      this.onSelectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
     }
   }
 
@@ -98,7 +98,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
     return !tabHeader.width || activeIndex === tabIndex || feetsInView;
   }
 
-  selectTab(event: MouseEvent, tab: TabViewTabComponent): void {
+  onSelectTab(event: MouseEvent, tab: TabViewTabComponent): void {
     if (tab.disabled) {
       return;
     }
@@ -112,7 +112,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
     // activate the tab the user has clicked on only if the selection is different
     tab.active = true;
     if (activeIndex !== tabIndex) {
-      this.select.emit(tabIndex);
+      this.selectTab.emit(tabIndex);
     }
 
     if (!event || tabIndex >= this.visibleTabs.length) {

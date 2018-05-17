@@ -25,6 +25,7 @@ export class EmployeeAddComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private selectedEmployees: Array<IEmployeeUser> = [];
+  private selectedRole: Boolean;
 
   notAddedEmployees: Observable<IEmployee[]>;
   controls: Array<IDynamicFormControl> = [];
@@ -71,8 +72,14 @@ export class EmployeeAddComponent implements OnInit {
     this.selectedEmployees = employees;
   }
 
+  onSelectRole(): void {
+    this.selectedRole = true;
+  }
+
   canSubmit(): boolean {
-    return this.selectedEmployees && this.selectedEmployees.length > 0 && this.form && this.form.isValid;
+    return this.selectedEmployees && this.selectedEmployees.length > 0 &&
+    this.selectedRole &&
+    this.form && this.form.isValid;
   }
 
   onSubmit(): void {

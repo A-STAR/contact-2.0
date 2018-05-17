@@ -4,6 +4,6 @@
   [rows]="contactLogList"
   [selection]="selected"
   [toolbar]="hideToolbar ? null : toolbarItems"
-  (select)="onSelect($event)"
+  (selectRow)="onSelect($event)"
   (dblClick)="onEdit($event)"
 ></app-simple-grid>

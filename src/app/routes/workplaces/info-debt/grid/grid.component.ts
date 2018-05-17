@@ -25,7 +25,7 @@ export class GridComponent {
   @Input() gridKey: string;
   @Input() rowIdKey: string;
 
-  @Output() select = new EventEmitter<IInfoDebtEntry[]>();
+  @Output() onSelect = new EventEmitter<IInfoDebtEntry[]>();
 
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IInfoDebtEntry>;
 
@@ -50,13 +50,13 @@ export class GridComponent {
       .subscribe((response: IAGridResponse<IInfoDebtEntry>) => {
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
-        this.select.emit(this.selection);
+        this.onSelect.emit(this.selection);
         this.cdRef.markForCheck();
       });
   }
 
-  onSelect(ids: number[]): void {
+  onSelectRow(ids: number[]): void {
     this.selectedIds = ids;
-    this.select.emit(this.selection);
+    this.onSelect.emit(this.selection);
   }
 }

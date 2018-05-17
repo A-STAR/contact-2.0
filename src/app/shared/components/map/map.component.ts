@@ -24,7 +24,6 @@ import { LayersService } from '@app/core/map-providers/layers/map-layers.service
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
-import { tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -91,26 +90,21 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
         this.notificationsService.fetchError(e).dispatch();
         return empty();
       })
-      .pipe(
-        tap((map: any) => {
-          if (map) {
-            this.map = map;
-            this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
-            if (this._controls) {
-              this.addControls(this._controls);
-              this._controls = null;
-            }
-            if (this._layers) {
-              this.addLayers(this._layers);
-              this._layers = null;
-            }
-            this.cdRef.markForCheck();
+      .subscribe((map: any) => {
+        if (map) {
+          this.map = map;
+          this.bounds = this.mapService.createBounds([ this.options.center, this.options.center ]);
+          if (this._controls) {
+            this.addControls(this._controls);
+            this._controls = null;
           }
-        }),
-        // NOTE: the only way I found to fit bounds properly, is when map already has size (i.lobanov)
-        delay(200)
-      )
-      .subscribe(_ => this.fitBounds());
+          if (this._layers) {
+            this.addLayers(this._layers);
+            this._layers = null;
+          }
+          this.cdRef.markForCheck();
+        }
+      });
 
   }
 
@@ -135,6 +129,7 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
           }
 
         });
+      this.fitBounds();
     }
   }
 

@@ -25,7 +25,7 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
   private selectedReport$ = new BehaviorSubject<IReport>(null);
   private canCreate$ = new BehaviorSubject<boolean>(null);
 
-  @Output() select = new EventEmitter<IReport>();
+  @Output() selectRow = new EventEmitter<IReport>();
 
   columns: Array<ISimpleGridColumn<IReport>> = [
     { prop: 'id', maxWidth: 70 },
@@ -93,7 +93,7 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     this.fetch();
 
     this.selectedReport$
-      .subscribe(report => this.select.emit(report));
+      .subscribe(report => this.selectRow.emit(report));
 
     this.actionSubscription = this.reportsService
       .getAction(ReportsService.MESSAGE_REPORT_SAVED)

@@ -3,6 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { ContextOperator, IAppContext, IContext, IContextExpression } from './dynamic-layout.interface';
@@ -38,7 +39,11 @@ export class ContextService {
   calculate(context: IContext): Observable<any> {
     const storeReferences = this.findStoreReferences(context);
     return combineLatest(
-      this.store,
+      this.store.pipe(
+        // TODO(d.maltsev): remove ContextOperator.EVAL
+        // For now, only changes in layout will be reflected here for performance reasons
+        distinctUntilChanged((a: any, b: any) => equals(a.layout, b.layout)),
+      ),
       this.entityAttributesService.bag$,
       this.userConstantsService.bag(),
       this.userPermissionsService.bag(),
@@ -105,20 +110,40 @@ export class ContextService {
           return appContext.attributes[v] && appContext.attributes[v].isUsed;
         case ContextOperator.EQUALS:
           return String(v[0]) === String(v[1]);
+        case ContextOperator.CONSTANT_CONTAINS:
+          return appContext.constants.contains(v[0], v[1]);
         case ContextOperator.CONSTANT_IS_TRUE:
           return appContext.constants.has(v);
         case ContextOperator.CONSTANT_NOT_EMPTY:
           return appContext.constants.notEmpty(v);
+        case ContextOperator.PERMISSION_CONTAINS:
+          return appContext.permissions.contains(v[0], v[1]);
         case ContextOperator.PERMISSION_IS_TRUE:
           return appContext.permissions.has(v);
         case ContextOperator.PERMISSION_NOT_EMPTY:
           return appContext.permissions.notEmpty(v);
         case ContextOperator.NOT:
           return !v;
+        case ContextOperator.NOT_NULL:
+          return Boolean(v);
         case ContextOperator.OR:
           return v.reduce((acc, item) => acc || item, false);
+        case ContextOperator.PERSON_ATTRIBUTES:
+          return this.getPersonAttributeConstantName(v);
       }
     }
-    throw new Error(`Unknown operator ${expression.operator}`);
+  }
+
+  private getPersonAttributeConstantName(value: number): string {
+    switch (value) {
+      case 1:
+        return 'Person.Individual.AdditionalAttribute.List';
+      case 2:
+        return 'Person.LegalEntity.AdditionalAttribute.List';
+      case 3:
+        return 'Person.SoleProprietorship.AdditionalAttribute.List';
+      default:
+        return null;
+    }
   }
 }

@@ -40,7 +40,7 @@ export class ContactSelectGridComponent implements OnInit, OnDestroy {
 
   rows: ILinkedContactPerson[] = [];
   rowCount = 0;
-  rowIdKey = 'id';
+  rowIdKey = 'personId';
 
   private contactRegistrationChangesSub: Subscription;
 
