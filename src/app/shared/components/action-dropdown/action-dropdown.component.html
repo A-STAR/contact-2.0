@@ -1,0 +1,20 @@
+<div appDropdown>
+  <div #dropdownTrigger>
+    <app-button [label]="label"></app-button>
+  </div>
+  <div #dropdownContent>
+    <ul class="list-group mb0">
+      <li class="list-group-item" *ngFor="let option of options"
+        (click)="onOptionClick(option)">
+        {{ option[this.labelKey] }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<app-mass-operation
+  *ngIf="actionData"
+  [type]="actionData.name"
+  [actionData]="actionData"
+  (close)="onCloseAction($event)"
+></app-mass-operation>

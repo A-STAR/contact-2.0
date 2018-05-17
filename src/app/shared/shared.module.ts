@@ -17,6 +17,7 @@ import { NowDirective } from './directives/now/now.directive';
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
+import { ActionDropdownModule } from '@app/shared/components/action-dropdown/action-dropdown.module';
 import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { AreaModule } from './components/layout/area/area.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
@@ -93,6 +94,7 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     // App Modules
     AccordionModule,
     ActionDialogModule,
+    ActionDropdownModule,
     ActionGridModule,
     AreaModule,
     BlockDialogModule,
@@ -174,6 +176,7 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     // App exports
     AccordionModule,
     ActionDialogModule,
+    ActionDropdownModule,
     ActionGridModule,
     AreaModule,
     BlockDialogModule,
