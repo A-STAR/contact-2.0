@@ -14,7 +14,7 @@ import {
   DynamicLayoutAction,
   DynamicLayoutItemType,
   IDynamicLayoutControl,
-  IDynamicLayoutChangeValidAction,
+  IDynamicLayoutChangeStatusAction,
   IDynamicLayoutChangeValueAction,
   IDynamicLayoutItem,
   IDynamicLayoutItemProperties,
@@ -93,8 +93,8 @@ export class ControlService implements OnDestroy {
 
   canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
     return this.store.select(state => {
-      const { dirty, valid } = getIn(state, [ 'layout', this.key, 'forms', form, 'status' ], {});
-      return dirty && valid;
+      const f = getIn(state, [ 'layout', this.key, 'forms', form ], {});
+      return f.dirty && f.status === 'VALID';
     });
   }
 
@@ -103,8 +103,13 @@ export class ControlService implements OnDestroy {
       select((state: any) => getIn(state, [ 'layout', this.key, 'forms' ], {})),
       select(forms => {
         const groups = Array.from(this.groupNames);
-        const valid = groups.reduce((acc, name) => acc && getIn(forms, [ name, 'status', 'valid' ], false), true);
-        const dirty = groups.reduce((acc, name) => acc || getIn(forms, [ name, 'status', 'dirty' ], false), false);
+        const valid = groups.reduce((acc, name) => {
+          const status = getIn(forms, [ name, 'status' ], false);
+          return acc && [ 'VALID', 'DISABLED' ].includes(status);
+        }, true);
+        const dirty = groups.reduce((acc, name) => {
+          return acc || getIn(forms, [ name, 'dirty' ], false);
+        }, false);
         return valid && dirty;
       })
     );
@@ -134,20 +139,20 @@ export class ControlService implements OnDestroy {
     return this.groups.get(form);
   }
 
-  dispatchChangeStatusAction(form: string, valid: boolean, dirty: boolean): void {
+  dispatchChangeStatusAction(form: string, status: string): void {
     const { key } = this;
-    const action: IDynamicLayoutChangeValidAction = {
-      type: DynamicLayoutAction.CHANGE_FORM_VALID,
-      payload: { key, form, valid, dirty },
+    const action: IDynamicLayoutChangeStatusAction = {
+      type: DynamicLayoutAction.CHANGE_FORM_STATUS,
+      payload: { key, form, status },
     };
     this.store.dispatch(action);
   }
 
-  dispatchChangeValueAction(form: string, value: Record<string, any>): void {
+  dispatchChangeValueAction(form: string, dirty: boolean, value: Record<string, any>): void {
     const { key } = this;
     const action: IDynamicLayoutChangeValueAction = {
       type: DynamicLayoutAction.CHANGE_FORM_VALUE,
-      payload: { key, form, value },
+      payload: { key, form, dirty, value },
     };
     this.store.dispatch(action);
   }
@@ -185,21 +190,13 @@ export class ControlService implements OnDestroy {
           distinctUntilChanged(equals),
           debounceTime(100),
         )
-        .subscribe(value => this.dispatchChangeValueAction(name, value));
-      const statusSubscription = combineLatest(
-        group.statusChanges
-          .pipe(
-            distinctUntilChanged()
-          ),
-        group.valueChanges
-          .pipe(
-            distinctUntilChanged(equals)
-          )
-      )
-      .pipe(
-        debounceTime(100),
-      )
-      .subscribe(([ status ]) => this.dispatchChangeStatusAction(name, status === 'VALID', group.dirty));
+        .subscribe(value => this.dispatchChangeValueAction(name, group.dirty, value));
+      const statusSubscription = group.statusChanges
+        .pipe(
+          distinctUntilChanged(),
+          debounceTime(100),
+        )
+        .subscribe(status => this.dispatchChangeStatusAction(name, status));
       this.formSubscription.add(valueSubscription);
       this.formSubscription.add(statusSubscription);
     }
@@ -220,7 +217,7 @@ export class ControlService implements OnDestroy {
   private enable(control: IDynamicLayoutControl, enabled: boolean): void {
     const formGroup = this.getFormGroupForControl(control);
     const c = formGroup.get(control.name);
-    if (enabled) {
+    if (enabled && formGroup.enabled) {
       c.enable();
     } else {
       c.disable();
