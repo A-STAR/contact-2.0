@@ -375,6 +375,7 @@
     }
   },
   "system": {
+    "accessDenied": "Access Denied",
     "notifications": {
       "tasks": {
         "created": "created {{ n }}",
