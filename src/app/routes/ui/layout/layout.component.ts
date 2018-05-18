@@ -72,7 +72,7 @@ export class LayoutComponent implements OnInit {
                         ],
                         id: 1,
                         asyncMode: false,
-                        inputParams: [{
+                        inputConfig: [{
                           name: 'Дата',
                           paramTypeCode: 1,
                           isMandatory: 1,
@@ -142,14 +142,19 @@ export class LayoutComponent implements OnInit {
                           systemName: 'lookup_field',
                           lookupKey: 'roles'
                         }],
-                        outputParams: [
-                          {
-                            name: 'Кол-во',
-                            paramTypeCode: 2,
-                            sortOrder: 1,
-                            systemName: 'number_field'
-                          }
-                        ]
+                        outputConfig: {
+                          key: 'operationOutput',
+                          items: [{
+                            type: 'template',
+                            value: 'grid',
+                            context: {
+                              columns: [
+                                { prop: 'column1', label: 'column1' },
+                                { prop : 'column2', label: 'column2' }
+                              ]
+                            }
+                          }]
+                        }
                       }]
                     }
                   },

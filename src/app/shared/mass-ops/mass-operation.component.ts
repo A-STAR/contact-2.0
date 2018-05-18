@@ -11,17 +11,26 @@ import { DialogFunctions } from '@app/core/dialog';
 })
 export class MassOperationComponent extends DialogFunctions {
 
-  @Input('type') dialog: string;
-  @Input('actionData') dialogData: IAction;
+  @Input()
+  set type(type: string) {
+    this.dialog = type;
+  }
+
+  @Input()
+  set actionData(actionData: IAction) {
+    this.dialogData = actionData;
+  }
 
   @Output() close = new EventEmitter<ICloseAction>();
+
+  dialog: string;
+  dialogData: IAction;
 
   get isCustomOperation(): boolean {
     return this.dialogData && !!this.dialogData.id;
   }
 
   onCloseAction(event: ICloseAction): void {
-    this.onCloseDialog();
     this.close.emit(event);
   }
 

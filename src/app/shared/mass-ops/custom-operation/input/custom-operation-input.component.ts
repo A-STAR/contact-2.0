@@ -5,7 +5,7 @@ import { of } from 'rxjs/observable/of';
 import { ICustomActionData } from '../custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
-import { IMetadataActionParam } from '@app/core/metadata/metadata.interface';
+import { IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
@@ -22,7 +22,7 @@ export class CustomOperationInputComponent implements OnInit, AfterViewInit {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
   @Input() key: string;
-  @Input() inputParams: IMetadataActionParam[];
+  @Input() inputConfig: IMetadataActionParamConfig[];
 
   @Output() submit = new EventEmitter<ICustomActionData>();
   @Output() close = new EventEmitter<ICloseAction>();
@@ -36,7 +36,7 @@ export class CustomOperationInputComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.config = this.customOperationService.getActionParamsConfig(this.key, this.inputParams, true);
+    this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.inputConfig);
   }
 
   ngAfterViewInit(): void {

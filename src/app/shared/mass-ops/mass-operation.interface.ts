@@ -1,4 +1,5 @@
-import { MetadataActionType, IMetadataActionParam } from '@app/core/metadata/metadata.interface';
+import { MetadataActionType, IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 export interface IAddOption {
   name: string;
@@ -19,12 +20,11 @@ export interface IAction {
   params?: string[];
   payload: IActionPayload;
   asyncMode?: boolean;
-  inputParams?: IMetadataActionParam[];
-  outputParams?: IMetadataActionParam[];
+  inputParams?: IMetadataActionParamConfig[];
+  outputParams?: IDynamicLayoutConfig[];
 }
 
 export interface ICloseAction {
   refresh?: boolean;
-  deselectAll?: boolean;
   metadataAction?: IAction;
 }

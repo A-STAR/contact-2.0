@@ -82,6 +82,10 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
     this.dropdown.close();
   }
 
+  onCloseAction(): void {
+    this.actionData = null;
+  }
+
   private getMetadataAction(actionId: number): IMetadataAction {
     return this.actions.find(action => action.id === actionId);
   }
@@ -98,8 +102,8 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
         data: metadataAction.params.reduce((acc, param) => ({ ...acc, [param]: this.context[param] }), {})
       },
       asyncMode: metadataAction.asyncMode,
-      inputParams: metadataAction.inputParams,
-      outputParams: metadataAction.outputParams
+      inputParams: metadataAction.inputConfig,
+      outputParams: metadataAction.outputConfig
     };
   }
 }

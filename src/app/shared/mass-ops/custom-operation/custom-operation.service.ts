@@ -13,7 +13,7 @@ import {
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 import { IGridActionPayload, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IMetadataActionParam } from '@app/core/metadata/metadata.interface';
+import { IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
@@ -37,7 +37,8 @@ export class CustomOperationService {
       success: true,
       data: [
         {
-          'number_field': 123
+          'column1': 123,
+          'column2': 123
         }
       ]
     });
@@ -65,14 +66,13 @@ export class CustomOperationService {
     );
   }
 
-  getActionParamsConfig(key: string, params: IMetadataActionParam[], enabled: boolean): IDynamicLayoutConfig {
+  getActionInputParamsConfig(key: string, params: IMetadataActionParamConfig[]): IDynamicLayoutConfig {
     return {
       key,
       items: params.sort((p1, p2) => p1.sortOrder - p2.sortOrder).map(param => ({
         label: param.name,
         name: param.systemName,
         type: DynamicLayoutItemType.CONTROL,
-        enabled,
         validators: {
           required: !!param.isMandatory,
         },
@@ -81,7 +81,7 @@ export class CustomOperationService {
     };
   }
 
-  private getActionParamControlOptions(param: IMetadataActionParam): Partial<IDynamicLayoutItem> {
+  private getActionParamControlOptions(param: IMetadataActionParamConfig): Partial<IDynamicLayoutItem> {
     switch (param.paramTypeCode) {
       case 1:
         return {

@@ -4,10 +4,19 @@
   </div>
 
   <app-dynamic-layout
-    style="height: 70vh"
-    [layout]="config"
-    [data]="{ default: result }"
+    style="height: 50vh"
+    [layout]="outputConfig"
+    [data]="{ default: result[0] }"
+    [templates]="templates"
   ></app-dynamic-layout>
+
+  <ng-template #grid let-context="context">
+    <app-simple-grid
+      style="height: 50vh"
+      [columns]="context.columns"
+      [rows]="result"
+    ></app-simple-grid>
+  </ng-template>
 
   <div dialog-footer>
     <app-button type="close" (click)="onClose()"></app-button>

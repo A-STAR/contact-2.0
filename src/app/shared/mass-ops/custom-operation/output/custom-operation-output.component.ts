@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewChild, TemplateRef, OnInit } from '@angular/core';
 
 import { ICustomActionData } from '../custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
-import { IMetadataActionParam } from '@app/core/metadata/metadata.interface';
-
-import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
@@ -17,21 +14,21 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 export class CustomOperationOutputComponent implements OnInit {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
-  @Input() key: string;
-  @Input() outputParams: IMetadataActionParam[];
+  @ViewChild('grid', { read: TemplateRef }) grid: TemplateRef<any>;
+
+  @Input() outputConfig: IDynamicLayoutConfig[];
   @Input() result: ICustomActionData;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
   config: IDynamicLayoutConfig;
 
-  constructor(
-    private customOperationService: CustomOperationService
-  ) {}
+  templates: Record<string, TemplateRef<any>>;
 
   ngOnInit(): void {
-    this.config = this.customOperationService
-      .getActionParamsConfig(this.key, this.outputParams, false);
+    this.templates = {
+      grid: this.grid,
+    };
   }
 
   onClose(): void {

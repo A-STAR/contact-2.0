@@ -27,7 +27,7 @@ export class CustomOperationComponent {
       .run(this.actionData, this.actionData.payload, data)
       .subscribe(result => {
         if (result.data) {
-          this.result = result.data[0];
+          this.result = result.data;
         } else {
           this.close.emit();
         }
