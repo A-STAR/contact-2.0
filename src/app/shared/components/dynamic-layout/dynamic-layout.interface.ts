@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IContext } from './context.interface';
+import { IContext } from '@app/core/context/context.interface';
 import { IDynamicLayoutAttribute } from './attribute/attribute.interface';
 import { IDynamicLayoutControl } from './control/control.interface';
 import { IDynamicLayoutGroup } from './group/group.interface';
@@ -8,7 +8,6 @@ import { IDynamicLayoutPlugin } from './event/event.interface';
 import { IDynamicLayoutTemplate } from './template/template.interface';
 
 export * from './attribute/attribute.interface';
-export * from './context.interface';
 export * from './control/control.interface';
 export * from './event/event.interface';
 export * from './group/group.interface';
