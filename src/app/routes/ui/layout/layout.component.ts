@@ -58,12 +58,13 @@ export class LayoutComponent implements OnInit {
                 children: [
                   {
                     type: DynamicLayoutItemType.TEMPLATE,
-                    label: 'Actions',
                     value: 'actions',
                     context: {
-                      label: 'Actions',
-                      lookupKey: 'contractors',
+                      label: 'Выполнить',
                       labelKey: 'label',
+                      options: [
+                        { value: 1, label: 'Операция 1' }
+                      ],
                       actions: [{
                         action: 'customOperation',
                         params: [

@@ -33,8 +33,7 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   @Input() lookupKey: ILookupKey;
   @Input() labelKey: string;
   @Input() actions: IMetadataAction[];
-
-  options: IOption[] = [];
+  @Input() options: IOption[] = [];
 
   context: any = {};
 
@@ -50,11 +49,13 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
-      .subscribe(options => {
-        this.options = options;
-        this.cdRef.markForCheck();
-      });
+    if (this.lookupKey) {
+      this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
+        .subscribe(options => {
+          this.options = options;
+          this.cdRef.markForCheck();
+        });
+    }
 
     this.contextSubscription = combineLatest(
       this.debtorCardService.selectedDebtId$,
@@ -70,7 +71,9 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.optionsSubscription.unsubscribe();
+    if (this.lookupKey) {
+      this.optionsSubscription.unsubscribe();
+    }
     this.contextSubscription.unsubscribe();
   }
 
