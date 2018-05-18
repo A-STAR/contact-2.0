@@ -24,6 +24,7 @@ interface IRow {
 })
 export class LayoutComponent implements OnInit {
   @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
+  @ViewChild('actions', { read: TemplateRef }) actions: TemplateRef<any>;
 
   readonly data = {
     default: {
@@ -55,6 +56,102 @@ export class LayoutComponent implements OnInit {
                 label: 'Collapse Me!',
                 collapsible: true,
                 children: [
+                  {
+                    type: DynamicLayoutItemType.TEMPLATE,
+                    label: 'Actions',
+                    value: 'actions',
+                    context: {
+                      label: 'Actions',
+                      lookupKey: 'contractors',
+                      labelKey: 'label',
+                      actions: [{
+                        action: 'customOperation',
+                        params: [
+                          'debtId'
+                        ],
+                        id: 1,
+                        asyncMode: false,
+                        inputParams: [{
+                          name: 'Дата',
+                          paramTypeCode: 1,
+                          isMandatory: 1,
+                          sortOrder: 2,
+                          systemName: 'date_field'
+                        }, {
+                          name: 'Число',
+                          paramTypeCode: 2,
+                          isMandatory: 1,
+                          sortOrder: 3,
+                          systemName: 'number_field'
+                        }, {
+                          name: 'Портфель',
+                          paramTypeCode: 3,
+                          isMandatory: 1,
+                          sortOrder: 4,
+                          systemName: 'portfolios_field'
+                        }, {
+                          name: 'Оператор',
+                          paramTypeCode: 4,
+                          isMandatory: 1,
+                          sortOrder: 5,
+                          systemName: 'operator_field'
+                        }, {
+                          name: 'Контраген',
+                          paramTypeCode: 5,
+                          isMandatory: 1,
+                          sortOrder: 6,
+                          systemName: 'contractors_field'
+                        }, {
+                          name: 'Строка',
+                          paramTypeCode: 6,
+                          isMandatory: 1,
+                          sortOrder: 7,
+                          systemName: 'string_field'
+                        }, {
+                          name: 'Словарь',
+                          paramTypeCode: 7,
+                          isMandatory: 1,
+                          sortOrder: 8,
+                          systemName: 'dict_field',
+                          dictNameCode: '12'
+                        }, {
+                          name: 'Чекбокс',
+                          paramTypeCode: 9,
+                          isMandatory: 1,
+                          sortOrder: 8,
+                          systemName: 'checkbox_field'
+                        }, {
+                          name: 'Дата и время',
+                          paramTypeCode: 10,
+                          isMandatory: 1,
+                          sortOrder: 9,
+                          systemName: 'datetime_field'
+                        }, {
+                          name: 'Группа',
+                          paramTypeCode: 11,
+                          isMandatory: 1,
+                          sortOrder: 10,
+                          systemName: 'group_field',
+                          entityTypeIds: [ 19 ]
+                        }, {
+                          name: 'Произвольный lookup',
+                          paramTypeCode: 12,
+                          isMandatory: 1,
+                          sortOrder: 11,
+                          systemName: 'lookup_field',
+                          lookupKey: 'roles'
+                        }],
+                        outputParams: [
+                          {
+                            name: 'Кол-во',
+                            paramTypeCode: 2,
+                            sortOrder: 1,
+                            systemName: 'number_field'
+                          }
+                        ]
+                      }]
+                    }
+                  },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
                     label: 'Formula #1',
@@ -163,6 +260,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.templates = {
       foo: this.foo,
+      actions: this.actions
     };
   }
 }
