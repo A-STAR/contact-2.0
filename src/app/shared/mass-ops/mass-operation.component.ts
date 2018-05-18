@@ -21,6 +21,7 @@ export class MassOperationComponent extends DialogFunctions {
   }
 
   onCloseAction(event: ICloseAction): void {
+    this.onCloseDialog();
     this.close.emit(event);
   }
 
