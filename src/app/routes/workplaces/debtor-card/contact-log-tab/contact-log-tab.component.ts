@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 @Component({
   selector: 'app-contact-log-tab',
@@ -12,7 +11,7 @@ import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card
 export class DebtorContactLogTabComponent {
 
   constructor(
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
   ) {}
 
@@ -20,9 +19,7 @@ export class DebtorContactLogTabComponent {
     return Number(this.route.snapshot.paramMap.get('contactLogId'));
   }
 
-  get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
-  }
+  readonly debtId$ = this.debtorService.debtId$;
 
   get contactLogType(): number {
     return Number(this.route.snapshot.paramMap.get('contactLogType'));

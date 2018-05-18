@@ -6,6 +6,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   AfterViewInit,
+  OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -15,23 +16,22 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
-import { IPerson } from '../debtor.interface';
-import { IDebt } from '../../debt-processing/debt-processing.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { DebtorService } from '../debtor.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DebtorInformationComponent } from '../information/information.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { invert } from '@app/core/utils';
+
+import { Debt, Person } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,12 +40,12 @@ import { invert } from '@app/core/utils';
   selector: 'app-debtor-card-layout',
   templateUrl: './debtor-card-layout.component.html',
 })
-export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
+export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
   controls: IDynamicFormItem[];
-  data: Partial<IDebt & IPerson>;
+  data: Partial<Debt & Person>;
   dialog: 'registerContact' = null;
   // nice, isn't it?
   tabs = [
@@ -62,20 +62,48 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     { isInitialised: false },
     { isInitialised: false },
   ];
+  debtorId: number;
+  debtId: number;
 
   private personSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
+    private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
+    this.debtId = Number(this.route.snapshot.paramMap.get('debtId'));
+    if (this.debtorId && this.debtId) {
+      this.debtorService.debtId$.next(this.debtId);
+      this.debtorService.debtorId$.next(this.debtorId);
+      this.personSubscription = combineLatest(
+        this.debtorService.debtor$,
+        this.debtorService.debt$,
+      )
+      .pipe(
+        first(),
+        map(([person, debt]) => ({
+            ...person,
+            responsibleFullName: debt.responsibleFullName,
+            utc: debt.utc,
+            shortInfo: debt.shortInfo,
+          }),
+        )
+      )
+      .subscribe(data => {
+        this.data = data;
+        this.cdRef.markForCheck();
+      });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -85,40 +113,15 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
         this.controls = this.buildControls(canEdit);
         this.cdRef.markForCheck();
       });
-
-    this.personSubscription = combineLatest(
-      this.debtorCardService.person$.filter(Boolean),
-      this.debtorCardService.selectedDebt$.filter(Boolean),
-    )
-    .map(([person, debt]) => ({
-        ...person,
-        responsibleFullName: debt.responsibleFullName,
-        utc: debt.utc,
-        shortInfo: debt.shortInfo,
-      })
-    )
-    .distinctUntilChanged()
-    .subscribe(data => {
-      this.data = data;
-      this.cdRef.markForCheck();
-    });
   }
 
   ngOnDestroy(): void {
-    this.personSubscription.unsubscribe();
+    if (this.personSubscription) {
+      this.personSubscription.unsubscribe();
+    }
   }
 
-  get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
-  }
-
-  get personId$(): Observable<number> {
-    return this.debtorCardService.personId$;
-  }
-
-  get isCompany$(): Observable<boolean> {
-    return this.debtorCardService.isCompany$;
-  }
+  readonly isCompany$: Observable<boolean> = this.debtorService.isCompany$;
 
   get canSubmit(): boolean {
     const mainForm = this.form;
@@ -130,28 +133,30 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     return isValid && isDirty;
   }
 
-  get isContactRegistrationDisabled$(): Observable<boolean> {
-    return this.debtorCardService.selectedDebt$
-      .pipe(
-        mergeMap(debt => this.debtService.canRegisterContactForDebt$(debt)),
-        map(invert),
-      );
-  }
+ readonly isContactRegistrationDisabled$: Observable<boolean> = this.debtorService.debt$
+    .pipe(
+      mergeMap(debt => this.debtorService.canRegisterContactForDebt$(debt)),
+      map(invert),
+    );
 
   onSubmit(): void {
-    const value = {
-      ...this.form.serializedUpdates,
-      ...this.information.form.serializedUpdates,
-    };
+    if (this.canSubmit) {
+      const value = {
+        ...this.form.serializedUpdates,
+        ...this.information.form.serializedUpdates,
+      };
 
-    this.personId$
-      .flatMap(personId => this.debtorService.update(personId, value))
-      .pipe(first())
-      .subscribe(() => {
-        this.form.form.markAsPristine();
-        this.information.form.form.markAsPristine();
-        this.cdRef.markForCheck();
-      });
+      this.debtorService.updateDebtor(value)
+        .pipe(first())
+        .subscribe(() => {
+          this.form.form.markAsPristine();
+          this.information.form.form.markAsPristine();
+          this.notificationsService.info('debtor.successUpdate')
+            .params({ id: this.debtId.toString() })
+            .dispatch();
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   onRegisterContactClick(): void {
@@ -160,17 +165,13 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    combineLatest(this.personId$, this.debtId$)
-      .pipe(first())
-      .subscribe(([ personId, debtId ]) => {
-        this.setDialog();
-        this.contactRegistrationService.startRegistration({
-          contactId,
-          contactType,
-          debtId,
-          personId,
-          personRole: 1,
-        });
+    this.setDialog();
+      this.contactRegistrationService.startRegistration({
+        contactId,
+        contactType,
+        debtId: this.debtId,
+        personId: this.debtorId,
+        personRole: 1,
       });
   }
 

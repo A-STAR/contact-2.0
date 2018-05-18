@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
-import { IContext } from './context.interface';
+import { IContext } from '@app/core/context/context.interface';
 import { IDynamicLayoutAttribute } from './attribute/attribute.interface';
 import { IDynamicLayoutControl } from './control/control.interface';
 import { IDynamicLayoutGroup } from './group/group.interface';
@@ -8,7 +8,6 @@ import { IDynamicLayoutPlugin } from './event/event.interface';
 import { IDynamicLayoutTemplate } from './template/template.interface';
 
 export * from './attribute/attribute.interface';
-export * from './context.interface';
 export * from './control/control.interface';
 export * from './event/event.interface';
 export * from './group/group.interface';
@@ -77,10 +76,8 @@ export interface IDynamicLayoutState {
   [key: string]: {
     forms: {
       [key: string]: {
-        status: {
-          dirty: boolean;
-          valid: boolean;
-        };
+        dirty: boolean;
+        status: string;
         value: Record<string, any>;
       };
     };
@@ -89,7 +86,7 @@ export interface IDynamicLayoutState {
 }
 
 export enum DynamicLayoutAction {
-  CHANGE_FORM_VALID = '[layout] change form valid',
+  CHANGE_FORM_STATUS = '[layout] change form valid',
   CHANGE_FORM_VALUE = '[layout] change form value',
   FETCH_CONFIG = '[layout] fetch config',
   FETCH_CONFIG_SUCCESS = '[layout] fetch config success',
@@ -99,13 +96,12 @@ export interface IDynamicLayoutGenericAction {
   type: DynamicLayoutAction;
 }
 
-export interface IDynamicLayoutChangeValidAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_FORM_VALID;
+export interface IDynamicLayoutChangeStatusAction extends IDynamicLayoutGenericAction {
+  type: DynamicLayoutAction.CHANGE_FORM_STATUS;
   payload: {
     key: string;
     form: string;
-    valid: boolean;
-    dirty: boolean;
+    status: string;
   };
 }
 
@@ -115,6 +111,7 @@ export interface IDynamicLayoutChangeValueAction extends IDynamicLayoutGenericAc
     key: string;
     form: string;
     value: any;
+    dirty: boolean;
   };
 }
 
@@ -134,7 +131,7 @@ export interface IDynamicLayoutFetchConfigSuccessAction extends IDynamicLayoutGe
 }
 
 export type IDynamicLayoutAction =
-  | IDynamicLayoutChangeValidAction
+  | IDynamicLayoutChangeStatusAction
   | IDynamicLayoutChangeValueAction
   | IDynamicLayoutFetchConfigSuccessAction
 ;

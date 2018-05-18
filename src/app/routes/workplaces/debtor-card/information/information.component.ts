@@ -5,16 +5,17 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
-import { IDebt } from '@app/core/app-modules/app-modules.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 import { CompanyComponent } from '@app/routes/workplaces/debtor-card/information/company/company.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { PersonComponent } from '@app/routes/workplaces/debtor-card/information/person/person.component';
+
+import { Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,47 +35,31 @@ export class DebtorInformationComponent {
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {}
 
-  get debt$(): Observable<IDebt> {
-    return this.debtorCardService.selectedDebt$;
-  }
+  readonly debt$: Observable<Debt> = this.debtorService.debt$;
 
-  get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
-  }
+  readonly debtId$: Observable<number> = this.debtorService.debtId$;
 
-  get personId$(): Observable<number> {
-    return this.debtorCardService.personId$;
-  }
+  readonly debtorId$: Observable<number> = this.debtorService.debtorId$;
 
   get form(): DynamicFormComponent {
     const component = this.companyComponent || this.personComponent;
     return component && component.form;
   }
 
-  get debtorTypeCode$(): Observable<number> {
-    return this.debtorCardService.person$.map(person => person && person.typeCode);
-  }
+  readonly debtorTypeCode$: Observable<number> = this.debtorService.debtor$.map(debtor => debtor && debtor.typeCode);
 
-  get isPerson$(): Observable<boolean> {
-    return this.debtorCardService.isPerson$;
-  }
+  readonly isPerson$: Observable<boolean> = this.debtorService.isPerson$;
 
-  get isCompany$(): Observable<boolean> {
-    return this.debtorCardService.isCompany$;
-  }
+  readonly isCompany$: Observable<boolean> = this.debtorService.isCompany$;
 
-  get phoneContactType(): number {
-    return 1;
-  }
+  readonly phoneContactType = 1;
 
-  get personRole(): number {
-    return 1;
-  }
+  readonly personRole = 1;
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
@@ -89,7 +74,7 @@ export class DebtorInformationComponent {
   }
 
   onAddressRegister(address: IAddress): void {
-    combineLatest(this.personId$, this.debtId$)
+    combineLatest(this.debtorId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => this.contactRegistrationService.startRegistration({
         contactId: address.id,
@@ -109,7 +94,7 @@ export class DebtorInformationComponent {
   }
 
   onPhoneRegister(phone: IPhone): void {
-    combineLatest(this.personId$, this.debtId$)
+    combineLatest(this.debtorId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => this.contactRegistrationService.startRegistration({
         contactId: phone.id,

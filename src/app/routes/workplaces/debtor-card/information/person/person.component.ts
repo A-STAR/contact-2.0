@@ -3,20 +3,20 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
-import { IPerson } from '../../debtor.interface';
-import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { range } from '../../../../../core/utils';
+import { range } from '@app/core/utils';
+import { Person } from '@app/entities';
 
 @Component({
   selector: 'app-debtor-information-person',
@@ -34,7 +34,7 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private entityAttributesService: EntityAttributesService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -57,9 +57,7 @@ export class PersonComponent implements OnInit, OnDestroy {
     this.personSubscription.unsubscribe();
   }
 
-  get debtor$(): Observable<IPerson> {
-    return this.debtorCardService.person$;
-  }
+  readonly debtor$: Observable<Person> = this.debtorService.debtor$;
 
   protected getControls(
     canEdit: boolean,

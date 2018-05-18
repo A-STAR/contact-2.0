@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { RepositoryService } from '@app/core/repository/repository.service';
-
-import { User } from './entities/user';
-import { Person } from './entities/person';
-import { Debt } from './entities/debt';
+import { User, Person, Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

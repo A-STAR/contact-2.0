@@ -1,7 +1,9 @@
-<div>
-  <header class="mb">
+<div class="flex vertical">
+  <header class="flex-item mb">
     <app-button type="clear" (click)="onClear()"></app-button>
     <app-button type="search" (click)="onSearch()"></app-button>
   </header>
-  <app-metadata-form [config]="filterForm"></app-metadata-form>
+  <div class="flex-item grow">
+    <app-dynamic-layout [layout]="filterFormLayout"></app-dynamic-layout>
+  </div>
 </div>

@@ -1,106 +1,91 @@
-export enum IContextConfigItemType {
-  CONSTANT = 'constant',
-  ENTITY = 'entity',
-  EXPRESSION = 'expression',
-  GROUP = 'group',
-  PERMISSION = 'permission',
-  STATE = 'state',
+import { ValueBag } from '@app/core/value-bag/value-bag';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
+
+export enum ContextOperator {
+
+  // Unary
+  CONSTANT_IS_TRUE     = 'constantIsTrue',
+  CONSTANT_NOT_EMPTY   = 'constantNotEmpty',
+  ENTITY_IS_MANDATORY  = 'entityIsMandatory',
+  ENTITY_IS_USED       = 'entityIsUsed',
+  EVAL                 = 'eval',
+  NOT                  = 'not',
+  NOT_NULL             = 'notNull',
+  PERMISSION_IS_TRUE   = 'permissionIsTrue',
+  PERMISSION_NOT_EMPTY = 'permissionNotEmpty',
+  PERSON_ATTRIBUTES    = 'personAttributes',
+
+  // Binary
+  CONSTANT_CONTAINS   = 'constantContains',
+  EQUALS              = 'equals',
+  PERMISSION_CONTAINS = 'permissionContains',
+
+  // Arbitrary arguments list length
+  AND = 'and',
+  OR  = 'or',
 }
 
+export type IContextUnaryOperator =
+  | ContextOperator.CONSTANT_IS_TRUE
+  | ContextOperator.CONSTANT_NOT_EMPTY
+  | ContextOperator.ENTITY_IS_MANDATORY
+  | ContextOperator.ENTITY_IS_USED
+  | ContextOperator.NOT
+  | ContextOperator.NOT_NULL
+  | ContextOperator.PERMISSION_IS_TRUE
+  | ContextOperator.PERMISSION_NOT_EMPTY
+  | ContextOperator.PERSON_ATTRIBUTES
+;
 
-// Entity:
+export type IContextBinaryOperator =
+  | ContextOperator.CONSTANT_CONTAINS
+  | ContextOperator.EQUALS
+  | ContextOperator.PERMISSION_CONTAINS
+;
 
-export enum IContextByEntityMethod {
-  IS_USED = 'isUsed',
-  IS_MANDATORY = 'isMandatory',
+export type IContextVariadicOperator =
+  | ContextOperator.AND
+  | ContextOperator.OR
+;
+
+export interface IContextGenericExpression {
+  operator: ContextOperator;
 }
 
-export interface IContextByEntityItem {
-  type: IContextConfigItemType.ENTITY;
-  method: IContextByEntityMethod;
-  value: number;
-}
-
-
-// Value Bag:
-
-export enum IContextByValueBagMethod {
-  HAS = 'has',
-  CONTAINS = 'contains',
-  NOT_EMPTY = 'notEmpty',
-  VALUE = 'value',
-}
-
-export interface IContextByValueBagUnaryOperation {
-  type: IContextConfigItemType.CONSTANT | IContextConfigItemType.PERMISSION;
-  method: IContextByValueBagMethod.HAS | IContextByValueBagMethod.NOT_EMPTY | IContextByValueBagMethod.VALUE;
+export interface IContextEvalExpression extends IContextGenericExpression {
+  operator: ContextOperator.EVAL;
   value: string;
 }
 
-export interface IContextByValueBagBinaryOperation {
-  type: IContextConfigItemType.CONSTANT | IContextConfigItemType.PERMISSION;
-  method: IContextByValueBagMethod.CONTAINS;
-  name: string;
-  value: number;
+export interface IContextUnaryExpression extends IContextGenericExpression {
+  operator: IContextUnaryOperator;
+  value: IContext;
 }
 
-export type IContextByValueBagConfigItem = IContextByValueBagUnaryOperation | IContextByValueBagBinaryOperation;
-
-
-// State:
-
-export enum IContextByStateMethod {
-  NOT_EMPTY = 'notEmpty',
-  EQUALS = 'equals',
-  VALUE = 'value',
+export interface IContextBinaryExpression extends IContextGenericExpression {
+  operator: IContextBinaryOperator;
+  value: [ IContext, IContext ];
 }
 
-export interface IContextByStateUnaryItem {
-  type: IContextConfigItemType.STATE;
-  method: IContextByStateMethod.NOT_EMPTY | IContextByStateMethod.VALUE;
-  key: string;
+export interface IContextVariadicExpression extends IContextGenericExpression {
+  operator: IContextVariadicOperator;
+  value: IContext[];
 }
 
-export interface IContextByStateBinaryItem {
-  type: IContextConfigItemType.STATE;
-  method: IContextByStateMethod.EQUALS;
-  key: string;
-  value: any;
+export type IContextExpression =
+  | IContextEvalExpression
+  | IContextUnaryExpression
+  | IContextBinaryExpression
+  | IContextVariadicExpression
+;
+
+export type IContextPrimitive = boolean | number | string;
+
+export type IContext = IContextPrimitive | IContextExpression;
+
+export interface IAppContext {
+  attributes: IEntityAttributes;
+  constants: ValueBag;
+  permissions: ValueBag;
+  state: any;
 }
-
-export type IContextByStateItem = IContextByStateUnaryItem | IContextByStateBinaryItem;
-
-
-// Expression:
-
-export enum IContextByExpressionMethod {
-  SWITCH = 'switch',
-}
-
-export interface IContextByExpressionSwitchItem {
-  type: IContextConfigItemType.EXPRESSION;
-  method: IContextByExpressionMethod.SWITCH;
-  key: IContextConfig;
-  value: { [key: string]: string };
-}
-
-export type IContextByExpressionItem = IContextByExpressionSwitchItem;
-
-
-// Group:
-
-export enum IContextConfigOperator {
-  AND = 'and',
-  OR = 'or',
-}
-
-export interface IContextGroup {
-  type: IContextConfigItemType.GROUP;
-  operator: IContextConfigOperator;
-  children: IContextConfig[];
-}
-
-// tslint:disable-next-line:max-line-length
-export type IContextConfigItem = IContextByEntityItem | IContextByValueBagConfigItem | IContextByStateItem | IContextByExpressionItem;
-
-export type IContextConfig = IContextGroup | IContextConfigItem;

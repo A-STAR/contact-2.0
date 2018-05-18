@@ -8,7 +8,7 @@ import { IProperty } from '@app/routes/workplaces/core/property/property.interfa
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -40,7 +40,7 @@ export class DebtorPropertyCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private propertyService: PropertyService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -51,7 +51,7 @@ export class DebtorPropertyCardComponent implements OnInit {
     combineLatest(
       this.propertyId ? this.propertyService.canEdit$ : this.propertyService.canAdd$,
       this.propertyId
-        ? this.debtorCardService.personId$.flatMap(personId => this.propertyService.fetch(personId, this.propertyId))
+        ? this.debtorService.debtorId$.flatMap(personId => this.propertyService.fetch(personId, this.propertyId))
         : of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
@@ -68,7 +68,7 @@ export class DebtorPropertyCardComponent implements OnInit {
   }
 
   get personId$(): Observable<number> {
-    return combineLatest(this.debtorCardService.personId$, this.routeParams$)
+    return combineLatest(this.debtorService.debtorId$, this.routeParams$)
       .pipe(
         map(([ personId, params ]) => params.personId || personId),
         distinctUntilChanged(),
@@ -84,7 +84,7 @@ export class DebtorPropertyCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action = this.debtorCardService.personId$.flatMap(personId => this.propertyId
+    const action = this.debtorService.debtorId$.flatMap(personId => this.propertyId
       ? this.propertyService.update(personId, this.propertyId, this.form.serializedUpdates)
       : this.propertyService.create(personId, this.form.serializedUpdates)
     );

@@ -10,19 +10,17 @@ import {
   ViewChild
 } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators/first';
-import { switchMap } from 'rxjs/operators/switchMap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '@app/core/debt/debt.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,7 +34,7 @@ import { toOption } from '@app/core/utils';
 export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() debt: IDebt;
+  @Input() debt: Debt;
   @Input() statusCode: number;
 
   @Output() close = new EventEmitter<void>();
@@ -51,8 +49,8 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
+    private workplacesService: WorkplacesService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -85,15 +83,14 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
       ...this.form.serializedUpdates,
       statusCode: this.statusCode
     };
-    this.debtorCardService.personId$
-      .pipe(
-        switchMap(personId => this.debtService.changeStatus(personId, this.debt.id, data, false)),
-        first()
-      )
+    const debtorId = this.debtorService.debtorId$.value;
+    if (debtorId) {
+      this.workplacesService.changeStatus(debtorId, this.debt.id, data, false)
       .subscribe(() => {
         this.submit.emit();
         this.onClose();
       });
+    }
   }
 
   onClose(): void {

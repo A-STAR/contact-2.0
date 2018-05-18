@@ -16,7 +16,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
@@ -45,7 +45,7 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
-    private debtorCardService: DebtorCardService
+    private debtorService: DebtorService
   ) { }
 
   ngOnInit(): void {
@@ -58,8 +58,8 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
     }
 
     this.contextSubscription = combineLatest(
-      this.debtorCardService.selectedDebtId$,
-      this.debtorCardService.personId$
+      this.debtorService.debtId$,
+      this.debtorService.debtorId$
     )
     .pipe(
       map(([debtId, debtorId]) => ({ debtId, debtorId }))

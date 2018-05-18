@@ -18,7 +18,6 @@ import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { MultiSelectModule } from '@app/shared/components/form/select/multi/multi-select.module';
 import { TabViewModule } from '@app/shared/components/layout/tabview/tabview.module';
 
-import { ContextService } from './context.service';
 import { MetadataService } from './metadata.service';
 import { GroupService } from './group/group.service';
 
@@ -56,7 +55,6 @@ import { TemplateComponent } from './template/template.component';
     TemplateComponent,
   ],
   providers: [
-    ContextService,
     GroupService,
     MetadataService,
   ],

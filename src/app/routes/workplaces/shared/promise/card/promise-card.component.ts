@@ -15,7 +15,7 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IDynamicFormControl, IDynamicFormDateControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPromise, IPromiseLimit } from '../promise.interface';
 
@@ -24,6 +24,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +40,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   @Input() promiseId: number;
 
   private canAddInsufficientAmount: boolean;
-  private debt: IDebt;
+  private debt: Debt;
   private promiseLimit: IPromiseLimit;
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
@@ -77,7 +78,8 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     private promiseService: PromiseService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private workplacesService: WorkplacesService,
   ) {
 
     this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
@@ -88,7 +90,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
       this.promiseService.getPromiseLimit(this.debtId, this.callCenter),
-      this.promiseService.fetchDebt(this.debtId, this.callCenter),
+      this.workplacesService.fetchDebt(this.debtId, this.callCenter),
       this.promiseId
         ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
         : of(null),
@@ -98,7 +100,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       canAdd, promiseLimit, debt, promise
     ]) => {
       this.promiseLimit = promiseLimit;
-      this.debt = <IDebt>debt;
+      this.debt = <Debt>debt;
       const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
       // Calculate the minimum promise amount
       const minAmount = Math.round((minAmountPercent / 100) * debt.debtAmount * 100) / 100;

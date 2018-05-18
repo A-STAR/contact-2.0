@@ -3,17 +3,6 @@
     <app-button type="back" (click)="onBack()"></app-button>
   </div>
   <div class="flex-item grow mb-lg">
-    <!-- <app-metadata-form
-      #linkForm
-      [config]="linkFormConfig"
-      [data]="contactPerson$ | async"
-    ></app-metadata-form>
-    <app-metadata-form
-      #contactPersonForm
-      [config]="contactPersonFormConfig"
-      [data]="contactPerson$ | async"
-      [disabled]="isContactPersonFormDisabled$ | async"
-    ></app-metadata-form> -->
     <app-dynamic-layout
       [layout]="layoutConfig"
       [data]="formData$ | async"
