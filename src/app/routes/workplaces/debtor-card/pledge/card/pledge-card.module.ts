@@ -10,34 +10,12 @@ import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.mod
 
 import { PledgeCardComponent } from './pledge-card.component';
 
-import {
-  createMetadataFormReducer,
-  IMetadataFormState,
-  IMetadataFormAction,
-} from '@app/shared/components/form/metadata-form/metadata-form.reducer';
-
 const routes: Routes = [
   {
     path: '',
     component: PledgeCardComponent,
   }
 ];
-
-export function pledgeCardContractFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
-  return createMetadataFormReducer('pledgeCardContractForm')(state, action);
-}
-
-export function pledgeCardPledgorFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
-  return createMetadataFormReducer('pledgeCardPledgorForm')(state, action);
-}
-
-export function pledgeCardPropertyFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
-  return createMetadataFormReducer('pledgeCardPropertyForm')(state, action);
-}
-
-export function pledgeCardSelectPersonFormReducer(state: IMetadataFormState, action: IMetadataFormAction): IMetadataFormState {
-  return createMetadataFormReducer('pledgeCardSelectPersonForm')(state, action);
-}
 
 @NgModule({
   declarations: [
@@ -63,10 +41,6 @@ export function pledgeCardSelectPersonFormReducer(state: IMetadataFormState, act
       ],
     ),
     RouterModule.forChild(routes),
-    StoreModule.forFeature('pledgeCardContractForm', pledgeCardContractFormReducer),
-    StoreModule.forFeature('pledgeCardPledgorForm', pledgeCardPledgorFormReducer),
-    StoreModule.forFeature('pledgeCardPropertyForm', pledgeCardPropertyFormReducer),
-    StoreModule.forFeature('pledgeCardSelectPersonForm', pledgeCardSelectPersonFormReducer),
     SharedModule,
     WorkplacesSharedModule,
   ],
