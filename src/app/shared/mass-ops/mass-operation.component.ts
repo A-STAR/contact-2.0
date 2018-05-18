@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { IAction, ICloseAction } from './mass-operation.interface';
 
 import { DialogFunctions } from '@app/core/dialog';
 
@@ -12,7 +12,7 @@ import { DialogFunctions } from '@app/core/dialog';
 export class MassOperationComponent extends DialogFunctions {
 
   @Input('type') dialog: string;
-  @Input('actionData') dialogData: IGridAction;
+  @Input('actionData') dialogData: IAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

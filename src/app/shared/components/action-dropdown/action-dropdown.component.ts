@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { map } from 'rxjs/operators/map';
 
-import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
@@ -38,7 +38,7 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
 
   context: any = {};
 
-  actionData: IGridAction;
+  actionData: IAction;
 
   private optionsSubscription: Subscription;
   private contextSubscription: Subscription;
@@ -83,7 +83,7 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
     return this.actions.find(action => action.id === actionId);
   }
 
-  private getActionData(actionId: number): IGridAction {
+  private getActionData(actionId: number): IAction {
     const metadataAction = this.getMetadataAction(actionId);
     return {
       id: metadataAction.id,
