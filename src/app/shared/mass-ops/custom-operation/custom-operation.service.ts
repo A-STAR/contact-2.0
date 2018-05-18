@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
 import { ICustomActionData } from './custom-operation.interface';
 
@@ -29,19 +28,9 @@ export class CustomOperationService {
   ) {}
 
   run(operation: IGridAction, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
-    operation.asyncMode
+    return operation.asyncMode
       ? this.schedule(operation.id, idData, actionData)
       : this.execute(operation.id, idData, actionData);
-    // TODO (i.kibisov): remove mock
-    return of({
-      success: true,
-      data: [
-        {
-          'column1': 123,
-          'column2': 123
-        }
-      ]
-    });
   }
 
   execute(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
