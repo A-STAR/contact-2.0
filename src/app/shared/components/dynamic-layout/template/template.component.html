@@ -1,3 +1,7 @@
-  <ng-container *ngIf="tRef">
-    <ng-container *ngTemplateOutlet="tRef"></ng-container>
-  </ng-container>
+<ng-container *ngIf="enabled && tRef">
+  <ng-container *ngTemplateOutlet="tRef"></ng-container>
+</ng-container>
+
+<div *ngIf="accessDenied">
+  {{ 'system.accessDenied' | translate }}
+</div>

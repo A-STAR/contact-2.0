@@ -375,6 +375,7 @@
     }
   },
   "system": {
+    "accessDenied": "Доступ ограничен",
     "notifications": {
       "tasks": {
         "created": "создано {{ n }}",

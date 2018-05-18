@@ -270,26 +270,55 @@ export const layout: IDynamicLayoutConfig = {
           children: [
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'IDENTITY_DOCUMENT_VIEW',
+              },
               label: 'Удостоверения личности',
               value: 'identification',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'EMPLOYMENT_VIEW',
+              },
               label: 'История трудоустройства',
               value: 'employment',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'ADDRESS_VIEW',
+              },
               label: 'Адреса',
               value: 'addresses',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'PHONE_VIEW',
+              },
               label: 'Телефоны',
               value: 'phones',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.OR,
+                value: [
+                  {
+                    operator: ContextOperator.PERMISSION_CONTAINS,
+                    value: [ 'FILE_ATTACHMENT_VIEW_LIST', 18 ],
+                  },
+                  {
+                    operator: ContextOperator.PERMISSION_CONTAINS,
+                    value: [ 'FILE_ATTACHMENT_VIEW_LIST', 63 ],
+                  },
+                ],
+              },
               label: 'Документы',
               value: 'documents',
             },
