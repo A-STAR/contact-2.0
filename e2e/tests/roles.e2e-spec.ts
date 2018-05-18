@@ -7,9 +7,9 @@ import {
   clickGridRow,
 } from '../utils/index';
 
-describe('admin/roles', () => {
+describe('app/admin/roles', () => {
   beforeEach(async () => {
-    await navigate('admin/roles');
+    await navigate('app/admin/roles');
   });
 
   it('should render', async done => {
