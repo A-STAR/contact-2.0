@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
 
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { PledgeCardService } from './pledge-card.service';
