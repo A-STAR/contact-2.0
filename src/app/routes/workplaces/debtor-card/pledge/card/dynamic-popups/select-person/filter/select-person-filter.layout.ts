@@ -1,5 +1,5 @@
+import { ContextOperator } from '@app/core/context/context.interface';
 import {
-  ContextOperator,
   DynamicLayoutControlType,
   DynamicLayoutGroupType,
   DynamicLayoutItemType,
