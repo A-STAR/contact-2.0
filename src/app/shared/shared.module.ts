@@ -51,7 +51,6 @@ import { ListModule } from './components/list/list.module';
 import { MapModule } from './components/map/map.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MenuModule } from './components/form/menu/menu.module';
-import { MetadataFormModule } from './components/form/metadata-form/metadata-form.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multilanguage/multilanguage.module';
 import { OperatorModule } from './components/operator/operator.module';
@@ -127,7 +126,6 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     MapModule,
     MassOpsModule,
     MenuModule,
-    MetadataFormModule,
     MomentModule,
     MultiLanguageModule,
     OperatorModule,
@@ -209,7 +207,6 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     MapModule,
     MassOpsModule,
     MenuModule,
-    MetadataFormModule,
     MomentModule,
     MultiLanguageModule,
     NumericInputComponent,
