@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { ICustomActionData, ICustomActionResult } from './custom-operation.interface';
 
@@ -13,6 +14,7 @@ import {
 
 import { IGridActionPayload, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
+import { ILookupOperation } from '@app/core/lookup/lookup.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
@@ -21,11 +23,21 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 @Injectable()
 export class CustomOperationService {
 
+  private operations: ILookupOperation[];
+
   constructor(
     private dataService: DataService,
     private actionGridService: ActionGridService,
     private notificationsService: NotificationsService
-  ) {}
+  ) {
+    // TODO (i.kibisov): remove mock
+    of([ { id: 5, name: 'rectangularDistribution' } ])
+      .subscribe(operations => this.operations = operations);
+  }
+
+  isAllowedOperation(id: number): boolean {
+    return !!this.operations.find(o => o.id === id);
+  }
 
   run(operation: IGridAction, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return operation.asyncMode

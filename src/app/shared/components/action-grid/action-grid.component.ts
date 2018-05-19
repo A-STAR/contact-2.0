@@ -47,8 +47,8 @@ import {
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ILookupOperation } from '@app/core/lookup/lookup.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -145,7 +145,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentSelectionAction: IMetadataAction;
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
-  private customActions: ILookupOperation[];
 
   dialog: string;
   dialogData: IGridAction;
@@ -183,6 +182,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   constructor(
     private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
+    private customOperationService: CustomOperationService,
     private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -210,12 +210,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
     this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
-
-    // TODO (i.kibisov): remove mock
-    of([ { id: 5, name: 'customOperation' } ])
-    .subscribe(operations => {
-      this.customActions = operations;
-    });
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
@@ -666,8 +660,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         .reduce((acc, action) => ({
           ...acc,
           [action.action]: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL
-            ? !!this.customActions.find(o => o.id === action.id)
-            : !!this.customActions.find(o => o.id === action.id) && selection.length
+            ? this.customOperationService.isAllowedOperation(action.id)
+            : this.customOperationService.isAllowedOperation(action.id) && selection.length
         }), {})
     };
   }
