@@ -40,7 +40,11 @@ export class CustomOperationService {
       actionData
     })
     .pipe(
-      catchError(this.notificationsService.updateError().entity('entities.workTask.gen.plural').dispatchCallback())
+      catchError(this.notificationsService
+        .error('errors.default.massOp')
+        .entity('  ')
+        .dispatchCallback()
+      )
     );
   }
 
@@ -51,7 +55,11 @@ export class CustomOperationService {
       actionData
     })
     .pipe(
-      catchError(this.notificationsService.updateError().entity('entities.workTask.gen.plural').dispatchCallback())
+      catchError(this.notificationsService
+        .error('errors.default.massOp')
+        .entity('  ')
+        .dispatchCallback()
+      )
     );
   }
 

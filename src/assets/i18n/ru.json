@@ -3502,7 +3502,8 @@
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
-        "changePersonType": "Изменить тип персоны"
+        "changePersonType": "Изменить тип персоны",
+        "rectangularDistribution": "Равномерное распределение долгов"
       }
     },
     "filter": {

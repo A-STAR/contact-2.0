@@ -3502,7 +3502,8 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type"
+        "changePersonType": "Change person type",
+        "rectangularDistribution": "Debt rectangular distribution"
       }
     },
     "filter": {
