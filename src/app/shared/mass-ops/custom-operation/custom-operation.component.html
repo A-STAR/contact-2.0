@@ -1,14 +1,14 @@
 <app-custom-operation-input
-  *ngIf="actionData.inputParams && !result"
+  *ngIf="actionData.inputConfig && !result"
   [key]="'operations/' + actionData.id + '/input'"
-  [inputConfig]="actionData.inputParams"
+  [inputConfig]="actionData.inputConfig"
   (submit)="onSubmit($event)"
   (close)="onClose()"
 ></app-custom-operation-input>
 
 <app-custom-operation-output
-  *ngIf="actionData.outputParams && result"
-  [outputConfig]="actionData.outputParams"
+  *ngIf="actionData.outputConfig && result"
+  [outputConfig]="actionData.outputConfig"
   [result]="result"
   (close)="onClose()"
 ></app-custom-operation-output>

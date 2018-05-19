@@ -212,7 +212,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.titlebar$ = this.getGridTitlebar();
 
     // TODO (i.kibisov): remove mock
-    of([ { id: 1, name: 'customOperation' } ])
+    of([ { id: 5, name: 'customOperation' } ])
     .subscribe(operations => {
       this.customActions = operations;
     });
@@ -473,8 +473,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       }),
       selection: this.actionGridService.getGridSelection(action, this.selection),
       asyncMode: action.metadataAction.asyncMode,
-      inputParams: action.metadataAction.inputConfig,
-      outputParams: action.metadataAction.outputConfig
+      inputConfig: action.metadataAction.inputConfig,
+      outputConfig: action.metadataAction.outputConfig
     };
   }
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 
-import { ICustomActionData } from './custom-operation.interface';
+import { ICustomActionData, ICustomActionResult } from './custom-operation.interface';
 
 import {
   IDynamicLayoutConfig,
@@ -53,6 +53,16 @@ export class CustomOperationService {
     .pipe(
       catchError(this.notificationsService.updateError().entity('entities.workTask.gen.plural').dispatchCallback())
     );
+  }
+
+  showResultMessage(result: ICustomActionResult): void {
+    this.notificationsService
+      .info('default.dialog.result.message')
+      .params({
+        total: `${result.total}`,
+        processed: `${result.processed}`
+      })
+      .dispatch();
   }
 
   getActionInputParamsConfig(key: string, params: IMetadataActionParamConfig[]): IDynamicLayoutConfig {
