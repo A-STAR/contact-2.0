@@ -38,6 +38,8 @@ import { isEmpty } from '@app/core/utils';
 export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
   @Input() filterParams: any = {};
+  @Input() label: string;
+  @Input() required: boolean;
 
   @Input() columnsFrom: ISimpleGridColumn<T>[] = [];
   @Input() columnsTo: ISimpleGridColumn<T>[] = [];

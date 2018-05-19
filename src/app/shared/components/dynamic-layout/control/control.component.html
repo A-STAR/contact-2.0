@@ -38,6 +38,8 @@
     <!-- Multiselect dialog -->
     <app-dialog-multi-select
       *ngSwitchCase="'dialogmultiselect'"
+      [label]="control.label"
+      [required]="isRequired(control) | async"
       [filterType]="control.filterType"
       [filterParams]="control.filterParams"
       [formControlName]="control.name"
