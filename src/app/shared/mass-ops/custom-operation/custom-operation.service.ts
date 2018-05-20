@@ -45,11 +45,14 @@ export class CustomOperationService {
       : this.execute(operation.id, idData, actionData);
   }
 
+  // TODO (i.kibisov): remove mock
   execute(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return this.dataService.create('/synch/mass/customOperation', {}, {
       operationId,
-      idData: this.actionGridService.buildRequest(idData),
-      actionData
+      idData: {
+        debtId: this.actionGridService.buildRequest(idData),
+        operatorId: { ids: actionData.operatorId.map(p => [p]) }
+      }
     })
     .pipe(
       catchError(this.notificationsService
