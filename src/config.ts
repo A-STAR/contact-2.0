@@ -26,7 +26,8 @@ export const load = (configUrl: string) => new Promise((resolve, reject) => {
         assets,
         domains: [ domain ],
         i18n: (response.i18n || [ 'i18n/{lang}.json' ]).map(path => `${assets}/${path}`),
-        maps: response.maps
+        maps: response.maps,
+        help: response.help,
       };
 
       resolve(config);
