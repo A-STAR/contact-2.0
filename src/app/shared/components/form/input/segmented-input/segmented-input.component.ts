@@ -33,7 +33,18 @@ import { DropdownComponent } from '@app/shared/components/dropdown/dropdown.comp
 export class SegmentedInputComponent implements ControlValueAccessor {
   @ViewChild(DropdownComponent) dropdown: DropdownComponent;
 
-  @Input() options: ISegmentedInputOption[];
+  @Input() set options(opts: ISegmentedInputOption[]) {
+    this._options = opts.reduce((acc, o) => ({
+      ...acc,
+      [o.name]: ''
+    }), {});
+    this._originalOptions = opts;
+    this.cdRef.markForCheck();
+  }
+
+  get options(): ISegmentedInputOption[] {
+    return this._originalOptions;
+  }
 
   private defaultMask: ISegmentedInputMask = {
     delimeter: ',',
@@ -43,6 +54,8 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   private _value: ISegmentedInputValue;
   private _mask: ISegmentedInputMask;
   private _strValue: string;
+  private _originalOptions: ISegmentedInputOption[];
+  private _options: { [key: string]: any };
   value: string;
 
   constructor(
@@ -52,9 +65,11 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   writeValue(value: ISegmentedInputValue): void {
     const name = value && value.name || this.options[0].name;
     this._value = { ...value, name };
-    if (this.options[0].mask) {
-      this.maskedArray = this.options[0].mask;
+    const option = this.options.find(o => o.name === name);
+    if (option && option.mask) {
+      this.maskedArray = option.mask;
     }
+    this._options[this._value.name] = this._value.value;
     this.value = this.toViewValue(this._value.value);
     this._strValue = this.value;
     this.cdRef.markForCheck();
@@ -68,7 +83,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
   }
 
   set maskedArray(mask: ISegmentedInputMask) {
-    this._mask = Object.assign(this.defaultMask, mask);
+    this._mask = mask ? Object.assign(this.defaultMask, mask) : null;
   }
 
   get maskedArray(): ISegmentedInputMask {
@@ -82,11 +97,12 @@ export class SegmentedInputComponent implements ControlValueAccessor {
 
   onOptionSelect(option: ISegmentedInputOption): void {
     this._value = {
-      ...(this._value || { value: '' }),
+      ...({ value: this._options[option.name] || '' }),
       name: option.name
     };
     this.maskedArray = option.mask;
-    this.value = this._value.value;
+    this.value = this.toViewValue(this._value.value);
+    this._strValue = this.value;
     this.propagateChange(this._value);
     this.dropdown.close();
   }
@@ -96,6 +112,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
       ...this._value,
       value: this.getModelValue(value),
     };
+    this._options[this._value.name] = this._value.value;
     this._strValue = value;
     this.propagateChange(this._value);
   }
