@@ -171,7 +171,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
 
     const data = {
       ...formData,
-      ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
+      ...(autoCommentIds && autoCommentIds.length ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(template ? { [template.name]: template.value || null } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value || null } : {}),
       ...(isEmpty(attributes) ? {} : { attributes }),
