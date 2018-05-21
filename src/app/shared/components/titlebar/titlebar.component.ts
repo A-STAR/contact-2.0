@@ -35,7 +35,8 @@ export class TitlebarComponent implements OnChanges, OnInit {
     [TitlebarItemTypeEnum.BUTTON_CLOSE]: { iconCls: 'co-close', title: 'default.buttons.close' },
     [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
-    [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-debt-list', title: 'Карточка должника' },
+    // TODO(d.maltsev): we need a better icon here
+    [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-edit', title: 'Карточка должника' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
     [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
@@ -57,21 +58,21 @@ export class TitlebarComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnChanges(): void {
-    this.title = this.titlebar.title;
+    this.title = this.titlebar && this.titlebar.title;
     this.cdRef.markForCheck();
   }
 
   ngOnInit(): void {
     const classesDefault = defaultTo(of(''));
     const enabledDefault = defaultTo(of(true));
-    this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
-    this.items = (this.titlebar.items || this.items).map(item => ({
+    this.borderCls = { 'no-border': this.titlebar && this.titlebar.suppressBorder === true };
+    this.items = ((this.titlebar && this.titlebar.items) || this.items).map(item => ({
       ...item,
       classes: classesDefault(item.classes),
       enabled: enabledDefault(item.enabled),
     }));
-    this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
-    this.title = this.titlebar.title;
+    this.suppressCenterZone = (this.titlebar && this.titlebar.suppressCenterZone) || false;
+    this.title = (this.titlebar && this.titlebar.title) || '';
   }
 
   getButtonType(item: ITitlebarItem): IButtonType {

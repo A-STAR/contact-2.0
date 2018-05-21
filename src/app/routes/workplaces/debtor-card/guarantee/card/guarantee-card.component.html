@@ -1,101 +1,83 @@
 <div class="flex vertical">
-
-  <!-- Titlebar -->
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
     <h1>{{ 'routes.workplaces.debtorCard.guarantee.card.titles.addGuarantor' | translate }}</h1>
   </div>
-
-  <!-- Forms -->
-  <div class="flex-item grow mb-lg" style="overflow-y: auto;">
-    <div class="flex horizontal">
-
-      <!-- Contract Form -->
-      <div *ngIf="showContractForm$ | async" class="flex-item grow pr">
-        <app-titlebar [titlebar]="contractTitlebar"></app-titlebar>
-        <app-metadata-form
-          #contractForm
-          [config]="contractFormConfig"
-        ></app-metadata-form>
-        <app-button type="clear"></app-button>
-      </div>
-
-      <!-- Guarantor Form -->
-      <div class="flex-item grow ph">
-        <app-titlebar [titlebar]="guarantorTitlebar"></app-titlebar>
-        <app-metadata-form
-          #guarantorForm
-          [config]="guarantorFormConfig"
-          [data]="guarantor$ | async"
-          [disabled]="isGuarantorFormDisabled$ | async"
-        ></app-metadata-form>
-        <app-button type="clear" (click)="onGuarantorFormClear()"></app-button>
-      </div>
-    </div>
+  <div class="flex-item grow mb-lg">
+    <app-dynamic-layout
+      [layout]="layoutConfig"
+      [data]="formData$ | async"
+      [templates]="templates"
+    ></app-dynamic-layout>
   </div>
-
-  <!-- Additional Info -->
-  <div *ngIf="edit$ | async" class="flex-item grow mb-lg">
-    <app-tabview [fullHeight]="true">
-
-      <!-- Identifications -->
-      <app-tabview-tab title="Удостоверения личности">
-        <app-identity-grid
-          [personId]="guarantorId"
-          (add)="onIdentityAdd()"
-          (dblClick)="onIdentityEdit($event)"
-          (edit)="onIdentityEdit($event)"
-        ></app-identity-grid>
-      </app-tabview-tab>
-
-      <!-- Employment -->
-      <app-tabview-tab title="Трудоустройство">
-        <app-employment-grid
-          [personId]="guarantorId"
-          (add)="onEmploymentAdd()"
-          (dblClick)="onEmploymentEdit($event)"
-          (edit)="onEmploymentEdit($event)"
-        ></app-employment-grid>
-      </app-tabview-tab>
-
-      <!-- Phones -->
-      <app-tabview-tab title="Телефоны">
-        <app-phone-grid
-          [contactType]="1"
-          [debtId]="debtId"
-          [personId]="guarantorId"
-          [personRole]="guaarantorRole"
-          (add)="onPhoneAdd()"
-          (dblClick)="onPhoneEdit($event)"
-          (edit)="onPhoneEdit($event)"
-        ></app-phone-grid>
-      </app-tabview-tab>
-
-      <!-- Addresses -->
-      <app-tabview-tab title="Адреса">
-        <app-address-grid
-          [debtId]="debtId"
-          [personId]="guarantorId"
-          [personRole]="guaarantorRole"
-          (add)="onAddressAdd()"
-          (dblClick)="onAddressEdit($event)"
-          (edit)="onAddressEdit($event)"
-        ></app-address-grid>
-      </app-tabview-tab>
-
-      <!-- Documents -->
-      <app-tabview-tab title="Документы">
-        <!-- Documents for debt (term 19 in dictionary 55) -->
-        <app-document-grid
-          [entityType]="19"
-          [entityId]="debtId"
-        ></app-document-grid>
-      </app-tabview-tab>
-    </app-tabview>
-  </div>
-
-  <!-- Toolbar -->
   <div class="flex-item">
-    <app-button type="save" [disabled]="!canSubmit" (click)="onSave()"></app-button>
+    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
   </div>
 </div>
+
+<ng-template #identification>
+  <app-identity-grid
+    [personId]="contactId"
+    (add)="onIdentityAdd()"
+    (dblClick)="onIdentityEdit($event)"
+    (edit)="onIdentityEdit($event)"
+  ></app-identity-grid>
+</ng-template>
+
+<ng-template #employment>
+  <app-employment-grid
+    [personId]="contactId"
+    (add)="onEmploymentAdd()"
+    (dblClick)="onEmploymentEdit($event)"
+    (edit)="onEmploymentEdit($event)"
+  ></app-employment-grid>
+</ng-template>
+
+<ng-template #phones>
+  <app-phone-grid
+    [contactType]="1"
+    [debtId]="debtId"
+    [personId]="contactId"
+    [personRole]="contactPersonRole"
+    (add)="onPhoneAdd()"
+    (dblClick)="onPhoneRegister($event)"
+    (edit)="onPhoneEdit($event)"
+    (register)="onPhoneRegister($event)"
+  ></app-phone-grid>
+</ng-template>
+
+<ng-template #addresses>
+  <app-address-grid
+    [debtId]="debtId"
+    [personId]="contactId"
+    [personRole]="contactPersonRole"
+    (add)="onAddressAdd()"
+    (dblClick)="onAddressRegister($event)"
+    (edit)="onAddressEdit($event)"
+    (register)="onAddressRegister($event)"
+  ></app-address-grid>
+</ng-template>
+
+<ng-template #documents>
+  <!-- Documents for debt (term 19 in dictionary 55) -->
+  <app-document-grid
+    [entityType]="19"
+    [entityId]="debtId"
+  ></app-document-grid>
+</ng-template>
+
+<ng-template #contractTitlebar>
+  <app-titlebar [titlebar]="contractTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #personTitlebar>
+  <app-titlebar [titlebar]="personTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #contractClearButton>
+  <app-button *ngIf="!(edit$ | async)" type="clear" (click)="onContactFormClear()"></app-button>
+</ng-template>
+
+<ng-template #personClearButton>
+  <app-button *ngIf="!(edit$ | async)" type="clear" (click)="onPersonFormClear()"></app-button>
+</ng-template>

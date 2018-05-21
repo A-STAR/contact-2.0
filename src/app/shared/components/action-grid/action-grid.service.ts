@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
+import {
+  IMetadataAction,
+  MetadataActionType,
+} from '@app/core/metadata/metadata.interface';
 
 import {
   IMetadataActionSetter,

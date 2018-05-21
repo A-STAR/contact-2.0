@@ -61,30 +61,39 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
       { fillColor: '23b7e5', char: 'CW', fontSize: 10, textColor: 'ffffff' }, // Blue fill, white textColor
       { fillColor: 'fad732', char: 'CE', fontSize: 10, textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ],
+    addressByContactLine: [
+      { fillColor: '23b7e5' }
+    ]
   };
 
   static ICON_CONFIG_GETTERS = {
-    singleAddress: (config: ILayerIconConfig[], entity) => {
-      return entity.isInactive ?  {
-        ...config[entity.typeCode],
-        ...config[0],
-      } : {
-        ...config[entity.typeCode]
+    singleAddress: (config: ILayerIconConfig[], entity?: any) => {
+      if (entity) {
+        const result = {
+          ...config[entity.typeCode]
+        };
+        return entity.isInactive ? { ...result, ...config[0] } : result;
+      }
+      return {
+        ...config[0]
       };
     },
-    addressByPerson: (config: ILayerIconConfig[], entity) => {
-      return entity.isInactive ?  {
-        ...config[entity.typeCode],
-        ...config[0],
-      } : {
-        ...config[entity.typeCode]
+    addressByPerson: (config: ILayerIconConfig[], entity?: any) => {
+      if (entity) {
+        const result = {
+          ...config[entity.typeCode]
+        };
+        return entity.isInactive ? { ...result, ...config[0] } : result;
+      }
+      return {
+        ...config[0]
       };
     },
-    addressByContact: (config: ILayerIconConfig[], data, params?: number) => {
-      if (data.addressLatitude && data.addressLongitude) {
+    addressByContact: (config: ILayerIconConfig[], data?: any, params?: number) => {
+      if (data && data.addressLatitude && data.addressLongitude) {
         const result = { ...config[data.addressTypeCode] };
         if (data.distance) {
-          result.fillColor = data.distance <= params ? 'fad732' : '37bc9b';
+          result.fillColor = data.distance <= params ? '37bc9b' : 'fad732';
         } else {
           result.fillColor = '23b7e5';
         }
@@ -94,7 +103,7 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
         ...config[config.length - 1],
         char: 'C'
       };
-    },
+    }
   };
 
   private libraryEl: HTMLScriptElement;
@@ -221,7 +230,7 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
     return `${this.dynamicIconBaseUrl}chst=d_map_spin&chld=${[0.75, 0, config.fillColor, config.fontSize || 12, '_', config.char].join('%7C')}`;
   }
 
-  getIconConfig(configKey: string, entity: T, params?: any): ILayerIconConfig {
+  getIconConfig(configKey: string, entity?: T, params?: any): ILayerIconConfig {
     if (MapGoogleService.ICON_CONFIGS[configKey]) {
       return MapGoogleService.ICON_CONFIG_GETTERS[configKey] ?
         MapGoogleService.ICON_CONFIG_GETTERS[configKey](MapGoogleService.ICON_CONFIGS[configKey], entity, params)

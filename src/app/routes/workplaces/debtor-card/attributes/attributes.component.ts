@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
-import { IActionType } from '@app/core/app-modules/debtor-card/debtor-card.interface';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 @Component({
   selector: 'app-debtor-attributes',
@@ -17,20 +16,13 @@ export class DebtorAttributesComponent implements OnInit, OnDestroy {
   paramsSub: Subscription;
 
   constructor(
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
   ) {}
 
   ngOnInit(): void {
-    this.entityId$ = this.debtorCardService.selectedDebtId$;
+    this.entityId$ = this.debtorService.debtId$;
     this.entityTypeId = DebtorAttributesComponent.ENTITY_TYPE_DEBT;
-    this.paramsSub = this.debtorCardService.selectedDebtId$
-      .subscribe(entityId =>
-        this.debtorCardService.dispatchAction(IActionType.SELECT_ENTITY,
-          {
-            entityId,
-            entityTypeId: DebtorAttributesComponent.ENTITY_TYPE_DEBT
-          })
-      );
+    this.debtorService.entityTypeId$.next(this.entityTypeId);
   }
 
   ngOnDestroy(): void {

@@ -15,13 +15,14 @@ import {
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
 import { DataService } from '@app/core/data/data.service';
-import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
 import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { combineLatestOr } from '@app/core/utils/helpers';
+import { Debt } from '@app/entities';
 
 @Injectable()
 export class ContactRegistrationService {
@@ -41,7 +42,7 @@ export class ContactRegistrationService {
 
   constructor(
     private dataService: DataService,
-    private debtsService: DebtsService,
+    private repo: RepositoryService,
     private documentService: DocumentService,
     private notificationsService: NotificationsService,
     private promiseService: PromiseService,
@@ -143,7 +144,11 @@ export class ContactRegistrationService {
   }
 
   readonly debt$ = this.debtId$.pipe(
-      mergeMap(debtId => debtId ? this.debtsService.getDebt(debtId) : of(null)),
+      mergeMap(debtId => debtId ? this.repo.fetch(Debt, { id: debtId })
+        .pipe(
+          first(),
+          map(debts => debts && debts[0])
+        ) : of(null)),
       publishReplay(1),
       refCount()
   );

@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged, first, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map } from 'rxjs/operators';
 import { getIn } from 'immutable';
 import { equals } from 'ramda';
 
@@ -14,7 +14,7 @@ import {
   DynamicLayoutAction,
   DynamicLayoutItemType,
   IDynamicLayoutControl,
-  IDynamicLayoutChangeValidAction,
+  IDynamicLayoutChangeStatusAction,
   IDynamicLayoutChangeValueAction,
   IDynamicLayoutItem,
   IDynamicLayoutItemProperties,
@@ -47,6 +47,7 @@ export class ControlService implements OnDestroy {
 
   private controls: IDynamicLayoutItemProperties<IDynamicLayoutControl>[];
   private data: Record<string, any> = {};
+  private groupNames: Set<string>;
   private groups = new Map<string, FormGroup>();
   private key: string;
 
@@ -75,8 +76,8 @@ export class ControlService implements OnDestroy {
 
     this.key = key;
 
-    const forms = new Set(this.controls.map(control => this.getControlForm(control.item)));
-    forms.forEach(form => this.createFormGroup(form, key));
+    this.groupNames = new Set(this.controls.map(control => this.getControlForm(control.item)));
+    this.groupNames.forEach(form => this.createFormGroup(form, key));
 
     this.controls.forEach(control => {
       const { enabled, display } = control.streams;
@@ -92,9 +93,33 @@ export class ControlService implements OnDestroy {
 
   canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
     return this.store.select(state => {
-      const { dirty, valid } = getIn(state, [ 'layout', this.key, 'forms', form, 'status' ], {});
-      return dirty && valid;
+      const f = getIn(state, [ 'layout', this.key, 'forms', form ], {});
+      return f.dirty && f.status === 'VALID';
     });
+  }
+
+  canSubmitAll(): Observable<boolean> {
+    return this.store.pipe(
+      select((state: any) => getIn(state, [ 'layout', this.key, 'forms' ], {})),
+      select(forms => {
+        const groups = Array.from(this.groupNames);
+        const valid = groups.reduce((acc, name) => {
+          const status = getIn(forms, [ name, 'status' ], false);
+          return acc && [ 'VALID', 'DISABLED' ].includes(status);
+        }, true);
+        const dirty = groups.reduce((acc, name) => {
+          return acc || getIn(forms, [ name, 'dirty' ], false);
+        }, false);
+        return valid && dirty;
+      })
+    );
+  }
+
+  reset(form: string = ControlService.DEFAULT_GROUP_NAME): void {
+    const group = this.groups.get(form);
+    if (group) {
+      group.reset();
+    }
   }
 
   getData(form: string = ControlService.DEFAULT_GROUP_NAME): any {
@@ -109,27 +134,41 @@ export class ControlService implements OnDestroy {
     this.patchFormGroups();
   }
 
-  getFormGroup(control: IDynamicLayoutControl): FormGroup {
+  getFormGroupForControl(control: IDynamicLayoutControl): FormGroup {
     const form = this.getControlForm(control);
     return this.groups.get(form);
   }
 
-  dispatchChangeStatusAction(form: string, valid: boolean, dirty: boolean): void {
+  dispatchChangeStatusAction(form: string, status: string): void {
     const { key } = this;
-    const action: IDynamicLayoutChangeValidAction = {
-      type: DynamicLayoutAction.CHANGE_FORM_VALID,
-      payload: { key, form, valid, dirty },
+    const action: IDynamicLayoutChangeStatusAction = {
+      type: DynamicLayoutAction.CHANGE_FORM_STATUS,
+      payload: { key, form, status },
     };
     this.store.dispatch(action);
   }
 
-  dispatchChangeValueAction(form: string, value: Record<string, any>): void {
+  dispatchChangeValueAction(form: string, dirty: boolean, value: Record<string, any>): void {
     const { key } = this;
     const action: IDynamicLayoutChangeValueAction = {
       type: DynamicLayoutAction.CHANGE_FORM_VALUE,
-      payload: { key, form, value },
+      payload: { key, form, dirty, value },
     };
     this.store.dispatch(action);
+  }
+
+  enableFormGroup(formGroupName: string = ControlService.DEFAULT_GROUP_NAME): void {
+    const formGroup = this.groups.get(formGroupName);
+    if (formGroup) {
+      formGroup.enable();
+    }
+  }
+
+  disableFormGroup(formGroupName: string = ControlService.DEFAULT_GROUP_NAME): void {
+    const formGroup = this.groups.get(formGroupName);
+    if (formGroup) {
+      formGroup.disable();
+    }
   }
 
   private createFormGroup(name: string, key: string): void {
@@ -149,19 +188,15 @@ export class ControlService implements OnDestroy {
       const valueSubscription = group.valueChanges
         .pipe(
           distinctUntilChanged(equals),
+          debounceTime(100),
         )
-        .subscribe(value => this.dispatchChangeValueAction(name, value));
-      const statusSubscription = combineLatest(
-        group.statusChanges
-          .pipe(
-            distinctUntilChanged()
-          ),
-        group.valueChanges
-          .pipe(
-            distinctUntilChanged(equals)
-          )
-      )
-      .subscribe(([ status ]) => this.dispatchChangeStatusAction(name, status === 'VALID', group.dirty));
+        .subscribe(value => this.dispatchChangeValueAction(name, group.dirty, value));
+      const statusSubscription = group.statusChanges
+        .pipe(
+          distinctUntilChanged(),
+          debounceTime(100),
+        )
+        .subscribe(status => this.dispatchChangeStatusAction(name, status));
       this.formSubscription.add(valueSubscription);
       this.formSubscription.add(statusSubscription);
     }
@@ -180,9 +215,9 @@ export class ControlService implements OnDestroy {
   }
 
   private enable(control: IDynamicLayoutControl, enabled: boolean): void {
-    const formGroup = this.getFormGroup(control);
+    const formGroup = this.getFormGroupForControl(control);
     const c = formGroup.get(control.name);
-    if (enabled) {
+    if (enabled && formGroup.enabled) {
       c.enable();
     } else {
       c.disable();
@@ -240,7 +275,7 @@ export class ControlService implements OnDestroy {
       case DynamicLayoutControlType.CHECKBOX:
         return Number(value);
       default:
-        return value;
+        return value === '' ? null : value;
     }
   }
 }

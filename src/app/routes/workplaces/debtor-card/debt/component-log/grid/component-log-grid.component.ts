@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 
 import { IComponentLogEntry } from '../component-log.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -9,6 +9,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DateRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel } from '@app/core/utils';
+import { first } from 'rxjs/operators/first';
 
 @Component({
   selector: 'app-component-log-grid',
@@ -16,8 +17,12 @@ import { addGridLabel } from '@app/core/utils';
   host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentLogGridComponent implements OnInit {
-  @Input() debtId: number;
+export class ComponentLogGridComponent {
+  @Input() set debtId(debtId: number) {
+    if (this._debtId !== debtId) {
+      this.fetch(debtId);
+    }
+  }
 
   columns: Array<ISimpleGridColumn<IComponentLogEntry>> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 250, dictCode: UserDictionariesService.DICTIONARY_DEBT_COMPONENTS },
@@ -31,16 +36,23 @@ export class ComponentLogGridComponent implements OnInit {
 
   entries: IComponentLogEntry[];
 
+  private _debtId: number;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private componentLogService: ComponentLogService,
   ) {}
 
-  ngOnInit(): void {
-
-    this.componentLogService.readAll(this.debtId).subscribe(entries => {
-      this.entries = entries;
-      this.cdRef.markForCheck();
-    });
+  private fetch(debtId: number): void {
+    if (debtId) {
+      this.componentLogService
+        .readAll(debtId)
+        .pipe(first())
+        .subscribe(entries => {
+          this.entries = entries;
+          this._debtId = debtId;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 }

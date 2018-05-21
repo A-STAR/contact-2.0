@@ -8,7 +8,7 @@ describe('home', () => {
   // Note:
   // Not taking screenshot because dashboard data is updated frequently
   it('should exist', async done => {
-    await expectToMatchUrl('home');
+    await expectToMatchUrl('app/home');
     done();
   });
 });

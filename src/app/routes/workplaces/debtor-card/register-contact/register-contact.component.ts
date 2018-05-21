@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '@app/core/debt/debt.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 import { AddressGridComponent } from './address/address.component';
 import { MiscComponent } from './misc/misc.component';
@@ -22,29 +21,18 @@ export class RegisterContactComponent {
   @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
 
   constructor(
-    private debtorCardService: DebtorCardService,
-    private debtService: DebtService,
+    private debtorService: DebtorService,
   ) {}
 
-  get entityType(): number {
-    return 18;
-  }
+  entityType = 18;
 
-  get entityId$(): Observable<number> {
-    return this.debtorCardService.personId$;
-  }
+  readonly entityId$: Observable<number> = this.debtorService.debtorId$;
 
-  get canRegisterPhones$(): Observable<boolean> {
-    return this.debtService.canRegisterIncomingCalls$;
-  }
+  readonly canRegisterPhones$: Observable<boolean> = this.debtorService.canRegisterIncomingCalls$;
 
-  get canRegisterAddresses$(): Observable<boolean> {
-    return this.debtService.canRegisterAddressVisits$;
-  }
+  readonly canRegisterAddresses$: Observable<boolean> = this.debtorService.canRegisterAddressVisits$;
 
-  get canRegisterMisc$(): Observable<boolean> {
-    return this.debtService.canRegisterSpecialOrOfficeVisit$;
-  }
+  readonly canRegisterMisc$: Observable<boolean> = this.debtorService.canRegisterSpecialOrOfficeVisit$;
 
   onAddressAction(contactId: number): void {
     this.submit.emit({ contactType: 3, contactId });

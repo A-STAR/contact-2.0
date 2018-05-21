@@ -210,12 +210,6 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'dialogmultiselect'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
     <app-dialog-multi-select
       [filterType]="control.filterType"
       [filterParams]="control.filterParams"

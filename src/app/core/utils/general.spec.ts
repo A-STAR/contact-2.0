@@ -1,4 +1,13 @@
-import { range, deepFilterAndMap, IncId, binaryFromArray, toBoolArray, toBoolSizedArray } from './general';
+import {
+  range,
+  deepFilterAndMap,
+  IncId,
+  binaryFromArray,
+  toBoolArray,
+  toBoolSizedArray,
+  pickExisting,
+  serializeBoolParams,
+} from './general';
 
 describe('General helper:', () => {
 
@@ -208,6 +217,58 @@ describe('General helper:', () => {
 
       result = toBoolSizedArray(-5, 5);
       expect(result).toEqual([false, false, true, false, true]);
+    });
+  });
+
+  describe('pickExisting', () => {
+    it('should return partial copy of an object with existing props', () => {
+      let obj = pickExisting({});
+      expect(obj).toEqual({});
+
+      obj = pickExisting({ a: 1, b: null });
+      expect(obj).toEqual({ a: 1 });
+
+      obj = pickExisting({ a: 1, b: 0 });
+      expect(obj).toEqual({ a: 1, b: 0 });
+
+      obj = pickExisting({ a: 1, b: '' });
+      expect(obj).toEqual({ a: 1, b: '' });
+
+      obj = pickExisting({ a: 1, b: undefined });
+      expect(obj).toEqual({ a: 1 });
+
+      obj = pickExisting(5);
+      expect(obj).toEqual(5);
+
+      obj = pickExisting(null);
+      expect(obj).toEqual(null);
+
+    });
+  });
+
+  describe('serializeBoolParams', () => {
+    it('should convert truthy properties of an object to the 1, omitting falsy values', () => {
+      let obj = serializeBoolParams({});
+      expect(obj).toEqual({});
+
+      obj = serializeBoolParams({ a: 1, b: true });
+      expect(obj).toEqual({ a: 1, b: 1 });
+
+      obj = serializeBoolParams({ a: 1, b: false });
+      expect(obj).toEqual({ a: 1 });
+
+      obj = serializeBoolParams({ a: false, b: false });
+      expect(obj).toEqual({ });
+
+      obj = serializeBoolParams({ a: 1, b: undefined });
+      expect(obj).toEqual({ a: 1, b: undefined });
+
+      obj = serializeBoolParams({ a: 1, b: null });
+      expect(obj).toEqual({ a: 1, b: null });
+
+      obj = serializeBoolParams({ a: 1, b: 'true' });
+      expect(obj).toEqual({ a: 1, b: 'true' });
+
     });
   });
 

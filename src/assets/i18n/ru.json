@@ -364,10 +364,18 @@
           "rowsSelected": "выбрано",
           "rowsTotal": "всего"
         }
+      },
+      "dynamic-layout": {
+        "metadata": {
+          "errors": {
+            "fetch": "Не удалось получить конфигурацию динамической формы."
+          }
+        }
       }
     }
   },
   "system": {
+    "accessDenied": "Доступ ограничен",
     "notifications": {
       "tasks": {
         "created": "создано {{ n }}",
@@ -1274,6 +1282,7 @@
     "reward": "Размер вознаграждения",
     "shortInfo": "Краткая иформация",
     "stageCode": "Стадия",
+    "successUpdate": "Информация о должнике с ID {{ id }} была успешно обновлена",
     "utc": "Местное время должника",
     "identityDocs": {
       "title": "Удостоверения личности",
@@ -2751,6 +2760,16 @@
       "errors": {
         "start": "Произошла ошибка при попытке стартовать мероприятия с ID {{ eventId }}"
       }
+    },
+    "customOperation": {
+      "dialog": {
+        "input": {
+          "title": "Введите параметры"
+        },
+        "output": {
+          "title": "Результат операции"
+        }
+      }
     }
   },
   "entities": {
@@ -2835,7 +2854,16 @@
         "gen": { "plural": "общей информации о должнике" }
       }
     },
+    "debtor": {
+      "gen": { "singular": "должника", "plural": "списка должников" },
+      "info": {
+        "gen": { "plural": "общей информации о должнике" }
+      }
+    },
     "debts": {
+      "gen": { "singular": "долга", "plural": "списка долгов" }
+    },
+    "debt": {
       "gen": { "singular": "долга", "plural": "списка долгов" }
     },
     "massOps": {
@@ -3474,7 +3502,8 @@
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
-        "changePersonType": "Изменить тип персоны"
+        "changePersonType": "Изменить тип персоны",
+        "rectangularDistribution": "Равномерное распределение долгов"
       }
     },
     "filter": {

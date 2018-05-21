@@ -4,12 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { DebtService } from '@app/core/debt/debt.service';
 import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,12 +30,13 @@ export class PhoneGridComponent implements OnInit {
   ].map(addGridLabel('debtor.information.phone.grid'));
 
   phones: IPhone[];
+  selectedPhone: IPhone;
 
   private selectedPhoneId: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
+    private debtorService: DebtorService,
     private phoneService: PhoneService,
   ) {}
 
@@ -46,22 +47,18 @@ export class PhoneGridComponent implements OnInit {
     });
   }
 
-  get canRegisterSelectedPhone$(): Observable<boolean> {
-    return this.debtService.canRegisterIncomingCall$(this.selectedPhone);
-  }
-
-  get selectedPhone(): IPhone {
-    return (this.phones || []).find(phone => phone.id === this.selectedPhoneId);
-  }
+  readonly canRegisterSelectedPhone$: Observable<boolean> = this.debtorService.canRegisterIncomingCall$(this.selectedPhone);
 
   onSelect(phones: IPhone[]): void {
     this.selectedPhoneId = isEmpty(phones)
       ? null
       : phones[0].id;
+    this.selectedPhone = phones[0];
     this.cdRef.markForCheck();
   }
 
   onDoubleClick(phone: IPhone): void {
+    this.selectedPhone = phone;
     this.selectedPhoneId = phone.id;
     doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
   }

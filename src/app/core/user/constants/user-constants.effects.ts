@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, map } from 'rxjs/operators';
 
 import { IUserConstant } from './user-constants.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
-import { DataService } from '../../data/data.service';
-import { NotificationsService } from '../../notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from './user-constants.service';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class UserConstantsEffects {
                 type: UserConstantsService.USER_CONSTANTS_FETCH_SUCCESS,
                 payload: {
                   data: constants.reduce((acc, constant) => ({ ...acc, [constant.name]: constant }), {})
-                }
+                },
               })),
               catchError(this.notificationService.fetchError().entity('entities.user.constants.gen.plural').callback()),
           )
@@ -37,7 +37,7 @@ export class UserConstantsEffects {
     private authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationsService,
-  ) {}
+  ) { }
 
   private read(): Observable<IUserConstant[]> {
     return this.dataService.readAll('/constants/values');

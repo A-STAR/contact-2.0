@@ -15,5 +15,8 @@
         "apiKey": "yandex api key"
       }
     }
+  },
+  "help": {
+    "url": "help base url"
   }
 }

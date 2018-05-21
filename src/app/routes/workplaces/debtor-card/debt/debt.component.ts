@@ -1,25 +1,23 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { map, first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators';
 
-import { IDebt } from '@app/core/debt/debt.interface';
-
-import { DebtService } from '@app/core/debt/debt.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
+import { Debt } from '@app/entities';
 import { invert } from '@app/core/utils';
 
 @Component({
@@ -34,36 +32,30 @@ export class DebtComponent implements AfterViewInit, OnInit {
   @ViewChild('portfolioLog', { read: TemplateRef }) portfolioLog: TemplateRef<any>;
   @ViewChild('componentLog', { read: TemplateRef }) componentLog: TemplateRef<any>;
 
-  debt: IDebt;
+  data = new BehaviorSubject<{ default?: Debt }>({});
   templates: Record<string, TemplateRef<any>>;
 
   isDisabled$ = of(true);
 
-  readonly displayDebtData = this.debtorCardService.selectedDebt$.pipe(map(Boolean));
-
+  readonly debtId$ = this.debtorService.debtId$;
+  readonly displayDebtData = this.debtId$.pipe(map(Boolean));
   readonly canViewComponentLog$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
   readonly canViewPortfolioLog$ = this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
 
-  readonly debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
-  readonly debtId   = Number(this.route.snapshot.paramMap.get('debtId'));
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
+
     if (this.isEditMode) {
-      this.debtService
-        .fetch(null, this.debtId)
-        .subscribe(debt => {
-          this.debt = debt;
-          this.cdRef.markForCheck();
-        });
+      this.debtorService.debt$
+      .pipe(first())
+      .subscribe(debt => this.data.next({ default: debt }));
     }
 
     this.templates = {
@@ -81,25 +73,25 @@ export class DebtComponent implements AfterViewInit, OnInit {
 
   onSubmit(): void {
     if (this.isEditMode) {
-      this.debtService
-        .update(this.debtorId, this.debtId, this.layout.getData())
+      this.debtorService
+        .updateDebt(this.layout.getData())
         .subscribe(() => {
-          this.debtorCardService.refreshDebts();
+          this.debtorService.refreshDebts();
           this.onBack();
         });
     } else {
-      this.debtService
-        .create(this.debtorId, this.layout.getData())
+      this.debtorService
+        .createDebt(this.layout.getData())
         .subscribe(() => {
-          this.debtorCardService.refreshDebts();
+          this.debtorService.refreshDebts();
           this.onBack();
         });
     }
   }
 
   onBack(): void {
-    const debtId = this.route.snapshot.paramMap.get('debtId');
-    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    const debtId = this.debtorService.debtId$.value;
+    const debtorId = this.debtorService.debtorId$.value;
     if (debtId && debtorId) {
       this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
     }
