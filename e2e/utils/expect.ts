@@ -8,12 +8,15 @@ export const expectToMatchUrl = async (url: string) => {
   return expect(await getUrl() === '/' + url);
 };
 
-export const expectToMatchScreenshot = async (threshold = 0.1) => {
+export const expectToMatchScreenshot = async () => {
   await pause();
   const page: Page = global['__PAGE__'];
   const screenshot = await page.screenshot();
   expect(screenshot)['toMatchImageSnapshot']({
-    failureThreshold: `${threshold}`,
-    failureThresholdType: 'percent'
+    customDiffConfig: {
+      threshold: 0,
+    },
+    failureThreshold: 0,
+    failureThresholdType: 'percent',
   });
 };
