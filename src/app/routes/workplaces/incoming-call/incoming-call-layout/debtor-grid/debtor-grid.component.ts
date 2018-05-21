@@ -49,7 +49,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   actions: IMetadataAction[] = [
     {
       action: 'openDebtCard',
-      params: [ 'debtId' ],
+      params: [ 'debtId', 'personRole' ],
     },
     {
       action: 'showContactHistory',
