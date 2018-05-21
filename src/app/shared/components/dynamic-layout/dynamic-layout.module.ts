@@ -12,8 +12,10 @@ import { DynamicLayoutEffects } from '@app/shared/components/dynamic-layout/dyna
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { DateTimeModule } from '@app/shared/components/form/datetime/datetime.module';
 import { DropdownInputModule } from '@app/shared/components/form/dropdown/dropdown-input.module';
+import { DialogMultiSelectModule } from '@app/shared/components/form/dialog-multi-select/dialog-multi-select.module';
 import { InputModule } from '@app/shared/components/form/input/input.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
+import { MultiSelectModule } from '@app/shared/components/form/select/multi/multi-select.module';
 import { TabViewModule } from '@app/shared/components/layout/tabview/tabview.module';
 
 import { MetadataService } from './metadata.service';
@@ -32,10 +34,12 @@ import { TemplateComponent } from './template/template.component';
     CommonModule,
     DateTimeModule,
     DropdownInputModule,
+    DialogMultiSelectModule,
     InputModule,
     ReactiveFormsModule,
     SelectModule,
     StoreModule.forFeature('layout', dynamicLayoutReducer),
+    MultiSelectModule,
     EffectsModule.forFeature([DynamicLayoutEffects]),
     TabViewModule,
     TranslateModule,

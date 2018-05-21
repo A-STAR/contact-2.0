@@ -2760,6 +2760,16 @@
       "errors": {
         "start": "Error has been occurred when tried to start schedule events with the ID {{ eventId }}"
       }
+    },
+    "customOperation": {
+      "dialog": {
+        "input": {
+          "title": "Enter parameters"
+        },
+        "output": {
+          "title": "Operations result"
+        }
+      }
     }
   },
   "entities": {
@@ -3492,7 +3502,8 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type"
+        "changePersonType": "Change person type",
+        "rectangularDistribution": "Debt rectangular distribution"
       }
     },
     "filter": {

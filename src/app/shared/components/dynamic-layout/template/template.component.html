@@ -1,5 +1,5 @@
 <ng-container *ngIf="enabled && tRef">
-  <ng-container *ngTemplateOutlet="tRef"></ng-container>
+  <ng-container [ngTemplateOutlet]="tRef" [ngTemplateOutletContext]="template"></ng-container>
 </ng-container>
 
 <div *ngIf="accessDenied">

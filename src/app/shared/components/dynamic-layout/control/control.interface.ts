@@ -2,13 +2,17 @@ import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-lay
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export enum DynamicLayoutControlType {
-  CHECKBOX   = 'checkbox',
-  DATE       = 'date',
-  GRIDSELECT = 'gridselect',
-  PASSWORD   = 'password',
-  SELECT     = 'select',
-  TEXT       = 'text',
-  TEXTAREA   = 'textarea',
+  CHECKBOX        = 'checkbox',
+  DATE            = 'date',
+  DATETIME        = 'datetimepicker',
+  DIALOGSELECT    = 'dialogmultiselect',
+  GRIDSELECT      = 'gridselect',
+  PASSWORD        = 'password',
+  SELECT          = 'select',
+  MULTISELECT     = 'multiselect',
+  TEXT            = 'text',
+  NUMBER          = 'number',
+  TEXTAREA        = 'textarea',
 }
 
 export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem {
@@ -17,6 +21,22 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
   name: string;
   // Optional:
   form?: string;
+}
+
+export interface IDynamicLayoutDialogSelectControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.DIALOGSELECT;
+}
+
+export interface IDynamicLayoutMultiSelectControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.MULTISELECT;
+}
+
+export interface IDynamicLayoutDateTimeControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.DATETIME;
+}
+
+export interface IDynamicLayoutNumberControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.NUMBER;
 }
 
 export interface IDynamicLayoutGridSelectControl extends IDynamicLayoutGenericControl {
@@ -35,7 +55,11 @@ export interface IDynamicLayoutTextareaControl extends IDynamicLayoutGenericCont
 }
 
 export type IDynamicLayoutControl =
+  | IDynamicLayoutDialogSelectControl
+  | IDynamicLayoutDateTimeControl
   | IDynamicLayoutGridSelectControl
+  | IDynamicLayoutMultiSelectControl
+  | IDynamicLayoutNumberControl
   | IDynamicLayoutTextControl
   | IDynamicLayoutTextareaControl
 ;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 
 import {
   DynamicLayoutAction,
@@ -17,14 +17,18 @@ export class DynamicLayoutEffects {
   fetchConfig$ = this.actions.pipe(
     ofType(DynamicLayoutAction.FETCH_CONFIG),
     switchMap(
-      (action: IDynamicLayoutFetchConfigAction) => this.metadataService.fetchConfig(action.payload.key),
-      (action: IDynamicLayoutFetchConfigAction, config: IDynamicLayoutConfig) => ({
-        type: DynamicLayoutAction.FETCH_CONFIG_SUCCESS,
-        payload: {
-          key: action.payload.key,
-          config: config
-        },
-      })
+      (action: IDynamicLayoutFetchConfigAction) => this.metadataService
+        .fetchConfig(action.payload.key)
+        .pipe(
+          map((config: IDynamicLayoutConfig) => ({
+              type: DynamicLayoutAction.FETCH_CONFIG_SUCCESS,
+              payload: {
+                key: action.payload.key,
+                config: config
+              },
+            })
+          ),
+        ),
     ),
     catchError(this.notificationService
       .fetchError('shared.components.dynamic-layout.metadata.errors.fetch')
