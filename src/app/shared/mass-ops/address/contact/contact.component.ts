@@ -69,11 +69,12 @@ export class ContactComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest(
-      this.userConstantsService.get('VisitContactAddress.AllowableDeviationRadius'),
+      this.userConstantsService.bag(),
       this.addressService.getAddressesByContacts(this.actionData.payload)
       )
       .pipe(
-        map(([constant, response]) => {
+        map(([constants, response]) => {
+          const constant = constants.get('VisitContactAddress.AllowableDeviationRadius');
           this.controls = this.getControls(constant);
           return response.reduce((acc: ILayerDef<IAddressByContact>[][], address) => {
             acc.push(this.createContactGroup(address, constant));
@@ -138,7 +139,7 @@ export class ContactComponent implements OnInit {
           ],
           type: LayerType.POLYLINE,
           options: {
-            strokeColor: '#' + iconConfig.fillColor
+            strokeColor: '#' + this.mapService.getIconConfig('addressByContactLine').fillColor
           },
           data
         } as any
