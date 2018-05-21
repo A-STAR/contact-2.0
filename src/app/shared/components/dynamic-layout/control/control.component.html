@@ -21,7 +21,7 @@
       *ngSwitchCase="'datetimepicker'"
       [formControlName]="control.name"
       [label]="control.label"
-      [required]="control.required"
+      [required]="isRequired(control) | async"
     ></app-datetimepicker>
 
     <!-- Grid Select -->
@@ -70,7 +70,7 @@
       [formControlName]="control.controlName"
       [label]="control.label"
       [lookupKey]="control.lookupKey"
-      [required]="control.required"
+      [required]="isRequired(control) | async"
     ></app-multi-select>
 
     <!-- Text -->
@@ -86,7 +86,7 @@
       *ngSwitchCase="'number'"
       [formControlName]="control.name"
       [label]="control.label"
-      [required]="control.required"
+      [required]="isRequired(control) | async"
     ></app-number>
 
     <!-- Textarea -->

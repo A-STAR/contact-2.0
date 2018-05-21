@@ -24,7 +24,19 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
 }
 
 export interface IDynamicLayoutDialogSelectControl extends IDynamicLayoutGenericControl {
-  controlType: DynamicLayoutControlType.GRIDSELECT;
+  controlType: DynamicLayoutControlType.DIALOGSELECT;
+}
+
+export interface IDynamicLayoutMultiSelectControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.MULTISELECT;
+}
+
+export interface IDynamicLayoutDateTimeControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.DATETIME;
+}
+
+export interface IDynamicLayoutNumberControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.NUMBER;
 }
 
 export interface IDynamicLayoutGridSelectControl extends IDynamicLayoutGenericControl {
@@ -44,7 +56,10 @@ export interface IDynamicLayoutTextareaControl extends IDynamicLayoutGenericCont
 
 export type IDynamicLayoutControl =
   | IDynamicLayoutDialogSelectControl
+  | IDynamicLayoutDateTimeControl
   | IDynamicLayoutGridSelectControl
+  | IDynamicLayoutMultiSelectControl
+  | IDynamicLayoutNumberControl
   | IDynamicLayoutTextControl
   | IDynamicLayoutTextareaControl
 ;

@@ -57,7 +57,6 @@ export class CustomOperationService {
     .pipe(
       catchError(this.notificationsService
         .error('errors.default.massOp')
-        .entity('  ')
         .dispatchCallback()
       )
     );
@@ -72,7 +71,6 @@ export class CustomOperationService {
     .pipe(
       catchError(this.notificationsService
         .error('errors.default.massOp')
-        .entity('  ')
         .dispatchCallback()
       )
     );
