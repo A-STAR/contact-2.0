@@ -1,5 +1,11 @@
 import { Page } from 'puppeteer';
 
+/**
+ * Looks for a grid inside `gridSelector` and scrolls its contents
+ * until any row containing `value` in column index `columnIndex` becomes visible.
+ *
+ * NOTE: `columnIndex` is 1-based.
+ */
 export const scrollTo = (gridSelector: string, columnIndex: number, value: string): Promise<void> => {
   const page: Page = global['__PAGE__'];
   return page.evaluate((_gridSelector, _columnIndex, _value) => {
