@@ -1,0 +1,22 @@
+{
+  "url": "http://localhost:8080",
+  "ws": "ws://localhost:8080",
+  "assets": "/assets",
+  "i18n": [
+    "i18n/{lang}.json"
+  ],
+  "maps": {
+    "useProvider": "google",
+    "providers": {
+      "google": {
+        "apiKey": "google api key"
+      },
+      "yandex": {
+        "apiKey": "yandex api key"
+      }
+    }
+  },
+  "help": {
+    "url": "help base url"
+  }
+}
