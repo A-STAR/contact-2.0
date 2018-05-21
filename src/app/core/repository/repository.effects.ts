@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { empty } from 'rxjs/observable/empty';
 
 import {
   IEntityDef,
@@ -15,8 +16,18 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 import { REPOSITORY_ENTITY } from './repository.service';
 
-import { getPrimaryKey, serializeKeys, serializeParams, serializeParamsKeys } from './repository.utils';
-import { serializeBoolParams } from '@app/core/utils';
+import {
+  getPrimaryKey,
+  serializeKeys,
+  serializeParams,
+  serializeParamsKeys,
+  getUrl,
+  getUrlParams,
+  getQueryParams,
+  isSimpleUrl,
+} from './repository.utils';
+
+import { pickDifference } from '@app/core/utils';
 
 @Injectable()
 export class RepositoryEffects {
@@ -54,11 +65,20 @@ export class RepositoryEffects {
     const entityName = entityDef.entityClass.name.toLowerCase();
     const serializedParamKeys = serializeParamsKeys(params);
     const url = entityDef.urls.find(u => {
-      const urlParams = u.match(/\{.+?\}/gi).map(i => i.slice(1, -1));
-      return serializeKeys(urlParams) === serializedParamKeys;
+      const urlParams = getUrlParams(u);
+      const qParams = Object.keys(getQueryParams(u, params));
+      return serializeKeys(urlParams.concat(qParams)) === serializedParamKeys;
     });
-    return this.dataService.readAll(url, serializeBoolParams(params)).pipe(
-      catchError(this.notificationsService.fetchError().entity(entityName).dispatchCallback()),
-    );
+    if (url) {
+      const queryParams = getQueryParams(url, params);
+      const routeParams = !isSimpleUrl(url) ? pickDifference(queryParams, params) : params;
+
+      return this.dataService.readAll(getUrl(url), routeParams, { params: queryParams }).pipe(
+        catchError(this.notificationsService.fetchError().entity(entityName).dispatchCallback()),
+      );
+    }
+    this.notificationsService.fetchError().entity(entityName).dispatch();
+    return empty();
   }
+
 }
