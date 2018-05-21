@@ -34,6 +34,7 @@ export interface IGridColumn<T> {
   // Optional Fields
   dictCode?: number | IDictCodeCallback<T>;
   rendererCallback?: IRendererCallback<T>;
+  hide?: boolean;
   filter?: IGridFilterType;
   lookupKey?: ILookupKey;
   minWidth?: number;
