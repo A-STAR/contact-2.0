@@ -2760,6 +2760,16 @@
       "errors": {
         "start": "Произошла ошибка при попытке стартовать мероприятия с ID {{ eventId }}"
       }
+    },
+    "customOperation": {
+      "dialog": {
+        "input": {
+          "title": "Введите параметры"
+        },
+        "output": {
+          "title": "Результат операции"
+        }
+      }
     }
   },
   "entities": {
@@ -3492,7 +3502,8 @@
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
-        "changePersonType": "Изменить тип персоны"
+        "changePersonType": "Изменить тип персоны",
+        "rectangularDistribution": "Равномерное распределение долгов"
       }
     },
     "filter": {
