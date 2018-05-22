@@ -233,7 +233,7 @@ export class UserDictionariesService {
           const dictionary = dictionaries[id];
           return {
             ...acc,
-            [id]: dictionary ? dictionary.map(transform) : null
+            [id]: dictionary ? dictionary.filter(t => !t.isClosed).map(transform) : null
           };
         }, {}))),
         filter(dictionaries => Object.keys(dictionaries).reduce((acc, key) => acc && !!dictionaries[key], true)),
