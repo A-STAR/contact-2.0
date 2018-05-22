@@ -27,7 +27,7 @@ export class DashboardService {
   private baseUrl = '/dashboard';
 
   private static readonly PRIMARY_COLOR = '#4a445f';
-  private static readonly PRIMARY_COLOR_LIGHT = '#4a445fa1';
+  private static readonly PRIMARY_COLOR_LIGHT = '#8c879a';
   private static readonly GREEN_COLOR = '#80da00';
 
   promiseCountStatusOptions: ChartOptions = {
