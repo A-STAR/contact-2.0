@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
-import { filter, first, map } from 'rxjs/operators';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { filter, first, map, mergeMap } from 'rxjs/operators';
 
+import { ActionsLogService } from '@app/core/actions-log/actions-log.service';
 import { HelpService } from '@app/core/help/help.service';
 import { LayoutService } from './layout.service';
 import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.service';
@@ -11,12 +12,20 @@ import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.serv
   styleUrls: [ './layout.component.scss' ],
   templateUrl: './layout.component.html',
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   constructor(
+    private actionsLogService: ActionsLogService,
     private coreLayoutService: CoreLayoutService,
     private helpService: HelpService,
     private layoutService: LayoutService,
   ) {}
+
+  ngOnInit(): void {
+    this.coreLayoutService.currentGuiObject$.pipe(
+      mergeMap(guiObject => this.actionsLogService.logOpenAction(guiObject.duration, null)),
+    )
+    .subscribe();
+  }
 
   @HostListener('window:resize')
   onWindowResize(): void {
