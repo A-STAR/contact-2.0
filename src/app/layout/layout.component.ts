@@ -1,9 +1,9 @@
 import { Component, HostListener } from '@angular/core';
+import { filter, first, map } from 'rxjs/operators';
 
 import { HelpService } from '@app/core/help/help.service';
 import { LayoutService } from './layout.service';
-
-import { menuConfig } from '@app/routes/menu-config';
+import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.service';
 
 @Component({
   host: { class: 'full-size' },
@@ -13,6 +13,7 @@ import { menuConfig } from '@app/routes/menu-config';
 })
 export class LayoutComponent {
   constructor(
+    private coreLayoutService: CoreLayoutService,
     private helpService: HelpService,
     private layoutService: LayoutService,
   ) {}
@@ -26,18 +27,12 @@ export class LayoutComponent {
   onKeyPress(event: KeyboardEvent): void {
     const { key } = event;
     if (key === 'F1') {
-      const menuLinkUrl = this.layoutService.url
-        .split('/')
-        .slice(0, 4)
-        .join('/');
-
-      const itemKey = Object.keys(menuConfig).find(k => menuConfig[k].link === menuLinkUrl);
-      if (itemKey) {
-        this.helpService.open(menuConfig[itemKey].docs);
-      } else if (menuLinkUrl.startsWith('/app/workplaces/debtor')) {
-        this.helpService.open('debt_card');
-      }
-      event.preventDefault();
+      this.coreLayoutService.currentGuiObject$.pipe(
+        first(),
+        filter(Boolean),
+        map(item => item.docs),
+      )
+      .subscribe(docs => this.helpService.open(docs));
     }
   }
 

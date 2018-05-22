@@ -118,7 +118,7 @@ export class DataService {
    * @param options Other HTTP options, p.e. `body` etc.
    */
   private jsonRequest(method: string, url: string, routeParams: object, options: RequestOptions): Observable<any> {
-    return this.layoutService.currentGuiObjectId$.pipe(
+    return this.layoutService.currentGuiObject$.pipe(
       first(),
       mergeMap(item => {
         const originalHeaders = options.headers

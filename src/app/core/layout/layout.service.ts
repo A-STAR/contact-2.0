@@ -10,9 +10,10 @@ import { menuConfig } from '@app/routes/menu-config';
 
 @Injectable()
 export class LayoutService {
-  readonly currentGuiObjectId$ = new BehaviorSubject<IGuiObjectDef>(null);
-
   private guiObjects: Record<string, IGuiObjectDef>;
+  private _currentGuiObject$ = new BehaviorSubject<IGuiObjectDef>(null);
+
+  readonly currentGuiObject$ = this._currentGuiObject$.asObservable();
 
   constructor(
     private router: Router,
@@ -30,6 +31,7 @@ export class LayoutService {
       ...acc,
       [menuConfig[key].link]: {
         id: flatGuiObjects[key],
+        docs: menuConfig[key],
         name: key,
       },
     }), {});
@@ -47,7 +49,7 @@ export class LayoutService {
   private onNavigation(fullUrl: string): void {
     if (this.guiObjects) {
       const url = fullUrl.split('/').slice(0, 4).join('/');
-      this.currentGuiObjectId$.next(this.guiObjects[url]);
+      this._currentGuiObject$.next(this.guiObjects[url]);
     }
   }
 }
