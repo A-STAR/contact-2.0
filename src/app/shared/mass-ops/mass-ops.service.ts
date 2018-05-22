@@ -38,7 +38,9 @@ export class MassOperationsService {
   openDebtCard(actionData: any, onClose?: Function): void {
 
     const { debtId, debtorId } = actionData;
-
+    // personRole = 2 personId === guarantorId, guarantee = contractId
+    // personRole = 3 personId === pledgor , pledge === contractId property === properties[0] ?
+    // personRole = 4 personId === person - ?
     debtorId
       ? this.openCard(debtorId, debtId, onClose)
       : this.getDebtorIdByDebtId(debtId)
