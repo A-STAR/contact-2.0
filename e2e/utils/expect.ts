@@ -11,10 +11,11 @@ export const expectToMatchUrl = async (url: string) => {
 export const expectToMatchScreenshot = async () => {
   await pause();
   const page: Page = global['__PAGE__'];
+  await page.waitForFunction(() => document.querySelectorAll('app-spinner').length === 0);
   const screenshot = await page.screenshot();
   expect(screenshot)['toMatchImageSnapshot']({
     customDiffConfig: {
-      threshold: 0,
+      threshold: 0.01,
     },
     failureThreshold: 0,
     failureThresholdType: 'percent',
