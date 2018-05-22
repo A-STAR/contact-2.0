@@ -25,6 +25,7 @@ export class MassOperationsService {
   openDebtCardByDebtor(actionData: any, onClose?: Function): void {
     const { debtorId } = actionData;
     this.getFirstDebtsByUserId(actionData)
+      .pipe(first())
       .subscribe( debtId => {
         if (!debtId) {
           this.notificationsService.warning('header.noDebt.title').dispatch();
