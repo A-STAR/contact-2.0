@@ -31,7 +31,7 @@ export class LayoutService {
       ...acc,
       [menuConfig[key].link]: {
         id: flatGuiObjects[key],
-        docs: menuConfig[key],
+        docs: menuConfig[key].docs,
         name: key,
       },
     }), {});
