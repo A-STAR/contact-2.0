@@ -54,7 +54,7 @@ export class FileUploadComponent implements ControlValueAccessor, Validator {
 
   validate(): any {
     switch (true) {
-      case this.required && !this.file:
+      case this.required && !this.displayFileName:
         return { required: true };
       default:
         return null;
