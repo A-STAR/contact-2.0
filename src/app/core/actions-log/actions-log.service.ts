@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
 
 import { DataService } from '../data/data.service';
 
@@ -7,11 +6,8 @@ import { DataService } from '../data/data.service';
 export class ActionsLogService {
   constructor(private dataService: DataService) {}
 
-  log(delay: number, guiObjectId: string): void {
-    const data = { typeCode: 1, duration: delay };
-    const headers = new HttpHeaders({
-      'X-Gui-Object': guiObjectId
-    });
-    this.dataService.create('/actions', {}, data, { headers }).subscribe();
+  log(duration: number): void {
+    const data = { typeCode: 1, duration };
+    this.dataService.create('/actions', {}, data).subscribe();
   }
 }

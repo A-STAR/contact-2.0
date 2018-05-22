@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { empty } from 'rxjs/observable/empty';
-import { finalize, catchError, map, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, finalize, first, map, mergeMap } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
@@ -11,6 +11,7 @@ import { IQueryParam, IQueryParams } from './data.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { ConfigService } from '@app/core/config/config.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 
 interface RequestOptions {
   body?: any;
@@ -34,6 +35,7 @@ export class DataService {
   constructor(
     private authService: AuthService,
     private configService: ConfigService,
+    private layoutService: LayoutService,
     private http: HttpClient
   ) {}
 
@@ -106,6 +108,7 @@ export class DataService {
   post(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
     return this.request(DataService.METHOD_POST, url, routeParams, { ...options, body }, null);
   }
+
   /**
    * Request that expects JSON for *response*.
    * Request content type is pre-set to `json`
@@ -115,8 +118,20 @@ export class DataService {
    * @param options Other HTTP options, p.e. `body` etc.
    */
   private jsonRequest(method: string, url: string, routeParams: object, options: RequestOptions): Observable<any> {
-    return this.request(method, url, routeParams, { ...options, responseType: 'json' });
+    return this.layoutService.currentGuiObjectId$.pipe(
+      first(),
+      mergeMap(item => {
+        const originalHeaders = options.headers
+          ? options.headers
+          : new HttpHeaders();
+        const headers = method === DataService.METHOD_GET
+          ? originalHeaders
+          : originalHeaders.set('X-Gui-Object', item.id.toString());
+        return this.request(method, url, routeParams, { ...options, headers, responseType: 'json' });
+      }),
+    );
   }
+
   /**
    * Request that expects binary data for *response*.
    * Request content type can be passed over in the header object, p.e. multipart/form-data, etc.
@@ -137,11 +152,6 @@ export class DataService {
     options: RequestOptions,
     prefix: string = '/api'
   ): Observable<any> {
-    const headers = options.headers || new HttpHeaders();
-    if (options.body && options.body.constructor === Object) {
-      headers.append('Content-Type', 'application/json');
-    }
-
     // increase the request counter for the loader
     this.nRequests$.next(this.nRequests$.value + 1);
 
@@ -152,7 +162,7 @@ export class DataService {
     return this.http.request(method, `${rootUrl}${api}`, {
       ...options,
       params: this.prepareHttpParams(options.params),
-      headers
+      headers: options.headers || new HttpHeaders(),
     }).pipe(
       catchError(resp => {
         if (401 === resp.status) {
