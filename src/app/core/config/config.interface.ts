@@ -10,6 +10,9 @@ export interface IConfig {
     useProvider: keyof MapProviders;
     providers: MapProviders;
   };
+  help: {
+    url: string;
+  };
 }
 
 interface MapProviders {

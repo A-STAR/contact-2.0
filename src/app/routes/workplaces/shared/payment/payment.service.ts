@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IPayment } from './payment.interface';
-import { IDebt } from '@app/core/debt/debt.interface';
+import { Debt } from '@app/entities';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -53,7 +53,7 @@ export class PaymentService extends AbstractActionService {
       .catch(this.notificationsService.updateError().entity('entities.payments.gen.singular').dispatchCallback());
   }
 
-  fetchDebt(debtId: number, callCenter: boolean): Observable<IDebt> {
+  fetchDebt(debtId: number, callCenter: boolean): Observable<Debt> {
     return this.dataService
       .read('/debts/{debtId}', { debtId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());

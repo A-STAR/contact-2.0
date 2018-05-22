@@ -1,5 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Injector, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
@@ -12,16 +24,16 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 
 import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
-import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
+import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 import { invert } from '@app/core/utils';
 
-import { linkFormConfig } from './config/link-form';
-import { contactPersonFormConfig } from './config/contact-person-form';
+import { layout } from './contact-person-card.layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,9 +41,17 @@ import { contactPersonFormConfig } from './config/contact-person-form';
   selector: 'app-contact-person-card',
   templateUrl: 'contact-person-card.component.html',
 })
-export class ContactPersonCardComponent implements AfterViewInit {
-  @ViewChild('linkForm') linkForm: MetadataFormComponent<any>;
-  @ViewChild('contactPersonForm') contactPersonForm: MetadataFormComponent<any>;
+export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
+
+  @ViewChild('identification', { read: TemplateRef }) identificationTemplate: TemplateRef<any>;
+  @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
+  @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
+  @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
+
+  @ViewChild('personTitlebar',    { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('personClearButton', { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
 
   readonly paramMap = this.route.snapshot.paramMap;
 
@@ -62,14 +82,7 @@ export class ContactPersonCardComponent implements AfterViewInit {
 
   readonly editing = Boolean(this.contactId);
 
-  readonly contactPersonFormConfig = contactPersonFormConfig;
-  readonly linkFormConfig = linkFormConfig;
-
   readonly contactPerson$ = this.contactPersonCardService.contactPerson$;
-
-  readonly isContactPersonFormDisabled$ = this.contactPerson$.pipe(
-    map(Boolean),
-  );
 
   readonly edit$ = this.route.data.pipe(
     map(data => data.edit),
@@ -78,6 +91,8 @@ export class ContactPersonCardComponent implements AfterViewInit {
   readonly showContractForm$ = this.route.data.pipe(
     map(data => data.showContractForm),
   );
+
+  readonly layoutConfig = layout;
 
   readonly contactPersonTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
@@ -90,9 +105,29 @@ export class ContactPersonCardComponent implements AfterViewInit {
     ]
   };
 
+  readonly formData$ = this.contactPerson$.pipe(
+    map(person => {
+      if (person) {
+        const { linkTypeCode, ...rest } = person;
+        return { default: rest, link: { linkTypeCode } };
+      } else {
+        return { default: {}, link: {} };
+      }
+    }),
+  );
+
+  readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
+
+  private subscription = new Subscription();
+
+  readonly phoneContactType = 1;
+
+  templates: Record<string, TemplateRef<any>>;
+
   constructor(
     private contactPersonCardService: ContactPersonCardService,
     private contactPersonsService: ContactPersonsService,
+    private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
     private personService: PersonService,
     private popupOutletService: PopupOutletService,
@@ -101,16 +136,25 @@ export class ContactPersonCardComponent implements AfterViewInit {
     @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
-  get canSubmit(): boolean {
-    const linkFormGroup = this.linkForm
-      ? this.linkForm.formGroup
-      : null;
-    const personFormGroup = this.contactPersonForm
-      ? this.contactPersonForm.formGroup
-      : null;
-    const linkFormValid = linkFormGroup && linkFormGroup.valid;
-    const personFormValid = personFormGroup && (personFormGroup.valid || personFormGroup.disabled);
-    return linkFormValid && personFormValid;
+  ngOnInit(): void {
+    this.templates = {
+      identification: this.identificationTemplate,
+      employment: this.employmentTemplate,
+      addresses: this.addressesTemplate,
+      phones: this.phonesTemplate,
+      documents: this.documentsTemplate,
+      personTitlebar: this.personTitlebarTemplate,
+      personClearButton: this.personClearButtonTemplate,
+    };
+
+    const subscription = this.contactPerson$.subscribe(person => {
+      if (person) {
+        this.layout.disableFormGroup();
+      } else {
+        this.layout.enableFormGroup();
+      }
+    });
+    this.subscription.add(subscription);
   }
 
   ngAfterViewInit(): void {
@@ -119,15 +163,21 @@ export class ContactPersonCardComponent implements AfterViewInit {
         .fetch(this.debtorId, this.personId)
         .subscribe(person => {
           const { linkTypeCode, ...rest } = person;
-          this.linkForm.formGroup.patchValue({ linkTypeCode });
-          this.contactPersonForm.formGroup.patchValue(rest);
+          this.layout.setData({ default: rest, link: { linkTypeCode } });
         });
     }
+    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    this.subscription.add(subscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onContactPersonFormClear(): void {
     this.contactPersonCardService.selectContactPerson(null);
-    this.contactPersonForm.formGroup.reset();
+    this.layout.resetForm();
+    this.layout.resetForm('link');
   }
 
   onSave(): void {
@@ -138,14 +188,14 @@ export class ContactPersonCardComponent implements AfterViewInit {
           if (selectedPerson) {
             return of(selectedPerson.id);
           }
-          const person = this.contactPersonForm.data;
+          const person = this.layout.getData();
           return this.editing
             ? this.personService.update(this.personId, person).pipe(mapTo(this.personId))
             : this.personService.create(person);
         }),
       )
       .subscribe(personId => {
-        const linkTypeCode = this.linkForm.data.linkTypeCode;
+        const { linkTypeCode } = this.layout.getData('link');
         if (linkTypeCode) {
           if (this.editing) {
             this.contactPersonsService
@@ -183,12 +233,32 @@ export class ContactPersonCardComponent implements AfterViewInit {
     this.router.navigate([ `phone/${phone.id}` ], { relativeTo: this.route });
   }
 
+  onPhoneRegister(phone: IPhone): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: phone.id,
+      contactType: this.phoneContactType,
+      debtId: this.debtId,
+      personId: this.personId,
+      personRole: this.contactPersonRole,
+    });
+  }
+
   onAddressAdd(): void {
     this.router.navigate([ 'address/create' ], { relativeTo: this.route });
   }
 
   onAddressEdit(address: IAddress): void {
-    this.router.navigate([ `phone/${address.id}` ], { relativeTo: this.route });
+    this.router.navigate([ `address/${address.id}` ], { relativeTo: this.route });
+  }
+
+  onAddressRegister(address: IAddress): void {
+    this.contactRegistrationService.startRegistration({
+      contactId: address.id,
+      contactType: 3,
+      debtId: this.debtId,
+      personId: this.personId,
+      personRole: this.contactPersonRole,
+    });
   }
 
   onIdentityAdd(): void {

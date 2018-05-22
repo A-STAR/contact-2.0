@@ -13,7 +13,7 @@
     ></app-simple-grid>
   </div>
 
-  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>
+  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData" (onSelect)="onSelectRole($event)"></app-dynamic-form>
 
   <div dialog-footer>
     <button

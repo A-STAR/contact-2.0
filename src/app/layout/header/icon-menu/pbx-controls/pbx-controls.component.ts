@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ICall } from '@app/core/calls/call.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -13,15 +16,31 @@ import { DialogFunctions } from '@app/core/dialog';
   templateUrl: './pbx-controls.component.html',
   styleUrls: [ './pbx-controls.component.scss' ]
 })
-export class PbxControlsComponent extends DialogFunctions {
+export class PbxControlsComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   dialog: string;
 
+  private activeCall: ICall;
+  private activeCallSub: Subscription;
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private callService: CallService,
     private userPermissionsService: UserPermissionsService
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.activeCallSub = this.callService.activeCall$
+      .subscribe(call => {
+        this.activeCall = call;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.activeCallSub.unsubscribe();
   }
 
   get canDropCall$(): Observable<boolean> {
@@ -76,12 +95,18 @@ export class PbxControlsComponent extends DialogFunctions {
     ]);
   }
 
-  get activeCallNumber$(): Observable<string> {
-    return this.callService.activeCall$.map(call => call ? call.phone : '');
+  get activeCallNumber(): string {
+    return this.activeCall ? this.activeCall.phone : '';
   }
 
-  get activeCallPersonName$(): Observable<string> {
-    return this.callService.activeCall$.map(call => call ? `${call.lastName} ${call.firstName} ${call.middleName[0]}.` : '');
+  get activeCallPersonName(): string {
+    return this.activeCall
+      ? [
+        this.activeCall.lastName,
+        this.activeCall.firstName,
+        this.activeCall.middleName ? this.activeCall.middleName[0] + '.' : null
+      ].filter(Boolean).join(' ')
+      : '';
   }
 
   onDropCall(): void {

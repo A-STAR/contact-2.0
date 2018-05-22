@@ -7,9 +7,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 
 import { ContactRegistrationService } from '../../../shared/contact-registration/contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { IncomingCallService } from '../../incoming-call.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { invert } from '@app/core/utils';
 import { combineLatestAnd } from '@app/core/utils/helpers';
@@ -42,7 +42,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   );
 
   readonly officeVisitButtonDisabled$ = combineLatestAnd([
-    this.debtService.canRegisterOfficeVisit$,
+    this.workplacesService.canRegisterOfficeVisit$,
     this.incomingCallService.selectedDebtor$.map(Boolean),
   ]);
 
@@ -53,7 +53,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
+    private workplacesService: WorkplacesService,
     private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
     private routingService: RoutingService,

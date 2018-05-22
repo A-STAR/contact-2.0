@@ -42,8 +42,8 @@ export class GroupComponent implements OnInit {
   get groupClass(): Record<string, boolean> {
     return {
       'grow flex': true,
-      'vertical': this.group.groupType === DynamicLayoutGroupType.VERTICAL,
-      'horizontal': this.group.groupType === DynamicLayoutGroupType.HORIZONTAL,
+      'vertical vertical-group': this.group.groupType === DynamicLayoutGroupType.VERTICAL,
+      'horizontal horizontal-group': this.group.groupType === DynamicLayoutGroupType.HORIZONTAL,
     };
   }
 

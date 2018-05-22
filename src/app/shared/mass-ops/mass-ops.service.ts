@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+import { first, map } from 'rxjs/operators';
 
-import { DebtService } from '@app/core/debt/debt.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { Observable } from 'rxjs/Observable';
+import { Debt } from '@app/entities';
 
 @Injectable()
 export class MassOperationsService {
@@ -13,13 +17,15 @@ export class MassOperationsService {
   };
 
   constructor(
-    private debtService: DebtService,
+    private repo: RepositoryService,
+    private routingService: RoutingService,
     private notificationsService: NotificationsService,
   ) { }
 
   openDebtCardByDebtor(actionData: any, onClose?: Function): void {
     const { debtorId } = actionData;
-    this.debtService.getFirstDebtsByUserId(actionData)
+    this.getFirstDebtsByUserId(actionData)
+      .pipe(first())
       .subscribe( debtId => {
         if (!debtId) {
           this.notificationsService.warning('header.noDebt.title').dispatch();
@@ -29,23 +35,43 @@ export class MassOperationsService {
       });
   }
 
-  openDebtCard(actionData: any, onClose?: Function): Promise<void> {
+  openDebtCard(actionData: any, onClose?: Function): void {
+
     const { debtId, debtorId } = actionData;
-    return debtorId
+
+    debtorId
       ? this.openCard(debtorId, debtId, onClose)
-      : this.debtService
-          .getDebtorIdByDebtId(debtId)
-          .toPromise()
-          .then(id => this.openCard(id, debtId, onClose));
+      : this.getDebtorIdByDebtId(debtId)
+          .pipe(first())
+          .subscribe(id => {
+            this.openCard(id, debtId, onClose);
+          });
   }
 
-  openIncomingCall(actionData: any): Promise<boolean> {
-    return this.debtService.openIncomingCall(actionData);
+  getFirstDebtsByUserId(payload: any): Observable<number> {
+    return this.repo.fetch(Debt, { personId: payload.personId })
+      .pipe(
+        map(res => res && res[0].id)
+      );
+  }
+
+  getDebtorIdByDebtId(debtId: number): Observable<number> {
+    return this.repo.fetch(Debt, { id: debtId })
+      .pipe(
+        map(response => response && response[0].personId)
+      );
+  }
+
+  openByDebtId(debtId: number, debtorId: number): Promise<boolean> {
+    return this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+  }
+
+  openIncomingCall(debtId: number): Promise<boolean> {
+    return this.routingService.navigate([ `/app/workplaces/incoming-call/${debtId}` ]);
   }
 
   private openCard(debtorId: number, debtId: number, onClose: Function = null): Promise<void> {
-    return this.debtService
-      .openByDebtId(debtId, debtorId)
+    return this.openByDebtId(debtId, debtorId)
       .then(success => success && onClose ? onClose() : null);
   }
 }

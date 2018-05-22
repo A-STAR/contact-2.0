@@ -7,7 +7,7 @@
     <app-dynamic-layout
       *ngIf="templates"
       layout="debt"
-      [data]="{ default: debt }"
+      [data]="data | async"
       [templates]="templates"
     ></app-dynamic-layout>
   </div>

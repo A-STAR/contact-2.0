@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionType } from '@app/core/app-modules/debtor-card/debtor-card.interface';
 import { IProperty } from '@app/routes/workplaces/core/property/property.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 
 @Component({
@@ -25,7 +24,7 @@ export class DebtorPropertyAttributesComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private propertyService: PropertyService,
-    private debtorCardService: DebtorCardService) {}
+    private debtorService: DebtorService) {}
 
   ngOnInit(): void {
     this.entityTypeId = DebtorPropertyAttributesComponent.ENTITY_TYPE_PROPERTY;
@@ -33,14 +32,11 @@ export class DebtorPropertyAttributesComponent implements OnInit {
       .getPayload<IProperty>(PropertyService.MESSAGE_PROPERTY_SELECTED)
       .map(property => property ? property.id : null)
       .do(entityId => {
-        this.debtorCardService.dispatchAction(IActionType.SELECT_ENTITY,
-          {
-            entityId,
-            entityTypeId: DebtorPropertyAttributesComponent.ENTITY_TYPE_PROPERTY
-          }
-        );
+        this.debtorService.entityTypeId$.next(this.entityTypeId);
+        this.debtorService.debtorId$.next(entityId);
         this.cdRef.markForCheck();
-      });
+      }
+    );
   }
 
   onTabSelect(tabIndex: number): void {

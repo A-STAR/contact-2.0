@@ -7,7 +7,7 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-pledge-card-select-person-grid',
+  selector: 'app-contact-person-card-select-person-grid',
   templateUrl: 'select-person-grid.component.html'
 })
 export class SelectPersonGridComponent {

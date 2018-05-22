@@ -42,3 +42,6 @@ testem.log
 Thumbs.db
 
 /src/assets/server/root.json
+
+# This is only until the CI setup for E2E tests is ready
+/e2e/tests/__image_snapshots__

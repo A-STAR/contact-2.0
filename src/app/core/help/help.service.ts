@@ -1,14 +1,23 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { ConfigService } from '@app/core/config/config.service';
 
 @Injectable()
 export class HelpService {
-  // TODO(d.maltsev): should be configurable
-  private url = 'https://appserver.luxbase.int/WebContactDoc/ru/index.html';
+  constructor(
+    private configService: ConfigService,
+    private translateService: TranslateService,
+  ) {}
 
   open(key: string): void {
-    if (key !== null) {
+    const { currentLang } = this.translateService;
+    const { url } = this.configService.config.help;
+
+    if (key !== null && url) {
+      const baseUrl = url.replace('{lang}', currentLang);
       const suffix = key ? `?${key}.htm` : key;
-      window.open(`${this.url}${suffix}`);
+      window.open(`${baseUrl}${suffix}`);
     }
   }
 }

@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first } from 'rxjs/operators/first';
+import { map } from 'rxjs/operators/map';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { EmailService } from '../email.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -34,7 +35,7 @@ export class DebtorEmailCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
     private emailService: EmailService,
     private route: ActivatedRoute,
     private router: Router,
@@ -71,14 +72,12 @@ export class DebtorEmailCardComponent implements OnInit {
     });
   }
 
-  get emailId$(): Observable<number> {
-    return this.route.params.map(params => params.emailId);
-  }
+  readonly emailId$: Observable<number> = this.route.params.pipe( map(params => params.emailId) );
 
-  get entityId$(): Observable<number> {
-    return combineLatest(this.debtorCardService.personId$, this.route.params)
-      .map(([ personId, params ]) => params.contactId || personId);
-  }
+  readonly entityId$: Observable<number> = combineLatest(this.debtorService.debtorId$, this.route.params)
+    .pipe(
+      map(([ personId, params ]) => params.contactId || personId)
+    );
 
   onSubmit(): void {
     const action = this.emailId

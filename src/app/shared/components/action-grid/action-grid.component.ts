@@ -48,6 +48,7 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -181,6 +182,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   constructor(
     private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
+    private customOperationService: CustomOperationService,
     private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -222,7 +224,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         this.entityAttributesService.getDictValueAttributes()
       )
       .pipe(
-          first(),
           map(([actions, constants, permissions, entityPermissions]) => {
 
             const actionsWithPermissions = this.processActions(actions, constants, permissions, entityPermissions);
@@ -262,6 +263,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   get hasPagination(): boolean {
     return !!this.metadataKey;
+  }
+
+  get customActions$(): Observable<IMetadataAction[]> {
+    return this.actions$
+      .pipe(
+        filter(Boolean),
+        map(actions => actions.filter(action => !!action.id))
+      );
   }
 
   isAttrChangeDictionaryDlg(): boolean {
@@ -447,6 +456,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   private setDialogData(action: IActionGridAction): IGridAction {
     return {
+      id: action.metadataAction.id,
       name: action.metadataAction.action,
       addOptions: action.metadataAction.addOptions,
       params: action.metadataAction.params,
@@ -455,7 +465,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         metadataKey: this.metadataKey,
         filters: this.getFilters()
       }),
-      selection: this.actionGridService.getGridSelection(action, this.selection)
+      selection: this.actionGridService.getGridSelection(action, this.selection),
+      asyncMode: action.metadataAction.asyncMode,
+      inputConfig: action.metadataAction.inputConfig,
+      outputConfig: action.metadataAction.outputConfig
     };
   }
 
@@ -642,6 +655,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         of(true) : selection.length && of(true),
       changePersonType: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('PERSON_INFO_EDIT') : selection.length && permissions.has('PERSON_INFO_EDIT'),
+      ...actions
+        .filter(action => !!action.id)
+        .reduce((acc, action) => ({
+          ...acc,
+          [action.action]: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL
+            ? this.customOperationService.isAllowedOperation(action.id)
+            : this.customOperationService.isAllowedOperation(action.id) && selection.length
+        }), {})
     };
   }
 }

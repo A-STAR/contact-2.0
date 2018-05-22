@@ -16,11 +16,11 @@ export class UIComponent {
     { link: 'select', title: 'Select' },
     { link: 'datetime', title: 'Date/Time' },
     { link: 'grids', title: 'Grids' },
-    { link: 'forms', title: 'Forms' },
     { link: 'layout/1', title: 'Layout' },
     { link: 'areas', title: 'Areas' },
     { link: 'icons', title: 'Icons' },
     { link: 'ws', title: 'WebSockets' },
+    { link: 'repository', title: 'Repository' },
     { link: 'maps', title: 'Maps' },
   ];
 }

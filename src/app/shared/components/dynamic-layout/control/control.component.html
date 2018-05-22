@@ -16,6 +16,14 @@
       [required]="isRequired(control) | async"
     ></app-datepicker>
 
+    <!-- Date time -->
+    <app-datetimepicker
+      *ngSwitchCase="'datetimepicker'"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [required]="isRequired(control) | async"
+    ></app-datetimepicker>
+
     <!-- Grid Select -->
     <app-grid-select
       *ngSwitchCase="'gridselect'"
@@ -26,6 +34,16 @@
       [required]="isRequired(control) | async"
       (onSelect)="onGridSelect(control, $event)"
     ></app-grid-select>
+
+    <!-- Multiselect dialog -->
+    <app-dialog-multi-select
+      *ngSwitchCase="'dialogmultiselect'"
+      [label]="control.label"
+      [required]="isRequired(control) | async"
+      [filterType]="control.filterType"
+      [filterParams]="control.filterParams"
+      [formControlName]="control.name"
+    ></app-dialog-multi-select>
 
     <!-- Password -->
     <app-password-input
@@ -45,6 +63,16 @@
       [lookupKey]="control.lookupKey"
     ></app-select>
 
+    <!-- Multiselect -->
+    <app-multi-select
+      *ngSwitchCase="'multiselect'"
+      [dictCode]="control.dictCode"
+      [formControlName]="control.controlName"
+      [label]="control.label"
+      [lookupKey]="control.lookupKey"
+      [required]="isRequired(control) | async"
+    ></app-multi-select>
+
     <!-- Text -->
     <app-text
       *ngSwitchCase="'text'"
@@ -52,6 +80,14 @@
       [label]="control.label"
       [required]="isRequired(control) | async"
     ></app-text>
+
+    <!-- Number -->
+    <app-number
+      *ngSwitchCase="'number'"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [required]="isRequired(control) | async"
+    ></app-number>
 
     <!-- Textarea -->
     <app-textarea

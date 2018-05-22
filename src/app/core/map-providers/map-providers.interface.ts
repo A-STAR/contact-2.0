@@ -32,7 +32,7 @@ export interface IMapService<T> {
   createControl(controlDef: IControlDef<T>): void;
   createLayer(layerDef: ILayerDef<T>): ILayer<T>;
   getControlPositionFromDef(position: MapControlPosition): google.maps.ControlPosition | ControlPosition;
-  getIconConfig(configKey: string, data: T, params?: any): ILayerIconConfig;
+  getIconConfig(configKey: string, data?: T, params?: any): ILayerIconConfig;
   getMap(): google.maps.Map | Map;
   addToMap(layer: ILayer<T>): void;
   removeFromMap(layer: ILayer<T>): void;

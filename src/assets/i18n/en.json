@@ -364,10 +364,18 @@
           "rowsSelected": "selected",
           "rowsTotal": "total"
         }
+      },
+      "dynamic-layout": {
+        "metadata": {
+          "errors": {
+            "fetch": "Failed to fetch dynamic layout form config."
+          }
+        }
       }
     }
   },
   "system": {
+    "accessDenied": "Access Denied",
     "notifications": {
       "tasks": {
         "created": "created {{ n }}",
@@ -1274,6 +1282,7 @@
     "reward": "Remuneration",
     "shortInfo": "Short info",
     "stageCode": "Stage",
+    "successUpdate": "Successfully updated debtor with ID {{ id }}",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -2751,6 +2760,16 @@
       "errors": {
         "start": "Error has been occurred when tried to start schedule events with the ID {{ eventId }}"
       }
+    },
+    "customOperation": {
+      "dialog": {
+        "input": {
+          "title": "Enter parameters"
+        },
+        "output": {
+          "title": "Operations result"
+        }
+      }
     }
   },
   "entities": {
@@ -2835,7 +2854,16 @@
         "gen": { "plural": "debtor general information" }
       }
     },
+    "debtor": {
+      "gen": { "singular": "debtor", "plural": "debtors" },
+      "info": {
+        "gen": { "plural": "debtor general information" }
+      }
+    },
     "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
+    },
+    "debt": {
       "gen": { "singular": "debt", "plural": "debts" }
     },
     "massOps": {
@@ -3474,7 +3502,8 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type"
+        "changePersonType": "Change person type",
+        "rectangularDistribution": "Debt rectangular distribution"
       }
     },
     "filter": {

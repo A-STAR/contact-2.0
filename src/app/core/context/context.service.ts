@@ -1,39 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { map, mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { distinctUntilChanged, first, share } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
-import {
-  IContextByEntityItem,
-  IContextByEntityMethod,
-  IContextByExpressionMethod,
-  IContextByStateItem,
-  IContextByStateMethod,
-  IContextByValueBagConfigItem,
-  IContextByValueBagMethod,
-  IContextConfig,
-  IContextConfigItem,
-  IContextConfigItemType,
-  IContextConfigOperator,
-  IContextGroup,
-  IContextByExpressionItem,
-} from './context.interface';
+import { IContext, IContextExpression, ContextOperator, IAppContext } from '@app/core/context/context.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { ValueBag } from '@app/core/value-bag/value-bag';
-
-import { combineLatestAnd, combineLatestOr } from '@app/core/utils';
-
-type IContextValue = boolean | number | string;
-
 @Injectable()
 export class ContextService {
+  private appContext$ = combineLatest(
+    this.store.pipe(
+      // TODO(d.maltsev): remove ContextOperator.EVAL
+      // For now, only changes in layout will be reflected here for performance reasons
+      distinctUntilChanged((a: any, b: any) => equals(a.layout, b.layout)),
+    ),
+    this.entityAttributesService.bag$,
+    this.userConstantsService.bag(),
+    this.userPermissionsService.bag(),
+  ).pipe(
+    share(),
+  );
+
   constructor(
     private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
@@ -41,127 +34,119 @@ export class ContextService {
     private userPermissionsService: UserPermissionsService,
   ) {}
 
-  calculate(config: IContextConfig): Observable<IContextValue> {
-    return this.eval(config);
-  }
-
-  private eval(config: IContextConfig): Observable<IContextValue> {
-    return config.type === IContextConfigItemType.GROUP
-      ? this.evalGroup(config)
-      : this.evalItem(config);
-  }
-
-  private evalGroup(config: IContextGroup): Observable<IContextValue> {
-    const children = config.children.map(child => this.eval(child));
-    switch (config.operator) {
-      case IContextConfigOperator.AND:
-        return combineLatestAnd(children as any);
-      case IContextConfigOperator.OR:
-        return combineLatestOr(children as any);
-      default:
-        return ErrorObservable.create('Invalid group operator');
-    }
-  }
-
-  private evalItem(item: IContextConfigItem): Observable<IContextValue> {
-    switch (item.type) {
-      case IContextConfigItemType.CONSTANT:
-        return this.evalConstant(item);
-      case IContextConfigItemType.ENTITY:
-        return this.evalEntity(item);
-      case IContextConfigItemType.PERMISSION:
-        return this.evalPermission(item);
-      case IContextConfigItemType.STATE:
-        return this.evalState(item);
-      case IContextConfigItemType.EXPRESSION:
-        return this.evalExpression(item);
-      default:
-        return ErrorObservable.create('Invalid item type');
-    }
-  }
-
-  private evalConstant(item: IContextByValueBagConfigItem): Observable<IContextValue> {
-    return this.userConstantsService.bag().pipe(
-      mergeMap(bag => this.evalValueBagItem(bag, item)),
-    );
-  }
-
-  private evalPermission(item: IContextByValueBagConfigItem): Observable<IContextValue> {
-    return this.userPermissionsService.bag().pipe(
-      mergeMap(bag => this.evalValueBagItem(bag, item)),
-    );
-  }
-
-  private evalValueBagItem(bag: ValueBag, item: IContextByValueBagConfigItem): Observable<IContextValue> {
-    switch (item.method) {
-      case IContextByValueBagMethod.CONTAINS:
-        // TODO(d.maltsev):
-        // this is ugly and inconsistent
-        // we need a way to allow expressions as any operand
-        return typeof item.name === 'object'
-          ? this.eval(item.name).pipe(
-              map(String),
-              map(n => bag.contains(n, item.value)),
-            )
-          : of(bag.contains(item.name, item.value));
-      case IContextByValueBagMethod.HAS:
-        return of(bag.has(item.value));
-      case IContextByValueBagMethod.NOT_EMPTY:
-        return of(bag.notEmpty(item.value));
-      case IContextByValueBagMethod.VALUE:
-        return of(bag.get(item.value));
-      default:
-        throw new Error('Invalid item method');
-    }
-  }
-
-  private evalEntity(item: IContextByEntityItem): Observable<boolean> {
-    return this.entityAttributesService.getAttribute(item.value).pipe(
-      map(attribute => {
-        switch (item.method) {
-          case IContextByEntityMethod.IS_MANDATORY:
-            return attribute.isMandatory;
-          case IContextByEntityMethod.IS_USED:
-            return attribute.isUsed;
-          default:
-            throw new Error('Invalid item method');
-        }
+  /**
+   * Returns Observable that emits the result of context evaluation.
+   *
+   * CAUTION:
+   * Absolutely make sure to dispose of it once you don't need it anymore!
+   *
+   * Don't use it in getters (it will create new stream on every getter call), i.e:
+   * ```typescript
+   * class Foo {
+   *  get foo(): Observable<boolean> {
+   *    return this.contextService.calculate(this.context)
+   *  }
+   * }
+   * ```
+   */
+  calculate(context: IContext): Observable<any> {
+    const storeReferences = this.findStoreReferences(context);
+    return this.appContext$.pipe(
+      select(([ state, attributes, constants, permissions ]) => {
+        const value = storeReferences.reduce((acc, key) => ({ ...acc, [key]: this.getStateSlice(state, key) }), {});
+        const appContext = { state: value, attributes, constants, permissions };
+        return this.calculateFromStore(appContext, context);
       }),
     );
   }
 
-  private evalState(item: IContextByStateItem): Observable<any> {
-    switch (item.method) {
-      case IContextByStateMethod.VALUE:
-        return this.getFromStore(item.key);
-      case IContextByStateMethod.NOT_EMPTY:
-        return this.getFromStore(item.key).pipe(
-          map(Boolean),
-        );
-      case IContextByStateMethod.EQUALS:
-        return this.getFromStore(item.key).pipe(
-          map(v => v === item.value),
-        );
-      default:
-        throw new Error('Invalid item method');
+  private findStoreReferences(context: IContext): string[] {
+    return this.findStoreReferencesRecursively([ context ]).map(item => String(item.value));
+  }
+
+  private findStoreReferencesRecursively(contexts: IContext[]): IContextExpression[] {
+    return contexts.reduce((acc, item) => {
+      if (typeof item === 'object') {
+        if (item.operator === ContextOperator.EVAL) {
+          return [ ...acc, item ];
+        } else {
+          const value = Array.isArray(item.value) ? item.value : [ item.value ];
+          return [ ...acc, ...this.findStoreReferencesRecursively(value) ];
+        }
+      } else {
+        return acc;
+      }
+    }, []);
+  }
+
+  private getStateSlice(state: IAppState, key: string): any {
+    return key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state);
+  }
+
+  private calculateFromStore(appContext: IAppContext, context: IContext): any {
+    return typeof context === 'object'
+      ? this.calculateExpression(appContext, context)
+      : context;
+  }
+
+  private calculateExpression(appContext: IAppContext, expression: IContextExpression): any {
+    if (expression.operator === ContextOperator.EVAL) {
+      return appContext.state[expression.value];
+    } else {
+      const v = Array.isArray(expression.value)
+        ? expression.value.map(e => this.calculateFromStore(appContext, e))
+        : this.calculateFromStore(appContext, expression.value);
+      switch (expression.operator) {
+        case ContextOperator.AND:
+          return v.reduce((acc, item) => acc && item, true);
+        case ContextOperator.ENTITY_IS_MANDATORY:
+          this.entityAttributesService
+            .getAttribute(v)
+            .pipe(first())
+            .subscribe();
+          return appContext.attributes[v] && appContext.attributes[v].isMandatory;
+        case ContextOperator.ENTITY_IS_USED:
+          this.entityAttributesService
+            .getAttribute(v)
+            .pipe(first())
+            .subscribe();
+          return appContext.attributes[v] && appContext.attributes[v].isUsed;
+        case ContextOperator.EQUALS:
+          return String(v[0]) === String(v[1]);
+        case ContextOperator.CONSTANT_CONTAINS:
+          return appContext.constants.contains(v[0], v[1]);
+        case ContextOperator.CONSTANT_IS_TRUE:
+          return appContext.constants.has(v);
+        case ContextOperator.CONSTANT_NOT_EMPTY:
+          return appContext.constants.notEmpty(v);
+        case ContextOperator.PERMISSION_CONTAINS:
+          return appContext.permissions.contains(v[0], v[1]);
+        case ContextOperator.PERMISSION_IS_TRUE:
+          return appContext.permissions.has(v);
+        case ContextOperator.PERMISSION_NOT_EMPTY:
+          return appContext.permissions.notEmpty(v);
+        case ContextOperator.NOT:
+          return !v;
+        case ContextOperator.NOT_NULL:
+          return Boolean(v);
+        case ContextOperator.OR:
+          return v.reduce((acc, item) => acc || item, false);
+        case ContextOperator.PERSON_ATTRIBUTES:
+          return this.getPersonAttributeConstantName(v);
+      }
     }
   }
 
-  private getFromStore(key: string): Observable<any> {
-    return this.store.pipe(
-      select(state => key.split('.').reduce((acc, chunk) => acc ? acc[chunk] : null, state)),
-    );
-  }
-
-  private evalExpression(item: IContextByExpressionItem): Observable<any> {
-    switch (item.method) {
-      case IContextByExpressionMethod.SWITCH:
-        return this.eval(item.key).pipe(
-          map(String),
-          map(k => item.value[k]),
-        );
+  private getPersonAttributeConstantName(value: number): string {
+    switch (value) {
+      case 1:
+        return 'Person.Individual.AdditionalAttribute.List';
+      case 2:
+        return 'Person.LegalEntity.AdditionalAttribute.List';
+      case 3:
+        return 'Person.SoleProprietorship.AdditionalAttribute.List';
       default:
-        throw new Error('Invalid item method');
+        return null;
     }
   }
 }

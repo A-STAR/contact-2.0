@@ -1,5 +1,6 @@
 import { IActionGridAction, ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
 
@@ -10,7 +11,21 @@ export interface IMetadataActionOption {
   value: Array<number|string>;
 }
 
+export interface IMetadataActionParamConfig {
+  id?: number;
+  name: string;
+  paramTypeCode: number;
+  sortOrder: number;
+  systemName: string;
+  isMandatory: number;
+  multiSelect: number;
+  dictNameCode: number;
+  entityTypeIds: number;
+  lookupKey: number;
+}
+
 export interface IMetadataAction {
+  id?: number;
   action: string;
   // for custom actions, translates label path + action
   label?: string;
@@ -25,6 +40,9 @@ export interface IMetadataAction {
   };
   children?: IMetadataAction[];
   type?: MetadataActionType;
+  asyncMode?: boolean;
+  inputConfig?: IMetadataActionParamConfig[];
+  outputConfig?: IDynamicLayoutConfig[];
 }
 
 export enum MetadataActionType {

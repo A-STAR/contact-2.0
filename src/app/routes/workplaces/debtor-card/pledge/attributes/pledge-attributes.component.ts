@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionType } from '../../../../../core/app-modules/debtor-card/debtor-card.interface';
 import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
 
+import { DebtorService } from '../../debtor.service';
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-debtor-pledge-attributes',
@@ -23,7 +22,7 @@ export class DebtorPledgeAttributesComponent implements OnInit {
 
   constructor(
     private pledgeService: PledgeService,
-    private debtorCardService: DebtorCardService
+    private debtorService: DebtorService
   ) {}
 
   ngOnInit(): void {
@@ -31,12 +30,10 @@ export class DebtorPledgeAttributesComponent implements OnInit {
     this.entityId$ = this.pledgeService
       .getPayload<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
       .map(pledge => pledge ? pledge.propertyId : null)
-      .do(entityId => this.debtorCardService.dispatchAction(IActionType.SELECT_ENTITY,
-          {
-            entityId,
-            entityTypeId: DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERTY
-          }
-        )
+      .do(entityId => {
+          this.debtorService.entityTypeId$.next(this.entityTypeId);
+          this.debtorService.debtorId$.next(entityId);
+        }
       );
   }
 

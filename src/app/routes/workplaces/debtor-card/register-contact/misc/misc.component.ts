@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtService } from '../../../../../core/debt/debt.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 @Component({
   selector: 'app-register-contact-misc',
@@ -13,16 +14,13 @@ export class MiscComponent {
   @Output() actionOfficeVisit = new EventEmitter<void>();
 
   constructor(
-    private debtService: DebtService,
+    private debtorService: DebtorService,
+    private workplacesService: WorkplacesService,
   ) {}
 
-  get canRegisterSpecial$(): Observable<boolean> {
-    return this.debtService.canRegisterSpecial$;
-  }
+  readonly canRegisterSpecial$: Observable<boolean> = this.debtorService.canRegisterSpecial$;
 
-  get canRegisterOfficeVisit$(): Observable<boolean> {
-    return this.debtService.canRegisterOfficeVisit$;
-  }
+  readonly canRegisterOfficeVisit$: Observable<boolean> = this.workplacesService.canRegisterOfficeVisit$;
 
   onSubmitSpecial(): void {
     this.actionSpecial.emit();
