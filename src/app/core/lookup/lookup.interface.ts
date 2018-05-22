@@ -7,7 +7,8 @@ export type ILookupKey =
   'roles' |
   'timeZone' |
   'operations' |
-  'users';
+  'users' |
+  'letterReport';
 
 export interface ILookupBase {
   id: number;

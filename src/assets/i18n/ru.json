@@ -2175,6 +2175,19 @@
           "code": "Код",
           "name": "Имя"
         }
+      },
+      "letter": {
+        "title": "Массоввое формирование писем",
+        "dialog": {
+          "templateId": "Шаблон",
+          "formatCode": "Формат",
+          "regLetter": "Регистрировать письма",
+          "addressTypes": "Тип адреса",
+          "avoidDuplication": "Исключить дублирование адресов",
+          "ignoreWrongAddress": "Исключить адреса со статусом \"Неверный\"",
+          "sortRule": "Сортировка",
+          "reportId": "Реестр"
+        }
       }
     },
     "nextCallDateSet": {

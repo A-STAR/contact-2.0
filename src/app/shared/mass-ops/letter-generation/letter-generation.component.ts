@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   IDynamicLayoutConfig,
@@ -32,7 +33,7 @@ export class LetterGenerationComponent {
     key: 'letter-generation',
     items: [
       {
-        label: 'widgets.mass.letter.form.templateId',
+        label: this.translateService.instant('widgets.mass.letter.dialog.templateId'),
         name: 'templateId',
         type: DynamicLayoutItemType.CONTROL,
         controlType: DynamicLayoutControlType.SELECT,
@@ -41,7 +42,7 @@ export class LetterGenerationComponent {
         }
       },
       {
-        label: 'widgets.mass.letter.form.formatCode',
+        label: this.translateService.instant('widgets.mass.letter.dialog.formatCode'),
         name: 'formatCode',
         type: DynamicLayoutItemType.CONTROL,
         controlType: DynamicLayoutControlType.SELECT,
@@ -51,13 +52,13 @@ export class LetterGenerationComponent {
         }
       },
       {
-        label: 'widgets.mass.letter.form.regLetter',
+        label: this.translateService.instant('widgets.mass.letter.dialog.regLetter'),
         name: 'regLetter',
         type: DynamicLayoutItemType.CONTROL,
         controlType: DynamicLayoutControlType.CHECKBOX
       },
       {
-        label: 'widgets.mass.letter.form.addressTypes',
+        label: this.translateService.instant('widgets.mass.letter.dialog.addressTypes'),
         name: 'addressTypes',
         type: DynamicLayoutItemType.CONTROL,
         controlType: DynamicLayoutControlType.MULTISELECT,
@@ -67,26 +68,26 @@ export class LetterGenerationComponent {
         }
       },
       {
-        label: 'widgets.mass.letter.form.avoidDuplication',
+        label: this.translateService.instant('widgets.mass.letter.dialog.avoidDuplication'),
         name: 'avoidDuplication',
         type: DynamicLayoutItemType.CONTROL,
         controlType: DynamicLayoutControlType.CHECKBOX
       },
       {
-        label: 'widgets.mass.letter.form.ignoreWrongAddress',
+        label: this.translateService.instant('widgets.mass.letter.dialog.ignoreWrongAddress'),
         name: 'ignoreWrongAddress',
         type: DynamicLayoutItemType.CONTROL,
         controlType: DynamicLayoutControlType.CHECKBOX
       },
       {
-        label: 'widgets.mass.letter.form.sortRule',
+        label: this.translateService.instant('widgets.mass.letter.dialog.sortRule'),
         name: 'sortRule',
         type: DynamicLayoutItemType.CONTROL,
         dictCode: UserDictionariesService.DICTIONARY_REGION_SORT_TYPE,
         controlType: DynamicLayoutControlType.MULTISELECT,
       },
       {
-        label: 'widgets.mass.letter.form.reportId',
+        label: this.translateService.instant('widgets.mass.letter.dialog.reportId'),
         name: 'reportId',
         type: DynamicLayoutItemType.CONTROL,
         lookupKey: 'letterReport',
@@ -104,6 +105,7 @@ export class LetterGenerationComponent {
   };
 
   constructor(
+    private translateService: TranslateService,
     private letterGenerationService: LetterGenerationService
   ) { }
 

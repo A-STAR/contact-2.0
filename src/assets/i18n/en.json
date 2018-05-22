@@ -2175,6 +2175,19 @@
           "code": "Code",
           "name": "Name"
         }
+      },
+      "letter": {
+        "title": "Letter generation",
+        "dialog": {
+          "templateId": "Template",
+          "formatCode": "Format",
+          "regLetter": "Register letter",
+          "addressTypes": "Address type",
+          "avoidDuplication": "Avoid duplication",
+          "ignoreWrongAddress": "Ignore wrong address",
+          "sortRule": "Sorting",
+          "reportId": "Register"
+        }
       }
     },
     "nextCallDateSet": {
