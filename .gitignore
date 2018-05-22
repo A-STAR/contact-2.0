@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 
 /src/assets/server/root.json
+/e2e/tests/__image_snapshots__
