@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
-import { IDynamicLayoutConfig, DynamicLayoutItemType, DynamicLayoutControlType } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import {
+  IDynamicLayoutConfig,
+  DynamicLayoutItemType,
+  DynamicLayoutControlType
+} from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+
 import { ICloseAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -13,7 +18,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-letter-generation',
+  selector: 'app-mass-letter-generation',
   templateUrl: 'letter-generation.component.html'
 })
 export class LetterGenerationComponent {

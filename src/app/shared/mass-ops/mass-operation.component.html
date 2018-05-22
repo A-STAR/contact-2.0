@@ -181,6 +181,11 @@
   (close)="onCloseAction($event)"
 ></app-mass-person-type>
 
+<app-mass-letter-generation
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-letter-generation>
+
 <app-mass-custom-operation
   *ngIf="dialog && isCustomOperation"
   [actionData]="dialogData"
