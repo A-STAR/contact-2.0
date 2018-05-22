@@ -46,12 +46,6 @@ export class GuiObjectsService {
       }));
   }
 
-  // get menuItemIds(): Observable<any> {
-  //   return this.getGuiObjects()
-  //     .map(guiObjects => this.flattenGuiObjectIds(guiObjects))
-  //     .distinctUntilChanged();
-  // }
-
   refreshGuiObjects(): void {
     this.store.dispatch({ type: GuiObjectsService.GUI_OBJECTS_FETCH });
     this.isFetching = true;
@@ -77,14 +71,6 @@ export class GuiObjectsService {
       children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
     };
   }
-
-  // private flattenGuiObjectIds(appGuiObjects: Array<IGuiObject>): any {
-  //   return appGuiObjects.reduce((acc, guiObject) => ({
-  //     ...acc,
-  //     ...this.flattenGuiObjectIds(guiObject.children),
-  //     [guiObject.name]: guiObject.id
-  //   }), {});
-  // }
 
   private getGuiObjects(): Observable<Array<IGuiObject>> {
     if (!this._guiObjects && !this.isFetching) {
