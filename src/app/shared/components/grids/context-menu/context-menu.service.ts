@@ -4,12 +4,14 @@ import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata
 import { MenuItemDef } from 'ag-grid';
 import { IContextMenuOptions, IContextMenuSimpleOptions } from './context-menu.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ContextMenuService {
 
   constructor(
+    private customOperationService: CustomOperationService,
     private translateService: TranslateService,
   ) { }
 
@@ -137,6 +139,8 @@ export class ContextMenuService {
   }
 
   private translateAction(action: IMetadataAction): string {
-    return this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
+    return action.id
+      ? this.customOperationService.getOperation(action.id).name
+      : this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
   }
 }

@@ -2998,6 +2998,9 @@
     },
     "letterTemplates": {
       "gen": { "singular": "letter template", "plural" : "letter templates" }
+    },
+    "operations": {
+      "gen": { "singular": "operation", "plural" : "operations" }
     }
   },
   "massOperations": {
@@ -3502,8 +3505,7 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type",
-        "rectangularDistribution": "Debt rectangular distribution"
+        "changePersonType": "Change person type"
       }
     },
     "filter": {
