@@ -70,11 +70,13 @@ export class EditComponent extends DialogFunctions {
     super();
   }
 
+  // Forms display
+
   readonly displayContactPersonForm$ = this.contactRegistrationService.outcome$.pipe(
     map(outcome => outcome && outcome.changeContactPerson === 1),
   );
 
-  readonly canDisplayContactForPhone$ = this.contactRegistrationService.outcome$.pipe(
+  readonly displayContactForPhone$ = this.contactRegistrationService.outcome$.pipe(
     map(outcome => outcome && outcome.addPhone === 1),
   );
 
@@ -84,6 +86,58 @@ export class EditComponent extends DialogFunctions {
 
   readonly displayAttachmentForm$ = this.contactRegistrationService.outcome$.pipe(
     map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)),
+  );
+
+  readonly displayPromiseForm$ = this.contactRegistrationService.canSetPromise$;
+
+  readonly displayPaymentForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.paymentMode)),
+  );
+
+  readonly displayNextCallForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)),
+  );
+
+  readonly displayCommentForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.commentMode)),
+  );
+
+  readonly displayAutoCommentForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && Boolean(outcome.autoCommentIds)),
+  );
+
+  readonly displayDebtReasonForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.debtReasonMode))
+);
+
+  readonly displayRefusalForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && outcome.isRefusal === 1),
+  );
+
+  readonly displayCallReasonForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.callReasonMode))
+  );
+
+  readonly displayStatusChangeForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.statusReasonMode) && Boolean(outcome.debtStatusCode)),
+  );
+
+  readonly displayPrompt$ = combineLatest(
+    this.displayContactPersonForm$,
+    this.displayContactForPhone$,
+    this.displayAttributeTree$,
+    this.displayAttachmentForm$,
+    this.displayPromiseForm$,
+    this.displayPaymentForm$,
+    this.displayNextCallForm$,
+    this.displayCommentForm$,
+    this.displayAutoCommentForm$,
+    this.displayDebtReasonForm$,
+    this.displayRefusalForm$,
+    this.displayCallReasonForm$,
+    this.displayStatusChangeForm$,
+  ).pipe(
+    map(formsDisplay => !formsDisplay.some(Boolean))
   );
 
   readonly debtId$ = this.contactRegistrationService.debtId$;

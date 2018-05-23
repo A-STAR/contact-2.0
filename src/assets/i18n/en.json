@@ -274,7 +274,8 @@
                 "form": {
                   "statusChange": "Status Change Reason"
                 }
-              }
+              },
+              "prompt": "Are you sure, you want to register contact by this outcome?"
             }
           },
           "tree": {

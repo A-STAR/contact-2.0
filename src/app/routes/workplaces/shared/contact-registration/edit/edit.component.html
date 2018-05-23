@@ -23,24 +23,27 @@
   <!-- Form -->
   <div class="flex-item grow" [formGroup]="form" style="overflow-y: auto;">
 
+      <div class="flex vertical justify-center" *ngIf="displayPrompt$ | async">
+        {{ 'routes.workplaces.shared.contactRegistration.edit.form.prompt' | translate }}
+      </div>
 
       <!-- Promise -->
-      <app-contact-registration-promise [formGroup]="form"></app-contact-registration-promise>
+      <app-contact-registration-promise *ngIf="displayPromiseForm$ | async" [formGroup]="form"></app-contact-registration-promise>
 
       <!-- Payment -->
-      <app-contact-registration-payment [formGroup]="form"></app-contact-registration-payment>
+      <app-contact-registration-payment *ngIf="displayPaymentForm$ | async" [formGroup]="form"></app-contact-registration-payment>
 
       <!-- Next Call -->
-      <app-contact-registration-next-call [formGroup]="form"></app-contact-registration-next-call>
+      <app-contact-registration-next-call *ngIf="displayNextCallForm$ | async" [formGroup]="form"></app-contact-registration-next-call>
 
       <!-- Comment -->
-      <app-contact-registration-comment [formGroup]="form"></app-contact-registration-comment>
+      <app-contact-registration-comment *ngIf="displayCommentForm$ | async" [formGroup]="form"></app-contact-registration-comment>
 
       <!-- Autocomment -->
-      <app-contact-registration-auto-comment [formGroup]="form"></app-contact-registration-auto-comment>
+      <app-contact-registration-auto-comment *ngIf="displayAutoCommentForm$ | async" [formGroup]="form"></app-contact-registration-auto-comment>
 
       <!-- Phone -->
-      <app-contact-registration-phone *ngIf="canDisplayContactForPhone$ | async" [formGroup]="form"></app-contact-registration-phone>
+      <app-contact-registration-phone *ngIf="displayContactForPhone$ | async" [formGroup]="form"></app-contact-registration-phone>
 
       <!-- Contact Person -->
       <div *ngIf="displayContactPersonForm$ | async">
@@ -50,19 +53,19 @@
       </div>
 
       <!-- Debt Reason -->
-      <app-contact-registration-debt-reason [formGroup]="form"></app-contact-registration-debt-reason>
+      <app-contact-registration-debt-reason *ngIf="displayDebtReasonForm$ | async" [formGroup]="form"></app-contact-registration-debt-reason>
 
       <!-- Refusal -->
-      <app-contact-registration-refusal [formGroup]="form"></app-contact-registration-refusal>
+      <app-contact-registration-refusal *ngIf="displayRefusalForm$ | async" [formGroup]="form"></app-contact-registration-refusal>
 
       <!-- Attachments -->
       <app-contact-registration-attachment *ngIf="displayAttachmentForm$ | async"></app-contact-registration-attachment>
 
       <!-- Call Reason -->
-      <app-contact-registration-call-reason [formGroup]="form"></app-contact-registration-call-reason>
+      <app-contact-registration-call-reason *ngIf="displayCallReasonForm$ | async" [formGroup]="form"></app-contact-registration-call-reason>
 
       <!-- Status Change -->
-      <app-contact-registration-status-change [formGroup]="form"></app-contact-registration-status-change>
+      <app-contact-registration-status-change *ngIf="displayStatusChangeForm$ | async" [formGroup]="form"></app-contact-registration-status-change>
 
       <!-- Attributes -->
       <app-contact-registration-attributes
