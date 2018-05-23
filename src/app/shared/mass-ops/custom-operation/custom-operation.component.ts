@@ -24,7 +24,7 @@ export class CustomOperationComponent {
 
   onSubmit(data: ICustomActionData): void {
     this.customOperationService
-      .run(this.actionData, this.actionData.payload, data)
+      .run(this.actionData, data)
       .subscribe(result => {
         if (this.actionData.outputConfig) {
           this.result = result.data;

@@ -16,7 +16,6 @@ import { IGridActionPayload, IGridAction } from '@app/shared/components/action-g
 import { IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
 import { ILookupOperation } from '@app/core/lookup/lookup.interface';
 
-import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
@@ -27,7 +26,6 @@ export class CustomOperationService {
 
   constructor(
     private dataService: DataService,
-    private actionGridService: ActionGridService,
     private notificationsService: NotificationsService
   ) {
     // TODO (i.kibisov): remove mock
@@ -39,20 +37,19 @@ export class CustomOperationService {
     return !!this.operations.find(o => o.id === id);
   }
 
-  run(operation: IGridAction, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
+  run(operation: IGridAction, actionData: ICustomActionData): Observable<ICustomActionData> {
+    const idData = this.buildIdData(operation, actionData);
+    const data = this.filterActionData(idData, actionData);
     return operation.asyncMode
-      ? this.schedule(operation.id, idData, actionData)
-      : this.execute(operation.id, idData, actionData);
+      ? this.schedule(operation.id, idData, data)
+      : this.execute(operation.id, idData, data);
   }
 
-  // TODO (i.kibisov): remove mock
   execute(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return this.dataService.create('/synch/mass/customOperation', {}, {
       operationId,
-      idData: {
-        debtId: this.actionGridService.buildRequest(idData),
-        operatorId: { ids: actionData.operatorId.map(p => [p]) }
-      }
+      idData,
+      actionData
     })
     .pipe(
       catchError(this.notificationsService
@@ -65,7 +62,7 @@ export class CustomOperationService {
   schedule(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
     return this.dataService.create('/asynch/mass/customOperation', {}, {
       operationId,
-      idData: this.actionGridService.buildRequest(idData),
+      idData,
       actionData
     })
     .pipe(
@@ -169,5 +166,23 @@ export class CustomOperationService {
           lookupKey: param.lookupKey
         } as Partial<IDynamicLayoutItem>;
     }
+  }
+
+  private buildIdData(operation: IGridAction, actionData: ICustomActionData): any {
+    return operation.params.reduce((acc, param, i) => ({
+      ...acc,
+      [param]: {
+        ids: operation.payload.data[0][i]
+          ? (operation.payload.data as number[][]).map(row => [ row[i] ])
+          : actionData[param].map(p => [p])
+      }
+    }), {});
+  }
+
+  private filterActionData(idData: any, actionData: ICustomActionData): ICustomActionData {
+    return Object.keys(actionData).reduce((acc, field) => ({
+      ...acc,
+      ...(!idData[field] ? { [field]: actionData[field] } : {})
+    }), {});
   }
 }
