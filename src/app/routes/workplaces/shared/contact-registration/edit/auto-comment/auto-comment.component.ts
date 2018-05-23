@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
@@ -46,13 +45,6 @@ export class ContactRegistrationAutoCommentComponent implements OnInit, OnDestro
     this.formSub.unsubscribe();
   }
 
-  get autoCommentIdOptions$(): Observable<any[]> {
-    return this.userTemplatesService.getTemplates(4, 0, false).pipe(map(valuesToOptions));
-  }
+  readonly autoCommentIdOptions$ = this.userTemplatesService.getTemplates(4, 0, false).pipe(map(valuesToOptions));
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && Boolean(outcome.autoCommentIds)),
-    );
-  }
 }

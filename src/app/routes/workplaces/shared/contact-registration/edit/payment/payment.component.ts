@@ -68,10 +68,6 @@ export class ContactRegistrationPaymentComponent implements AfterViewInit, OnDes
     }
   }
 
-  readonly canDisplayForm$ = this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.paymentMode)),
-  );
-
   get today(): Date {
     return moment().toDate();
   }
