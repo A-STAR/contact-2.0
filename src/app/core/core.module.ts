@@ -21,6 +21,7 @@ import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
@@ -103,6 +104,7 @@ import 'rxjs/add/operator/withLatestFrom';
     GridFiltersService,
     GuiObjectsService,
     HelpService,
+    LayoutService,
     MetadataService,
     NotificationsService,
     PersistenceService,

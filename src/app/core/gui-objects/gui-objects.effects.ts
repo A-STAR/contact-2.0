@@ -9,6 +9,7 @@ import { IGuiObject } from './gui-objects.interface';
 import { AuthService } from '../auth/auth.service';
 import { DataService } from '../data/data.service';
 import { GuiObjectsService } from './gui-objects.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
@@ -19,7 +20,10 @@ export class GuiObjectsEffects {
     .switchMap(() => {
       return this.authService.isRetrievedTokenValid()
         ? this.readGuiObjects()
-          .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))
+          .map(guiObjects => {
+            this.layoutService.setGuiObjects(guiObjects);
+            return { type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects };
+          })
           .catch(error => {
             this.router.navigate(['/connection-error']);
             return [
@@ -34,6 +38,7 @@ export class GuiObjectsEffects {
     private actions: Actions,
     private authService: AuthService,
     private dataService: DataService,
+    private layoutService: LayoutService,
     private notificationService: NotificationsService,
     private router: Router,
   ) {}

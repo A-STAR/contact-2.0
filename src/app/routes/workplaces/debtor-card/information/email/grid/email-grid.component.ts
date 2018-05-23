@@ -37,9 +37,15 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   @Input() entityType = 18;
   @Input() ignorePermissions = false;
   @Input() personRole = 1;
-  @Input() debt: Debt;
+
+  @Input() set debt (debt: Debt) {
+    this.debt$.next(debt);
+  }
 
   private selectedEmailId: number;
+
+  private debt$ = new BehaviorSubject<Debt>(null);
+
   selectedEmail$ = new BehaviorSubject<IEmail>(null);
 
   columns: ISimpleGridColumn<IEmail>[] = [];
@@ -163,7 +169,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       personRole: this.personRole,
       emailId: this.selectedEmailId
     };
-    this.emailService.scheduleEmail(this.debt.id, data).subscribe(() => this.onSubmitSuccess());
+    this.emailService.scheduleEmail(this.debt$.value.id, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
@@ -217,7 +223,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
         .pipe(
           map(hasPermission => hasPermission || this.ignorePermissions),
         ),
-      of(this.workplacesService.isDebtActive(this.debt)),
+      this.debt$.map(debt => this.workplacesService.isDebtActive(debt)),
       this.selectedEmail$.flatMap(email => email
         ? this.userPermissionsService
             .contains('EMAIL_SINGLE_ADDRESS_TYPE_LIST', email.typeCode)
