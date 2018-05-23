@@ -25,6 +25,7 @@ export class GuiObjectsEffects {
             return { type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects };
           })
           .catch(error => {
+            console.log(error);
             this.router.navigate(['/connection-error']);
             return [
               this.notificationService.fetchError()

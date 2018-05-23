@@ -124,7 +124,7 @@ export class DataService {
         const originalHeaders = options.headers
           ? options.headers
           : new HttpHeaders();
-        const headers = item && method !== DataService.METHOD_GET
+        const headers = item && item.id && method !== DataService.METHOD_GET
           ? originalHeaders.set('X-Gui-Object', item.id.toString())
           : originalHeaders;
         return this.request(method, url, routeParams, { ...options, headers, responseType: 'json' });

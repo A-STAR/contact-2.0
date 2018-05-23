@@ -1,5 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 import { filter, first, map, mergeMap } from 'rxjs/operators';
 
 import { ActionsLogService } from '@app/core/actions-log/actions-log.service';
@@ -14,7 +15,9 @@ import { RoutingService } from '@app/core/routing/routing.service';
   styleUrls: [ './layout.component.scss' ],
   templateUrl: './layout.component.html',
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
+  private subscriptions = new Subscription();
+
   constructor(
     private actionsLogService: ActionsLogService,
     private coreLayoutService: CoreLayoutService,
@@ -25,15 +28,19 @@ export class LayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.coreLayoutService.currentGuiObject$.pipe(
+    const subscription = this.coreLayoutService.currentGuiObject$.pipe(
       filter(Boolean),
       mergeMap(guiObject => {
         const { duration } = guiObject;
         const debtorId = this.routingService.getRouteParam(this.route, 'debtorId');
         return this.actionsLogService.logOpenAction(duration, debtorId);
       }),
-    )
-    .subscribe();
+    ).subscribe();
+    this.subscriptions.add(subscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   @HostListener('window:resize')
