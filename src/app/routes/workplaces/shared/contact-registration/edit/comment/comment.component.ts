@@ -17,15 +17,8 @@ export class ContactRegistrationCommentComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.commentMode)),
-    );
-  }
-
-  get isCommentRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
+  readonly isCommentRequired$: Observable<boolean> = this.contactRegistrationService.outcome$
+    .pipe(
       map(outcome => outcome && outcome.commentMode === 3),
     );
-  }
 }
