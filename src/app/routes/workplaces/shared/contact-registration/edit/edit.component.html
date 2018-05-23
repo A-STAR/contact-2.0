@@ -23,7 +23,7 @@
   <!-- Form -->
   <div class="flex-item grow" [formGroup]="form" style="overflow-y: auto;">
 
-      <div class="flex vertical justify-center" *ngIf="displayPrompt$ | async">
+      <div class="flex vertical justify-center text-center" *ngIf="displayPrompt$ | async">
         {{ 'routes.workplaces.shared.contactRegistration.edit.form.prompt' | translate }}
       </div>
 
