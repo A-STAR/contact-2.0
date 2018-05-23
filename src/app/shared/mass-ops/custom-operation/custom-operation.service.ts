@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
-import { ICustomActionData, ICustomActionResult } from './custom-operation.interface';
+import { ICustomActionData, ICustomOperationResult, ICustomOperation } from './custom-operation.interface';
 
 import {
   IDynamicLayoutConfig,
@@ -14,27 +13,37 @@ import {
 
 import { IGridActionPayload, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
-import { ILookupOperation } from '@app/core/lookup/lookup.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class CustomOperationService {
+  static TYPE_CUSTOM_OPERATION = 2;
 
-  private operations: ILookupOperation[];
+  private operations: ICustomOperation[];
 
   constructor(
     private dataService: DataService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) {
-    // TODO (i.kibisov): remove mock
-    of([ { id: 5, name: 'rectangularDistribution' } ])
+    this.fetchOperations()
       .subscribe(operations => this.operations = operations);
   }
 
   isAllowedOperation(id: number): boolean {
     return !!this.operations.find(o => o.id === id);
+  }
+
+  getOperation(id: number): ICustomOperation {
+    return this.operations.find(operation => operation.id === id);
+  }
+
+  fetchOperations(): Observable<ICustomOperation[]> {
+    return this.dataService.readAll('/lookup/operations?operationType={operationType} ', {
+      operationType: CustomOperationService.TYPE_CUSTOM_OPERATION
+    })
+    .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
   }
 
   run(operation: IGridAction, actionData: ICustomActionData): Observable<ICustomActionData> {
@@ -73,7 +82,7 @@ export class CustomOperationService {
     );
   }
 
-  showResultMessage(result: ICustomActionResult): void {
+  showResultMessage(result: ICustomOperationResult): void {
     this.notificationsService
       .info('default.dialog.result.message')
       .params({
