@@ -182,7 +182,7 @@
 ></app-mass-person-type>
 
 <app-mass-custom-operation
-  *ngIf="dialog && isCustomOperation"
+  *ngIf="isCustomOperation"
   [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-mass-custom-operation>

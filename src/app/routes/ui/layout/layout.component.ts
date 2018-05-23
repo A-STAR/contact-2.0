@@ -60,11 +60,6 @@ export class LayoutComponent implements OnInit {
                     type: DynamicLayoutItemType.TEMPLATE,
                     value: 'actions',
                     context: {
-                      label: 'Выполнить',
-                      labelKey: 'label',
-                      options: [
-                        { value: 1, label: 'Операция 1' }
-                      ],
                       actions: [{
                         action: 'customOperation',
                         params: [

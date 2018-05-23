@@ -6,7 +6,7 @@
     <ul class="list-group mb0">
       <li class="list-group-item" *ngFor="let option of options"
         (click)="onOptionClick(option)">
-        {{ option[this.labelKey] }}
+        {{ option.label }}
       </li>
     </ul>
   </div>

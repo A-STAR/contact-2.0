@@ -207,6 +207,6 @@ export class CustomOperationService {
   }
 
   private filterInputParams(operation: IGridAction, params: ICustomOperationParams[]): ICustomOperationParams[] {
-    return params.filter(p => operation.params.indexOf(p.systemName))
+    return params.filter(p => operation.params.indexOf(p.systemName));
   }
 }

@@ -15,10 +15,10 @@ export interface IActionPayload {
 
 export interface IAction {
   id?: number;
-  name: string;
-  addOptions: IAddOption[];
+  name?: string;
+  addOptions?: IAddOption[];
   params?: string[];
-  payload: IActionPayload;
+  payload?: IActionPayload;
   asyncMode?: boolean;
   outputConfig?: IDynamicLayoutConfig[];
 }

@@ -14,6 +14,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, mergeMap, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
@@ -64,6 +65,15 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   ];
   debtorId: number;
   debtId: number;
+
+  actions: IAction[] = [{
+    id: 5,
+    asyncMode: false,
+    params: [
+      'debtId',
+      'operatorId'
+    ]
+  }];
 
   private personSubscription: Subscription;
 

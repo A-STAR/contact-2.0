@@ -13,11 +13,10 @@ import { map } from 'rxjs/operators/map';
 
 import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { LookupService } from '@app/core/lookup/lookup.service';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
@@ -30,32 +29,29 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   @Input() label: string;
-  @Input() lookupKey: ILookupKey;
-  @Input() labelKey: string;
   @Input() actions: IMetadataAction[];
-  @Input() options: IOption[] = [];
+
+  options: IOption[] = [];
 
   context: any = {};
 
   actionData: IAction;
 
-  private optionsSubscription: Subscription;
   private contextSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private lookupService: LookupService,
+    private customOperationsService: CustomOperationService,
     private debtorService: DebtorService
   ) { }
 
   ngOnInit(): void {
-    if (this.lookupKey) {
-      this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
-        .subscribe(options => {
-          this.options = options;
-          this.cdRef.markForCheck();
-        });
-    }
+    this.customOperationsService.fetchOperations()
+      .map(operations => operations.map(o => ({ label: o.name, value: o.id })))
+      .subscribe(options => {
+        this.options = options;
+        this.cdRef.markForCheck();
+      });
 
     this.contextSubscription = combineLatest(
       this.debtorService.debtId$,
@@ -71,9 +67,6 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.lookupKey) {
-      this.optionsSubscription.unsubscribe();
-    }
     this.contextSubscription.unsubscribe();
   }
 
@@ -99,7 +92,11 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
       params: metadataAction.params,
       payload: {
         type: metadataAction.type,
-        data: metadataAction.params.reduce((acc, param) => ({ ...acc, [param]: this.context[param] }), {})
+        data: [
+          metadataAction.params
+            .map(param => this.context[param])
+            .filter(Boolean)
+        ]
       },
       asyncMode: metadataAction.asyncMode,
       outputConfig: metadataAction.outputConfig

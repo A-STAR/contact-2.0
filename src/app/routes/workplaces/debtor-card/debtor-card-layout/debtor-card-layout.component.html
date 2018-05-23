@@ -5,6 +5,11 @@
     <div class="pb-lg">
       <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
       <app-button color="secondary" type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
+      <app-action-dropdown
+        class="pull-right"
+        [label]="'Actions'"
+        [actions]="actions"
+      ></app-action-dropdown>
     </div>
     <app-dynamic-form
       *ngIf="controls"
