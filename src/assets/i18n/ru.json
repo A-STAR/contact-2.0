@@ -1274,6 +1274,7 @@
   "debtor": {
     "title": "Карточка должника",
     "id": "ID",
+    "actions": "Операции",
     "firstName": "Имя",
     "lastName": "Фамилия",
     "middleName": "Отчество",

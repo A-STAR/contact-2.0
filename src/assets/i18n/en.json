@@ -1274,6 +1274,7 @@
   "debtor": {
     "title": "Debtor",
     "id": "ID",
+    "actions": "Actions",
     "firstName": "Name",
     "lastName": "Family name",
     "middleName": "Middle name",
