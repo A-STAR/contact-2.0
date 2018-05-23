@@ -44,8 +44,9 @@ export class CustomOperationService {
     return this.operations.find(operation => operation.id === id);
   }
 
-  getOperationParams(id: number): Observable<ICustomOperationParams[]> {
-    return this.dataService.readAll(`/operations/${id}/params`)
+  getOperationParams(operation: IGridAction): Observable<ICustomOperationParams[]> {
+    return this.dataService.readAll(`/operations/${operation.id}/params`)
+      .map(params => this.filterInputParams(operation, params))
       .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
   }
 
@@ -193,7 +194,7 @@ export class CustomOperationService {
       [param]: {
         ids: operation.payload.data[0][i]
           ? (operation.payload.data as number[][]).map(row => [ row[i] ])
-          : actionData[param].map(p => [p])
+          : (Array.isArray(actionData[param]) ? actionData[param] : [ actionData[param] ]).map(p => [p])
       }
     }), {});
   }
@@ -203,5 +204,9 @@ export class CustomOperationService {
       ...acc,
       ...(!idData[field] ? { [field]: actionData[field] } : {})
     }), {});
+  }
+
+  private filterInputParams(operation: IGridAction, params: ICustomOperationParams[]): ICustomOperationParams[] {
+    return params.filter(p => operation.params.indexOf(p.systemName))
   }
 }

@@ -26,7 +26,7 @@ export class CustomOperationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.customOperationService.getOperationParams(this.actionData.id)
+    this.customOperationService.getOperationParams(this.actionData)
       .subscribe(params => {
         this.inputParams = params;
         this.cdRef.markForCheck();
