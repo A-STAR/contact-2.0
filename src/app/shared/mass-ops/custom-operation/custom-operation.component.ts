@@ -28,7 +28,7 @@ export class CustomOperationComponent implements OnInit {
   ngOnInit(): void {
     this.customOperationService.getOperationParams(this.actionData)
       .subscribe(params => {
-        this.inputParams = params;
+        this.initInputParams(params);
         this.cdRef.markForCheck();
       });
   }
@@ -38,6 +38,22 @@ export class CustomOperationComponent implements OnInit {
   }
 
   onSubmit(data: ICustomActionData): void {
+    this.run(data);
+  }
+
+  onClose(): void {
+    this.close.emit();
+  }
+
+  private initInputParams(params: ICustomOperationParams[]): void {
+    if (params.length) {
+      this.inputParams = params;
+    } else {
+      this.run();
+    }
+  }
+
+  private run(data: ICustomActionData = {}): void {
     this.customOperationService
       .run(this.actionData, data)
       .subscribe(result => {
@@ -48,9 +64,5 @@ export class CustomOperationComponent implements OnInit {
           this.close.emit();
         }
       });
-  }
-
-  onClose(): void {
-    this.close.emit();
   }
 }

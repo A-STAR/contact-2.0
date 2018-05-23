@@ -41,7 +41,7 @@ export interface IMetadataAction {
   children?: IMetadataAction[];
   type?: MetadataActionType;
   asyncMode?: boolean;
-  outputConfig?: IDynamicLayoutConfig[];
+  outputConfig?: IDynamicLayoutConfig;
 }
 
 export enum MetadataActionType {

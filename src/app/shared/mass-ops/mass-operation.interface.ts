@@ -20,7 +20,7 @@ export interface IAction {
   params?: string[];
   payload?: IActionPayload;
   asyncMode?: boolean;
-  outputConfig?: IDynamicLayoutConfig[];
+  outputConfig?: IDynamicLayoutConfig;
 }
 
 export interface ICloseAction {
