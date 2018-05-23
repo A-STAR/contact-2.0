@@ -1,9 +1,13 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+import { filter, first, map, mergeMap } from 'rxjs/operators';
 
+import { ActionsLogService } from '@app/core/actions-log/actions-log.service';
 import { HelpService } from '@app/core/help/help.service';
 import { LayoutService } from './layout.service';
-
-import { menuConfig } from '@app/routes/menu-config';
+import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
   host: { class: 'full-size' },
@@ -11,11 +15,33 @@ import { menuConfig } from '@app/routes/menu-config';
   styleUrls: [ './layout.component.scss' ],
   templateUrl: './layout.component.html',
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit, OnDestroy {
+  private subscriptions = new Subscription();
+
   constructor(
+    private actionsLogService: ActionsLogService,
+    private coreLayoutService: CoreLayoutService,
     private helpService: HelpService,
     private layoutService: LayoutService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
   ) {}
+
+  ngOnInit(): void {
+    const subscription = this.coreLayoutService.currentGuiObject$.pipe(
+      filter(Boolean),
+      mergeMap(guiObject => {
+        const { duration } = guiObject;
+        const debtorId = this.routingService.getRouteParam(this.route, 'debtorId');
+        return this.actionsLogService.logOpenAction(duration, debtorId);
+      }),
+    ).subscribe();
+    this.subscriptions.add(subscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
   @HostListener('window:resize')
   onWindowResize(): void {
@@ -26,18 +52,12 @@ export class LayoutComponent {
   onKeyPress(event: KeyboardEvent): void {
     const { key } = event;
     if (key === 'F1') {
-      const menuLinkUrl = this.layoutService.url
-        .split('/')
-        .slice(0, 4)
-        .join('/');
-
-      const itemKey = Object.keys(menuConfig).find(k => menuConfig[k].link === menuLinkUrl);
-      if (itemKey) {
-        this.helpService.open(menuConfig[itemKey].docs);
-      } else if (menuLinkUrl.startsWith('/app/workplaces/debtor')) {
-        this.helpService.open('debt_card');
-      }
-      event.preventDefault();
+      this.coreLayoutService.currentGuiObject$.pipe(
+        first(),
+        filter(Boolean),
+        map(item => item.docs),
+      )
+      .subscribe(docs => this.helpService.open(docs));
     }
   }
 
