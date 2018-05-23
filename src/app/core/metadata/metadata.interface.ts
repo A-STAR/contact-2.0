@@ -41,7 +41,6 @@ export interface IMetadataAction {
   children?: IMetadataAction[];
   type?: MetadataActionType;
   asyncMode?: boolean;
-  inputConfig?: IMetadataActionParamConfig[];
   outputConfig?: IDynamicLayoutConfig[];
 }
 

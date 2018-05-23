@@ -102,7 +102,6 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
         data: metadataAction.params.reduce((acc, param) => ({ ...acc, [param]: this.context[param] }), {})
       },
       asyncMode: metadataAction.asyncMode,
-      inputConfig: metadataAction.inputConfig,
       outputConfig: metadataAction.outputConfig
     };
   }

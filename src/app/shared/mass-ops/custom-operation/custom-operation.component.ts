@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { ICustomActionData } from './custom-operation.interface';
+import { ICustomActionData, ICustomOperationParams } from './custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
@@ -11,16 +11,31 @@ import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/cu
   templateUrl: './custom-operation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomOperationComponent {
+export class CustomOperationComponent implements OnInit {
   @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
   result: ICustomActionData;
 
+  inputParams: ICustomOperationParams[];
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private customOperationService: CustomOperationService
   ) { }
+
+  ngOnInit(): void {
+    this.customOperationService.getOperationParams(this.actionData.id)
+      .subscribe(params => {
+        this.inputParams = params;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  get inputParamsExists(): boolean {
+    return this.inputParams && !!this.inputParams.length;
+  }
 
   onSubmit(data: ICustomActionData): void {
     this.customOperationService

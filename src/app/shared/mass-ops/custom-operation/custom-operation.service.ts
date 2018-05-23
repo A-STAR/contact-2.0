@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 
-import { ICustomActionData, ICustomOperationResult, ICustomOperation } from './custom-operation.interface';
+import {
+  ICustomActionData,
+  ICustomOperationResult,
+  ICustomOperation,
+  ICustomOperationParams
+} from './custom-operation.interface';
 
 import {
   IDynamicLayoutConfig,
@@ -37,6 +42,11 @@ export class CustomOperationService {
 
   getOperation(id: number): ICustomOperation {
     return this.operations.find(operation => operation.id === id);
+  }
+
+  getOperationParams(id: number): Observable<ICustomOperationParams[]> {
+    return this.dataService.readAll(`/operations/${id}/params`)
+      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
   }
 
   fetchOperations(): Observable<ICustomOperation[]> {

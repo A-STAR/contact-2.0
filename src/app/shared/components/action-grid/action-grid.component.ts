@@ -467,7 +467,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       }),
       selection: this.actionGridService.getGridSelection(action, this.selection),
       asyncMode: action.metadataAction.asyncMode,
-      inputConfig: action.metadataAction.inputConfig,
       outputConfig: action.metadataAction.outputConfig
     };
   }

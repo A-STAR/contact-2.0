@@ -1,4 +1,4 @@
-import { MetadataActionType, IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
+import { MetadataActionType } from '@app/core/metadata/metadata.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 export interface IAddOption {
@@ -20,7 +20,6 @@ export interface IAction {
   params?: string[];
   payload: IActionPayload;
   asyncMode?: boolean;
-  inputConfig?: IMetadataActionParamConfig[];
   outputConfig?: IDynamicLayoutConfig[];
 }
 
