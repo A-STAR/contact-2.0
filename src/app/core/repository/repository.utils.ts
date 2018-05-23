@@ -45,15 +45,15 @@ export const serializeParams = (params: Record<string, any>): string => {
 };
 
 export const getUrlParams = (url: any): string[] => {
-  return this.getUrl(url).match(/\{.+?\}/gi).map(i => i.slice(1, -1));
+  return getUrl(url).match(/\{.+?\}/gi).map(i => i.slice(1, -1));
 };
 
 export const getQueryParams = (url: any, params: any): any => {
-  return !this.isSimpleUrl(url) ? pickExistingBy((url as IEntityUrl).queryParams, params) : {};
+  return !isSimpleUrl(url) ? pickExistingBy((url as IEntityUrl).queryParams, params) : {};
 };
 
 export const getUrl = (url: any): string => {
-  return ( !this.isSimpleUrl(url) ? ( url as IEntityUrl ).url : url as string);
+  return !isSimpleUrl(url) ? ( url as IEntityUrl ).url : url as string;
 };
 
 export const isSimpleUrl = (url: any): boolean => {
