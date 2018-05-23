@@ -1,10 +1,12 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { filter, first, map, mergeMap } from 'rxjs/operators';
 
 import { ActionsLogService } from '@app/core/actions-log/actions-log.service';
 import { HelpService } from '@app/core/help/help.service';
 import { LayoutService } from './layout.service';
 import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
   host: { class: 'full-size' },
@@ -18,11 +20,18 @@ export class LayoutComponent implements OnInit {
     private coreLayoutService: CoreLayoutService,
     private helpService: HelpService,
     private layoutService: LayoutService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
   ) {}
 
   ngOnInit(): void {
     this.coreLayoutService.currentGuiObject$.pipe(
-      mergeMap(guiObject => this.actionsLogService.logOpenAction(guiObject.duration, null)),
+      filter(Boolean),
+      mergeMap(guiObject => {
+        const { duration } = guiObject;
+        const debtorId = this.routingService.getRouteParam(this.route, 'debtorId');
+        return this.actionsLogService.logOpenAction(duration, debtorId);
+      }),
     )
     .subscribe();
   }

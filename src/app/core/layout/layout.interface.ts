@@ -4,3 +4,8 @@ export interface IGuiObjectDef {
   docs: string;
   duration: number;
 }
+
+export interface INavigationDef {
+  start: Date;
+  end: Date;
+}

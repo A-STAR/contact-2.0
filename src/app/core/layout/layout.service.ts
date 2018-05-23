@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { distinctUntilChanged, filter, share } from 'rxjs/operators';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { IGuiObject } from '@app/core/gui-objects/gui-objects.interface';
-import { IGuiObjectDef } from '@app/core/layout/layout.interface';
+import { IGuiObjectDef, INavigationDef } from '@app/core/layout/layout.interface';
 
 import { menuConfig } from '@app/routes/menu-config';
 
@@ -12,11 +12,10 @@ import { menuConfig } from '@app/routes/menu-config';
 export class LayoutService {
   private _currentGuiObject$ = new BehaviorSubject<IGuiObjectDef>(null);
   private guiObjects: Record<string, IGuiObjectDef>;
-  private navigation: { start: Date, end: Date } = { start: null, end: null};
+  private navigation: INavigationDef = { start: new Date(), end: null };
 
   readonly currentGuiObject$ = this._currentGuiObject$.pipe(
     distinctUntilChanged((a, b) => a && b && a.id === b.id),
-    share(),
   );
 
   constructor(
@@ -33,8 +32,6 @@ export class LayoutService {
         filter(event => event instanceof NavigationEnd),
       )
       .subscribe((event: NavigationEnd) => this.onNavigationEnd(event));
-
-    this.onNavigationStart();
   }
 
   setGuiObjects(guiObjects: any): void {
