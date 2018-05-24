@@ -17,12 +17,20 @@
         [attr.placeholder]="(placeholder || '') | translate"
         [ngModel]="activeLabel | translate"
       >
-      <i
-        *ngIf="!disabled"
-        class="co co-back select-caret"
-        [ngClass]="caretCls"
-        (click)="$event.preventDefault()"
-      ></i>
+      <div class="select-controls">
+        <i
+          *ngIf="isNullable"
+          class="co co-close select-control select-clear"
+          (click)="onClear($event)"
+        >
+        </i>
+        <i
+          *ngIf="!disabled"
+          class="co co-back select-caret select-control"
+          [ngClass]="caretCls"
+          (click)="$event.preventDefault()"
+        ></i>
+      </div>
     </div>
 
     <ul

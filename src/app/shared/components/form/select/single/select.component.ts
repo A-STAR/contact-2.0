@@ -61,6 +61,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
   @Input() renderer: (option: ILabeledValue) => void;
+  @Input() isNullable = false;
   @Input() styles: CSSStyleDeclaration;
 
   @Output() select = new EventEmitter<any>();
@@ -102,6 +103,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input()
   set isRequired(value: boolean) {
     this._required = this.setDefault(value, this._required);
+    this.isNullable = !this._required;
   }
 
   get required(): boolean {
@@ -226,6 +228,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   onClear(event: MouseEvent): void {
     event.preventDefault();
+    event.stopPropagation();
     this.active = null;
     this.propagateChange(null);
   }
