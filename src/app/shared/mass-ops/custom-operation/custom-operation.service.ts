@@ -6,7 +6,8 @@ import {
   ICustomActionData,
   ICustomOperationResult,
   ICustomOperation,
-  ICustomOperationParams
+  ICustomOperationParams,
+  OperationControlTypeEnum
 } from './custom-operation.interface';
 
 import {
@@ -17,7 +18,6 @@ import {
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 import { IGridActionPayload, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IMetadataActionParamConfig } from '@app/core/metadata/metadata.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -57,12 +57,12 @@ export class CustomOperationService {
     .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
   }
 
-  run(operation: IGridAction, actionData: ICustomActionData): Observable<ICustomActionData> {
-    const idData = this.buildIdData(operation, actionData);
-    const data = this.filterActionData(idData, actionData);
+  run(operation: IGridAction, params: ICustomOperationParams[], data: ICustomActionData): Observable<ICustomActionData> {
+    const idData = this.createIdData(operation, params, data);
+    const actionData = this.filterActionData(idData, data);
     return operation.asyncMode
-      ? this.schedule(operation.id, idData, data)
-      : this.execute(operation.id, idData, data);
+      ? this.schedule(operation.id, idData, actionData)
+      : this.execute(operation.id, idData, actionData);
   }
 
   execute(operationId: number, idData: IGridActionPayload, actionData: ICustomActionData): Observable<ICustomActionData> {
@@ -103,7 +103,7 @@ export class CustomOperationService {
       .dispatch();
   }
 
-  getActionInputParamsConfig(key: string, params: IMetadataActionParamConfig[]): IDynamicLayoutConfig {
+  getActionInputParamsConfig(key: string, params: ICustomOperationParams[]): IDynamicLayoutConfig {
     return {
       key,
       items: params.sort((p1, p2) => p1.sortOrder - p2.sortOrder).map(param => ({
@@ -118,22 +118,22 @@ export class CustomOperationService {
     };
   }
 
-  private getActionParamControlOptions(param: IMetadataActionParamConfig): Partial<IDynamicLayoutItem> {
+  private getActionParamControlOptions(param: ICustomOperationParams): Partial<IDynamicLayoutItem> {
     switch (param.paramTypeCode) {
-      case 1:
+      case OperationControlTypeEnum.DATE:
         return {
           controlType: DynamicLayoutControlType.DATE
         };
-      case 2:
+      case OperationControlTypeEnum.NUMBER:
         return {
           controlType: DynamicLayoutControlType.NUMBER
         };
-      case 6:
+      case OperationControlTypeEnum.TEXT:
         return {
           controlType: DynamicLayoutControlType.TEXT
         };
-      case 3:
-      case 8:
+      case OperationControlTypeEnum.PORTFOLIOS:
+      case OperationControlTypeEnum.OUTGOING_PORTFOLIOS:
         return {
           controlType: param.multiSelect
             ? DynamicLayoutControlType.DIALOGSELECT
@@ -141,36 +141,36 @@ export class CustomOperationService {
           filterType: 'portfolios',
           filterParams: { directionCodes: [ 1 ] }
         } as Partial<IDynamicLayoutItem>;
-      case 4:
+      case OperationControlTypeEnum.OPERATORS:
         return {
           controlType: param.multiSelect
             ? DynamicLayoutControlType.DIALOGSELECT
             : DynamicLayoutControlType.GRIDSELECT,
           filterType: 'users'
         } as Partial<IDynamicLayoutItem>;
-      case 5:
+      case OperationControlTypeEnum.CONTRACTORS:
         return {
           controlType: param.multiSelect
             ? DynamicLayoutControlType.DIALOGSELECT
             : DynamicLayoutControlType.GRIDSELECT,
           filterType: 'contractors'
         } as Partial<IDynamicLayoutItem>;
-      case 7:
+      case OperationControlTypeEnum.DICTIONARY:
         return {
           controlType: param.multiSelect
             ? DynamicLayoutControlType.MULTISELECT
             : DynamicLayoutControlType.SELECT,
           dictCode: param.dictNameCode
         } as Partial<IDynamicLayoutItem>;
-      case 9:
+      case OperationControlTypeEnum.CHECKBOX:
         return {
           controlType: DynamicLayoutControlType.CHECKBOX
         };
-      case 10:
+      case OperationControlTypeEnum.DATETIME:
         return {
           controlType: DynamicLayoutControlType.DATETIME
         };
-      case 11:
+      case OperationControlTypeEnum.GROUP:
         return {
           controlType: DynamicLayoutControlType.GRIDSELECT,
           filterType: 'entityGroups',
@@ -178,7 +178,7 @@ export class CustomOperationService {
             entityTypeIds: param.entityTypeIds
           }
         } as Partial<IDynamicLayoutItem>;
-      case 12:
+      case OperationControlTypeEnum.LOOKUP:
         return {
           controlType: param.multiSelect
             ? DynamicLayoutControlType.MULTISELECT
@@ -188,15 +188,29 @@ export class CustomOperationService {
     }
   }
 
-  private buildIdData(operation: IGridAction, actionData: ICustomActionData): any {
-    return operation.params.reduce((acc, param, i) => ({
-      ...acc,
-      [param]: {
-        ids: operation.payload.data[0][i]
-          ? (operation.payload.data as number[][]).map(row => [ row[i] ])
-          : (Array.isArray(actionData[param]) ? actionData[param] : [ actionData[param] ]).map(p => [p])
-      }
-    }), {});
+  private createIdData(operation: IGridAction, params: ICustomOperationParams[], actionData: ICustomActionData): any {
+    return {
+      ...operation.params.reduce((acc, param, i) => ({
+        ...acc,
+        [param]: {
+          ids: Array.isArray(operation.payload.data)
+            ? (operation.payload.data as number[][]).map(row => [ row[i] ])
+            : [ [operation.payload.data[param]] ]
+        }
+      }), {}),
+      ...(params || [])
+        .filter(p => [3, 4, 5, 8, 11].includes(p.paramTypeCode))
+        .reduce((acc, p) => ({
+          ...acc,
+          [p.systemName]: {
+            ids: (
+              Array.isArray(actionData[p.systemName])
+                ? actionData[p.systemName]
+                : [ actionData[p.systemName] ]
+            ).map(param => [ param ])
+          }
+        }), {})
+    };
   }
 
   private filterActionData(idData: any, actionData: ICustomActionData): ICustomActionData {

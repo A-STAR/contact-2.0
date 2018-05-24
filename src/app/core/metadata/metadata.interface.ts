@@ -11,19 +11,6 @@ export interface IMetadataActionOption {
   value: Array<number|string>;
 }
 
-export interface IMetadataActionParamConfig {
-  id?: number;
-  name: string;
-  paramTypeCode: number;
-  sortOrder: number;
-  systemName: string;
-  isMandatory: number;
-  multiSelect: number;
-  dictNameCode: number;
-  entityTypeIds: number;
-  lookupKey: number;
-}
-
 export interface IMetadataAction {
   id?: number;
   action: string;

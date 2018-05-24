@@ -14,7 +14,7 @@
 
 <app-mass-operation
   *ngIf="actionData"
-  [type]="actionData.name"
+  [type]="actionData.name || actionData.id"
   [actionData]="actionData"
   (close)="onCloseAction()"
 ></app-mass-operation>

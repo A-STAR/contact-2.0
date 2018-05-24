@@ -15,7 +15,7 @@ export interface ICustomOperationResult {
 export interface ICustomOperationParams {
   id?: number;
   name: string;
-  paramTypeCode: number;
+  paramTypeCode: OperationControlTypeEnum;
   sortOrder: number;
   systemName: string;
   isMandatory: number;
@@ -23,4 +23,19 @@ export interface ICustomOperationParams {
   dictNameCode: number;
   entityTypeIds: number;
   lookupKey: number;
+}
+
+export enum OperationControlTypeEnum {
+  DATE = 1,
+  NUMBER = 2,
+  PORTFOLIOS = 3,
+  OPERATORS = 4,
+  CONTRACTORS = 5,
+  TEXT = 6,
+  DICTIONARY = 7,
+  OUTGOING_PORTFOLIOS = 8,
+  CHECKBOX = 9,
+  DATETIME = 10,
+  GROUP = 11,
+  LOOKUP = 12
 }
