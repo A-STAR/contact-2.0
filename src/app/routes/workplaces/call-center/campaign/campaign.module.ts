@@ -18,10 +18,14 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
+        redirectTo: 'campaign',
+      },
+      {
+        path: 'campaign',
         loadChildren: './campaign-layout/campaign-layout.module#CampaignLayoutModule',
       },
       {
-        path: 'phone/:personId/create',
+        path: 'campaign/phone/:personId/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: true,
@@ -29,7 +33,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'phone/:personId/:phoneId',
+        path: 'campaign/phone/:personId/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: true,
@@ -37,7 +41,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'address/:personId/create',
+        path: 'campaign/address/:personId/create',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: true,
@@ -45,7 +49,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'address/:personId/:addressId',
+        path: 'campaign/address/:personId/:addressId',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: true,
@@ -53,15 +57,15 @@ const routes: Routes = [
         },
       },
       {
-        path: 'contactLog/:debtId/:contactId/contactLogType/:contactType',
+        path: 'campaign/contactLog/:debtId/:contactId/contactLogType/:contactType',
         loadChildren: './contact/contact.module#ContactModule',
       },
       {
-        path: 'promise/:debtId/:promiseId',
+        path: 'campaign/promise/:debtId/:promiseId',
         loadChildren: './promise/promise.module#PromiseModule',
       },
       {
-        path: 'payment/:debtId/:paymentId',
+        path: 'campaign/payment/:debtId/:paymentId',
         loadChildren: './payment/payment.module#PaymentModule',
       },
     ]
