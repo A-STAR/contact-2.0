@@ -61,7 +61,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
   @Input() renderer: (option: ILabeledValue) => void;
-  @Input() isNullable = false;
   @Input() styles: CSSStyleDeclaration;
 
   @Output() select = new EventEmitter<any>();
@@ -130,6 +129,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   ) {
     this.renderer = (option: ILabeledValue) => option.label;
   }
+
+  isNullable = false;
 
   ngOnInit(): void {
     if (this.dictCode && this.lookupKey) {
