@@ -14,22 +14,17 @@ i.co {
   }
 }
 
-.select-clear {
-  position: absolute;
-  top: 0.4em;
-  right: 1.5em;
-  cursor: pointer;
-}
-
-.select-caret {
+.select-controls {
   position: absolute;
   top: 0.55em;
   right: 0.3em;
-  transition: transform 400ms ease;
-  transform: rotateZ(270deg);
-  &.up {
-    transform: rotateZ(90deg);
-    top: 0.4em;
+  .select-caret {
+    transition: transform 400ms ease;
+    transform: rotateZ(270deg);
+    &.up {
+      transform: rotateZ(90deg);
+      top: 0.4em;
+    }
   }
   cursor: pointer;
 }
@@ -76,6 +71,12 @@ i.co {
       background-color: #23b7e5;
     }
   }
+  &.closed {
+    .dropdown-item {
+      cursor: not-allowed;
+      color: $text-light;
+    }
+  }
   &:hover {
     background-color: #eee;
   }
@@ -88,12 +89,20 @@ i.co {
   }
 }
 
-.select-container:hover > input:not(:disabled) {
-  & ~ i {
+.select-clear {
+  display: none;
+}
+
+.select-container:hover .select-dropdown-trigger > input:not(:disabled) {
+  & ~ .select-controls {
     color: $text-light;
+    .select-clear {
+      display: inline-block;
+    }
   }
-  & ~ i:hover {
+  & ~ .select-controls .select-control:hover {
     color: $link-color;
   }
+
 }
 

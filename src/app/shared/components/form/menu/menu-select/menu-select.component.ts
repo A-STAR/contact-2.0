@@ -47,14 +47,14 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     if (this.dictCode) {
       this.optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
       .subscribe(options => {
-        this.options = options;
+        this.options = options.filter(o => o.isClosed === 0);
         this.cdRef.markForCheck();
       });
     }
     if (this.lookupKey) {
       this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
       .subscribe(options => {
-        this.options = options;
+        this.options = options.filter(o => o.isClosed === 0);
         this.cdRef.markForCheck();
       });
     }
