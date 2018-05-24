@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter, map } from 'rxjs/operators';
+import { first, filter, map, takeUntil, delay, flatMap, switchMap, tap, mapTo } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 import { never } from 'rxjs/observable/never';
@@ -67,6 +67,8 @@ import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
+import { startWith } from 'rxjs/operator/startWith';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -145,6 +147,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentSelectionAction: IMetadataAction;
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
+  private dblClick$ = new Subject<void>();
 
   dialog: string;
   dialogData: IGridAction;
@@ -210,6 +213,22 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
     this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
+
+    this.selectRow.pipe(
+        filter(selection => selection && selection.length && !!this.currentSelectionAction),
+        switchMap((selection) => {
+          return of(selection)
+          .pipe(
+            takeUntil(this.dblClick$),
+            delay(200),
+          );
+        }
+    )).subscribe(s => {
+      console.log(`Selection: ${s}`);
+      this.onSelectionAction(s);
+    });
+
+
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
@@ -349,6 +368,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onDblClick(row: T): void {
+    this.dblClick$.next(null);
     if (this.currentDefaultAction) {
       const action: IActionGridAction = {
         selection: row,
@@ -370,9 +390,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onSelect(selected: number[]): void {
-    if (this.currentSelectionAction && selected && selected.length) {
-      this.onSelectionAction(selected);
-    }
     this.selectRow.emit(selected);
   }
 
