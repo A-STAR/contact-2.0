@@ -7,15 +7,18 @@ import {
   Output,
   ViewChild,
   OnInit,
-  TemplateRef
+  TemplateRef,
+  OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter, map, takeUntil, delay, flatMap, switchMap, tap, mapTo } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
-import { Observable } from 'rxjs/Observable';
+import { first, filter, map, takeUntil, delay, switchMap } from 'rxjs/operators';
 import { never } from 'rxjs/observable/never';
+import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   DynamicLayoutGroupType,
@@ -67,8 +70,6 @@ import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
-import { startWith } from 'rxjs/operator/startWith';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,7 +82,7 @@ import { Subject } from 'rxjs/Subject';
   styleUrls: [ './action-grid.component.scss' ],
   templateUrl: 'action-grid.component.html',
 })
-export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
+export class ActionGridComponent<T> extends DialogFunctions implements OnInit, OnDestroy {
   /**
    * These inputs are handling config,
    * passed directly from client code,
@@ -147,7 +148,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentSelectionAction: IMetadataAction;
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
-  private dblClick$ = new Subject<void>();
+  private preventSelect$ = new Subject<void>();
+  private selectActionSub: Subscription;
 
   dialog: string;
   dialogData: IGridAction;
@@ -214,21 +216,27 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
 
-    this.selectRow.pipe(
-        filter(selection => selection && selection.length && !!this.currentSelectionAction),
-        switchMap((selection) => {
-          return of(selection)
+    // https://jsfiddle.net/v8x0cy0L/
+   this.selectActionSub = this.selectRow.pipe(
+      filter(selection => selection && selection.length && !!this.currentSelectionAction),
+      switchMap((selection) =>
+        of(selection)
           .pipe(
-            takeUntil(this.dblClick$),
+            // NOTE: delay should be before takeUntil
             delay(200),
-          );
-        }
-    )).subscribe(s => {
-      console.log(`Selection: ${s}`);
-      this.onSelectionAction(s);
-    });
+            takeUntil(this.preventSelect$),
+          )
+        )
+      )
+      .subscribe(s => {
+        this.onSelectionAction(s);
+      });
+  }
 
-
+  ngOnDestroy(): void {
+    if (this.selectActionSub) {
+      this.selectActionSub.unsubscribe();
+    }
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
@@ -368,7 +376,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onDblClick(row: T): void {
-    this.dblClick$.next(null);
+    this.preventSelect$.next(null);
+
     if (this.currentDefaultAction) {
       const action: IActionGridAction = {
         selection: row,
@@ -483,6 +492,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         filters: this.getFilters()
       }),
       selection: this.actionGridService.getGridSelection(action, this.selection),
+      rowData: action.selection,
       asyncMode: action.metadataAction.asyncMode,
       inputConfig: action.metadataAction.inputConfig,
       outputConfig: action.metadataAction.outputConfig

@@ -45,4 +45,5 @@ export type IMetadataActionSetter = (action: IMetadataAction) => IMetadataAction
 export interface IGridAction extends IAction {
   payload: IGridActionPayload;
   selection?: number[][];
+  rowData?: any;
 }
