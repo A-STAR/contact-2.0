@@ -182,6 +182,7 @@
 ></app-mass-person-type>
 
 <app-mass-letter-generation
+  *ngIf="isDialog('letterGenerate')"
   [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-mass-letter-generation>

@@ -4,6 +4,7 @@
   </div>
 
   <app-dynamic-layout
+    *ngIf="layoutConfig"
     style="height: 50vh"
     [layout]="layoutConfig"
     [data]="{ default: data }"
