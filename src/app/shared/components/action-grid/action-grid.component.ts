@@ -631,8 +631,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('PAYMENT_CANCEL') : selection.length && permissions.has('PAYMENT_CANCEL'),
       paymentsConfirm: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('PAYMENT_CONFIRM') : selection.length && permissions.has('PAYMENT_CONFIRM'),
-      prepareVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('VISIT_PREPARE') : selection.length && permissions.has('VISIT_PREPARE'),
+      prepareVisit: (actionType: MetadataActionType, selection, row) => actionType === MetadataActionType.ALL ?
+        permissions.has('VISIT_PREPARE') : row.visitId && selection.length && permissions.has('VISIT_PREPARE'),
       rejectPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
       permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
       showContactHistory: (_: MetadataActionType, __, row) => row && row.personId

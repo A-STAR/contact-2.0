@@ -5,11 +5,13 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { map, first } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -26,7 +28,7 @@ import { invert } from '@app/core/utils';
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
 })
-export class DebtComponent implements AfterViewInit, OnInit {
+export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
   @ViewChild('debtComponents', { read: TemplateRef }) debtComponents: TemplateRef<any>;
   @ViewChild('portfolioLog', { read: TemplateRef }) portfolioLog: TemplateRef<any>;
@@ -41,11 +43,12 @@ export class DebtComponent implements AfterViewInit, OnInit {
   readonly displayDebtData = this.debtId$.pipe(map(Boolean));
   readonly canViewComponentLog$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
   readonly canViewPortfolioLog$ = this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
+  private debtSub: Subscription;
 
 
   constructor(
     private debtorService: DebtorService,
-    private route: ActivatedRoute,
+    private router: Router,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -53,9 +56,10 @@ export class DebtComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
 
     if (this.isEditMode) {
-      this.debtorService.debt$
-      .pipe(first())
-      .subscribe(debt => this.data.next({ default: debt }));
+      this.debtSub = this.debtorService.debt$
+        .subscribe(debt => this.data.next({ default: debt }));
+    } else {
+      this.data.next({});
     }
 
     this.templates = {
@@ -97,7 +101,13 @@ export class DebtComponent implements AfterViewInit, OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.debtSub) {
+      this.debtSub.unsubscribe();
+    }
+  }
+
   private get isEditMode(): boolean {
-    return this.route.snapshot.url.join('/').indexOf('create') === -1;
+    return !this.router.url.includes('create');
   }
 }
