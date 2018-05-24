@@ -64,7 +64,7 @@ export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
   private _formattedValue: number;
   private debounce$ = new Subject<number>();
   private debounceSub: Subscription;
-  private minLogValue = 100;
+  private minLogValue = 10;
   private maxLogValue = 10000000;
 
   constructor(private cdRef: ChangeDetectorRef) {}
