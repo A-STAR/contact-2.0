@@ -14,7 +14,7 @@ export enum MapToolbarFilterItemType {
   CHECKBOX = 'checkbox',
   DICTIONARY = 'dict',
   LOOKUP = 'lookup',
-  SLIDER = 'slider'
+  SLIDER = 'slider',
 }
 
 export interface IMapToolbarActionData {
@@ -59,6 +59,7 @@ export interface IMapToolbarFilterItem {
   icon?: string;
   multi?: boolean;
   value?: any;
+  showInput?: boolean;
 }
 
 export type IMapToolbarItem = IMapToolbarButton | IMapToolbarFilter;
