@@ -3516,7 +3516,8 @@
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
         "changePersonType": "Change person type",
-        "rectangularDistribution": "Debt rectangular distribution"
+        "rectangularDistribution": "Debt rectangular distribution",
+        "letterGenerate": "Letter generation"
       }
     },
     "filter": {

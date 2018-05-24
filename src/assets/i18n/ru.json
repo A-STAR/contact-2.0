@@ -3516,7 +3516,8 @@
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
         "changePersonType": "Изменить тип персоны",
-        "rectangularDistribution": "Равномерное распределение долгов"
+        "rectangularDistribution": "Равномерное распределение долгов",
+        "letterGenerate": "Массовое формирование писем"
       }
     },
     "filter": {
