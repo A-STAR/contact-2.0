@@ -7,29 +7,31 @@
   </span>
 
   <div #dropdownParent class="select-container dropdown open" [ngStyle]="styles">
-    <input
-      #input
-      #dropdownTrigger
-      readonly="readonly"
-      type="text"
-      [ngClass]="{'form-control select-search': true, disabled: disabled}"
-      autocomplete="off"
-      [attr.placeholder]="(placeholder || '') | translate"
-      [ngModel]="activeLabel | translate"
-      (ngModelChange)="onInputChange($event)"
-    >
-    <i
-      *ngIf="!disabled"
-      class="co co-back select-caret"
-      [ngClass]="caretCls"
-    ></i>
-    <!--
-    <i
-      *ngIf="!disabled && !required && activeLabel"
-      class="co co-close select-clear"
-      (click)="onClear($event)"
-    ></i>
-    -->
+    <div #dropdownTrigger class="select-dropdown-trigger">
+      <input
+        #input
+        readonly="readonly"
+        type="text"
+        [ngClass]="{'form-control select-search': true, disabled: disabled}"
+        autocomplete="off"
+        [attr.placeholder]="(placeholder || '') | translate"
+        [ngModel]="activeLabel | translate"
+      >
+      <div class="select-controls">
+        <i
+          *ngIf="isNullable"
+          class="co co-close select-control select-clear"
+          (click)="onClear($event)"
+        >
+        </i>
+        <i
+          *ngIf="!disabled"
+          class="co co-back select-caret select-control"
+          [ngClass]="caretCls"
+          (click)="$event.preventDefault()"
+        ></i>
+      </div>
+    </div>
 
     <ul
       #dropdownContent
@@ -39,7 +41,7 @@
       <li *ngFor="let option of options">
         <div
           class="select-item"
-          [ngClass]="{ active: isActive(option) }"
+          [ngClass]="{ active: isActive(option), closed: isClosed(option) }"
           (click)="onSelect($event, option)"
         >
           <div class="dropdown-item">{{ renderer(option) | translate }}</div>

@@ -32,16 +32,16 @@ export const addFormLabel = (key: string) => addLabel(key, 'controlName');
 export const addGridLabel = (key: string) => addLabel(key, 'prop');
 export const addLabelForEntity = (entity: string) => addLabel(`common.entities.${entity}.fields`, 'name');
 
-export const toLabeledValues = item => ({ label: item.name, value: item.code });
+export const toLabeledValues = item => ({ label: item.name, value: item.code, isClosed: item.isClosed });
 
 type IValueToOption<T> = (value: T) => IOption;
 
-export const toOption = <T extends Object>(valueKey: keyof T, labelKey: keyof T): IValueToOption<T> => {
+export const toOption = <T extends { [key: string]: any }>(valueKey: keyof T, labelKey: keyof T): IValueToOption<T> => {
   return value => ({
-    // TODO(i.lobanov): types are incompatible
     label: value[labelKey],
-    value: value[valueKey]
-  } as any);
+    value: value[valueKey],
+    isClosed: value.isClosed
+  });
 };
 
 export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {

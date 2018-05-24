@@ -3,7 +3,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 export interface IUserTerm {
   code: number;
   name: string;
-  isClosed: boolean;
+  isClosed: 0 | 1;
   parentDictTerm: number;
   parentCode: number;
 }
