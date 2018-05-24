@@ -17,6 +17,7 @@ export interface IValueEntity {
 export interface ILabeledValue {
   label?: string;
   value: any;
+  isClosed?: 0 | 1;
 }
 
 export interface INamedValue {
@@ -27,6 +28,7 @@ export interface INamedValue {
 export interface IOption {
   label: string;
   value: number | string;
+  isClosed?: 0 | 1;
 }
 
 export interface IOptionSet {

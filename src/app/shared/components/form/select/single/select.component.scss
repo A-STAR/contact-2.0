@@ -76,6 +76,12 @@ i.co {
       background-color: #23b7e5;
     }
   }
+  &.closed {
+    .dropdown-item {
+      cursor: not-allowed;
+      color: $text-light;
+    }
+  }
   &:hover {
     background-color: #eee;
   }
@@ -88,7 +94,7 @@ i.co {
   }
 }
 
-.select-container:hover > input:not(:disabled) {
+.select-container:hover .select-dropdown-trigger > input:not(:disabled) {
   & ~ i {
     color: $text-light;
   }
