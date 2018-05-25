@@ -57,13 +57,21 @@ export class CustomOperationComponent implements OnInit {
     this.customOperationService
       .run(this.actionData, this.inputParams, data)
       .subscribe(result => {
-        if (this.actionData.outputConfig) {
-          this.result = result.data;
+        if (result.data) {
+          this.onOperationResult(result);
         } else {
-          this.customOperationService.showResultMessage(result.data[0]);
           this.close.emit();
         }
         this.cdRef.markForCheck();
       });
+  }
+
+  private onOperationResult(result: ICustomActionData): void {
+    if (this.actionData.outputConfig) {
+      this.result = result.data;
+    } else {
+      this.customOperationService.showResultMessage(result.data[0]);
+      this.close.emit();
+    }
   }
 }
