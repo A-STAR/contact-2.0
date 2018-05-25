@@ -8,6 +8,7 @@ import { HelpService } from '@app/core/help/help.service';
 import { LayoutService } from './layout.service';
 import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { TaskService } from '@app/core/task/task.service';
 
 @Component({
   host: { class: 'full-size' },
@@ -25,9 +26,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
+    private taskService: TaskService,
   ) {}
 
   ngOnInit(): void {
+    this.taskService.init();
     const subscription = this.coreLayoutService.currentGuiObject$.pipe(
       filter(Boolean),
       mergeMap(guiObject => {
