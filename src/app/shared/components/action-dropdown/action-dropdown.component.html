@@ -3,12 +3,11 @@
     <app-button [label]="label"></app-button>
   </div>
   <div #dropdownContent>
-    <ul class="list-group mb0">
-      <li class="list-group-item" *ngFor="let option of options"
-        (click)="onOptionClick(option)">
+    <div class="list-group m0">
+      <a class="list-group-item" *ngFor="let option of options" (click)="onOptionClick(option)">
         {{ option.label }}
-      </li>
-    </ul>
+      </a>
+    </div>
   </div>
 </div>
 
