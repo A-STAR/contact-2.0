@@ -149,7 +149,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
   private preventSelect$ = new Subject<void>();
-  private selectActionSub: Subscription;
+  private subs = new Subscription();
 
   dialog: string;
   dialogData: IGridAction;
@@ -216,8 +216,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
 
-    // https://jsfiddle.net/v8x0cy0L/
-   this.selectActionSub = this.selectRow.pipe(
+   const selectActionSub = this.selectRow.pipe(
       filter(selection => selection && selection.length && !!this.currentSelectionAction),
       switchMap((selection) =>
         of(selection)
@@ -231,12 +230,19 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       .subscribe(s => {
         this.onSelectionAction(s);
       });
+
+    const closeSelectActionSub = this.preventSelect$
+      .subscribe(() => {
+        this.gridDetails$.next(false);
+      });
+
+    this.subs.add(selectActionSub);
+    this.subs.add(closeSelectActionSub);
+
   }
 
   ngOnDestroy(): void {
-    if (this.selectActionSub) {
-      this.selectActionSub.unsubscribe();
-    }
+    this.subs.unsubscribe();
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
