@@ -85,7 +85,6 @@
     *ngIf="isGridDetails('showContactHistory')"
     [offset]="{ x: '0px', y: hasPagination ? '39px' : '0px' }"
     [actionData]="selectionActionData"
-    (close)="onDetailsClose()"
-    [rowData]="selection[0]">
+    (close)="onDetailsClose()">
   </app-contact-log-details>
 </ng-template>
