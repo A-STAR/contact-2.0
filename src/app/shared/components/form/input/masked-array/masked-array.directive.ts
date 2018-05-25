@@ -37,14 +37,18 @@ export class MaskedArrayDirective implements OnChanges {
     ],
     actions: [
       'Space',
+      'Tab',
+      'Enter',
+      // NOTE: delimeter can be different
+      'Comma',
     ],
   };
-
-  private _value: string;
 
   @Input() appMaskedArray: ISegmentedInputMask;
 
   private _mask: ISegmentedInputMask;
+
+  private actionsRe = /[\s,]/;
 
   constructor(
     public el: ElementRef
@@ -63,12 +67,23 @@ export class MaskedArrayDirective implements OnChanges {
       const { ctrlKey, key, target, code } = event;
       const { value, selectionEnd } = target as HTMLInputElement;
       const { main, aux } = MaskedArrayDirective.ALLOWED_KEYS;
+
       if (this.isAction(code, key)) {
-        this._value = this.formatViewValue(code, value, selectionEnd);
-        this.el.nativeElement.value = this._value;
         event.preventDefault();
+
+        const result = this.formatViewValue(value, selectionEnd);
+        this.update(result);
+
       } else if (main.includes(key)) {
-        this._value = value + key;
+
+        const prevChar = value.charAt(selectionEnd - 1);
+        if (prevChar === this._mask.delimeter) {
+          event.preventDefault();
+
+          const result = this.handleInput(key, value, selectionEnd);
+          this.update(result);
+        }
+
       } else if (!ctrlKey && !aux.includes(key)) {
         event.preventDefault();
       }
@@ -78,11 +93,16 @@ export class MaskedArrayDirective implements OnChanges {
   onPaste(event: ClipboardEvent): void {
     if (this._mask && event.clipboardData) {
       event.preventDefault();
-      const value = event.clipboardData.getData('Text');
-      this._value = this.replaceValue(value);
-      this.el.nativeElement.value = this._value;
-      this.ngModelChange.emit(this._value);
+      let value = event.clipboardData.getData('Text');
+      value = this.replaceValue(value);
+      this.el.nativeElement.value = value;
+      this.ngModelChange.emit(value);
     }
+  }
+
+  private update(result: { value: string; pos: number; }): void {
+    this.updateView(result.value, result.pos);
+    this.ngModelChange.emit(result.value);
   }
 
   private isAction(code: string, key: string): boolean {
@@ -94,23 +114,51 @@ export class MaskedArrayDirective implements OnChanges {
     return value.match(/[\d]+(?=([\D])+)/g).join(`${this._mask.delimeter} `);
   }
 
-  private formatViewValue(code: string, value: string, pos: number): string {
-    switch (code) {
-      case 'Space':
-        const char = value.charAt(pos - 1);
-        if (!(char === ' ' || char === this._mask.delimeter)) {
-          value = value.slice(0, pos) + this._mask.delimeter + ' ' + value.slice(pos + 1);
-          pos += 2;
-        }
-       break;
-       // delimeter
-      default:
-        value = value.slice(0, pos) + ' ' + value.slice(pos);
-        pos += 1;
-        break;
+  private handleInput(char: string, value: string, selectionEnd: number): { value: string, pos: number } {
+    let pos = selectionEnd;
+    value = this.insertCharsAt([' ', char], value, pos);
+    pos += 2;
+    const nextChar = value.charAt(pos);
+    if (this.isActionChar(nextChar) && nextChar !== this._mask.delimeter) {
+      value = this.insertCharsAt([this._mask.delimeter], value, pos);
     }
+    return { pos, value };
+  }
+
+  private updateView(value: string, pos: number): void {
+    this.el.nativeElement.value = value;
     (this.el.nativeElement as HTMLInputElement).setSelectionRange(pos, pos);
-    return value;
+  }
+
+  private formatViewValue(value: string, pos: number): { value: string, pos: number } {
+    const prevChar = value.charAt(pos - 1);
+    const char = value.charAt(pos);
+    // look behind one char
+    if (!this.isActionChar(prevChar)) {
+      // look current char
+      if (!this.isActionChar(char)) {
+        return {
+          value: this.insertCharsAt([this._mask.delimeter, ' '], value, pos),
+          pos: pos + 2
+        };
+      }
+      return { value, pos: pos + 2 };
+    }
+    if (!this.isActionChar(char) && prevChar === this._mask.delimeter) {
+      return {
+        value: this.insertCharsAt([' '], value, pos),
+        pos: pos + 1
+      };
+    }
+    return { value, pos };
+  }
+
+  private isActionChar(char: string): boolean {
+    return this.actionsRe.test(char) || char === this._mask.delimeter;
+  }
+
+  private insertCharsAt(chars: string[], value: string, pos: number): string {
+    return value.slice(0, pos) + chars.join('') + value.slice(pos);
   }
 
 }
