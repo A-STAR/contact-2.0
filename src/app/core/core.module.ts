@@ -54,6 +54,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
+import { TaskService } from '@app/core/task/task.service';
 
 @NgModule({
   imports: [
@@ -109,6 +110,7 @@ import 'rxjs/add/operator/withLatestFrom';
     NotificationsService,
     PersistenceService,
     SettingsService,
+    TaskService,
     ThemesService,
     TranslateService,
     ValueConverterService,
