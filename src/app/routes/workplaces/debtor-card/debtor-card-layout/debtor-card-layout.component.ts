@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, mergeMap, map } from 'rxjs/operators';
+import { equals } from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
@@ -67,11 +67,13 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   debtorId: number;
   debtId: number;
 
+  private debtSub: Subscription;
+  private debtorSub: Subscription;
+
   actions: IAction[] = [{
     id: 5,
     params: [
-      'debtId',
-      'operatorId'
+      'debtId'
     ]
   }, {
     id: 6,
@@ -102,8 +104,6 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     }
   }];
 
-  private personSubscription: Subscription;
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
@@ -117,30 +117,35 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   ngOnInit(): void {
+
     this.debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
     this.debtId = Number(this.route.snapshot.paramMap.get('debtId'));
-    if (this.debtorId && this.debtId) {
-      this.debtorService.debtId$.next(this.debtId);
-      this.debtorService.debtorId$.next(this.debtorId);
-      this.personSubscription = combineLatest(
-        this.debtorService.debtor$,
-        this.debtorService.debt$,
-      )
-      .pipe(
-        first(),
-        map(([person, debt]) => ({
-            ...person,
-            responsibleFullName: debt.responsibleFullName,
-            utc: debt.utc,
-            shortInfo: debt.shortInfo,
-          }),
-        )
-      )
-      .subscribe(data => {
-        this.data = data;
+
+    this.debtorService.debtor$
+      .distinctUntilChanged((a, b) => a && b && equals(a, b))
+      .subscribe(person => {
+        this.data = {
+          ...this.data,
+          ...person,
+        };
         this.cdRef.markForCheck();
       });
-    }
+
+    this.debtSub = this.debtorService.debt$
+      .distinctUntilChanged((a, b) => a && b && equals(a, b))
+      .subscribe(debt => {
+        this.data = {
+          ...this.data,
+          ...(
+            {
+              responsibleFullName: debt.responsibleFullName,
+              utc: debt.utc,
+              shortInfo: debt.shortInfo,
+            }
+          ),
+        };
+        this.cdRef.markForCheck();
+      });
   }
 
   ngAfterViewInit(): void {
@@ -153,8 +158,11 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   ngOnDestroy(): void {
-    if (this.personSubscription) {
-      this.personSubscription.unsubscribe();
+    if (this.debtSub) {
+      this.debtSub.unsubscribe();
+    }
+    if (this.debtorSub) {
+      this.debtorSub.unsubscribe();
     }
   }
 

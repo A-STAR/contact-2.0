@@ -102,6 +102,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input()
   set isRequired(value: boolean) {
     this._required = this.setDefault(value, this._required);
+    this.isNullable = !this._required;
   }
 
   get required(): boolean {
@@ -128,6 +129,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   ) {
     this.renderer = (option: ILabeledValue) => option.label;
   }
+
+  isNullable = false;
 
   ngOnInit(): void {
     if (this.dictCode && this.lookupKey) {
@@ -184,8 +187,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   validate(): ValidationErrors {
-    // TODO(i.lobanov): fix this horrible check
-    return this.required && (this.selectedValue == null || (this.selectedValue as any) === '')
+    return this.required && ['', null, undefined].includes(this.selectedValue as any)
       ? { required: false }
       : null;
   }
@@ -208,15 +210,13 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     this.cdRef.markForCheck();
   }
 
-  onInputChange(label: string): void {
-    const option = this.options.find(o => o.label === label);
-    this.selectedValue = option ? option.value : null;
-    this.propagateChange(this.selectedValue);
-  }
-
   onSelect(event: Event, option: ILabeledValue): void {
     event.stopPropagation();
     event.preventDefault();
+
+    if (this.isClosed(option)) {
+      return;
+    }
 
     this.selectedValue = option.value;
     this.active = option;
@@ -229,12 +229,17 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   onClear(event: MouseEvent): void {
     event.preventDefault();
+    event.stopPropagation();
     this.active = null;
     this.propagateChange(null);
   }
 
   isActive(option: ILabeledValue): boolean {
     return this.selectedValue === option.value;
+  }
+
+  isClosed(option: ILabeledValue): boolean {
+    return option.isClosed === 1;
   }
 
   propagateTouched: Function = () => {};

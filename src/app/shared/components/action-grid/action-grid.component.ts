@@ -7,15 +7,18 @@ import {
   Output,
   ViewChild,
   OnInit,
-  TemplateRef
+  TemplateRef,
+  OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter, map } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
-import { Observable } from 'rxjs/Observable';
+import { first, filter, map, takeUntil, delay, switchMap } from 'rxjs/operators';
 import { never } from 'rxjs/observable/never';
+import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   DynamicLayoutGroupType,
@@ -79,7 +82,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   styleUrls: [ './action-grid.component.scss' ],
   templateUrl: 'action-grid.component.html',
 })
-export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
+export class ActionGridComponent<T> extends DialogFunctions implements OnInit, OnDestroy {
   /**
    * These inputs are handling config,
    * passed directly from client code,
@@ -145,6 +148,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentSelectionAction: IMetadataAction;
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
+  private preventSelect$ = new Subject<void>();
+  private subs = new Subscription();
 
   dialog: string;
   dialogData: IGridAction;
@@ -210,6 +215,34 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
     this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
+
+   const selectActionSub = this.selectRow.pipe(
+      filter(selection => selection && selection.length && !!this.currentSelectionAction),
+      switchMap((selection) =>
+        of(selection)
+          .pipe(
+            // NOTE: delay should be before takeUntil
+            delay(200),
+            takeUntil(this.preventSelect$),
+          )
+        )
+      )
+      .subscribe(s => {
+        this.onSelectionAction(s);
+      });
+
+    const closeSelectActionSub = this.preventSelect$
+      .subscribe(() => {
+        this.gridDetails$.next(false);
+      });
+
+    this.subs.add(selectActionSub);
+    this.subs.add(closeSelectActionSub);
+
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
@@ -349,6 +382,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onDblClick(row: T): void {
+    this.preventSelect$.next(null);
+
     if (this.currentDefaultAction) {
       const action: IActionGridAction = {
         selection: row,
@@ -370,9 +405,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onSelect(selected: number[]): void {
-    if (this.currentSelectionAction && selected && selected.length) {
-      this.onSelectionAction(selected);
-    }
     this.selectRow.emit(selected);
   }
 
@@ -466,6 +498,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         filters: this.getFilters()
       }),
       selection: this.actionGridService.getGridSelection(action, this.selection),
+      rowData: action.selection,
       asyncMode: action.metadataAction.asyncMode,
       outputConfig: action.metadataAction.outputConfig
     };
@@ -630,8 +663,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('PAYMENT_CANCEL') : selection.length && permissions.has('PAYMENT_CANCEL'),
       paymentsConfirm: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('PAYMENT_CONFIRM') : selection.length && permissions.has('PAYMENT_CONFIRM'),
-      prepareVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('VISIT_PREPARE') : selection.length && permissions.has('VISIT_PREPARE'),
+      prepareVisit: (actionType: MetadataActionType, selection, row) => actionType === MetadataActionType.ALL ?
+        permissions.has('VISIT_PREPARE') : row.visitId && selection.length && permissions.has('VISIT_PREPARE'),
       rejectPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
       permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
       showContactHistory: (_: MetadataActionType, __, row) => row && row.personId

@@ -19,22 +19,26 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
+        redirectTo: 'edit',
+      },
+      {
+        path: 'edit',
         loadChildren: './debtor-card-layout/debtor-card-layout.module#DebtorCardLayoutModule',
       },
       {
-        path: 'property/create',
+        path: 'edit/property/create',
         loadChildren: './property/card/property-card.module#PropertyCardModule',
       },
       {
-        path: 'property/:propertyId',
+        path: 'edit/property/:propertyId',
         loadChildren: './property/card/property-card.module#PropertyCardModule',
       },
       {
-        path: 'contactLog/:contactLogId/contactLogType/:contactLogType',
+        path: 'edit/contactLog/:contactLogId/contactLogType/:contactLogType',
         loadChildren: './contact-log-tab/contact-log-tab.module#ContactLogTabModule',
       },
       {
-        path: 'phone/create',
+        path: 'edit/phone/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -42,7 +46,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'phone/:phoneId',
+        path: 'edit/phone/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -50,7 +54,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'address/create',
+        path: 'edit/address/create',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -58,7 +62,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'address/:addressId',
+        path: 'edit/address/:addressId',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -66,89 +70,89 @@ const routes: Routes = [
         },
       },
       {
-        path: 'document/create',
+        path: 'edit/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
-        path: 'document/:documentId',
+        path: 'edit/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
-        path: 'email/create',
+        path: 'edit/email/create',
         loadChildren: './information/email/card/email-card.module#EmailCardModule',
       },
       {
-        path: 'email/:emailId',
+        path: 'edit/email/:emailId',
         loadChildren: './information/email/card/email-card.module#EmailCardModule',
       },
       {
-        path: 'employment/create',
+        path: 'edit/employment/create',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'debtorId',
         },
       },
       {
-        path: 'employment/:employmentId',
+        path: 'edit/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'debtorId',
         },
       },
       {
-        path: 'identity/create',
+        path: 'edit/identity/create',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'debtorId',
         },
       },
       {
-        path: 'identity/:identityId',
+        path: 'edit/identity/:identityId',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'debtorId',
         },
       },
       {
-        path: 'debt',
+        path: 'edit/debt',
         loadChildren: './debt/debt.module#DebtModule',
       },
       {
-        path: 'debt/create',
+        path: 'edit/debt/create',
         loadChildren: './debt/debt.module#DebtModule',
       },
       {
-        path: 'debt/debt-component/create',
+        path: 'edit/debt/debt-component/create',
         loadChildren: './debt-component/debt-component.module#DebtComponentModule',
       },
       {
-        path: 'debt/debt-component/:debtComponentId',
+        path: 'edit/debt/debt-component/:debtComponentId',
         loadChildren: './debt-component/debt-component.module#DebtComponentModule',
       },
       {
-        path: 'debt/promise/create',
+        path: 'edit/debt/promise/create',
         loadChildren: './debtor-promise/debtor-promise.module#DebtorPromiseModule',
       },
       {
-        path: 'debt/promise/:promiseId',
+        path: 'edit/debt/promise/:promiseId',
         loadChildren: './debtor-promise/debtor-promise.module#DebtorPromiseModule',
       },
       {
-        path: 'debt/payment/create',
+        path: 'edit/debt/payment/create',
         loadChildren: './debtor-payment/debtor-payment.module#DebtorPaymentModule',
       },
       {
-        path: 'debt/payment/:paymentId',
+        path: 'edit/debt/payment/:paymentId',
         loadChildren: './debtor-payment/debtor-payment.module#DebtorPaymentModule',
       },
       {
-        path: ':attributeId/versions',
+        path: 'edit/:attributeId/versions',
         loadChildren: './versions/debtor-attributes-versions.module#DebtorAttributesVersionsModule',
       },
 
       // Guarantee
       {
-        path: 'guarantee/create',
+        path: 'edit/guarantee/create',
         loadChildren: './guarantee/card/guarantee-card.module#GuaranteeCardModule',
         data: {
           edit: false,
@@ -156,7 +160,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/create',
+        path: 'edit/guarantee/:contractId/guarantor/create',
         loadChildren: './guarantee/card/guarantee-card.module#GuaranteeCardModule',
         data: {
           edit: false,
@@ -164,7 +168,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId',
         loadChildren: './guarantee/card/guarantee-card.module#GuaranteeCardModule',
         data: {
           edit: true,
@@ -172,7 +176,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/phone/create',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/phone/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -180,7 +184,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/phone/:phoneId',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/phone/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -188,7 +192,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/address/create',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/address/create',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -196,7 +200,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/address/:addressId',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/address/:addressId',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -204,61 +208,61 @@ const routes: Routes = [
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/employment/create',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/employment/create',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'guarantorId',
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/employment/:employmentId',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'guarantorId',
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/identity/create',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/identity/create',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'guarantorId',
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/identity/:identityId',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/identity/:identityId',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'guarantorId',
         },
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/document/create',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
-        path: 'guarantee/:contractId/guarantor/:guarantorId/document/:documentId',
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
 
       // Pledge
       {
-        path: 'pledge/create',
+        path: 'edit/pledge/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
       },
       {
-        path: 'pledge/:contractId/pledgor/create',
+        path: 'edit/pledge/:contractId/pledgor/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/property/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/create',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId',
         loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -266,7 +270,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/:phoneId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -274,7 +278,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/address/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/address/create',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -282,7 +286,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/property/:propertyId/address/:addressId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/address/:addressId',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
@@ -290,123 +294,123 @@ const routes: Routes = [
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/employment/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/employment/create',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'pledgorId',
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/employment/:employmentId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'pledgorId',
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/identity/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/identity/create',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'pledgorId',
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/identity/:identityId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/identity/:identityId',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'pledgorId',
         },
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/document/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
-        path: 'pledge/:contractId/pledgor/:pledgorId/document/:documentId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
 
       // Contact Persons:
       {
-        path: 'contact/create',
+        path: 'edit/contact/create',
         loadChildren: './contact-persons/card/contact-person-card.module#ContactPersonCardModule',
         data: {
           edit: false,
         },
       },
       {
-        path: 'contact/:contactId/person/:personId',
+        path: 'edit/contact/:personId',
         loadChildren: './contact-persons/card/contact-person-card.module#ContactPersonCardModule',
         data: {
           edit: true,
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/phone/create',
+        path: 'edit/contact/:personId/phone/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/phone/:phoneId',
+        path: 'edit/contact/:personId/phone/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/address/create',
+        path: 'edit/contact/:personId/address/create',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/address/:addressId',
+        path: 'edit/contact/:personId/address/:addressId',
         loadChildren: 'app/routes/workplaces/shared/address/card/address-card.module#AddressCardModule',
         data: {
           callCenter: false,
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/employment/create',
+        path: 'edit/contact/:personId/employment/create',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/employment/:employmentId',
+        path: 'edit/contact/:personId/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/identity/create',
+        path: 'edit/contact/:personId/identity/create',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/identity/:identityId',
+        path: 'edit/contact/:personId/identity/:identityId',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
-          entityKey: 'contactId',
+          entityKey: 'personId',
         },
       },
       {
-        path: 'contact/:contactId/person/:personId/document/create',
+        path: 'edit/contact/:personId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
       {
-        path: 'contact/:contactId/person/:personId/document/:documentId',
+        path: 'edit/contact/:personId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
       },
     ],

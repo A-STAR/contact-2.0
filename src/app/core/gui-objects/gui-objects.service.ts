@@ -23,7 +23,9 @@ export class GuiObjectsService {
     select(state => state.guiObjects),
   );
 
-  constructor(private store: Store<IAppState>) {
+  constructor(
+    private store: Store<IAppState>,
+  ) {
     // is it really neccessary?
     this.state$.subscribe(state => this._guiObjects = state.data);
   }
@@ -42,12 +44,6 @@ export class GuiObjectsService {
         ...menuConfig[guiObject.name],
         ...guiObject
       }));
-  }
-
-  get menuItemIds(): Observable<any> {
-    return this.getGuiObjects()
-      .map(guiObjects => this.flattenGuiObjectIds(guiObjects))
-      .distinctUntilChanged();
   }
 
   refreshGuiObjects(): void {
@@ -74,14 +70,6 @@ export class GuiObjectsService {
       ...menuConfig[guiObject.name],
       children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
     };
-  }
-
-  private flattenGuiObjectIds(appGuiObjects: Array<IGuiObject>): any {
-    return appGuiObjects.reduce((acc, guiObject) => ({
-      ...acc,
-      ...this.flattenGuiObjectIds(guiObject.children),
-      [guiObject.name]: guiObject.id
-    }), {});
   }
 
   private getGuiObjects(): Observable<Array<IGuiObject>> {

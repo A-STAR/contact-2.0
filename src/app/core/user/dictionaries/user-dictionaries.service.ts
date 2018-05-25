@@ -127,11 +127,12 @@ export class UserDictionariesService {
   }
 
   getDictionaryAsOptions(id: number): Observable<IOption[]> {
-    return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name })).map(dictionaries => dictionaries[id]);
+    return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name, isClosed: term.isClosed }))
+      .map(dictionaries => dictionaries[id]);
   }
 
   getDictionariesAsOptions(ids: Array<number>): Observable<IUserDictionaryOptions> {
-    return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name }));
+    return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name, isClosed: term.isClosed }));
   }
 
   getDictionaryAsOptionsWithPermission(id: number, permissionName: string): Observable<IOption[]> {

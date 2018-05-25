@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
-import { DataService } from '../data/data.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Injectable()
 export class ActionsLogService {
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+  ) {}
 
-  log(delay: number, guiObjectId: string): void {
-    const data = { typeCode: 1, duration: delay };
-    const headers = new HttpHeaders({
-      'X-Gui-Object': guiObjectId
-    });
-    this.dataService.create('/actions', {}, data, { headers }).subscribe();
+  logOpenAction(duration: number, personId: number): Observable<void> {
+    const data = { typeCode: 1, duration, personId };
+    return this.dataService.create('/actions', {}, data);
   }
 }

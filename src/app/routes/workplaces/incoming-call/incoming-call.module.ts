@@ -17,10 +17,14 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
+        redirectTo: 'main',
+      },
+      {
+        path: 'main',
         loadChildren: './incoming-call-layout/incoming-call-layout.module#IncomingCallLayoutModule',
       },
       {
-        path: ':personId/phones/create',
+        path: 'main/:personId/phones/create',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
@@ -28,7 +32,7 @@ const routes: Routes = [
         },
       },
       {
-        path: ':personId/phones/:phoneId',
+        path: 'main/:personId/phones/:phoneId',
         loadChildren: 'app/routes/workplaces/shared/phone/card/phone-card.module#PhoneCardModule',
         data: {
           callCenter: false,
