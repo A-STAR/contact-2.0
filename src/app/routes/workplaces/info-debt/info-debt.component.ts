@@ -47,6 +47,16 @@ export class InfoDebtComponent {
     { dataType: 3, name: 'templateName' },
   ].map(col => ({ ...col, label: label(`email.grid.${col.name}`)}));
 
+  letterGridColumns: IGridColumn[] = [
+    { dataType: 1, name: 'letterId' },
+    { dataType: 3, name: 'address' },
+    { dataType: 6, name: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_EMAIL_STATUS },
+    { dataType: 2, name: 'createDateTime' },
+    { dataType: 2, name: 'sendDateTime' },
+    { dataType: 3, name: 'userFullName' },
+    { dataType: 3, name: 'templateName' },
+  ].map(col => ({ ...col, label: label(`letter.grid.${col.name}`)}));
+
   grids: IGridDef[] = [
     {
       rowIdKey: 'debtId',
@@ -86,6 +96,15 @@ export class InfoDebtComponent {
       title: label('email.title'),
       isInitialised: false,
       columns: this.emailGridColumns
+    },
+    {
+      rowIdKey: 'letterId',
+      gridKey$: this.selectedRows$
+        .map(rows => rows && rows[0])
+        .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/letter`),
+      title: label('letter.title'),
+      isInitialised: false,
+      columns: this.letterGridColumns
     }
   ];
 
