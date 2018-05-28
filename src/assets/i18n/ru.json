@@ -1275,6 +1275,7 @@
   "debtor": {
     "title": "Карточка должника",
     "id": "ID",
+    "actions": "Операции",
     "firstName": "Имя",
     "lastName": "Фамилия",
     "middleName": "Отчество",
@@ -2999,6 +3000,9 @@
     },
     "letterTemplates": {
       "gen": { "singular": "шаблона письма", "plural" : "шаблонов писем" }
+    },
+    "operations": {
+      "gen": { "singular": "операции", "plural" : "операций" }
     }
   },
   "massOperations": {
@@ -3258,6 +3262,7 @@
         "*": "При перемещении {{ entity }} произошла ошибка"
       },
       "massOp": "При совершении операции {{ entity }} произошла ошибка",
+      "customMassOp": "При совершении операции произошла ошибка",      
       "update": {
         "403": "У вас недостаточно прав для изменения {{ entity }}",
         "*": "При изменении {{ entity }} произошла ошибка"
@@ -3503,8 +3508,7 @@
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
-        "changePersonType": "Изменить тип персоны",
-        "rectangularDistribution": "Равномерное распределение долгов"
+        "changePersonType": "Изменить тип персоны"
       }
     },
     "filter": {

@@ -1275,6 +1275,7 @@
   "debtor": {
     "title": "Debtor",
     "id": "ID",
+    "actions": "Actions",
     "firstName": "Name",
     "lastName": "Family name",
     "middleName": "Middle name",
@@ -2999,6 +3000,9 @@
     },
     "letterTemplates": {
       "gen": { "singular": "letter template", "plural" : "letter templates" }
+    },
+    "operations": {
+      "gen": { "singular": "operation", "plural" : "operations" }
     }
   },
   "massOperations": {
@@ -3258,6 +3262,7 @@
         "*": "Could not move {{ entity }}"
       },
       "massOp": "An error occurred while completing the {{ entity }} operation",
+      "customMassOp": "An error occurred while completing the operation",      
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
@@ -3503,8 +3508,7 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type",
-        "rectangularDistribution": "Debt rectangular distribution"
+        "changePersonType": "Change person type"
       }
     },
     "filter": {
