@@ -183,7 +183,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
 
   onSelect(debts: Debt[]): void {
     if (debts && debts.length) {
-      // this.debtId$.next(debts[0].id);
+      this.debtId$.next(debts[0].id);
       this.routingService.navigate([
         `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${debts[0].id}` ], this.route);
     }
