@@ -171,12 +171,27 @@ export class ContactLogCardComponent implements OnInit {
     ];
   }
 
+  private createLetterControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
+    return [
+      { label: label('contract'), controlName: 'contract', type: 'number',  width: 6, disabled: true },
+      { label: label('userFullName'), controlName: 'userFullName', type: 'text', width: 6,  disabled: true },
+      { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('contactAddress'), controlName: 'contactAddress', type: 'text', width: 6, disabled: true },
+      { label: label('templateName'), controlName: 'tempalteName', type: 'text', width: 6, disabled: true },
+      { label: label('status'), controlName: 'statusCode', options: statusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('fullName'), controlName: 'fullName', type: 'text', width: 6,  disabled: true },
+      { label: label('createDateTime'), controlName: 'createDateTime', type: 'datepicker', width: 6, disabled: true }
+    ];
+  }
+
   private get statusOptions(): Observable<IOption[]> {
     switch (this.contactLogType) {
       case ContactLogService.CONTACT_TYPE_SMS:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS);
       case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_STATUS);
+      case ContactLogService.CONTACT_TYPE_LETTER:
+        return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_LETTER_STATUS);
       default:
         return of(null);
     }
@@ -186,6 +201,7 @@ export class ContactLogCardComponent implements OnInit {
     switch (this.contactLogType) {
       case ContactLogService.CONTACT_TYPE_SMS:
       case ContactLogService.CONTACT_TYPE_EMAIL:
+      case ContactLogService.CONTACT_TYPE_LETTER:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE);
       default:
         return of(null);
@@ -206,6 +222,8 @@ export class ContactLogCardComponent implements OnInit {
         return this.createSMSControls(roleOpts, statusOpts);
       case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.createEmailControls(roleOpts, statusOpts);
+      case ContactLogService.CONTACT_TYPE_LETTER:
+        return this.createLetterControls(roleOpts, statusOpts);
       default:
         return this.createDefaultControls(contactTypeOptions, contactLog, canEditComment);
     }

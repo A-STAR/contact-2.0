@@ -2450,7 +2450,10 @@
         "status": "Status",
         "text": "Message text",
         "startDateTime": "Planned sending date",
-        "subject": "Subject"
+        "subject": "Subject",
+        "templateName": "Letter type",
+        "contactAddress": "Address",
+        "createDateTime": "Create date"
       },
       "grid": {
         "comment": "Comments",

@@ -2450,7 +2450,10 @@
         "status": "Статус",
         "text": "Текст сообщения",
         "startDateTime": "Планируемая дата отправки",
-        "subject": "Тема"
+        "subject": "Тема",
+        "templateName": "Тип письма",
+        "contactAddress": "Адрес",
+        "createDateTime": "Дата формирования"
       },
       "grid": {
         "comment": "Комментарий",

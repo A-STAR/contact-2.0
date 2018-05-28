@@ -9,6 +9,7 @@ import { IContactLog } from './contact-log.interface';
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 
 
 @Injectable()
@@ -16,11 +17,13 @@ export class ContactLogService extends AbstractActionService {
   static COMMENT_CONTACT_LOG_SAVED = 'COMMENT_CONTACT_LOG_SAVED';
   static CONTACT_TYPE_EMAIL = 6;
   static CONTACT_TYPE_SMS = 4;
+  static CONTACT_TYPE_LETTER = 5;
 
   private baseUrl = '/persons/{personId}/contacts';
   private urlDefault = '/debts/{debtId}/contacts/{contactsLogId}';
   private urlSMS = '/debts/{debtId}/sms/{contactsLogId}';
   private urlEmail = '/debts/{debtId}/email/{contactsLogId}';
+  private urlLetter = '/debts/{debtId}/letter/{contactsLogId}';
 
   constructor(
     protected actions: Actions,
@@ -29,6 +32,13 @@ export class ContactLogService extends AbstractActionService {
     protected store: Store<IAppState>,
   ) {
     super();
+  }
+
+  get letteExportAction(): IMetadataAction {
+    return {
+      action: 'letterExport',
+      label: 'modules.infoDebt.letter.grid',
+    };
   }
 
   fetchAll(personId: number, callCenter: boolean): Observable<Array<IContactLog>> {
@@ -43,6 +53,8 @@ export class ContactLogService extends AbstractActionService {
         return this.fetchSmsContact(debtId, contactsLogId, contactType, callCenter);
       case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.fecthEmailContact(debtId, contactsLogId, contactType, callCenter);
+      case ContactLogService.CONTACT_TYPE_LETTER:
+        return this.fecthLetterContact(debtId, contactsLogId, contactType, callCenter);
       default:
         return this.fetchDefaultContact(debtId, contactsLogId, contactType, callCenter);
     }
@@ -60,6 +72,11 @@ export class ContactLogService extends AbstractActionService {
 
   fecthEmailContact(debtId: number, contactsLogId: number, _: number, callCenter: boolean): Observable<IContactLog> {
     return this.dataService.read(this.urlEmail, { debtId, contactsLogId }, { params: { callCenter } })
+      .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.singular').dispatchCallback());
+  }
+
+  fecthLetterContact(debtId: number, contactsLogId: number, _: number, callCenter: boolean): Observable<IContactLog> {
+    return this.dataService.read(this.urlLetter, { debtId, contactsLogId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.singular').dispatchCallback());
   }
 

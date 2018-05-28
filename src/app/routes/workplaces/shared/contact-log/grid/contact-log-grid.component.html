@@ -1,9 +1,16 @@
 <app-simple-grid
   persistenceKey="[grid] workplaces/shared/contact-log"
+  [actions]="actions"
   [columns]="columns"
   [rows]="contactLogList"
   [selection]="selected"
   [toolbar]="hideToolbar ? null : toolbarItems"
+  (action)="onAction($event)"
   (selectRow)="onSelect($event)"
   (dblClick)="onEdit($event)"
 ></app-simple-grid>
+
+<app-downloader
+  #downloader
+  entityTranslationKey="entities.letters.gen.singular"
+></app-downloader>

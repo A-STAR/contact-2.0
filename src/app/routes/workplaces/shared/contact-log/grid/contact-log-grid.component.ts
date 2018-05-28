@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { filter, map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
+import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
 import { IContactLog } from '../contact-log.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -17,6 +20,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { DateRendererComponent, DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel } from '@app/core/utils';
@@ -33,8 +37,13 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
   @Input() hideToolbar = false;
   @Input() personId: number;
 
+  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
+
   selected: IContactLog[];
   selectedChanged$ = new BehaviorSubject<boolean>(false);
+
+  actions: IMetadataAction[] = [
+  ];
 
   columns: ISimpleGridColumn<IContactLog>[] = [
     { prop: 'debtId', minWidth: 70, maxWidth: 100 },
@@ -53,6 +62,8 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
         switch (item.contactType) {
           case 4:
             return UserDictionariesService.DICTIONARY_SMS_STATUS;
+          case 5:
+            return UserDictionariesService.DICTIONARY_LETTER_STATUS;
           case 6:
             return UserDictionariesService.DICTIONARY_EMAIL_STATUS;
           default:
@@ -85,6 +96,7 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   private _contactLogList: IContactLog[] = [];
 
+  private selectionSubpscription: Subscription;
   private viewPermissionSubscription: Subscription;
   private viewCommentUpdate: Subscription;
 
@@ -125,9 +137,23 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
         }
         this.cdRef.markForCheck();
       });
+
+    this.selectionSubpscription = this.selectedChanged$
+      .pipe(
+        tap(() => this.actions = []),
+        map(() => this.selected),
+        filter(selection => selection && selection.length === 1),
+        filter(selection => selection[0].contactType === 5)
+      )
+      .subscribe(() => {
+        this.actions = [
+          this.contactLogService.letteExportAction
+        ];
+      });
   }
 
   ngOnDestroy(): void {
+    this.selectionSubpscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
     this.viewCommentUpdate.unsubscribe();
   }
@@ -149,6 +175,13 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   get hasSelection(): boolean {
     return !!this.selected && !!this.selected.length;
+  }
+
+  onAction(action: IAGridAction): void {
+    switch (action.metadataAction.action) {
+      case this.contactLogService.letteExportAction.action:
+        this.exportLetter(action.selection.node.data);
+    }
   }
 
   onSelect(contactLogs: IContactLog[]): void {
@@ -176,5 +209,12 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   private clear(): void {
     this.contactLogList = [];
+  }
+
+  private exportLetter(contactLog: IContactLog): void {
+    this.downloader.name = contactLog.messageTemplate;
+    this.downloader.url =
+      `/debts/${contactLog.debtId}/letter/${contactLog.contactId}/file?callCenter=${this.callCenter ? 1 : 0}`;
+    this.downloader.download();
   }
 }
