@@ -50,6 +50,8 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   columns: ISimpleGridColumn<IEmail>[] = [];
 
+  readonly debtId$ = this.debt$.pipe(map(debt => debt ? debt.id : null));
+
   /*
   contextMenuOptions: IContextMenuItem[] = [
     {
