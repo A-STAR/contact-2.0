@@ -24,7 +24,7 @@
   persistenceKey="[grid] workplaces/debtor-card/debts"
   [columns]="columns"
   [rows]="debts$ | async"
-  [selection]="selection$ | async"
+  [selection]="selection"
   [toolbar]="toolbarItems"
   (dblClick)="onDoubleClick($event)"
   (selectRow)="onSelect($event)">
