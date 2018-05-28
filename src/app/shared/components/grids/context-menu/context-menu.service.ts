@@ -139,8 +139,9 @@ export class ContextMenuService {
   }
 
   private translateAction(action: IMetadataAction): string {
-    return action.id
-      ? this.customOperationService.getOperation(action.id).name
+    const customOperation = this.customOperationService.getOperation(action.id);
+    return customOperation
+      ? customOperation.name
       : this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
   }
 }
