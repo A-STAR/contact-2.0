@@ -4,4 +4,5 @@ export interface IMultiSelectOption {
   value: number;
   label: string;
   checked?: boolean;
+  isClosed?: 0 | 1;
 }
