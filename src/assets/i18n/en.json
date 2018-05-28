@@ -849,7 +849,8 @@
           "createDateTime": "Created",
           "sendDateTime": "Send date",
           "userFullName": "Operator",
-          "templateName": "Template"
+          "templateName": "Template",
+          "letterExport": "Letter export"
         }
       }
     },

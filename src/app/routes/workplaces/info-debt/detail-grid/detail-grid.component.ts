@@ -1,15 +1,27 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAGridResponse, IAGridColumn } from 'app/shared/components/grid2/grid2.interface';
 import { IGridColumn } from '../info-debt.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 
 import { GridService } from 'app/shared/components/grid/grid.service';
 import { InfoDebtService } from '../info-debt.service';
 
 import { Grid2Component } from 'app/shared/components/grid2/grid2.component';
+import { IActionGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,10 +35,13 @@ export class DetailGridComponent implements OnInit, OnDestroy {
     this.gridKey$.next(gridKey);
   }
 
+  @Input() actions: IMetadataAction[];
   @Input() columns: IGridColumn[];
   @Input() rowIdKey: string;
 
   @ViewChild(Grid2Component) grid: Grid2Component;
+
+  @Output() action = new EventEmitter<IActionGridAction>();
 
   columns$: Observable<IAGridColumn[]>;
 
@@ -63,6 +78,10 @@ export class DetailGridComponent implements OnInit, OnDestroy {
     } else {
       this.clear();
     }
+  }
+
+  onAction(action: IActionGridAction): void {
+    this.action.emit(action);
   }
 
   private fetch(): void {
