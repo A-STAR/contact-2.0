@@ -48,8 +48,8 @@ export class SegmentedInputComponent implements ControlValueAccessor {
 
   private defaultMask: ISegmentedInputMask = {
     delimeter: ',',
-    maxNumberLength: 5,
-    maxNumbers: 6
+    maxNumberLength: 7,
+    maxNumbers: 8
   };
   private _value: ISegmentedInputValue;
   private _mask: ISegmentedInputMask;
