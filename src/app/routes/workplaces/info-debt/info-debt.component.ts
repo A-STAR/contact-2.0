@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChildren, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators';
 
+import { IActionGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IGridDef, IInfoDebtEntry, IGridColumn } from './info-debt.interface';
 
 import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
 
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { GridComponent } from './grid/grid.component';
 
 import { makeKey } from '../../../core/utils';
@@ -22,6 +25,7 @@ export class InfoDebtComponent {
   private selectedRows$ = new BehaviorSubject<IInfoDebtEntry[]>(null);
 
   @ViewChildren(GridComponent) gridComponents: QueryList<GridComponent>;
+  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
 
   selectedTabIndex = 0;
 
@@ -104,6 +108,12 @@ export class InfoDebtComponent {
         .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/letter`),
       title: label('letter.title'),
       isInitialised: false,
+      actions: [
+        {
+          action: 'letterExport',
+          label: 'modules.infoDebt.letter.grid',
+        }
+      ],
       columns: this.letterGridColumns
     }
   ];
@@ -134,5 +144,18 @@ export class InfoDebtComponent {
   onSelect(): void {
     this.selectedRows$.next(this.selection);
     this.cdRef.markForCheck();
+  }
+
+  onAction(action: IActionGridAction): void {
+    this.selectedRows$
+      .pipe(
+        first()
+      )
+      .subscribe(rows => {
+        const detailRow = action.selection.node;
+        this.downloader.name = detailRow.data.templateName;
+        this.downloader.url = `/debts/${rows[0].debtId}/letter/${detailRow.data.letterId}/file`;
+        this.downloader.download();
+      });
   }
 }

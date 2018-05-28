@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
+
 export interface IInfoDebtEntry {
   debtId: number;
   personId: number;
@@ -69,6 +71,7 @@ export interface IGridDef {
   gridKey$: Observable<string>;
   rowIdKey?: string;
   title: string;
+  actions?: IMetadataAction[];
   columns?: IGridColumn[];
 }
 
@@ -77,4 +80,9 @@ export interface IGridColumn {
   name: string;
   label: string;
   dictCode?: number;
+}
+
+export interface ILetterExport {
+  url: string;
+  name: string;
 }

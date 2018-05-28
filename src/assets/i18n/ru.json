@@ -849,7 +849,8 @@
           "createDateTime": "Дата создания",
           "sendDateTime": "Фактическая дата отправки",
           "userFullName": "Оператор",
-          "templateName": "Название шаблона"
+          "templateName": "Название шаблона",
+          "letterExport": "Сохранение файла письма"
         }
       }
     },

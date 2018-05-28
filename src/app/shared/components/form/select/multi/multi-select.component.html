@@ -10,30 +10,27 @@
     class="select-container dropdown open"
     [ngStyle]="styles"
   >
-    <input
-      #input
-      #dropdownTrigger
-      type="text"
-      class="form-control select-search"
-      autocomplete="off"
-      [attr.placeholder]="(placeholder || '') | translate"
-      [disabled]="disabled"
-      [ngModel]="selectionLabel"
-      (ngModelChange)="onInputChange()"
-    >
-    <i
-      *ngIf="!disabled"
-      class="co co-back select-caret"
-      [ngClass]="{ 'up': open }"
-    ></i>
-
-    <!--
-    <i
-      *ngIf="!disabled && !required && hasSelection"
-      class="co co-clear select-clear"
-      (click)="onClear($event)"
-    ></i>
-    -->
+    <div #dropdownTrigger class="select-dropdown-trigger">
+      <input
+        #input
+        type="text"
+        readonly="readonly"
+        [ngClass]="{'form-control select-search': true, disabled: disabled}"
+        autocomplete="off"
+        [attr.placeholder]="(placeholder || '') | translate"
+        [disabled]="disabled"
+        [ngModel]="selectionLabel"
+        (ngModelChange)="onInputChange()"
+      >
+      <div class="select-controls">
+        <i
+          *ngIf="!disabled"
+          class="co co-back select-caret select-control"
+          [ngClass]="caretCls"
+          (click)="$event.preventDefault()"
+        ></i>
+    </div>
+  </div>
 
     <ul
       #dropdownContent
@@ -45,6 +42,7 @@
         <app-checkbox
           [label]="option.label"
           [ngModel]="option.checked"
+          [disabled]="isClosed(option)"
           (ngModelChange)="onSelect($event, option)"
         ></app-checkbox>
       </li>
