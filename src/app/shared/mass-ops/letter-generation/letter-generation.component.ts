@@ -52,6 +52,8 @@ export class LetterGenerationComponent implements OnInit {
     ignoreWrongAddress: 1
   };
 
+  private personRole: number;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private actionGridService: ActionGridService,
@@ -61,8 +63,8 @@ export class LetterGenerationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const personRole = Number(this.actionGridService.getAddOption(this.actionData, 'personRole', 0));
-    this.userTemplatesService.getLetterTemplatesForDebt(personRole, null)
+    this.personRole = Number(this.actionGridService.getAddOption(this.actionData, 'personRole', 0));
+    this.userTemplatesService.getLetterTemplatesForDebt(this.personRole, null)
       .map(templates => templates.map(t => ({ label: t.name, value: t.id })))
       .subscribe(templateOptions => {
         this.layoutConfig = this.createLayout(templateOptions);
@@ -76,7 +78,7 @@ export class LetterGenerationComponent implements OnInit {
 
   onSubmit(): void {
     this.letterGenerationService
-      .generate(this.actionData.payload, this.layout.getData())
+      .generate(this.actionData.payload, this.personRole, this.layout.getData())
       .subscribe(() => this.close.emit({ refresh: false }));
   }
 
