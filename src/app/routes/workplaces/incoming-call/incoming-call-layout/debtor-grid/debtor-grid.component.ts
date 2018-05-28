@@ -26,6 +26,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     { prop: 'debtorId', minWidth: 100 },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'contract', minWidth: 100 },
+    { prop: 'contractId', hide: true },
     { prop: 'docNumber', minWidth: 150 },
     { prop: 'personRole', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
     { prop: 'personId', minWidth: 100 },
@@ -49,7 +50,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   actions: IMetadataAction[] = [
     {
       action: 'openDebtCard',
-      params: [ 'debtId' ],
+      params: [ 'debtId', 'personRole', 'personId', 'debtorId', 'contractId' ],
     },
     {
       action: 'showContactHistory',

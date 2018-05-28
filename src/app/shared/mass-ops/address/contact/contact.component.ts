@@ -206,6 +206,7 @@ export class ContactComponent implements OnInit {
               {
                 type: MapToolbarFilterItemType.SLIDER,
                 filter: MapFilters.DISTANCE,
+                showInput: true,
                 value: constant,
                 label: 'massOperations.addressesByContacts.filter.distance',
                 enabled: of(true),

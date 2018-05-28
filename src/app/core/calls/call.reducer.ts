@@ -38,7 +38,7 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         activeCall: null
       };
     }
-    case CallService.CALL_DROP: {
+    case CallService.CALL_DROP_SUCCESS: {
       return {
         ...state,
         activeCall: null

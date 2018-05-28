@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
 import { ContactRegistrationService } from '../../contact-registration.service';
@@ -20,15 +19,7 @@ export class ContactRegistrationCallReasonComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.callReasonMode))
-    );
-  }
-
-  get isCallReasonRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && outcome.callReasonMode === 3)
-    );
-  }
+  readonly isCallReasonRequired$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && outcome.callReasonMode === 3)
+  );
 }

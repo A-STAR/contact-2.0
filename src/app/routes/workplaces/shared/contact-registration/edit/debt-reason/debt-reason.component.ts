@@ -19,10 +19,6 @@ export class ContactRegistrationDebtReasonComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  readonly canDisplayForm$ = this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.debtReasonMode))
-  );
-
   readonly isDebtReasonCodeRequired$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && outcome.debtReasonMode === 3)
   );

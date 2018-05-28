@@ -26,6 +26,7 @@ export class VisitCardComponent implements OnInit, OnDestroy {
   controls: Array<IDynamicFormItem> = null;
   visit: Partial<IVisit> = {};
 
+  private planUserId: number;
   private operatorSubscription: Subscription;
 
   constructor(
@@ -44,10 +45,7 @@ export class VisitCardComponent implements OnInit, OnDestroy {
 
     this.operatorSubscription = this.visitPrepareService.getPayload<IVisitOperator>(VisitPrepareService.MESSAGE_OPERATOR_SELECTED)
       .subscribe(operator => {
-        if (this.form) {
-          this.setPlanUserId(operator);
-          this.cdRef.markForCheck();
-        }
+        this.planUserId = operator.id;
       });
   }
 
@@ -56,21 +54,18 @@ export class VisitCardComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.planUserId && this.form && this.form.canSubmit;
+  }
+
+  get data(): any {
+    return { ...this.form.serializedUpdates, planUserId: this.planUserId };
   }
 
   private createControls(visitOpts: IOption[]): Array<IDynamicFormItem> {
     return [
       { label: label('purposeCode'), controlName: 'purposeCode', type: 'select', options: visitOpts },
       { label: label('planVisitDateTime'), controlName: 'planVisitDateTime', type: 'datetimepicker', required: true },
-      { label: label('planUserId'), controlName: 'planUserId', type: 'text', display: false, required: true },
       { label: label('comment'), controlName: 'comment', type: 'textarea' },
     ];
-  }
-
-  private setPlanUserId(operator: IVisitOperator): void {
-    const control = this.form.getControl('planUserId');
-    control.setValue(operator.id);
-    control.markAsDirty();
   }
 }
