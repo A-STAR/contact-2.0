@@ -21,7 +21,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator } fro
 })
 export class FileUploadComponent implements ControlValueAccessor, Validator {
   @Input() fileName: string;
-  @Input() required = false;
+  @Input() isRequired = false;
 
   private file: File;
 
@@ -54,7 +54,7 @@ export class FileUploadComponent implements ControlValueAccessor, Validator {
 
   validate(): any {
     switch (true) {
-      case this.required && !this.displayFileName:
+      case this.isRequired && !this.displayFileName:
         return { required: true };
       default:
         return null;
