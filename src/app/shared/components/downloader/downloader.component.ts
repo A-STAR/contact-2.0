@@ -21,15 +21,21 @@ export class DownloaderComponent {
   ) {}
 
   download(body: object = null): void {
-    const request = body ?
-      this.dataService.createBlob(this.url, {}, body) :
-      this.dataService.readBlob(this.url, {});
+    const request = body
+      ? this.dataService.createBlob(this.url, {}, body)
+      : this.dataService.readBlob(this.url, {});
 
     request
       .map(blob => {
-        const href = URL.createObjectURL(blob);
-        this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
-        URL.revokeObjectURL(href);
+        const { navigator } = window;
+        if (navigator && navigator.msSaveOrOpenBlob) {
+          // IE doesn't want to save blobs via <a> tag
+          navigator.msSaveOrOpenBlob(blob, this.name);
+        } else {
+          const href = URL.createObjectURL(blob);
+          this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
+          URL.revokeObjectURL(href);
+        }
       })
       .catch(error => {
         this.notificationsService.error('errors.default.download').entity(this.entityTranslationKey).response(error).dispatch();
