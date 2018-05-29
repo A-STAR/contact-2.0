@@ -1,5 +1,5 @@
 {
-  "key": "routes/workplaces/debtor/debt",
+  "key": "routes/workplaces/debtor/debt-create",
   "items": [
     {
       "type": "group",
