@@ -3,6 +3,15 @@ import { MetadataActionType, IMetadataAction } from '@app/core/metadata/metadata
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { IActionData, IAction } from '@app/shared/mass-ops/mass-operation.interface';
 
+export enum ActionOperator {
+  HAS,
+  NOT_EMPTY,
+  CONTAINS,
+  AND,
+  OR,
+
+}
+
 export interface IGridActionPayload {
   data: IGridActionData;
   type: MetadataActionType;

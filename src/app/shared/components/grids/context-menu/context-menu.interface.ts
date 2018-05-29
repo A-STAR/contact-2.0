@@ -15,3 +15,8 @@ export interface IContextMenuOptions {
   selection: GetContextMenuItemsParams;
   cb: (action: IAGridAction) => void;
 }
+export interface IPermParams {
+  action: IMetadataAction;
+  selected: any[];
+  selection: GetContextMenuItemsParams;
+}

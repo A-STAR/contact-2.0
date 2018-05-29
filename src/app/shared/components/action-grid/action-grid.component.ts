@@ -70,6 +70,7 @@ import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
+import { IPermParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -306,18 +307,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       );
   }
 
-  isAttrChangeDictionaryDlg(): boolean {
-    return [
-      'changeRegionAttr',
-      'changeDict1Attr',
-      'changeDict2Attr',
-      'changeDict3Attr',
-      'changeDict4Attr',
-      'changeCreditTypeAttr',
-      'changeBranchAttr'
-    ].includes(this.dialog);
-  }
-
   getFilters(): FilterObject {
     return this.grid instanceof Grid2Component
       ? this.getGridFilters()
@@ -369,12 +358,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     if (action.deselectAll) {
       this.grid.deselectAll();
     }
-    this.onCloseDialog();
 
     if (this.close) {
       this.close.emit(action);
     }
-    this.cdRef.markForCheck();
   }
 
   onRequest(): void {
@@ -590,17 +577,70 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     }
   }
 
+  private validateSelection(props: string[], selection: T[]): boolean {
+    return selection.length && selection.some(s => props.every(prop => !!s[prop]));
+  }
+
+  private readonly hasValidators: any = {
+    addVisit: 'ADDRESS_VISIT_ADD',
+    cancelVisit: 'VISIT_CANCEL',
+    changeBranchAttr: 'DEBT_EDIT',
+    changeCreditTypeAttr: 'DEBT_EDIT',
+    changePersonType: 'PERSON_INFO_EDIT',
+    changePortfolioAttr: 'DEBT_PORTFOLIO_EDIT',
+    changeRegionAttr: 'DEBT_EDIT',
+    changeStageAttr: 'DEBT_EDIT',
+    changeTimezoneAttr: 'DEBT_EDIT',
+    confirmPaymentsOperator: 'PAYMENTS_OPERATOR_CHANGE',
+    confirmPromise: 'PROMISE_CONFIRM',
+    debtClearResponsible: 'DEBT_RESPONSIBLE_CLEAR',
+    debtNextCallDate: 'DEBT_NEXT_CALL_DATE_SET',
+    debtOutsourcingExclude: 'DEBT_OUTSOURCING_SEND',
+    debtOutsourcingReturn: 'DEBT_OUTSOURCING_RETURN',
+    debtOutsourcingSend: 'DEBT_OUTSOURCING_SEND',
+    debtSetResponsible: ['DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET'],
+    deletePromise: ['PROMISE_DELETE', 'PROMISE_CONFIRM'],
+    mapAddressView: 'MAP_ADDRESS_VIEW',
+    mapContactView: 'MAP_CONTACT_VIEW',
+    openUserDetail: 'OPERATOR_DETAIL_VIEW',
+    paymentsCancel: 'PAYMENT_CANCEL',
+    paymentsConfirm: 'PAYMENT_CONFIRM',
+    prepareVisit: 'VISIT_PREPARE',
+    rejectPaymentsOperator: 'PAYMENTS_OPERATOR_CHANGE',
+    showContactHistory: 'CONTACT_LOG_VIEW',
+  };
+
+  private readonly notEmptyValidators = {
+    deleteSMS: 'SMS_DELETE_STATUS_LIST',
+  };
+
+  private addPermission(action: IMetadataAction, constants: ValueBag,
+    permissions: ValueBag, entityPerms: IEntityAttributes): (params: IPermParams) => boolean {
+      if (action.action in this.hasValidators) {
+        return this.hasPermValidation(permissions, this.hasValidators[action.action]);
+      }
+      if (action.action in this.notEmptyValidators) {
+
+      }
+      if (action.id) {
+        return params => this.customOperationPerm(params);
+      }
+  }
+
+  private customOperationPerm(params: IPermParams): boolean {
+    return params.action.type === MetadataActionType.ALL ? this.customOperationService.isAllowedOperation(params.action.id)
+      : this.customOperationService.isAllowedOperation(params.action.id) && !!params.selected.length;
+  }
+
+  private hasPermValidation(bag: ValueBag, perms: string | string[]): (params: IPermParams) => boolean {
+    const hasPerm = Array.isArray(perms) ? bag.has : bag.hasOneOf;
+    return (params: IPermParams) => params.action.type === MetadataActionType.ALL ?
+      hasPerm.call(bag, perms) : this.validateSelection(params.action.params, params.selected) && hasPerm.call(bag, perms);
+  }
+
   private buildPermissions(actions: IMetadataAction[], constants: ValueBag,
     permissions: ValueBag, entityPerms: IEntityAttributes): IMetadataActionPermissions {
     return {
-      addVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('ADDRESS_VISIT_ADD') : selection.length && permissions.has('ADDRESS_VISIT_ADD'),
-      cancelVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('VISIT_CANCEL') : selection.length && permissions.has('VISIT_CANCEL'),
-      changePortfolioAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_PORTFOLIO_EDIT') : selection.length && permissions.has('DEBT_PORTFOLIO_EDIT'),
-      changeRegionAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
       changeDict1Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.notEmpty('DEBT_DICT1_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed :
         selection.length && permissions.notEmpty('DEBT_DICT1_EDIT_LIST')
@@ -617,30 +657,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         permissions.notEmpty('DEBT_DICT4_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed :
         selection.length && permissions.notEmpty('DEBT_DICT4_EDIT_LIST')
           && entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed,
-      changeCreditTypeAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
-      changeBranchAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
-      changeTimezoneAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
-      changeStageAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
-      confirmPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      confirmPromise: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('PROMISE_CONFIRM') : selection.length && permissions.has('PROMISE_CONFIRM'),
-      debtClearResponsible: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_RESPONSIBLE_CLEAR') : selection.length && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
-      debtNextCallDate: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_NEXT_CALL_DATE_SET') : selection.length && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
-      debtSetResponsible: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.hasOneOf(['DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET', ]) : selection.length
-          && permissions.hasOneOf(['DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET', ]),
-      deletePromise: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) : selection.length
-          && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
-      deleteSMS: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.notEmpty('SMS_DELETE_STATUS_LIST') : selection.length && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
       emailCreate: (actionType: MetadataActionType, selection) => {
         const action = actions.find(a => a.action === 'emailCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
@@ -649,26 +665,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
           selection.length && constants.has('Email.Use')
             && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
-      mapAddressView: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('MAP_ADDRESS_VIEW') : selection.length && permissions.has('MAP_ADDRESS_VIEW'),
-      mapContactView: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('MAP_CONTACT_VIEW') : selection.length && permissions.has('MAP_CONTACT_VIEW'),
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
       objectAddToGroup: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19) : selection.length
           && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
-      openUserDetail: (_: MetadataActionType, __, row) => row && row.userId
-        && permissions.has('OPERATOR_DETAIL_VIEW'),
-      paymentsCancel: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('PAYMENT_CANCEL') : selection.length && permissions.has('PAYMENT_CANCEL'),
-      paymentsConfirm: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('PAYMENT_CONFIRM') : selection.length && permissions.has('PAYMENT_CONFIRM'),
-      prepareVisit: (actionType: MetadataActionType, selection, row) => actionType === MetadataActionType.ALL ?
-        permissions.has('VISIT_PREPARE') : row.visitId && selection.length && permissions.has('VISIT_PREPARE'),
-      rejectPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-      permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      showContactHistory: (_: MetadataActionType, __, row) => row && row.personId
-        && permissions.has('CONTACT_LOG_VIEW'),
       smsCreate: (actionType: MetadataActionType, selection) => {
         const action = actions.find(a => a.action === 'smsCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
@@ -677,24 +677,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
           selection.length && constants.has('SMS.Use')
             && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
-      debtOutsourcingSend: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_OUTSOURCING_SEND') : selection.length && permissions.has('DEBT_OUTSOURCING_SEND'),
-      debtOutsourcingExclude: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_OUTSOURCING_EXCLUDE') : selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
-      debtOutsourcingReturn: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('DEBT_OUTSOURCING_RETURN') : selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
       registerContact: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         of(true) : selection.length && of(true),
-      changePersonType: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.has('PERSON_INFO_EDIT') : selection.length && permissions.has('PERSON_INFO_EDIT'),
-      ...actions
-        .filter(action => !!action.id)
-        .reduce((acc, action) => ({
-          ...acc,
-          [action.action]: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL
-            ? this.customOperationService.isAllowedOperation(action.id)
-            : this.customOperationService.isAllowedOperation(action.id) && selection.length
-        }), {})
     };
   }
 }
