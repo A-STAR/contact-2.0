@@ -186,3 +186,12 @@
   [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-mass-custom-operation>
+
+<app-mass-confirm
+  *ngIf="isDialog('confirm')"
+  [actionName]="type"
+  [confirmParams]="confirmParams"
+  (confirm)="onConfirm($event)"
+  (close)="onCloseAction($event)"
+>
+</app-mass-confirm>
