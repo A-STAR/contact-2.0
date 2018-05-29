@@ -1,4 +1,4 @@
-import { mergeDeep } from 'immutable';
+import { mergeDeep, setIn } from 'immutable';
 
 import { IRepositoryAction, IRepositoryState, RepositoryActionType, RepositoryStatus } from './repository.interface';
 
@@ -20,17 +20,19 @@ export function reducer(state: IRepositoryState = defaultState, action: IReposit
     }
     case RepositoryActionType.FETCH_SUCCESS: {
       const { entityName, data, primaryKey, serializedParams } = action.payload;
-      return mergeDeep(state, {
+      const s = mergeDeep(state, {
         [entityName]: {
           data: data.reduce((acc, item) => ({ ...acc, [item[primaryKey]]: item }), {}),
           index: {
             [serializedParams]: {
-              primaryKeys: data.map(item => item[primaryKey]),
               status: RepositoryStatus.SUCCESS,
             },
           },
         },
       });
+      // NOTE: (d.maltsev, i.lobanov): because merge deep merges all properties including arrays,
+      // so multiply items with the same id are created in primaryKeys
+      return setIn(s, [ entityName, 'index', serializedParams, 'primaryKeys' ], data.map(item => item[primaryKey]));
     }
     default:
       return state;

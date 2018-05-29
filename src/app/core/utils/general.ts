@@ -13,10 +13,8 @@ import {
   isNil,
   ifElse,
   identity,
-  mapObjIndexed,
   complement,
-  equals,
-  compose,
+  pick,
 } from 'ramda';
 
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
@@ -34,16 +32,16 @@ export const addFormLabel = (key: string) => addLabel(key, 'controlName');
 export const addGridLabel = (key: string) => addLabel(key, 'prop');
 export const addLabelForEntity = (entity: string) => addLabel(`common.entities.${entity}.fields`, 'name');
 
-export const toLabeledValues = item => ({ label: item.name, value: item.code });
+export const toLabeledValues = item => ({ label: item.name, value: item.code, isClosed: item.isClosed });
 
 type IValueToOption<T> = (value: T) => IOption;
 
-export const toOption = <T extends Object>(valueKey: keyof T, labelKey: keyof T): IValueToOption<T> => {
+export const toOption = <T extends { [key: string]: any }>(valueKey: keyof T, labelKey: keyof T): IValueToOption<T> => {
   return value => ({
-    // TODO(i.lobanov): types are incompatible
     label: value[labelKey],
-    value: value[valueKey]
-  } as any);
+    value: value[valueKey],
+    isClosed: value.isClosed
+  });
 };
 
 export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {
@@ -223,10 +221,16 @@ export function deepFilterAndMap<T extends { children?: T[] }, V>(items: T[],
     ]), []);
 }
 
-export const pickExisting = ifElse(is(Object), pickBy(complement(isNil)), identity);
+export const isFalsy = v => isNil(v) || v === false;
 
-export const filterFalse = pickBy(complement(equals(false)));
+export const pickExisting = ifElse(is(Object), pickBy(complement(isFalsy)), identity);
 
-export const convertBool = ifElse(is(Boolean), Number, identity);
+export const pickExistingBy = (by: string[], params: Record<string, any>) => {
+  return pick(by, pickExisting(params));
+};
 
-export const serializeBoolParams = compose(mapObjIndexed(convertBool), filterFalse);
+export function pickDifference(filterObj: any, data: any): any {
+  const filterKeys = Object.keys(filterObj);
+  return pickBy((_, key: string) => !filterKeys.includes(key), data);
+}
+

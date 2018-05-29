@@ -56,11 +56,6 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   readonly paramMap = this.route.snapshot.paramMap;
 
   /**
-   * Contact person link ID in pivot table
-   */
-  readonly contactId = Number(this.paramMap.get('contactId'));
-
-  /**
    * Debt ID
    */
   readonly debtId = Number(this.paramMap.get('debtId'));
@@ -80,7 +75,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
    */
   readonly contactPersonRole = 4;
 
-  readonly editing = Boolean(this.contactId);
+  readonly editing = this.route.snapshot.data.edit;
 
   readonly contactPerson$ = this.contactPersonCardService.contactPerson$;
 
@@ -221,7 +216,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     const debtId = this.route.snapshot.paramMap.get('debtId');
     const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
-      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 

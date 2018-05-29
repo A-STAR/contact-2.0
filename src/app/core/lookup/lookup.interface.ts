@@ -6,7 +6,6 @@ export type ILookupKey =
   'portfolios' |
   'roles' |
   'timeZone' |
-  'operations' |
   'users' |
   'letterReport';
 
@@ -66,9 +65,4 @@ export interface ILookupState {
   // NOTE: this key is in singular, because the API endpoint is GET lookup/timeZone
   timeZone: ILookupSlice<ILookupTimeZone>;
   users: ILookupSlice<ILookupUser>;
-}
-
-export interface ILookupOperation {
-  id: number;
-  name: string;
 }

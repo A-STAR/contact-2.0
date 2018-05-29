@@ -24,7 +24,7 @@
 
 <ng-template #identification>
   <app-identity-grid
-    [personId]="contactId"
+    [personId]="personId"
     (add)="onIdentityAdd()"
     (dblClick)="onIdentityEdit($event)"
     (edit)="onIdentityEdit($event)"
@@ -33,7 +33,7 @@
 
 <ng-template #employment>
   <app-employment-grid
-    [personId]="contactId"
+    [personId]="personId"
     (add)="onEmploymentAdd()"
     (dblClick)="onEmploymentEdit($event)"
     (edit)="onEmploymentEdit($event)"
@@ -44,7 +44,7 @@
   <app-phone-grid
     [contactType]="phoneContactType"
     [debtId]="debtId"
-    [personId]="contactId"
+    [personId]="personId"
     [personRole]="contactPersonRole"
     (add)="onPhoneAdd()"
     (dblClick)="onPhoneRegister($event)"
@@ -56,7 +56,7 @@
 <ng-template #addresses>
   <app-address-grid
     [debtId]="debtId"
-    [personId]="contactId"
+    [personId]="personId"
     [personRole]="contactPersonRole"
     (add)="onAddressAdd()"
     (dblClick)="onAddressRegister($event)"

@@ -17,6 +17,14 @@
   </div>
   <div>
     <span *ngIf="errors">{{ errors | json }}</span>
-    <span *ngIf="!errors"> {{ 'default.filter.value' | translate }}: {{ value }} </span>
+    <label *ngIf="!errors" class="form-inline range-label">
+      <span class="range-text">{{ 'default.filter.value' | translate }}</span>
+      <span *ngIf="!showInput" class="range-value">{{ formattedValue }}</span>
+      <input *ngIf="showInput && !readonly"
+        type="text"
+        [ngModel]="formattedValue"
+        (ngModelChange)="onInputChange($event)"
+        class="form-control range-text">
+    </label>
   </div>
 </label>

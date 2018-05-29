@@ -70,8 +70,6 @@ export class ContactRegistrationPromiseComponent implements AfterViewInit, OnDes
     }
   }
 
-  readonly canDisplayForm$ = this.contactRegistrationService.canSetPromise$;
-
   get today(): Date {
     return moment().toDate();
   }

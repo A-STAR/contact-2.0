@@ -4,12 +4,14 @@ import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata
 import { MenuItemDef } from 'ag-grid';
 import { IContextMenuOptions, IContextMenuSimpleOptions } from './context-menu.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ContextMenuService {
 
   constructor(
+    private customOperationService: CustomOperationService,
     private translateService: TranslateService,
   ) { }
 
@@ -22,23 +24,24 @@ export class ContextMenuService {
 
   private getMetadataActions(options: IContextMenuOptions): [ MenuItemDef[], MenuItemDef[]] {
     const actions = (options && options.actions) || [];
-    return actions.reduce((acc, action) => {
+    return actions
+      .filter(action => this.isAllowedAction(action))
+      .reduce((acc, action) => {
+        const menuDef = action.applyTo
+          ? this.getNonSingleAction(action, options)
+          : action.children
+            ? {
+              ...this.getActionWithChildren(action, options),
+              subMenu: this.getMetadataMenuItems({
+                ...options,
+                actions: action.children
+              }, true)
+            }
+            : this.getSingleAction(action, options);
+        const arr = (action.applyTo || action.children) ? acc[0] : acc[1];
 
-      const menuDef = action.applyTo ?
-      this.getNonSingleAction(action, options) :
-      action.children ?
-        {
-          ...this.getActionWithChildren(action, options),
-          subMenu: this.getMetadataMenuItems({
-            ...options,
-            actions: action.children
-          }, true)
-        } :
-        this.getSingleAction(action, options);
-      const arr = (action.applyTo || action.children) ? acc[0] : acc[1];
-
-      arr.push(menuDef);
-      return acc;
+        arr.push(menuDef);
+        return acc;
     }, [[], []] as [ MenuItemDef[], MenuItemDef[] ]);
   }
 
@@ -137,6 +140,13 @@ export class ContextMenuService {
   }
 
   private translateAction(action: IMetadataAction): string {
-    return this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
+    const customOperation = this.customOperationService.getOperation(action.id);
+    return customOperation
+      ? customOperation.name
+      : this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
+  }
+
+  private isAllowedAction(action: IMetadataAction): boolean {
+    return !action.id || this.customOperationService.isAllowedOperation(action.id);
   }
 }

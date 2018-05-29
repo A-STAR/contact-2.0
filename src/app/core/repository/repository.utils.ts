@@ -1,7 +1,9 @@
 import { Type } from '@angular/core';
-import { setIn } from 'immutable';
-import { pickExisting, serializeBoolParams } from '@app/core/utils';
 import { compose } from 'ramda';
+import { setIn } from 'immutable';
+
+import { IEntityUrl } from './repository.interface';
+import { pickExisting, pickExistingBy } from '@app/core/utils';
 
 export enum FieldType {
   NONE,
@@ -35,9 +37,25 @@ export const serializeKeys = (keys: string[]): string => {
 };
 
 export const serializeParamsKeys = (params: Record<string, any>) => {
-  return compose(serializeKeys, Object.keys, serializeBoolParams)(params);
+  return compose(serializeKeys, Object.keys, pickExisting)(params);
 };
 
 export const serializeParams = (params: Record<string, any>): string => {
   return JSON.stringify(pickExisting(params));
+};
+
+export const isSimpleUrl = (url: any): boolean => {
+  return typeof url === 'string';
+};
+
+export const getUrl = (url: any): string => {
+  return !isSimpleUrl(url) ? ( url as IEntityUrl ).url : url as string;
+};
+
+export const getUrlParams = (url: any): string[] => {
+  return getUrl(url).match(/\{.+?\}/gi).map(i => i.slice(1, -1));
+};
+
+export const getQueryParams = (url: any, params: any): any => {
+  return !isSimpleUrl(url) ? pickExistingBy((url as IEntityUrl).queryParams, params) : {};
 };

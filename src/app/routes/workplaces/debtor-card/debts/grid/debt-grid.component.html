@@ -23,8 +23,7 @@
 <app-simple-grid
   persistenceKey="[grid] workplaces/debtor-card/debts"
   [columns]="columns"
-  [rows]="debts$ | async"
-  [selection]="selection$ | async"
+  [rows]="debts"
   [toolbar]="toolbarItems"
   (dblClick)="onDoubleClick($event)"
   (selectRow)="onSelect($event)">

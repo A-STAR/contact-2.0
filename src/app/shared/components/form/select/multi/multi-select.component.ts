@@ -90,13 +90,16 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   @Input()
-  set required(value: boolean) {
+  set isRequired(value: boolean) {
     this._required = this.setDefault(value, this._required);
+    this.isNullable = !this._required;
   }
 
-  get required(): boolean {
+  get isRequired(): boolean {
     return this._required;
   }
+
+  isNullable = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -163,7 +166,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   validate(): ValidationErrors {
-    return this.required && !this.value.length
+    return this._required && !this.value.length
       ? { required: false }
       : null;
   }
@@ -192,6 +195,9 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   onSelect(checked: boolean, option: IMultiSelectOption): void {
+    if (this.isClosed(option)) {
+      return;
+    }
     option.checked = checked;
     this.tempValue = checked
       ? Array.from(new Set([...this.tempValue, option.value ]))
@@ -216,6 +222,14 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.propagateChange(this.value);
     this.select.emit(this.value);
     this.cdRef.markForCheck();
+  }
+
+  get caretCls(): string {
+    return this.dropdown.opened ? 'up' : '';
+  }
+
+  isClosed(option: IMultiSelectOption): boolean {
+    return option.isClosed === 1;
   }
 
   trackByFn(option: IMultiSelectOption): number {
