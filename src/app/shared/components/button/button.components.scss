@@ -1,0 +1,45 @@
+:host {
+  button {
+    // &:not(.btn-icon) {
+    //   background-color: #58526e;
+    //   color: #fff;
+    // }
+
+    &.btn-arrow {
+      position: relative;
+      height: 34px;
+      background-color: #58526e;
+      color: #fff;
+      font-size: 15px !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      line-height: 34px;
+
+      &::before,
+      &::after {
+        position: absolute;
+        top: 0;
+        content: '';
+        width: 0;
+        height: 0;
+        border-top: 16px solid transparent;
+        border-bottom: 16px solid transparent;
+        border-left: 11px solid transparent;
+      }
+
+      &::before {
+        right: -22px;
+        border-left-color: #44a1f8;
+      }
+
+      &::after {
+        right: -11px;
+        border-color: #44a1f8;
+        border-left-color: #58526e;
+      }
+
+    }
+
+  }
+
+}

@@ -217,7 +217,8 @@ $btn-default-border:             #eaeaea;
 $btn-default-border-focus:       lighten($brand-primary-light, 20%);
 
 $btn-primary-color:              #fff;
-$btn-primary-bg:                 $brand-success;
+// $btn-primary-bg:                 $brand-success;
+$btn-primary-bg:                 #44a1f8;
 $btn-primary-border:             darken($btn-primary-bg, 1%);
 
 $btn-success-color:              #fff;
