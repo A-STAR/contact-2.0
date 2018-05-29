@@ -2,7 +2,12 @@ import { Type } from '@angular/core';
 
 export interface IEntityDef {
   entityClass: Type<any>;
-  urls: string[];
+  urls: Array<string | IEntityUrl>;
+}
+
+export interface IEntityUrl {
+  url: string;
+  queryParams?: string[];
 }
 
 export enum RepositoryStatus {

@@ -5,6 +5,11 @@
     <div class="pb-lg">
       <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
       <app-button color="secondary" type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
+      <app-action-dropdown
+        class="pull-right"
+        [label]="'debtor.actions'"
+        [actions]="actions"
+      ></app-action-dropdown>
     </div>
     <app-dynamic-form
       *ngIf="controls"
@@ -23,14 +28,12 @@
       <app-tabview-tab [title]="'debtor.debtsTab.title'">
         <app-debtor-debts *ngIf="tabs[1].isInitialised"></app-debtor-debts>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.guarantorsTab.title'">
-        <app-guarantee-grid *ngIf="tabs[2].isInitialised"></app-guarantee-grid>
-      </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.contactsTab.title'">
-        <app-contact-persons-grid
-          *ngIf="tabs[3].isInitialised"
+      <app-tabview-tab [title]="'debtor.contactLogTab.title'">
+        <app-contact-log-grid
+          *ngIf="tabs[10].isInitialised"
+          [debtId]="debtId"
           [personId]="debtorId"
-        ></app-contact-persons-grid>
+        ></app-contact-log-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.documentsTab.title'">
         <app-document-grid
@@ -39,23 +42,14 @@
           [entityType]="19"
         ></app-document-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.employmentRecordTab.title'" [disabled]="isCompany$ | async">
-        <app-employment-grid
-          *ngIf="tabs[5].isInitialised"
+      <app-tabview-tab [title]="'debtor.contactsTab.title'">
+        <app-contact-persons-grid
+          *ngIf="tabs[3].isInitialised"
           [personId]="debtorId"
-          (add)="onEmploymentAdd()"
-          (dblClick)="onEmploymentEdit($event)"
-          (edit)="onEmploymentEdit($event)"
-        ></app-employment-grid>
+        ></app-contact-persons-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async">
-        <app-identity-grid
-          *ngIf="tabs[6].isInitialised"
-          [personId]="debtorId"
-          (add)="onIdentityAdd()"
-          (dblClick)="onIdentityEdit($event)"
-          (edit)="onIdentityEdit($event)"
-        ></app-identity-grid>
+      <app-tabview-tab [title]="'debtor.guarantorsTab.title'">
+        <app-guarantee-grid *ngIf="tabs[2].isInitialised"></app-guarantee-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.pledgorsTab.title'">
         <ng-container *ngIf="tabs[7].isInitialised">
@@ -73,21 +67,32 @@
           <app-debtor-property-attributes></app-debtor-property-attributes>
         </ng-container>
       </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async">
+        <app-identity-grid
+          *ngIf="tabs[6].isInitialised"
+          [personId]="debtorId"
+          (add)="onIdentityAdd()"
+          (dblClick)="onIdentityEdit($event)"
+          (edit)="onIdentityEdit($event)"
+        ></app-identity-grid>
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.employmentRecordTab.title'" [disabled]="isCompany$ | async">
+        <app-employment-grid
+          *ngIf="tabs[5].isInitialised"
+          [personId]="debtorId"
+          (add)="onEmploymentAdd()"
+          (dblClick)="onEmploymentEdit($event)"
+          (edit)="onEmploymentEdit($event)"
+        ></app-employment-grid>
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.attributesTab.title'">
+        <app-debtor-attributes *ngIf="tabs[11].isInitialised"></app-debtor-attributes>
+      </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.actionLogTab.title'">
         <app-debtor-action-log
           *ngIf="tabs[9].isInitialised"
           [personId]="debtorId"
         ></app-debtor-action-log>
-      </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.contactLogTab.title'">
-        <app-contact-log-grid
-          *ngIf="tabs[10].isInitialised"
-          [debtId]="debtId"
-          [personId]="debtorId"
-        ></app-contact-log-grid>
-      </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.attributesTab.title'">
-        <app-debtor-attributes *ngIf="tabs[11].isInitialised"></app-debtor-attributes>
       </app-tabview-tab>
     </app-tabview>
   </div>

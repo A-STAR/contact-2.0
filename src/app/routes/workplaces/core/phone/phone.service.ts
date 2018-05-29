@@ -9,6 +9,10 @@ import { IPhone, ISMSSchedule } from './phone.interface';
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
+import { Phone } from '@app/entities';
+import { first } from 'rxjs/operators/first';
+import { map } from 'rxjs/operators/map';
 
 @Injectable()
 export class PhoneService extends AbstractActionService {
@@ -20,21 +24,23 @@ export class PhoneService extends AbstractActionService {
     protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private repo: RepositoryService,
     protected store: Store<IAppState>,
   ) {
     super();
   }
 
-  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<IPhone[]> {
-    return this.dataService
-      .readAll(this.baseUrl, { entityType, entityId }, { params: { callCenter } })
-      .catch(this.notificationsService.fetchError().entity('entities.phones.gen.plural').dispatchCallback());
+  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Phone[]> {
+    return this.repo.fetch(Phone, { entityType, entityId, callCenter }).pipe(
+      first()
+    );
   }
 
-  fetch(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<IPhone> {
-    return this.dataService
-      .read(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, { params: { callCenter } })
-      .catch(this.notificationsService.fetchError().entity(this.singular).dispatchCallback());
+  fetch(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<Phone> {
+    return this.repo.fetch(Phone, { entityType, entityId, callCenter, phoneId }).pipe(
+      first(),
+      map(phones => phones && phones[0])
+    );
   }
 
   create(entityType: number, entityId: number, callCenter: boolean, phone: IPhone): Observable<void> {

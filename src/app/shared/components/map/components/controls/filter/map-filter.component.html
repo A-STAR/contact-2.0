@@ -44,10 +44,10 @@
           class="dropdown-control-slider"
           [label]="child.label"
           [ngModel]="child.value"
+          [showInput]="child.showInput"
           [isDisabled]="isDisabled(child) | async"
+          [logarithmic]="true"
           [debounce]="200"
-          [min]="10"
-          [max]="100000"
           (ngModelChange)="onChildSelect($event, child)"
         ></app-range>
         <!-- Checkbox -->

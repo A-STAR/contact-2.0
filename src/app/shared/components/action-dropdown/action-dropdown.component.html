@@ -3,18 +3,17 @@
     <app-button [label]="label"></app-button>
   </div>
   <div #dropdownContent>
-    <ul class="list-group mb0">
-      <li class="list-group-item" *ngFor="let option of options"
-        (click)="onOptionClick(option)">
-        {{ option[this.labelKey] }}
-      </li>
-    </ul>
+    <div class="list-group m0">
+      <a class="list-group-item" *ngFor="let option of options" (click)="onOptionClick(option)">
+        {{ option.label }}
+      </a>
+    </div>
   </div>
 </div>
 
 <app-mass-operation
   *ngIf="actionData"
-  [type]="actionData.name"
+  [type]="actionData.name || actionData.id"
   [actionData]="actionData"
   (close)="onCloseAction()"
 ></app-mass-operation>

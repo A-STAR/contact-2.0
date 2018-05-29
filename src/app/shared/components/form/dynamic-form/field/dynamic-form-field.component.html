@@ -45,6 +45,8 @@
     [max]="control.max"
     [required]="control.required"
     [debounce]="control.debounce"
+    [showInput]="control.showInput"
+    [logarithmic]="control.logarithmic"
   ></app-range>
 
   <app-checkbox
@@ -103,7 +105,7 @@
       [label]="control.label"
       [lookupKey]="control.lookupKey"
       [options]="control.options"
-      [required]="control.required"
+      [isRequired]="control.required"
       (select)="selectHandler({ control: control, items: $event})"
     ></app-multi-select>
   </ng-container>
@@ -211,6 +213,7 @@
 
   <ng-container *ngSwitchCase="'dialogmultiselect'">
     <app-dialog-multi-select
+      [label]="control.label"
       [filterType]="control.filterType"
       [filterParams]="control.filterParams"
       [formControlName]="control.controlName"
@@ -247,7 +250,7 @@
     <app-file-upload
       [formControlName]="control.controlName"
       [fileName]="control.fileName"
-      [required]="control.required">
+      [isRequired]="control.required">
     </app-file-upload>
   </ng-container>
 

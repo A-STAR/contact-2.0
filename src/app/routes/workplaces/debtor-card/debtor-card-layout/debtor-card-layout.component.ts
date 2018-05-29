@@ -10,11 +10,13 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, mergeMap, map } from 'rxjs/operators';
+import { equals } from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicLayoutTemplate } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
@@ -65,7 +67,42 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   debtorId: number;
   debtId: number;
 
-  private personSubscription: Subscription;
+  private debtSub: Subscription;
+  private debtorSub: Subscription;
+
+  actions: IAction[] = [{
+    id: 5,
+    params: [
+      'debtId'
+    ]
+  }, {
+    id: 6,
+    params: [
+      'debtId',
+    ],
+    outputConfig: {
+      key: 'operationOutput',
+      items: [
+        {
+          type: 'template',
+          value: 'grid',
+          context: {
+            columns: [
+              { prop: 'id', label: 'ID' },
+              { prop: 'debtId', label: 'Debt' },
+              { prop: 'amount', label: 'Amount' },
+              { prop: 'paymentDateTime', label: 'Payment date' },
+              { prop: 'currencyName', label: 'Currency' },
+              { prop: 'receiveDateTime', label: 'Receive date' },
+              { prop: 'statusCode', label: 'Status code' },
+              { prop: 'purposeCode', label: 'Purpose code' },
+              { prop: 'comment', label: 'Comment' },
+            ]
+          }
+        } as IDynamicLayoutTemplate
+      ]
+    }
+  }];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -80,30 +117,35 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   ngOnInit(): void {
+
     this.debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
     this.debtId = Number(this.route.snapshot.paramMap.get('debtId'));
-    if (this.debtorId && this.debtId) {
-      this.debtorService.debtId$.next(this.debtId);
-      this.debtorService.debtorId$.next(this.debtorId);
-      this.personSubscription = combineLatest(
-        this.debtorService.debtor$,
-        this.debtorService.debt$,
-      )
-      .pipe(
-        first(),
-        map(([person, debt]) => ({
-            ...person,
-            responsibleFullName: debt.responsibleFullName,
-            utc: debt.utc,
-            shortInfo: debt.shortInfo,
-          }),
-        )
-      )
-      .subscribe(data => {
-        this.data = data;
+
+    this.debtorService.debtor$
+      .distinctUntilChanged((a, b) => a && b && equals(a, b))
+      .subscribe(person => {
+        this.data = {
+          ...this.data,
+          ...person,
+        };
         this.cdRef.markForCheck();
       });
-    }
+
+    this.debtSub = this.debtorService.debt$
+      .distinctUntilChanged((a, b) => a && b && equals(a, b))
+      .subscribe(debt => {
+        this.data = {
+          ...this.data,
+          ...(
+            {
+              responsibleFullName: debt.responsibleFullName,
+              utc: debt.utc,
+              shortInfo: debt.shortInfo,
+            }
+          ),
+        };
+        this.cdRef.markForCheck();
+      });
   }
 
   ngAfterViewInit(): void {
@@ -116,8 +158,11 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   }
 
   ngOnDestroy(): void {
-    if (this.personSubscription) {
-      this.personSubscription.unsubscribe();
+    if (this.debtSub) {
+      this.debtSub.unsubscribe();
+    }
+    if (this.debtorSub) {
+      this.debtorSub.unsubscribe();
     }
   }
 

@@ -36,8 +36,8 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => {
-        const { contactPersonId, contactId } = this.selectedContact$.value;
-        this.onEdit(contactPersonId, contactId);
+        const { contactId } = this.selectedContact$.value;
+        this.onEdit(contactId);
       },
       enabled: combineLatest(
         this.canEdit$,
@@ -101,7 +101,7 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(contact: IContactPerson): void {
-    this.onEdit(contact.contactPersonId, contact.contactId);
+    this.onEdit(contact.contactId);
   }
 
   onSelect(contacts: IContactPerson[]): void {
@@ -134,11 +134,10 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @param contactPersonId Link ID in pivot table
    * @param contactId       Linked person ID
    */
-  private onEdit(contactPersonId: number, contactId: number): void {
-    this.routingService.navigate([ `contact/${contactPersonId}/person/${contactId}` ], this.route);
+  private onEdit(contactId: number): void {
+    this.routingService.navigate([ `contact/${contactId}` ], this.route);
   }
 
   get canView$(): Observable<boolean> {

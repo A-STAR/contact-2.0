@@ -207,6 +207,12 @@ export const menuConfig: IMenuConfig = {
     icon: 'co-m-call-incoming',
     docs: 'inner_call',
   },
+  debtCard: {
+    text: null,
+    link: '/app/workplaces/debtor',
+    icon: null,
+    docs: 'debt_card',
+  },
 
   // Отчеты
   reports: {

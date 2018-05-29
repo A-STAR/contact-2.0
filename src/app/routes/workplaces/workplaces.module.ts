@@ -28,10 +28,6 @@ const routes: Routes = [
         path: 'debtor/:debtorId/debt/:debtId',
         loadChildren: './debtor-card/debtor.module#DebtorCardModule',
       },
-      // {
-      //   path: 'contact-registration/:debtId/:contactTypeCode/:contactId',
-      //   loadChildren: './contact-registration/contact-registration.module#ContactRegistrationModule',
-      // },
       {
         path: 'incoming-call',
         loadChildren: './incoming-call/incoming-call.module#IncomingCallModule',

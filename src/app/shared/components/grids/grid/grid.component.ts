@@ -268,8 +268,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
 
   private onSelectionChanged(): void {
     const selection = this.gridApi.getSelectedRows();
-    this.
-    selectRow.emit(selection);
+    this.selectRow.emit(selection);
     this.updateToolbar();
   }
 

@@ -21,6 +21,7 @@ import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
@@ -33,7 +34,7 @@ import { WSService } from './ws/ws.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
 import { environment } from '../../environments/environment';
-import { Debt, Person, User } from '@app/entities';
+import { Debt, Person, User, Phone } from '@app/entities';
 
 /**
  * NOTE: this is a quick patch that places the operators
@@ -53,6 +54,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
+import { TaskService } from '@app/core/task/task.service';
 
 @NgModule({
   imports: [
@@ -71,7 +73,20 @@ import 'rxjs/add/operator/withLatestFrom';
     }),
     RepositoryModule.withEntity({
       entityClass: Debt,
-      urls: [ '/debts/{id}', '/persons/{personId}/debts', '/debts/{id}?callCenter={callCenter}' ],
+      urls: [ { url: '/debts/{id}', queryParams: [ 'callCenter' ] }, '/persons/{personId}/debts' ],
+    }),
+    RepositoryModule.withEntity({
+      entityClass: Phone,
+      urls: [
+        {
+          url: '/entityTypes/{entityType}/entities/{entityId}/phones',
+          queryParams: [ 'callCenter' ]
+        },
+        {
+          url: '/entityTypes/{entityType}/entities/{entityId}/phones/{phoneId}',
+          queryParams: [ 'callCenter' ]
+        },
+      ],
     }),
     UserModule,
   ],
@@ -90,10 +105,12 @@ import 'rxjs/add/operator/withLatestFrom';
     GridFiltersService,
     GuiObjectsService,
     HelpService,
+    LayoutService,
     MetadataService,
     NotificationsService,
     PersistenceService,
     SettingsService,
+    TaskService,
     ThemesService,
     TranslateService,
     ValueConverterService,

@@ -80,7 +80,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
             // filter terms with allowed dict codes
             terms = terms.filter(term => allowedDictCodes.includes(term.code));
           }
-          this.terms = terms;
+          this.terms = terms.filter(term => term.isClosed === 0);
           this.cdRef.markForCheck();
         });
     }

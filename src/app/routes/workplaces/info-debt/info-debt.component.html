@@ -18,9 +18,16 @@
           *ngIf="grid.isInitialised"
           [gridKey]="grid.gridKey$ | async"
           [rowIdKey]="grid.rowIdKey"
+          [actions]="grid.actions"
           [columns]="grid.columns"
+          (action)="onAction($event)"
         ></app-info-debt-detail-grid>
       </app-tabview-tab>
     </app-tabview>
   </app-area>
 </app-area>
+
+<app-downloader
+  #downloader
+  entityTranslationKey="entities.letters.gen.singular"
+></app-downloader>

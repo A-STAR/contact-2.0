@@ -70,7 +70,7 @@
       [formControlName]="control.controlName"
       [label]="control.label"
       [lookupKey]="control.lookupKey"
-      [required]="isRequired(control) | async"
+      [isRequired]="isRequired(control) | async"
     ></app-multi-select>
 
     <!-- Text -->
@@ -88,6 +88,19 @@
       [label]="control.label"
       [required]="isRequired(control) | async"
     ></app-number>
+
+    <!-- Range -->
+    <app-range
+      *ngSwitchCase="'range'"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [min]="control.min"
+      [max]="control.max"
+      [required]="isRequired(control) | async"
+      [debounce]="control.debounce"
+      [showInput]="control.showInput"
+      [logarithmic]="control.logarithmic"
+    ></app-range>
 
     <!-- Textarea -->
     <app-textarea
