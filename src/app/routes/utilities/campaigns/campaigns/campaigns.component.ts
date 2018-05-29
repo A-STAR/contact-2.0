@@ -11,21 +11,29 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, map, switchMap } from 'rxjs/operators';
 
 import { ICampaign, CampaignStatus } from './campaigns.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ToolbarItemTypeEnum, IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignsService } from './campaigns.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { DialogFunctions } from '@app/core/dialog';
 
 import { addGridLabel, isEmpty } from '@app/core/utils';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
+const hasPermissionAndStarted = map(([ hasPermissions, selectedCampaign ]) => {
+  return hasPermissions && !!selectedCampaign && selectedCampaign.statusCode === CampaignStatus.STARTED;
+});
+
+const hasPermissionAndNotStarted = map(([ hasPermissions, selectedCampaign ]) => {
+  return hasPermissions && !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED;
+});
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,9 +84,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
         this.selectedCampaign
-      )
-        .map(([canDelete, selectedCampaign]) => canDelete &&
-          !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED)
+      ).pipe(hasPermissionAndNotStarted),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -91,11 +97,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
-      ).pipe(
-        map(([hasPermissions, selectedCampaign]) => {
-          return hasPermissions && !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED;
-        })
-      ),
+      ).pipe(hasPermissionAndNotStarted),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_STOP,
@@ -103,11 +105,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
-      ).pipe(
-        map(([hasPermissions, selectedCampaign]) => {
-          return hasPermissions && !!selectedCampaign && selectedCampaign.statusCode === CampaignStatus.STARTED;
-        })
-      ),
+      ).pipe(hasPermissionAndStarted),
     },
   ];
 
