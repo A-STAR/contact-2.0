@@ -1,15 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ParticipantsModule } from './participants/participants.module';
+import { CampaignsModule as SimpleCampaignsModule } from './campaigns/campaigns.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { StatisticsModule } from './statistics/statistics.module';
 
-import { CampaignsService, CAMPAIGN_NAME_ID } from './campaigns.service';
-
-import { CampaignsComponent } from './campaigns.component';
-import { CampaignsEditComponent } from './campaigns-edit/campaigns-edit.component';
+import { CampaignsComponent } from '@app/routes/utilities/campaigns/campaigns.component';
+import { GenesysCampaignsModule } from '@app/routes/utilities/campaigns/genesys/genesys.module';
 
 const routes: Routes = [
   {
@@ -23,10 +19,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
+    GenesysCampaignsModule,
+    SimpleCampaignsModule,
     SharedModule,
-    ParticipantsModule,
-    StatisticsModule,
     RouterModule.forChild(routes),
   ],
   exports: [
@@ -34,14 +29,6 @@ const routes: Routes = [
   ],
   declarations: [
     CampaignsComponent,
-    CampaignsEditComponent
-  ],
-  providers: [
-    CampaignsService,
-    {
-      provide: CAMPAIGN_NAME_ID,
-      useValue: 402
-    }
   ],
 })
 export class CampaignsModule {}

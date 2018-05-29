@@ -839,6 +839,19 @@
           "subject": "Subject",
           "templateName": "Template"
         }
+      },
+      "letter": {
+        "title": "Letters",
+        "grid": {
+          "letterId": "ID",
+          "address": "Address",
+          "statusCode": "Status",
+          "createDateTime": "Created",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "templateName": "Template",
+          "letterExport": "Letter export"
+        }
       }
     },
     "debtsProcessing": {

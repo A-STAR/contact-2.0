@@ -839,6 +839,19 @@
           "subject": "Тема",
           "templateName": "Название шаблона"
         }
+      },
+      "letter": {
+        "title": "Письма",
+        "grid": {
+          "letterId": "ID",
+          "address": "Адрес",
+          "statusCode": "Статус",
+          "createDateTime": "Дата создания",
+          "sendDateTime": "Фактическая дата отправки",
+          "userFullName": "Оператор",
+          "templateName": "Название шаблона",
+          "letterExport": "Сохранение файла письма"
+        }
       }
     },
     "debtsProcessing": {
