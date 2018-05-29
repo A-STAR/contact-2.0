@@ -44,7 +44,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   readonly officeVisitButtonDisabled$ = combineLatestAnd([
     this.workplacesService.canRegisterOfficeVisit$,
     this.incomingCallService.selectedDebtor$.map(Boolean),
-  ]);
+  ]).pipe(
+    map(isEnabled => !isEnabled)
+  );
 
   private selectedPhoneId: number;
 
