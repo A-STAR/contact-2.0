@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, map } from 'rxjs/operators';
 
-import { IContactRegistrationMode } from '../contact-registration.interface';
-
 import { ContactRegistrationService } from '../contact-registration.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
@@ -177,9 +175,9 @@ export class EditComponent extends DialogFunctions {
   }
 
   onBack(): void {
-    this.contactRegistrationService.cancelRegistration();
+    this.contactRegistrationService.toOutcomeTree();
     this.form.reset();
-    this.displayOutcomeTree();
+    // this.displayOutcomeTree();
   }
 
   private submit(isUnconfirmed: boolean = null): void {
@@ -243,10 +241,10 @@ export class EditComponent extends DialogFunctions {
     return this.isContactForPersonHasChosen() && this.isContactForPhoneHasChosen();
   }
 
-  private displayOutcomeTree(): void {
-    this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
-    this.cdRef.markForCheck();
-  }
+  // private displayOutcomeTree(): void {
+  //   this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
+  //   this.cdRef.markForCheck();
+  // }
 
   private onCompleteRegistration(): void {
     this.contactRegistrationService.contactPersonChange$.next(this.isContactChanged);
