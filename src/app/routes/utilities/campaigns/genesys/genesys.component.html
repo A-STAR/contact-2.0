@@ -1,0 +1,16 @@
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <app-action-grid
+      metadataKey="pbxCampaigns"
+      persistenceKey="pbxCampaigns"
+      [fullHeight]="true"
+      [rows]="rows"
+      [rowCount]="rowCount"
+      (request)="onRequest()"
+    ></app-action-grid>
+  </div>
+  <div class="flex-item grow">
+    Configurable area
+  </div>
+</div>
+

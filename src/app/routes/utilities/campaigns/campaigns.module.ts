@@ -5,6 +5,7 @@ import { CampaignsModule as SimpleCampaignsModule } from './campaigns/campaigns.
 import { SharedModule } from '@app/shared/shared.module';
 
 import { CampaignsComponent } from '@app/routes/utilities/campaigns/campaigns.component';
+import { GenesysCampaignsModule } from '@app/routes/utilities/campaigns/genesys/genesys.module';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    GenesysCampaignsModule,
     SimpleCampaignsModule,
     SharedModule,
     RouterModule.forChild(routes),
