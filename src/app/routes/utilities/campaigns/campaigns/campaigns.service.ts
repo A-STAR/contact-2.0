@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import {
   ICampaign,
   ICampaignGroup,
@@ -14,11 +14,11 @@ import {
   IParticipant,
   ICampaignsStatistic, IUserStatistic
 } from './campaigns.interface';
-import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
+import { IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 
-import { DataService } from '../../../core/data/data.service';
-import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { EntityTranslationsService } from '@app/core/entity/translations/entity-translations.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 export const CAMPAIGN_NAME_ID = new InjectionToken<number>('CAMPAIGN_NAME_ID');
 
