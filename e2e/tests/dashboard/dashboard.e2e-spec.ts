@@ -1,4 +1,4 @@
-import { expectToMatchUrl, navigate } from '../utils/index';
+import { expectToMatchUrl, navigate } from '../../utils/index';
 
 describe('home', () => {
   beforeEach(async () => {
