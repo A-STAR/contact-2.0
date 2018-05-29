@@ -98,7 +98,7 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
     const debtId = this.debtorService.debtId$.value;
     const debtorId = this.debtorService.debtorId$.value;
     if (debtId && debtorId) {
-      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 
