@@ -11,15 +11,15 @@ import {
 import { first } from 'rxjs/operators';
 
 import { ICampaign } from '../campaigns.interface';
-import { IDynamicFormItem, IDynamicFormConfig } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { EntityTranslationsConstants } from '../../../../core/entity/translations/entity-translations.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
+import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { CampaignsService } from '../campaigns.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-campaigns-edit',

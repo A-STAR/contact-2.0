@@ -1,5 +1,5 @@
 import { ICampaignsState } from './campaigns.interface';
-import { SafeAction } from '../../../core/state/state.interface';
+import { SafeAction } from '@app/core/state/state.interface';
 
 import { CampaignsService } from './campaigns.service';
 
