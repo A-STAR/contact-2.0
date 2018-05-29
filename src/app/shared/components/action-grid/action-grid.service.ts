@@ -105,14 +105,12 @@ export class ActionGridService {
    */
   getSelection(action: IActionGridAction, selected: any[]): number[][] {
     return selected.reduce((acc, row) => {
-      return [
-        ...acc,
-        [...action.metadataAction.params
-          .map(param => row[param])
-          // filter null and undefined params
-          .filter(value => value != null)
-        ]
+      const mappedParams = [...action.metadataAction.params
+        .map(param => row[param])
+        // filter null and undefined params
+        .filter(value => value != null)
       ];
+      return mappedParams.length ? [...acc, mappedParams ] : acc;
     }, []);
   }
   /**
