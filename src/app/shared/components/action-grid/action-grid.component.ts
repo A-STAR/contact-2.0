@@ -47,11 +47,11 @@ import {
   IMetadataTitlebar,
   IMetadataActionPermissions,
 } from '@app/core/metadata/metadata.interface';
+import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -187,7 +187,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   constructor(
     private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
-    private customOperationService: CustomOperationService,
     private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -254,12 +253,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         this.actions$.pipe(filter(Boolean)),
         this.userConstantsService.bag(),
         this.userPermissionsService.bag(),
-        this.entityAttributesService.getDictValueAttributes()
+        this.entityAttributesService.getDictValueAttributes(),
+        this.actionGridService.customOperations$.pipe(filter(Boolean))
       )
       .pipe(
-          map(([actions, constants, permissions, entityPermissions]) => {
-
-            const actionsWithPermissions = this.processActions(actions, constants, permissions, entityPermissions);
+          map(([actions, constants, permissions, entityPermissions, operations]) => {
+            const actionsWithOperations = this.bindOperations(actions, operations);
+            const actionsWithPermissions = this.processActions(actionsWithOperations, constants, permissions, entityPermissions);
 
             this.currentDefaultAction = this.actionGridService.getAction(
               actionsWithPermissions,
@@ -590,6 +590,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     }
   }
 
+  private bindOperations(actions: IMetadataAction[], operations: ICustomOperation[]): IMetadataAction[] {
+    return actions
+      .filter(action => !action.id || operations.find(o => !action.id || o.id === action.id))
+      .map(action => {
+        const customAction = operations.find(a => a.id === action.id);
+        return {
+          ...action,
+          action: customAction ? customAction.name : action.action
+        };
+      });
+  }
+
   private buildPermissions(actions: IMetadataAction[], constants: ValueBag,
     permissions: ValueBag, entityPerms: IEntityAttributes): IMetadataActionPermissions {
     return {
@@ -691,9 +703,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         .filter(action => !!action.id)
         .reduce((acc, action) => ({
           ...acc,
-          [action.action]: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL
-            ? this.customOperationService.isAllowedOperation(action.id)
-            : this.customOperationService.isAllowedOperation(action.id) && selection.length
+          [action.action]: (actionType: MetadataActionType, selection) =>
+            actionType === MetadataActionType.ALL || selection.length
         }), {})
     };
   }

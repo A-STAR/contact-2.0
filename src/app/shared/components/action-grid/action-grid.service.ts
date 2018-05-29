@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
+import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 
 import {
   IMetadataAction,
@@ -14,16 +17,20 @@ import {
   IGridActionSelection,
   IGridActionFilterSelection } from '@app/shared/components/action-grid/action-grid.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 import { compose } from 'ramda';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class ActionGridService {
 
   static DefaultSelectionAction = 'showContactHistory';
+
+  static TYPE_CUSTOM_OPERATION = 2;
 
   cbActions: { [key: string]: (action: IGridAction) => any };
 
@@ -33,10 +40,16 @@ export class ActionGridService {
     [MetadataActionType.SINGLE]: this.getSingleSelectionPayload,
   };
 
+  readonly customOperations$ = new BehaviorSubject<ICustomOperation[]>(null);
+
   constructor(
+    private customOperationService: CustomOperationService,
     private massOpsService: MassOperationsService,
   ) {
     this.cbActions = this.createDlgActions();
+
+    this.getCustomOperations()
+      .subscribe(operations => this.customOperations$.next(operations));
   }
 
   getAction(
@@ -202,4 +215,7 @@ export class ActionGridService {
     }), {});
   }
 
+  private getCustomOperations(): Observable<ICustomOperation[]> {
+    return this.customOperationService.fetchOperations(ActionGridService.TYPE_CUSTOM_OPERATION);
+  }
 }
