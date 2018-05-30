@@ -21,6 +21,7 @@ import {
 import { GenesysService } from '@app/routes/utilities/campaigns/genesys/genesys.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
+import { isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -139,7 +140,10 @@ export class GenesysCampaignsComponent implements OnInit {
       });
   }
 
-  onSelectRow(campaign: IGenesysCampaign): void {
+  onSelectRow(campaignIds: number[]): void {
+    const campaign = isEmpty(campaignIds)
+      ? null
+      : this.rows.find(row => row.id === campaignIds[0]);
     this.selectedCampaign$.next(campaign);
   }
 
