@@ -7,7 +7,7 @@ import {
   pause,
   scrollTo,
   typeIntoDialogInput,
-} from '../utils/index';
+} from '../../utils/index';
 
 describe('app/admin/roles', () => {
   beforeEach(async () => {
