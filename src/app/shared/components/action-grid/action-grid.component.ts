@@ -11,15 +11,17 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+
 import { GridOptions } from 'ag-grid';
-import { first, filter, map, takeUntil, delay, switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, filter, map, takeUntil, delay, switchMap, tap } from 'rxjs/operators';
 import { never } from 'rxjs/observable/never';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
+import { IContext } from '@app/core/context/context.interface';
 import {
   DynamicLayoutGroupType,
   DynamicLayoutGroupMode,
@@ -31,6 +33,7 @@ import {
   IGridAction,
   IActionGridAction,
 } from './action-grid.interface';
+import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IGridControlValue } from './excel-filter/excel-filter.interface';
 import {
   IAGridAction,
@@ -39,24 +42,23 @@ import {
   IAGridColumn,
   IAGridExportableColumn,
 } from '../grid2/grid2.interface';
-import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
+
 import { IMetadataDefs } from '../grid/grid.interface';
 import {
   IMetadataAction,
   MetadataActionType,
   IMetadataTitlebar,
-  IMetadataActionPermissions,
 } from '@app/core/metadata/metadata.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
+import { ContextService } from '@app/core/context/context.service';
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
-import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
@@ -66,11 +68,9 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
-import { combineLatestAnd } from '@app/core/utils';
+import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
-import { ValueBag } from '@app/core/value-bag/value-bag';
-import { IPermParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,7 +80,6 @@ import { IPermParams } from '@app/shared/components/grids/context-menu/context-m
     ExcelFilteringService,
   ],
   selector: 'app-action-grid',
-  styleUrls: [ './action-grid.component.scss' ],
   templateUrl: 'action-grid.component.html',
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit, OnDestroy {
@@ -158,7 +157,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   selectionActionData: IGridAction;
   selectionActionName: string;
 
-  gridActions$: Observable<IMetadataAction[]>;
   titlebar$: Observable<ITitlebar>;
   layoutConfig: IDynamicLayoutConfig = {
     key: 'action-grid',
@@ -188,11 +186,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   constructor(
     private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
+    private contextService: ContextService,
     private customOperationService: CustomOperationService,
-    private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -214,7 +211,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       );
     }
 
-    this.gridActions$ = this.getGridActions();
     this.titlebar$ = this.getGridTitlebar();
 
    const selectActionSub = this.selectRow.pipe(
@@ -250,33 +246,35 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     return permissionKey ? this.userPermissionsService.has(permissionKey) : of(true);
   }
 
-  getGridActions(): Observable<IMetadataAction[]> {
-    return combineLatest(
-        this.actions$.pipe(filter(Boolean)),
-        this.userConstantsService.bag(),
-        this.userPermissionsService.bag(),
-        this.entityAttributesService.getDictValueAttributes()
-      )
+  readonly gridActions$: Observable<IMetadataAction[]> = this.actions$.pipe(
+    filter(Boolean),
+    switchMap(actions => {
+      const flatActions = flatten(actions);
+      return combineLatest<IMetadataAction>(...flatActions.map(action => this.processAction(action)))
       .pipe(
-          map(([actions, constants, permissions, entityPermissions]) => {
-
-            const actionsWithPermissions = this.processActions(actions, constants, permissions, entityPermissions);
-
-            this.currentDefaultAction = this.actionGridService.getAction(
-              actionsWithPermissions,
-              action => action.action === this.defaultActionName
-            );
-
-            this.currentSelectionAction = this.actionGridService.getAction(
-                actionsWithPermissions,
-                action => action.action === this.selectionActionName,
-                (_actions: IMetadataAction[], _: IMetadataAction, index: number) => _actions.splice(index, 1)
-            );
-
-            return actionsWithPermissions;
-        })
+        map(processed => processed.reduce((acc, value) => Object.assign(acc, value), {})),
+        map(processedFlatActions => this.actionGridService.setActionsData(actions, [
+            a => ({ ...a, enabled: a.enabled || this.addPermission(a, processedFlatActions[a.action]) }),
+            a => {
+              const isDialog = !Object.keys(this.actionGridService.cbActions).includes(a.action);
+              return { ...a, isDialog, cb: !isDialog ? this.actionGridService.cbActions[a.action] : null };
+            },
+        ]))
       );
-  }
+    }),
+    tap(actions => {
+      this.currentDefaultAction = this.actionGridService.getAction(
+        actions,
+        action => action.action === this.defaultActionName
+      );
+
+      this.currentSelectionAction = this.actionGridService.getAction(
+        actions,
+          action => action.action === this.selectionActionName,
+          (_actions: IMetadataAction[], _: IMetadataAction, index: number) => _actions.splice(index, 1)
+      );
+    })
+  );
 
   getGridTitlebar(): Observable<ITitlebar> {
     return this.titlebarConfig$
@@ -299,13 +297,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     return !!this.metadataKey;
   }
 
-  get customActions$(): Observable<IMetadataAction[]> {
-    return this.actions$
-      .pipe(
-        filter(Boolean),
-        map(actions => actions.filter(action => !!action.id))
-      );
-  }
+  readonly customActions$: Observable<IMetadataAction[]> = this.actions$
+    .pipe(
+      filter(Boolean),
+      map(actions => actions.filter(action => !!action.id))
+  );
 
   getFilters(): FilterObject {
     return this.grid instanceof Grid2Component
@@ -491,18 +487,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     };
   }
 
-  private processActions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
-      entityPerms: IEntityAttributes): IMetadataAction[] {
-
-    const actionPermissions = this.buildPermissions(actions, constants, permissions, entityPerms);
-
-    return this.actionGridService.attachActionData(actions, [
-      action => ({ ...action, enabled: action.enabled || actionPermissions[action.action] }),
-      action => {
-        const isDialog = !Object.keys(this.actionGridService.cbActions).includes(action.action);
-        return { ...action, isDialog, cb: !isDialog ? this.actionGridService.cbActions[action.action] : null };
-      },
-    ]);
+  private processAction(action: IMetadataAction): Observable<any> {
+    const config = this.getValidator(action);
+    return this.contextService.calculate(config).pipe(
+      map(computedValue => ( { [action.action]: computedValue } ) ),
+      tap(c => console.log(c))
+    );
   }
 
   private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
@@ -581,104 +571,26 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     return selection.length && selection.some(s => props.every(prop => !!s[prop]));
   }
 
-  private readonly hasValidators: any = {
-    addVisit: 'ADDRESS_VISIT_ADD',
-    cancelVisit: 'VISIT_CANCEL',
-    changeBranchAttr: 'DEBT_EDIT',
-    changeCreditTypeAttr: 'DEBT_EDIT',
-    changePersonType: 'PERSON_INFO_EDIT',
-    changePortfolioAttr: 'DEBT_PORTFOLIO_EDIT',
-    changeRegionAttr: 'DEBT_EDIT',
-    changeStageAttr: 'DEBT_EDIT',
-    changeTimezoneAttr: 'DEBT_EDIT',
-    confirmPaymentsOperator: 'PAYMENTS_OPERATOR_CHANGE',
-    confirmPromise: 'PROMISE_CONFIRM',
-    debtClearResponsible: 'DEBT_RESPONSIBLE_CLEAR',
-    debtNextCallDate: 'DEBT_NEXT_CALL_DATE_SET',
-    debtOutsourcingExclude: 'DEBT_OUTSOURCING_SEND',
-    debtOutsourcingReturn: 'DEBT_OUTSOURCING_RETURN',
-    debtOutsourcingSend: 'DEBT_OUTSOURCING_SEND',
-    debtSetResponsible: ['DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET'],
-    deletePromise: ['PROMISE_DELETE', 'PROMISE_CONFIRM'],
-    mapAddressView: 'MAP_ADDRESS_VIEW',
-    mapContactView: 'MAP_CONTACT_VIEW',
-    openUserDetail: 'OPERATOR_DETAIL_VIEW',
-    paymentsCancel: 'PAYMENT_CANCEL',
-    paymentsConfirm: 'PAYMENT_CONFIRM',
-    prepareVisit: 'VISIT_PREPARE',
-    rejectPaymentsOperator: 'PAYMENTS_OPERATOR_CHANGE',
-    showContactHistory: 'CONTACT_LOG_VIEW',
-  };
-
-  private readonly notEmptyValidators = {
-    deleteSMS: 'SMS_DELETE_STATUS_LIST',
-  };
-
-  private addPermission(action: IMetadataAction, constants: ValueBag,
-    permissions: ValueBag, entityPerms: IEntityAttributes): (params: IPermParams) => boolean {
-      if (action.action in this.hasValidators) {
-        return this.hasPermValidation(permissions, this.hasValidators[action.action]);
-      }
-      if (action.action in this.notEmptyValidators) {
-
-      }
-      if (action.id) {
-        return params => this.customOperationPerm(params);
-      }
+  private getValidator(action: IMetadataAction): IContext {
+    const validatorGetter = this.actionGridService.actionValidators[action.action];
+    // NOTE: if no associated validator is found, then this action will be allowed
+    return validatorGetter ? validatorGetter(action) : true;
   }
 
-  private customOperationPerm(params: IPermParams): boolean {
+  private addPermission(action: IMetadataAction, computedValue: boolean): (params: IContextMenuParams) => boolean {
+      if (!action.id) {
+        return this.attachValidator(computedValue);
+      }
+      return params => this.customOperationPerm(params);
+  }
+  // TODO(i.lobanov): move isAllowedOperation to actionValidators
+  private customOperationPerm(params: IContextMenuParams): boolean {
     return params.action.type === MetadataActionType.ALL ? this.customOperationService.isAllowedOperation(params.action.id)
       : this.customOperationService.isAllowedOperation(params.action.id) && !!params.selected.length;
   }
 
-  private hasPermValidation(bag: ValueBag, perms: string | string[]): (params: IPermParams) => boolean {
-    const hasPerm = Array.isArray(perms) ? bag.has : bag.hasOneOf;
-    return (params: IPermParams) => params.action.type === MetadataActionType.ALL ?
-      hasPerm.call(bag, perms) : this.validateSelection(params.action.params, params.selected) && hasPerm.call(bag, perms);
-  }
-
-  private buildPermissions(actions: IMetadataAction[], constants: ValueBag,
-    permissions: ValueBag, entityPerms: IEntityAttributes): IMetadataActionPermissions {
-    return {
-      changeDict1Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.notEmpty('DEBT_DICT1_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed :
-        selection.length && permissions.notEmpty('DEBT_DICT1_EDIT_LIST')
-          && entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed,
-      changeDict2Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.notEmpty('DEBT_DICT2_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed :
-        selection.length
-          && permissions.notEmpty('DEBT_DICT2_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed,
-      changeDict3Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.notEmpty('DEBT_DICT3_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed :
-        selection.length && permissions.notEmpty('DEBT_DICT3_EDIT_LIST')
-          && entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed,
-      changeDict4Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.notEmpty('DEBT_DICT4_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed :
-        selection.length && permissions.notEmpty('DEBT_DICT4_EDIT_LIST')
-          && entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed,
-      emailCreate: (actionType: MetadataActionType, selection) => {
-        const action = actions.find(a => a.action === 'emailCreate');
-        const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-        return actionType === MetadataActionType.ALL ? constants.has('Email.Use')
-          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole)) :
-          selection.length && constants.has('Email.Use')
-            && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
-      },
-      // TODO(d.maltsev, i.kibisov): pass entityTypeId
-      objectAddToGroup: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19) : selection.length
-          && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
-      smsCreate: (actionType: MetadataActionType, selection) => {
-        const action = actions.find(a => a.action === 'smsCreate');
-        const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-        return actionType === MetadataActionType.ALL ? constants.has('SMS.Use')
-          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole)) :
-          selection.length && constants.has('SMS.Use')
-            && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
-      },
-      registerContact: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        of(true) : selection.length && of(true),
-    };
+  private attachValidator(computedValue: boolean): (params: IContextMenuParams) => boolean {
+    return (params: IContextMenuParams) => params.action.type === MetadataActionType.ALL ?
+      computedValue : this.validateSelection(params.action.params, params.selected) && computedValue;
   }
 }

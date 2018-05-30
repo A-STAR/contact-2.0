@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
 import { MenuItemDef } from 'ag-grid';
-import { IContextMenuOptions, IContextMenuSimpleOptions, IPermParams } from './context-menu.interface';
+import { IContextMenuOptions, IContextMenuSimpleOptions, IContextMenuParams } from './context-menu.interface';
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -149,7 +149,7 @@ export class ContextMenuService {
     return !action.id || this.customOperationService.isAllowedOperation(action.id);
   }
 
-  private setPermParams(action: IMetadataAction, type: MetadataActionType, options: IContextMenuOptions): IPermParams {
+  private setPermParams(action: IMetadataAction, type: MetadataActionType, options: IContextMenuOptions): IContextMenuParams {
     return {
       action: {
         ...action,

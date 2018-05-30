@@ -12,6 +12,7 @@ import {
   IPortfolio,
   IActionType
 } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
@@ -103,12 +104,12 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
       applyTo: {
         selected: true
       },
-      enabled: (_, __, portfolio) => this.canFormPortfolio(portfolio)
+      enabled: (params: IContextMenuParams) => this.canFormPortfolio(params.selection)
     },
     {
       action: 'sendOutsourcing',
       label: 'portfolios.outsourcing.send',
-      enabled: (_, __, portfolio) => this.canSendPortfolio(portfolio),
+      enabled: (params: IContextMenuParams) => this.canSendPortfolio(params.selection),
       children: [
         {
           action: 'sendOutsource',
@@ -117,7 +118,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
           applyTo: {
             selected: true
           },
-          enabled: (_, __, portfolio) => this.canSendPortfolio(portfolio),
+          enabled: (params: IContextMenuParams) => this.canSendPortfolio(params.selection),
         }, {
           action: 'sendCession',
           label: 'portfolios.outsourcing.send',
@@ -125,7 +126,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
           applyTo: {
             selected: true
           },
-          enabled: (_, __, portfolio) => this.canSendPortfolio(portfolio),
+          enabled: (params: IContextMenuParams) => this.canSendPortfolio(params.selection),
         }
       ]
     },
@@ -136,7 +137,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
       applyTo: {
         selected: true
       },
-      enabled: (_, __, portfolio) => this.canReturnPortfolio(portfolio),
+      enabled: (params: IContextMenuParams) => this.canReturnPortfolio(params.selection),
     }
   ];
 
