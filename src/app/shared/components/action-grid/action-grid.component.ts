@@ -490,8 +490,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private processAction(action: IMetadataAction): Observable<any> {
     const config = this.getValidator(action);
     return this.contextService.calculate(config).pipe(
-      map(computedValue => ( { [action.action]: computedValue } ) ),
-      tap(c => console.log(c))
+      map(computedValue => ( { [action.action]: Boolean(computedValue) } ) ),
     );
   }
 
