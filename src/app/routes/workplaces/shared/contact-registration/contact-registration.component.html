@@ -8,5 +8,5 @@
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
-<app-contact-registration-tree [hidden]="showEdit$ | async"></app-contact-registration-tree>
-<app-contact-registration-edit [hidden]="showTree$ | async"></app-contact-registration-edit>
+<app-contact-registration-tree *ngIf="showTree$ | async"></app-contact-registration-tree>
+<app-contact-registration-edit *ngIf="showEdit$ | async"></app-contact-registration-edit>

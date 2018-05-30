@@ -38,6 +38,7 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   templates: Record<string, TemplateRef<any>>;
 
   isDisabled$ = of(true);
+  readonly isEditMode = !this.router.url.includes('edit/debt/create');
 
   readonly debtId$ = this.debtorService.debtId$;
   readonly displayDebtData = this.debtId$.pipe(map(Boolean));
@@ -97,7 +98,7 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
     const debtId = this.debtorService.debtId$.value;
     const debtorId = this.debtorService.debtorId$.value;
     if (debtId && debtorId) {
-      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 
@@ -107,7 +108,6 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  private get isEditMode(): boolean {
-    return !this.router.url.includes('create');
-  }
+  readonly layoutConfig = this.isEditMode ? 'debt' : 'debt-create';
+
 }

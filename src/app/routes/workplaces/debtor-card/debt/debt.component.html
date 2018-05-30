@@ -5,8 +5,8 @@
   </div>
   <div class="flex-item grow">
     <app-dynamic-layout
-      *ngIf="templates"
-      layout="debt"
+      *ngIf="templates && layoutConfig"
+      [layout]="layoutConfig"
       [data]="data | async"
       [templates]="templates"
     ></app-dynamic-layout>

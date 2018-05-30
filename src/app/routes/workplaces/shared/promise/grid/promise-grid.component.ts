@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
@@ -35,11 +34,12 @@ import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 export class PromiseGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
   @Input() hideToolbar = false;
-  @Input('debtId') set debtId(debtId: number) {
+  @Input() set debtId(debtId: number) {
+    this._debtId = debtId;
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
-  @Input('debtStatusCode') set debtStatusCode(debtStatusCode: number) {
+  @Input() set debtStatusCode(debtStatusCode: number) {
     this.debtStatusCode$.next(debtStatusCode);
     this.cdRef.markForCheck();
   }
@@ -49,6 +49,30 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   private debtStatusCode$ = new BehaviorSubject<number>(null);
   // NOTE: emit true by default, since false means that the user can add another promise
   private hasActivePromise$ = new BehaviorSubject<boolean>(true);
+  private _debtId: number;
+
+  readonly canView$ = this.userPermissionsService.has('PROMISE_VIEW');
+
+  readonly canAdd$ = combineLatest(
+      this.userPermissionsService.has('PROMISE_ADD'),
+      this.userConstantsService.get('Promise.SeveralActive.Use'),
+      this.debtStatusCode$,
+      this.hasActivePromise$,
+    )
+    .pipe(
+      map(([canAdd, severalActiveValue, debtStatusCode, hasActivePromise ]) => {
+        const severalActiveUse = Boolean(severalActiveValue.valueB);
+        return canAdd && this._debtId && ![6, 7, 8, 17].includes(debtStatusCode) &&
+         (severalActiveUse || (!severalActiveUse && !hasActivePromise));
+      }),
+      distinctUntilChanged()
+    );
+
+  readonly canRefresh$ = combineLatestAnd([ this.canView$, this.debtId$.map(Boolean) ]).distinctUntilChanged();
+
+  readonly canСonfirm$ = this.userPermissionsService.has('PROMISE_CONFIRM');
+
+  readonly canDelete$ = this.userPermissionsService.has('PROMISE_DELETE');
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -118,7 +142,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
         if (!hasPermission) {
           this.notificationsService.permissionError().entity('entities.promises.gen.plural').dispatch();
           this.clear();
-        } else if (this.debtId) {
+        } else if (this._debtId) {
           this.fetch();
         } else {
           this.clear();
@@ -148,17 +172,16 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   onDoubleClick(promise: IPromise): void {
     const { id: promiseId } = promise || this.selectedPromise$.value;
-    const { debtId } = this;
-    if (!debtId) { return; }
+    if (!this._debtId) { return; }
     const url = this.callCenter
-      ? `promise/${this.debtId}/${promiseId}`
+      ? `promise/${this._debtId}/${promiseId}`
       : `debt/promise/${promiseId}`;
     this.routingService.navigate([ url ], this.route);
   }
 
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
-    this.promiseService.delete(this.debtId$.value, promiseId, this.callCenter)
+    this.promiseService.delete(this._debtId, promiseId, this.callCenter)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -168,7 +191,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   onApprove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
     const promise = { isUnconfirmed: 0 } as IPromise;
-    this.promiseService.update(this.debtId$.value, promiseId, promise, this.callCenter)
+    this.promiseService.update(this._debtId, promiseId, promise, this.callCenter)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -189,61 +212,27 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   get debtId(): number {
-    return this.debtId$.value;
-  }
-
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return combineLatest(
-      this.userPermissionsService.has('PROMISE_ADD'),
-      this.userConstantsService.get('Promise.SeveralActive.Use'),
-      this.debtStatusCode$,
-      this.hasActivePromise$,
-    )
-    .pipe(
-      map(([canAdd, severalActiveValue, debtStatusCode, hasActivePromise ]) => {
-        const severalActiveUse = Boolean(severalActiveValue.valueB);
-        return canAdd && this.debtId && ![6, 7, 8, 17].includes(debtStatusCode) &&
-         (severalActiveUse || (!severalActiveUse && !hasActivePromise));
-      }),
-      distinctUntilChanged()
-    );
-  }
-
-  get canRefresh$(): Observable<boolean> {
-    return combineLatestAnd([ this.canView$, this.debtId$.map(Boolean) ]).distinctUntilChanged();
-  }
-
-  get canСonfirm$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_CONFIRM');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('PROMISE_DELETE');
+    return this._debtId;
   }
 
   private onAdd(): void {
-    if (!this.debtId) {
+    if (!this._debtId) {
       return;
     }
     this.routingService.navigate([ 'debt/promise/create' ], this.route);
   }
 
   private fetch(): void {
-    const { debtId } = this;
-    if (!debtId) { return; }
+    if (!this._debtId) { return; }
 
-    this.promiseService.fetchAll(debtId, this.callCenter)
+    this.promiseService.fetchAll(this._debtId, this.callCenter)
       .subscribe(promises => {
         this.rows = [].concat(promises);
         this.selectedPromise$.next(null);
         this.cdRef.markForCheck();
       });
 
-    this.promiseService.getPromiseLimit(debtId, this.callCenter)
+    this.promiseService.getPromiseLimit(this._debtId, this.callCenter)
       .subscribe(({ hasActivePromise }) => {
         this.hasActivePromise$.next(hasActivePromise);
       });
