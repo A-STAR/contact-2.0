@@ -131,7 +131,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       ),
       this.scheduleEventService.constants$,
       this.scheduleEventService.fetchGroups(),
-      this.scheduleEventService.fetchUsers()
+      this.scheduleEventService.fetchUsers(),
+      this.scheduleEventService.fetchCustomOperations()
     )
     .pipe(first())
     .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users]) => {

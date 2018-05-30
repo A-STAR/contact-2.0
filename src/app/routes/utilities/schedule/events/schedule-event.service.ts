@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
+import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import {
   IScheduleEvent, IScheduleGroup, IScheduleType,
   IScheduleParam, IScheduleStartRequest, IScheduleUser, IScheduleEventLog
@@ -14,6 +15,7 @@ import { IUserConstant } from '@app/core/user/constants/user-constants.interface
 import { IUserDictionaryOptions } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -28,10 +30,13 @@ import { toOption } from '@app/core/utils';
 export class ScheduleEventService extends AbstractActionService {
   static MESSAGE_SCHEDULE_EVENT_SAVED = 'MESSAGE_SCHEDULE_EVENT_SAVED';
 
+  static TYPE_CUSTOM_OPERATION = 3;
+
   private baseUrl = '/scheduleEvent';
 
   constructor(
     protected actions: Actions,
+    private customOperationService: CustomOperationService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userConstantsService: UserConstantsService,
@@ -130,6 +135,11 @@ export class ScheduleEventService extends AbstractActionService {
   fetchLogs(eventId: number): Observable<IScheduleEventLog[]> {
     return this.dataService.readAll(`${this.baseUrl}/{eventId}/executionLogs`, { eventId })
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEventLog.gen.singular').dispatchCallback());
+  }
+
+  fetchCustomOperations(): Observable<ICustomOperation[]> {
+    return this.customOperationService.fetchOperations(ScheduleEventService.TYPE_CUSTOM_OPERATION)
+      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
   }
 
   delete(eventId: number): Observable<any> {
