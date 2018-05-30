@@ -21,6 +21,7 @@ import {
 import { GenesysService } from '@app/routes/utilities/campaigns/genesys/genesys.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
+
 import { isEmpty } from '@app/core/utils';
 
 @Component({
@@ -149,25 +150,25 @@ export class GenesysCampaignsComponent implements OnInit {
 
   onStart(): void {
     this.actionData = {
-      id: null,
+      id: 1,
     };
   }
 
   onStop(): void {
     this.actionData = {
-      id: null,
+      id: 1,
     };
   }
 
   onLoad(): void {
     this.actionData = {
-      id: null,
+      id: 1,
     };
   }
 
   onUnload(): void {
     this.actionData = {
-      id: null,
+      id: 1,
     };
   }
 
