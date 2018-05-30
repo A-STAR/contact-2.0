@@ -35,7 +35,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -44,7 +44,7 @@ export class DashboardService {
     legend: {
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -53,7 +53,7 @@ export class DashboardService {
     legend: {
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -63,7 +63,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -73,7 +73,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -83,7 +83,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
