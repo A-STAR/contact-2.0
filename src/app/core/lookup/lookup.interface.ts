@@ -6,7 +6,8 @@ export type ILookupKey =
   'portfolios' |
   'roles' |
   'timeZone' |
-  'users';
+  'users' |
+  'letterReport';
 
 export interface ILookupBase {
   id: number;
