@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 
 import { IAuthState } from '../auth/auth.interface';
 import { ICallState } from '@app/core/calls/call.interface';
-import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.interface';
+import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns/campaigns.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import {
   IContractorsAndPortfoliosState

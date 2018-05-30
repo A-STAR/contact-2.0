@@ -2190,6 +2190,19 @@
           "code": "Code",
           "name": "Name"
         }
+      },
+      "letter": {
+        "title": "Letter generation",
+        "dialog": {
+          "templateId": "Template",
+          "formatCode": "Format",
+          "regLetter": "Register letter",
+          "addressTypes": "Address type",
+          "avoidDuplication": "Avoid duplication",
+          "ignoreWrongAddress": "Ignore wrong address",
+          "sortRule": "Sorting",
+          "reportId": "Register"
+        }
       }
     },
     "nextCallDateSet": {
@@ -3521,7 +3534,8 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type"
+        "changePersonType": "Change person type",
+        "letterGenerate": "Letter generation"
       }
     },
     "filter": {
