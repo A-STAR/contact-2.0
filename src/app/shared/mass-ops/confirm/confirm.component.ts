@@ -16,4 +16,8 @@ export class ConfirmComponent {
     this.confirm.emit(this.actionName);
   }
 
+  onClose(): void {
+    this.close.emit();
+  }
+
 }
