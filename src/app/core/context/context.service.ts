@@ -23,8 +23,6 @@ export class ContextService {
     this.entityAttributesService.bag$,
     this.userConstantsService.bag(),
     this.userPermissionsService.bag(),
-  ).pipe(
-    share(),
   );
 
   constructor(
