@@ -59,10 +59,10 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'timeZoneUsed', minWidth: 50, renderer: TickRendererComponent },
   ].map(addGridLabel('utilities.campaigns.grid'));
 
-  tabs = [
-    { isInitialised: true, },
-    { isInitialised: false, },
-  ];
+  // tabs = [
+  //   { isInitialised: true, },
+  //   { isInitialised: false, },
+  // ];
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -219,9 +219,9 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     this.campaignsService.selectCampaign(null);
   }
 
-  onTabSelect(tabIndex: number): void {
-    this.tabs[tabIndex].isInitialised = true;
-  }
+  // onTabSelect(tabIndex: number): void {
+  //   this.tabs[tabIndex].isInitialised = true;
+  // }
 
   private formatCampaignsDates(campaings: ICampaign[]): ICampaign[] {
     return campaings.map(campaign => {
