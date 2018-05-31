@@ -100,6 +100,7 @@ export interface IMetadata {
   defaultAction?: string;
   selectionAction?: string;
   permits?: string[];
+  primary?: string;
 }
 
 export interface IMetadataState {

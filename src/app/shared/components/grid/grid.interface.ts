@@ -17,4 +17,5 @@ export interface IMetadataDefs {
   defaultAction?: string;
   selectionAction?: string;
   permits?: string[];
+  primary?: string;
 }
