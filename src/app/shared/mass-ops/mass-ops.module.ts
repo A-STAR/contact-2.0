@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AddressModule } from './address/address.module';
 import { AttributesModule } from './attributes/attributes.module';
+import { ConfirmModule } from '@app/shared/mass-ops/confirm/confirm.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
 import { CustomOperationModule } from './custom-operation/custom-operation.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
@@ -32,6 +33,7 @@ import { MassOperationComponent } from './mass-operation.component';
     AddressModule,
     AttributesModule,
     CommonModule,
+    ConfirmModule,
     ContactLogModule,
     CustomOperationModule,
     DebtResponsibleModule,

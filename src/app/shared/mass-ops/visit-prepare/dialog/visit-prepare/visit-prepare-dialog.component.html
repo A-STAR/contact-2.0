@@ -1,16 +1,4 @@
-<app-dialog-action
-  *ngIf="isDialog('visitPrepareConfirm')"
-  actionMode="warning"
-  actionTranslationKey="default.dialog.confirm.confirmMessage"
-  actionMessage="default.buttons.ok"
-  titleTranslationKey="default.dialog.confirm.confirmTitle"
-  [messageParams]="confirmOperation"
-  (action)="onConfirm()"
-  (cancel)="onClose()">
-</app-dialog-action>
-
 <app-visit-dialog
-  *ngIf="isDialog('visitPrepare')"
   (create)="onCreate($event)"
   (close)="onClose()"
 ></app-visit-dialog>
