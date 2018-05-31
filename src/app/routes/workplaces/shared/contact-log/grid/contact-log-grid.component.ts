@@ -28,7 +28,6 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IContactLog>;
 
-  selected: IContactLog[];
   selectedChanged$ = new BehaviorSubject<boolean>(false);
   rowCount: number;
   contactLogList: IContactLog[];
@@ -83,12 +82,15 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
     this.viewCommentUpdate.unsubscribe();
   }
 
+  get selected(): IContactLog[] {
+    return (this.grid && this.grid.selection) || [];
+  }
+
   get hasSelection(): boolean {
     return !!this.selected && !!this.selected.length;
   }
 
-  onSelect(contactLogs: IContactLog[]): void {
-    this.selected = contactLogs;
+  onSelect(): void {
     this.selectedChanged$.next(true);
   }
 

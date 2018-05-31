@@ -5,9 +5,8 @@
   [toolbarItems]="hideToolbar ? null : toolbarItems"
   [fullHeight]="true"
   [rows]="contactLogList"
-  [filterData]="filterData"
   [rowCount]="rowCount"
-  (selectRow)="onSelect($event)"
+  (selectRow)="onSelect()"
   (dblClick)="onEdit($event)"
   (request)="onRequest()"
 ></app-action-grid>
