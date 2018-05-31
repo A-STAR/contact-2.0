@@ -17,6 +17,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { addGridLabel } from '@app/core/utils';
+import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 
 @Component({
   selector: 'app-schedule-type-card',
@@ -109,6 +110,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     modeCode: { controlName: 'modeCode', type: 'select', required: true },
     delay: { controlName: 'delay', type: 'number', min: 0, required: true },
     stage: { controlName: 'stage', type: 'select', required: true },
+    operationId: {
+      controlName: 'operationId',
+      type: 'select',
+      required: true,
+      onChange: () => this.onEventTypeSelect()
+    },
   };
 
   constructor(
@@ -135,7 +142,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       this.scheduleEventService.fetchCustomOperations()
     )
     .pipe(first())
-    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users]) => {
+    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users, operations]) => {
       const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
       const groupsByEntityType = this.scheduleEventService.getGroupsByEntityType(groups);
 
@@ -193,6 +200,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           canEdit,
           groupsByEntityType[22],
           UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING
+        ),
+        this.createOperationTypeControls(
+          canEdit,
+          operations
         )
       ];
 
@@ -375,6 +386,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         markAsDirty: !this.eventId
       },
       checkGroup: { disabled: !canEdit }
+    });
+  }
+
+  private createOperationTypeControls(canEdit: boolean, operations: ICustomOperation[]): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
+      operationId: {
+        disabled: !canEdit,
+        options: operations.map(o => ({ label: o.name, value: o.id }))
+      }
     });
   }
 
