@@ -34,6 +34,7 @@ export class PhoneCardComponent implements OnInit {
 
   private callCenter = this.routeData.callCenter;
   private entityKey = this.routeData.entityKey || 'entityId';
+  private parentUrl = this.routeData.parentUrl;
 
   private phoneId = Number(this.routeParamMap.get('phoneId'));
   private entityId = Number(this.routeParamMap.get(this.entityKey));
@@ -80,7 +81,11 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigateToParent(this.route);
+    if (this.parentUrl) {
+      this.routingService.navigateToUrl(this.parentUrl);
+    } else {
+      this.routingService.navigateToParent(this.route);
+    }
   }
 
   get canSubmit(): boolean {
