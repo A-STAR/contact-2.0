@@ -33,7 +33,7 @@
           *ngIf="tabs[2].isInitialised"
           [debtId]="debtId"
           [personId]="debtorId"
-        ></app-contact-persons-grid>
+        ></app-contact-log-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.documentsTab.title'">
         <app-document-grid
@@ -49,7 +49,7 @@
           (add)="onEmploymentAdd()"
           (dblClick)="onEmploymentEdit($event)"
           (edit)="onEmploymentEdit($event)"
-        ></app-employment-grid>
+        ></app-contact-persons-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.guarantorsTab.title'">
         <app-guarantee-grid *ngIf="tabs[5].isInitialised"></app-guarantee-grid>
@@ -74,13 +74,13 @@
         <app-identity-grid
           *ngIf="tabs[8].isInitialised"
           [personId]="debtorId"
-        ></app-debtor-action-log>
+        ></app-identity-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.employmentRecordTab.title'" [disabled]="isCompany$ | async">
         <app-employment-grid
           *ngIf="tabs[9].isInitialised"
           [personId]="debtorId"
-        ></app-contact-log-grid>
+        ></app-employment-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.attributesTab.title'">
         <app-debtor-attributes *ngIf="tabs[10].isInitialised"></app-debtor-attributes>
