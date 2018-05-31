@@ -143,7 +143,8 @@ export class ScheduleEventService extends AbstractActionService {
   }
 
   fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
-    return this.customOperationService.fetchOperationParams(operationId);
+    return this.customOperationService.fetchOperationParams(operationId)
+      .map(params => params.filter(p => p.paramTypeCode > 0));
   }
 
   delete(eventId: number): Observable<any> {

@@ -279,7 +279,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   get canSubmit(): boolean {
     return this.selectedEventTypeCode === this.currentAddParamsForm
       && this.eventTypeForms.find(form => form && form.canSubmit)
-      && this.eventTypeForms.map(dform => dform && dform.form).every(form => !form || form.valid);
+      && this.eventTypeForms.map(dform => dform && dform.form).every(form => !form || form.valid)
+      && (!this.addDynamicParamsForm || this.addDynamicParamsForm.canSubmit);
   }
 
   get serializedUpdates(): IScheduleType {
