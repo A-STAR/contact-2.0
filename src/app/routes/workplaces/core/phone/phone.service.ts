@@ -31,9 +31,11 @@ export class PhoneService extends AbstractActionService {
   }
 
   fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Phone[]> {
-    return this.repo.fetch(Phone, { entityType, entityId, callCenter }).pipe(
-      first()
-    );
+    return this.repo.fetch(Phone, { entityType, entityId, callCenter });
+  }
+
+  refreshPhones(entityType: number, entityId: number, callCenter: boolean): void {
+    this.repo.refresh(Phone, { entityType, entityId, callCenter });
   }
 
   fetch(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<Phone> {

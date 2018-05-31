@@ -1,15 +1,24 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { first } from 'rxjs/operators/first';
 import { Observable } from 'rxjs/Observable';
 
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
-import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +50,9 @@ export class PhoneGridComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.phoneService.fetchAll(this.entityType, this.entityId, false).subscribe(phones => {
+    this.phoneService.fetchAll(this.entityType, this.entityId, false)
+    .pipe(first())
+    .subscribe(phones => {
       this.phones = phones.filter(phone => !phone.isInactive);
       this.cdRef.markForCheck();
     });
@@ -53,7 +64,7 @@ export class PhoneGridComponent implements OnInit {
     this.selectedPhoneId = isEmpty(phones)
       ? null
       : phones[0].id;
-    this.selectedPhone = phones[0];
+    this.selectedPhone = phones && phones.length && phones[0];
     this.cdRef.markForCheck();
   }
 
