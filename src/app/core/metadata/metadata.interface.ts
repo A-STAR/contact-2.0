@@ -2,6 +2,7 @@ import { IActionGridAction, ICloseAction } from '@app/shared/components/action-g
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
+import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
 
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
@@ -17,7 +18,7 @@ export interface IMetadataAction {
   // for custom actions, translates label path + action
   label?: string;
   addOptions?: IMetadataActionOption[];
-  enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
+  enabled?: (params: IContextMenuParams) => boolean;
   params?: string[];
   isDialog?: boolean;
   cb?: (action: any, onClose?: (data: IActionGridAction | ICloseAction) => any) => void;
@@ -99,6 +100,7 @@ export interface IMetadata {
   defaultAction?: string;
   selectionAction?: string;
   permits?: string[];
+  primary?: string;
 }
 
 export interface IMetadataState {
