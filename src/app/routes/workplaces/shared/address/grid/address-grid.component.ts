@@ -366,6 +366,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.addressService.fetchAll(this.entityType, this._personId$.value, this.callCenter)
       .subscribe(addresses => {
         this._addresses = addresses;
+        this.selectedAddress$.next(null);
         this.cdRef.markForCheck();
       });
   }

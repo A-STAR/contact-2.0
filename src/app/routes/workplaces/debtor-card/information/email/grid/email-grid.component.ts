@@ -301,10 +301,10 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
-    // TODO(d.maltsev): persist selection
     this.emailService.fetchAll(this.entityType, this.entityId)
       .subscribe(emails => {
         this._emails = emails;
+        this.selectedEmail$.next(null);
         this.cdRef.markForCheck();
       });
   }
