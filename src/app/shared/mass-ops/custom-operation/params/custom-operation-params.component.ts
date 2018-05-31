@@ -16,7 +16,8 @@ export class CustomOperationParamsComponent implements OnInit {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
   @Input() key: string;
-  @Input() inputParams: ICustomOperationParams[];
+  @Input() params: ICustomOperationParams[];
+  @Input() value: any;
 
   config: IDynamicLayoutConfig;
 
@@ -25,6 +26,6 @@ export class CustomOperationParamsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.inputParams);
+    this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.params);
   }
 }

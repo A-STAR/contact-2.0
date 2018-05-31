@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
@@ -12,9 +13,9 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
-import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { CustomOperationParamsComponent } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { addGridLabel } from '@app/core/utils';
@@ -27,6 +28,7 @@ import { addGridLabel } from '@app/core/utils';
 export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('addParams') addParamsForm:  DynamicFormComponent;
+  @ViewChild('dynamicParams') addDynamicParamsForm: CustomOperationParamsComponent;
 
   @Input() groupId: number;
   @Input() eventId: number;
@@ -39,7 +41,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   addParamsControls: Array<Partial<IDynamicFormItem>[]> = [];
   addParamsData: any;
-  addOperationParams: ICustomOperationParams[];
+  addDynamicParams: ICustomOperationParams[];
 
   selectedType: Partial<IScheduleType>;
 
@@ -240,10 +242,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
       this.selectedOperationSub = this.selectedOperation$
         .filter(Boolean)
-        .do(() => this.addOperationParams = null)
+        .do(() => this.addDynamicParams = null)
         .flatMap(operationId => this.scheduleEventService.fetchOperationParams(operationId))
         .subscribe(params => {
-          this.addOperationParams = params;
+          this.addDynamicParams = params;
           this.cdRef.markForCheck();
         });
 
@@ -281,8 +283,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   get serializedUpdates(): IScheduleType {
-    const formData = this.addParamsForm && this.addParamsForm.serializedValue;
-    return this.serializeScheduleType(formData || {});
+    const formData = this.addParamsForm ? this.addParamsForm.serializedValue : {};
+    const dynamicData = this.addDynamicParamsForm ? this.addDynamicParamsForm.layout.getData() : {};
+    return this.serializeScheduleType({
+      ...formData,
+      ...dynamicData
+    });
   }
 
   onEventTypeSelect(): void {

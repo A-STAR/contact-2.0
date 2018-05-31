@@ -20,8 +20,9 @@
 </ng-container>
 
 <app-custom-operation-params
-  #addOperationParams
-  *ngIf="addOperationParams && addOperationParams.length"
+  #dynamicParams
+  *ngIf="addDynamicParams && addDynamicParams.length"
   key="schedule-operation-params"
-  [inputParams]="addOperationParams"
+  [params]="addDynamicParams"
+  [value]="selectedType"
 ></app-custom-operation-params>
