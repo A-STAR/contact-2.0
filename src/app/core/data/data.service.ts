@@ -7,12 +7,12 @@ import { catchError, distinctUntilChanged, finalize, first, map, mergeMap } from
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
+import { IGuiObjectDef } from '@app/core/layout/layout.interface';
 import { IQueryParam, IQueryParams } from './data.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { ConfigService } from '@app/core/config/config.service';
 import { LayoutService } from '@app/core/layout/layout.service';
-import { IGuiObjectDef } from '@app/core/layout/layout.interface';
 
 interface RequestOptions {
   body?: any;
