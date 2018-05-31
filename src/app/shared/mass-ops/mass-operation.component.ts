@@ -76,7 +76,7 @@ export class MassOperationComponent extends DialogFunctions {
     const total = (data.selection && data.selection.length) || 0;
 
     if ((count < total) && !this.actionGridService.isFilterAction(data.payload)) {
-      this.confirmParams = { count, total };
+      this.confirmParams = { count: total - count, total };
       this.setDialog('confirm');
     } else {
       this.setDialog(this._type);

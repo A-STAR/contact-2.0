@@ -206,7 +206,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
           actions: this.actions,
           titlebar: this.titlebar,
           defaultAction: this.defaultAction,
-          selectionAction: this.selectionAction
+          selectionAction: this.selectionAction,
         }
       );
     }
@@ -259,7 +259,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
               const isDialog = !Object.keys(this.actionGridService.cbActions).includes(a.action);
               return { ...a, isDialog, cb: !isDialog ? this.actionGridService.cbActions[a.action] : null };
             },
-        ]))
+        ])),
       );
     }),
     tap(actions => {
@@ -358,6 +358,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     if (this.close) {
       this.close.emit(action);
     }
+
+    this.setDialog();
   }
 
   onRequest(): void {
@@ -449,6 +451,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
   private initGrid(data: IMetadataDefs): void {
     this.actions$.next(data.actions || this.actions);
+    this.rowIdKey = data.primary || this.rowIdKey || 'id';
     this.defaultActionName = data.defaultAction;
     this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
     this.titlebarConfig$.next(data.titlebar || this.titlebar);
