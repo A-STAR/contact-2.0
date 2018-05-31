@@ -34,6 +34,9 @@
     </app-simple-grid>
   </app-area>
   <app-area>
+    <app-participants></app-participants>
+    <!-- Mayble we'll use this later -->
+    <!--
     <app-tabview [fullHeight]="true" [noMargin]="true" (selectTab)="onTabSelect($event)">
       <app-tabview-tab [title]="'utilities.campaigns.tabs.participants'">
         <app-participants *ngIf="tabs[0].isInitialised"></app-participants>
@@ -42,5 +45,6 @@
         <app-statistics *ngIf="tabs[1].isInitialised"></app-statistics>
       </app-tabview-tab>
     </app-tabview>
+    -->
   </app-area>
 </app-area>

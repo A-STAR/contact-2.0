@@ -13,7 +13,8 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaign, IParticipant } from '../campaigns.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { CampaignsService } from '../campaigns.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -21,7 +22,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
 import { DialogFunctions } from '@app/core/dialog/index';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { addGridLabel } from '@app/core/utils';
 
@@ -49,32 +49,37 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     { prop: 'position', minWidth: 100 }
   ].map(addGridLabel('utilities.campaigns.participants.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () =>  this.setDialog('PARTICIPANT_ADD'),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.campaignsService.selectedCampaign
-      ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
-        && (selectedCampaign.statusCode === 1 || selectedCampaign.statusCode === 3))
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('PARTICIPANT_REMOVE'),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.campaignsService.selectedCampaign,
-        this.campaignsService.selectedParticipant
-      ).map(([hasPermissions, selectedCampaign, selectedParticipant]) => hasPermissions && !!selectedCampaign
-        && !!selectedParticipant && (selectedCampaign.statusCode === 1 || selectedCampaign.statusCode === 3))
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchParticipants().subscribe(participants => this.onParticipantsFetch(participants)),
-      enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
-    }
-  ];
+  readonly titlebar: ITitlebar = {
+    title: 'utilities.campaigns.tabs.participants',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('PARTICIPANT_ADD'),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.campaignsService.selectedCampaign,
+        ).map(([hasPermissions, selectedCampaign]) => {
+          return hasPermissions && !!selectedCampaign && [ 1, 3 ].includes(selectedCampaign.statusCode);
+        }),
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('PARTICIPANT_REMOVE'),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.campaignsService.selectedCampaign,
+          this.campaignsService.selectedParticipant,
+        ).map(([hasPermissions, selectedCampaign, selectedParticipant]) => {
+          return hasPermissions && !!selectedCampaign && !!selectedParticipant && [ 1, 3 ].includes(selectedCampaign.statusCode);
+        }),
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetchParticipants().subscribe(participants => this.onParticipantsFetch(participants)),
+        enabled: this.userPermissionsService.has('CAMPAIGN_VIEW'),
+      },
+    ],
+  };
 
   constructor(
     private campaignsService: CampaignsService,
