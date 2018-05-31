@@ -18,3 +18,10 @@
     ></app-dynamic-form>
   </div>
 </ng-container>
+
+<app-custom-operation-params
+  #addOperationParams
+  *ngIf="addOperationParams && addOperationParams.length"
+  key="schedule-operation-params"
+  [inputParams]="addOperationParams"
+></app-custom-operation-params>

@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
+import { ICustomOperation, ICustomOperationParams } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import {
   IDynamicFormItem, IDynamicFormConfig, IDynamicFormSelectControl, IDynamicFormControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -17,7 +18,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { addGridLabel } from '@app/core/utils';
-import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 
 @Component({
   selector: 'app-schedule-type-card',
@@ -39,6 +39,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   addParamsControls: Array<Partial<IDynamicFormItem>[]> = [];
   addParamsData: any;
+  addOperationParams: ICustomOperationParams[];
 
   selectedType: Partial<IScheduleType>;
 
@@ -47,6 +48,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private selectedPersonRoles$ = new BehaviorSubject<number>(null);
   private selectedPersonRolesSub: Subscription;
+
+  private selectedOperation$ = new BehaviorSubject<number>(null);
+  private selectedOperationSub: Subscription;
 
   private formControlsFactory = {
     eventTypeCode: {
@@ -114,7 +118,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       controlName: 'operationId',
       type: 'select',
       required: true,
-      onChange: () => this.onEventTypeSelect()
+      onChange: () => this.onOperationSelect()
     },
   };
 
@@ -234,6 +238,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           this.cdRef.markForCheck();
         });
 
+      this.selectedOperationSub = this.selectedOperation$
+        .filter(Boolean)
+        .do(() => this.addOperationParams = null)
+        .flatMap(operationId => this.scheduleEventService.fetchOperationParams(operationId))
+        .subscribe(params => {
+          this.addOperationParams = params;
+          this.cdRef.markForCheck();
+        });
+
       this.cdRef.markForCheck();
     });
   }
@@ -241,6 +254,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.selectedEventTypeCodeSub.unsubscribe();
     this.selectedPersonRolesSub.unsubscribe();
+    this.selectedOperationSub.unsubscribe();
   }
 
   get selectedEventTypeCode(): number {
@@ -285,6 +299,11 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   onPersonRoleSelect(): void {
     const personRoleControl = this.addParamsForm.getControl('personRoles');
     this.selectedPersonRoles$.next(personRoleControl.value);
+  }
+
+  onOperationSelect(): void {
+    const operationControl = this.addParamsForm.getControl('operationId');
+    this.selectedOperation$.next(operationControl.value);
   }
 
   private createFormControls(controls: any): Partial<IDynamicFormControl>[] {

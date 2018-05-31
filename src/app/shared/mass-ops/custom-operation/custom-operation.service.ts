@@ -31,9 +31,8 @@ export class CustomOperationService {
   ) { }
 
   getOperationParams(operation: IGridAction): Observable<ICustomOperationParams[]> {
-    return this.dataService.readAll(`/operations/${operation.id}/params`)
-      .map(params => this.filterInputParams(operation, params))
-      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
+    return this.fetchOperationParams(operation.id)
+      .map(params => this.filterInputParams(operation, params));
   }
 
   fetchOperations(operationType: number): Observable<ICustomOperation[]> {
@@ -41,6 +40,11 @@ export class CustomOperationService {
       operationType
     })
     .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
+  }
+
+  fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
+    return this.dataService.readAll(`/operations/${operationId}/params`)
+      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
   }
 
   run(operation: IGridAction, params: ICustomOperationParams[], data: ICustomActionData): Observable<ICustomActionData> {

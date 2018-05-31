@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
+import { ICustomOperation, ICustomOperationParams } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import {
   IScheduleEvent, IScheduleGroup, IScheduleType,
   IScheduleParam, IScheduleStartRequest, IScheduleUser, IScheduleEventLog
@@ -30,7 +30,7 @@ import { toOption } from '@app/core/utils';
 export class ScheduleEventService extends AbstractActionService {
   static MESSAGE_SCHEDULE_EVENT_SAVED = 'MESSAGE_SCHEDULE_EVENT_SAVED';
 
-  static TYPE_CUSTOM_OPERATION = 3;
+  static TYPE_CUSTOM_OPERATION = 2;
 
   private baseUrl = '/scheduleEvent';
 
@@ -140,6 +140,10 @@ export class ScheduleEventService extends AbstractActionService {
   fetchCustomOperations(): Observable<ICustomOperation[]> {
     return this.customOperationService.fetchOperations(ScheduleEventService.TYPE_CUSTOM_OPERATION)
       .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
+  }
+
+  fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
+    return this.customOperationService.fetchOperationParams(operationId);
   }
 
   delete(eventId: number): Observable<any> {
