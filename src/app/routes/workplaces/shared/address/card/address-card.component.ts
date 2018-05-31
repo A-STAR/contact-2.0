@@ -33,6 +33,7 @@ export class AddressCardComponent implements OnInit {
 
   private callCenter = this.routeData.callCenter;
   private entityKey = this.routeData.entityKey || 'entityId';
+  private parentUrl = this.routeData.parentUrl;
 
   private addressId = Number(this.routeParamMap.get('addressId'));
   private entityId = Number(this.routeParamMap.get(this.entityKey));
@@ -77,7 +78,11 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigateToParent(this.route);
+    if (this.parentUrl) {
+      this.routingService.navigateToUrl(this.parentUrl);
+    } else {
+      this.routingService.navigateToParent(this.route);
+    }
   }
 
   get canSubmit(): boolean {

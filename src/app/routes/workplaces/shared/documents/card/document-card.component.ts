@@ -31,6 +31,7 @@ export class DocumentCardComponent implements OnInit {
 
   private callCenter = this.routeData.callCenter;
   private readOnly = this.routeData.readOnly;
+  private parentUrl = this.routeData.parentUrl;
 
   private documentId = Number(this.routeParamMap.get('documentId'));
   private entityTypeCode = Number(this.queryParamMap.get('entityType')) || 18;
@@ -102,7 +103,11 @@ export class DocumentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigateToParent(this.route);
+    if (this.parentUrl) {
+      this.routingService.navigateToUrl(this.parentUrl);
+    } else {
+      this.routingService.navigateToParent(this.route);
+    }
   }
 
   get canSubmit(): boolean {
