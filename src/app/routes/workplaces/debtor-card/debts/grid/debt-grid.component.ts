@@ -86,6 +86,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CLEAR,
+      label: 'widgets.debt.toolbar.terminate',
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
         {
