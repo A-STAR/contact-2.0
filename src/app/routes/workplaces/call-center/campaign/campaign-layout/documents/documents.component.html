@@ -2,7 +2,8 @@
   *ngIf="debtExists$ | async"
   action="download"
   [callCenter]="true"
+  [debtId]="debtId$ | async"
   [entityId]="debtId$ | async"
-  [entityType]="19"
+  [entityType]="entityType"
   [hideToolbar]="true"
 ></app-document-grid>

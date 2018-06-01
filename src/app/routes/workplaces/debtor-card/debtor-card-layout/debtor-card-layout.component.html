@@ -38,8 +38,9 @@
       <app-tabview-tab [title]="'debtor.documentsTab.title'">
         <app-document-grid
           *ngIf="tabs[3].isInitialised"
+          [debtId]="debtId"
           [entityId]="debtId"
-          [entityType]="19"
+          [entityType]="entityType"
         ></app-document-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.contactsTab.title'">
