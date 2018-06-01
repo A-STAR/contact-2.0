@@ -2,9 +2,9 @@
   <!-- Menu -->
   <ul class="flex-item grow">
     <li *ngFor="let item of menuItems$ | async" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
-      <div class="menu-item">
-        <div class="icon-container">
-          <i *ngIf="item.icon" [ngClass]="item.icon"></i>
+      <div class="flex align-center menu-item">
+        <div class="flex icon-container flex">
+          <i class="flex align-center" *ngIf="item.icon" [ngClass]="item.icon"></i>
         </div>
         <div class="menu-item-title" [ngClass]="{ showTitle: showTitle }">{{ item.text | translate }}</div>
       </div>
