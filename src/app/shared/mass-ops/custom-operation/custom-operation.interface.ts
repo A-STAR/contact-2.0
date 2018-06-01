@@ -25,6 +25,11 @@ export interface ICustomOperationParams {
   lookupKey: number;
 }
 
+export enum CustomOperation {
+  DEBT_DISTRIBUTION       = 5,
+  PBX_CAMPAIGN_STATISTICS = 7,
+}
+
 export enum OperationControlTypeEnum {
   DATE = 1,
   NUMBER = 2,

@@ -287,6 +287,20 @@
       }
     },
     "utilities": {
+      "campaigns": {
+        "genesys": {
+          "statistics": {
+            "grid": {
+              "complete": "Complete",
+              "errors": "Errors",
+              "not_started": "Not Started",
+              "postponed": "Postponed",
+              "processing": "Processing",
+              "total_chains": "Total"
+            }
+          }
+        }
+      },
       "formulas": {
         "grid": {
           "id": "ID",
