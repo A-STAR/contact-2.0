@@ -2478,7 +2478,7 @@
         "debtId": "Debt id",
         "fullName": "Full name",
         "messageTemplate": "Template",
-        "msgStatusCode": "Status",
+        "msgStatusName": "Status",
         "personRole": "Role",
         "promiseDate": "Promise date",
         "resultName": "Result",

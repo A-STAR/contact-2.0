@@ -2478,7 +2478,7 @@
         "debtId": "ID долга",
         "fullName": "ФИО",
         "messageTemplate": "Шаблон",
-        "msgStatusCode": "Статус",
+        "msgStatusName": "Статус",
         "personRole": "Роль",
         "promiseDate": "Обещанная дата",
         "resultName": "Результат",
