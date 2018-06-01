@@ -34,6 +34,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   private routeData = this.route.snapshot.data;
 
   private entityKey = this.routeData.entityKey || 'entityId';
+  private parentUrl = this.routeData.parentUrl;
 
   private identityId = Number(this.routeParamMap.get('identityId'));
   private entityId = Number(this.routeParamMap.get(this.entityKey));
@@ -100,7 +101,11 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigateToParent(this.route);
+    if (this.parentUrl) {
+      this.routingService.navigateToUrl(this.parentUrl);
+    } else {
+      this.routingService.navigateToParent(this.route);
+    }
   }
 
   private onSubmit(data: any): void {

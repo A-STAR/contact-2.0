@@ -1,5 +1,0 @@
-{
-    "vsicons.presets.angular": true,
-    "stylelint.enable": true,
-    "typescript.tsdk": "node_modules\\typescript\\lib"
-}

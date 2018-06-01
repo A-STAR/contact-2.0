@@ -33,6 +33,7 @@ export class EmploymentCardComponent implements OnInit {
   private routeData = this.route.snapshot.data;
 
   private entityKey = this.routeData.entityKey || 'entityId';
+  private parentUrl = this.routeData.parentUrl;
 
   private employmentId = Number(this.routeParamMap.get('employmentId'));
   private entityId = Number(this.routeParamMap.get(this.entityKey));
@@ -79,7 +80,11 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigateToParent(this.route);
+    if (this.parentUrl) {
+      this.routingService.navigateToUrl(this.parentUrl);
+    } else {
+      this.routingService.navigateToParent(this.route);
+    }
   }
 
   onSubmit(): void {

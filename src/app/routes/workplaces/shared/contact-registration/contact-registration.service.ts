@@ -202,6 +202,11 @@ export class ContactRegistrationService {
     this.status$.next(null);
   }
 
+  toOutcomeTree(): void {
+    this._mode$.next(IContactRegistrationMode.TREE);
+    this._outcome$.next(null);
+  }
+
   continueRegistration(): void {
     this.status$.next(IContactRegistrationStatus.REGISTRATION);
   }

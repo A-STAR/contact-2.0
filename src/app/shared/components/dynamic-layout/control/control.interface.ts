@@ -1,4 +1,5 @@
 import { IDynamicLayoutGenericItem, DynamicLayoutItemType } from '../dynamic-layout.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export enum DynamicLayoutControlType {
@@ -21,6 +22,13 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
   name: string;
   // Optional:
   form?: string;
+}
+
+export interface IDynamicLayoutSelectControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.SELECT;
+  options?: IOption[];
+  dictCode?: number;
+  lookupKey?: ILookupKey;
 }
 
 export interface IDynamicLayoutDialogSelectControl extends IDynamicLayoutGenericControl {
@@ -55,6 +63,7 @@ export interface IDynamicLayoutTextareaControl extends IDynamicLayoutGenericCont
 }
 
 export type IDynamicLayoutControl =
+  | IDynamicLayoutSelectControl
   | IDynamicLayoutDialogSelectControl
   | IDynamicLayoutDateTimeControl
   | IDynamicLayoutGridSelectControl

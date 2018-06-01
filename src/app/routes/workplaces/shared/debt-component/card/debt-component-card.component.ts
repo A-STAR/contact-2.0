@@ -85,7 +85,7 @@ export class DebtComponentCardComponent {
     const debtId = this.route.snapshot.paramMap.get('debtId');
     const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
-      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/debt` ]);
+      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/debt` ]);
     }
   }
 

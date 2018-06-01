@@ -415,6 +415,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.phoneService.fetchAll(this.entityType, this._personId$.value, this.callCenter)
       .subscribe(phones => {
         this.phones = phones;
+        this.selectedPhoneId$.next(null);
         this.cdRef.markForCheck();
       });
   }

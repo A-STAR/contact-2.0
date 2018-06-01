@@ -181,6 +181,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'guarantorId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/guarantee/{contractId}/guarantor/{guarantorId}',
         },
       },
       {
@@ -189,6 +190,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'guarantorId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/guarantee/{contractId}/guarantor/{guarantorId}',
         },
       },
       {
@@ -197,6 +199,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'guarantorId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/guarantee/{contractId}/guarantor/{guarantorId}',
         },
       },
       {
@@ -205,6 +208,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'guarantorId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/guarantee/{contractId}/guarantor/{guarantorId}',
         },
       },
       {
@@ -267,6 +271,8 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -275,6 +281,8 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -283,6 +291,8 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -291,6 +301,8 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -298,6 +310,8 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -305,6 +319,8 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -312,6 +328,8 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
@@ -319,15 +337,25 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
       {
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
+        },
       },
       {
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
+        },
       },
 
       // Contact Persons:
@@ -351,6 +379,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -359,6 +388,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -367,6 +397,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -375,6 +406,7 @@ const routes: Routes = [
         data: {
           callCenter: false,
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -382,6 +414,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -389,6 +422,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -396,6 +430,7 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
@@ -403,15 +438,22 @@ const routes: Routes = [
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
       {
         path: 'edit/contact/:personId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
+        },
       },
       {
         path: 'edit/contact/:personId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
+        },
       },
     ],
   },

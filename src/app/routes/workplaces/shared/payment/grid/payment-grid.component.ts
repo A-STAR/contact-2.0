@@ -29,13 +29,15 @@ import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 export class PaymentGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
   @Input() hideToolbar = false;
-  @Input('debtId') set debtId(debtId: number) {
+  @Input() set debtId(debtId: number) {
+    this._debtId = debtId;
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
 
   private selectedPayment$ = new BehaviorSubject<IPayment>(null);
   private debtId$ = new BehaviorSubject<number>(null);
+  private _debtId: number;
 
   displayCanceled = false;
 
@@ -153,7 +155,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   }
 
   get debtId(): number {
-    return this.debtId$.value;
+    return this._debtId;
   }
 
   get canView$(): Observable<boolean> {
@@ -192,7 +194,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   onConfirm(): void {
     const { id: paymentId } = this.selectedPayment$.value;
     const payment = { isConfirmed: 1 } as IPayment;
-    this.paymentService.update(this.debtId, paymentId, payment, this.callCenter)
+    this.paymentService.update(this._debtId, paymentId, payment, this.callCenter)
     .subscribe(
       () => this.setDialog().fetch(),
       () => this.setDialog()
@@ -202,7 +204,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   onCancelConfirm(): void {
     const { id: paymentId } = this.selectedPayment$.value;
     const payment = { isCanceled: 1 } as IPayment;
-    this.paymentService.update(this.debtId, paymentId, payment, this.callCenter)
+    this.paymentService.update(this._debtId, paymentId, payment, this.callCenter)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -229,23 +231,22 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   private onEdit(payment: IPayment = null): void {
     const { id } = payment || this.selectedPayment$.value;
     const url = this.callCenter
-      ? `payment/${this.debtId}/${id}`
+      ? `payment/${this._debtId}/${id}`
       : `debt/payment/${id}`;
     this.routingService.navigate([ url ], this.route);
   }
 
   private onAdd(): void {
-    if (!this.debtId) {
+    if (!this._debtId) {
       return;
     }
     this.routingService.navigate([ 'debt/payment/create' ], this.route);
   }
 
   private fetch(): void {
-    const { debtId } = this;
-    if (!debtId) { return; }
+    if (!this._debtId) { return; }
 
-    this.paymentService.fetchAll(debtId, this.displayCanceled, this.callCenter)
+    this.paymentService.fetchAll(this._debtId, this.displayCanceled, this.callCenter)
       .subscribe(payments => {
         this.rows = [].concat(payments);
         this.selectedPayment$.next(null);

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { share } from 'rxjs/operators/share';
 
 import {
   DynamicLayoutGroupType,
@@ -121,7 +122,7 @@ export class DynamicLayoutService {
       return of(true);
     }
     return typeof item[prop] === 'object'
-      ? this.contextService.calculate(item[prop])
+      ? this.contextService.calculate(item[prop]).pipe(share())
       : of(item[prop]);
   }
 }

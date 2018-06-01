@@ -56,12 +56,4 @@ export class VisitPrepareService extends AbstractActionService {
       )
       .catch(this.notificationsService.deleteError().entity('entities.visit.gen.singular').dispatchCallback());
   }
-
-  getVisitsCount(idData: IGridActionPayload): number {
-    return this.actionGridService.getSelectionCount(idData) || 0;
-  }
-
-  isFilterAction(idData: IGridActionPayload): boolean {
-    return this.actionGridService.isFilterAction(idData);
-  }
 }

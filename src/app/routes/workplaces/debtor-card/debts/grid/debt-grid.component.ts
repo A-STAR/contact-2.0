@@ -26,7 +26,7 @@ import { Debt } from '@app/entities';
 })
 export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnInit {
 
-  readonly debts$ = this.debtorService.debts$;
+  debts: Debt[];
 
   readonly selectedDebt$ = this.debtorService.debt$;
 
@@ -86,6 +86,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CLEAR,
+      label: 'widgets.debt.toolbar.terminate',
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
         {
@@ -141,7 +142,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
   dialog: string;
 
-  private debtUpdateSub: Subscription;
+  private debtsSub: Subscription = new Subscription();
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -154,16 +155,24 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
   }
 
   ngOnInit(): void {
-    this.debtorService.debt$
+    const selectionSub = this.debtorService.debt$
       .pipe(first())
       .subscribe(debt => {
         this.selection = [ debt ];
         this.cdRef.markForCheck();
       });
+    const debtsSub = this.debtorService.debts$
+      .subscribe(debts => {
+        this.debts = debts;
+        this.cdRef.markForCheck();
+      });
+
+    this.debtsSub.add(selectionSub);
+    this.debtsSub.add(debtsSub);
   }
 
   ngOnDestroy(): void {
-    this.debtUpdateSub.unsubscribe();
+    this.debtsSub.unsubscribe();
   }
 
   onDoubleClick(debt: Debt): void {
@@ -177,7 +186,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
     if (debts && debts.length) {
       this.debtId$.next(debts[0].id);
       this.routingService.navigate([
-        `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${this.debtId$.value}` ], this.route);
+        `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${debts[0].id}` ], this.route);
     }
   }
 

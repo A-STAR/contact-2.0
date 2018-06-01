@@ -61,13 +61,14 @@
       [isRequired]="isRequired(control) | async"
       [label]="control.label"
       [lookupKey]="control.lookupKey"
+      [options]="control.options"
     ></app-select>
 
     <!-- Multiselect -->
     <app-multi-select
       *ngSwitchCase="'multiselect'"
       [dictCode]="control.dictCode"
-      [formControlName]="control.controlName"
+      [formControlName]="control.name"
       [label]="control.label"
       [lookupKey]="control.lookupKey"
       [isRequired]="isRequired(control) | async"

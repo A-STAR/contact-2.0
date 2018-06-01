@@ -10,8 +10,8 @@ $layout-content-border-width:       7px;
 $layout-logo-height:               39px;
 
 // Colors
-$text:                #222222;
-$text-light:          #808080;
+$text:                #58526e;
+$text-light:          #b4b2b9;
 $brand-primary-dark:  #49435d;
 $brand-primary:       #4a445f;
 $brand-primary-light: #58526e;
@@ -104,7 +104,7 @@ $link-hover-decoration: underline;
 //## Font, line-height, and color for body text, headings, and more.
 
 // $font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
-$font-family-sans-serif:  "Roboto Condensed", sans-serif !default;
+$font-family-sans-serif:  Roboto, sans-serif !default;
 $font-family-serif:       Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -130,7 +130,7 @@ $line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
 $headings-font-family:    inherit;
-$headings-font-weight:    500;
+$headings-font-weight:    400;
 $headings-line-height:    1.1;
 $headings-color:          inherit;
 
@@ -209,7 +209,7 @@ $table-border-color:            #eee;
 //
 //## For each of Bootstrap's buttons, define text, background and border color.
 
-$btn-font-weight:                normal;
+$btn-font-weight:                light;
 
 $btn-default-color:              #333;
 $btn-default-bg:                 #fff;
@@ -703,7 +703,7 @@ $modal-sm:                    300px;
 
 $alert-padding:               8px;
 $alert-border-radius:         $border-radius-small;
-$alert-link-font-weight:      bold;
+$alert-link-font-weight:      normal;
 
 $alert-success-bg:            $brand-success;
 $alert-success-text:          #fff;
@@ -860,7 +860,7 @@ $badge-active-color:          $link-color;
 //** Badge background color in active nav link
 $badge-active-bg:             #fff;
 
-$badge-font-weight:           bold;
+$badge-font-weight:           normal;
 $badge-line-height:           1;
 $badge-border-radius:         10px;
 
