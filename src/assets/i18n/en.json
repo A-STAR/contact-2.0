@@ -849,7 +849,8 @@
           "createDateTime": "Created",
           "sendDateTime": "Send date",
           "userFullName": "Operator",
-          "templateName": "Template"
+          "templateName": "Template",
+          "letterExport": "Сохранение файла письма"
         }
       }
     },
@@ -3277,7 +3278,7 @@
         "*": "Could not move {{ entity }}"
       },
       "massOp": "An error occurred while completing the {{ entity }} operation",
-      "customMassOp": "An error occurred while completing the operation",      
+      "customMassOp": "An error occurred while completing the operation",
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
