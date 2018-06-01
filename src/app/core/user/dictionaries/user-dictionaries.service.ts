@@ -99,6 +99,7 @@ export class UserDictionariesService {
   static DICTIONARY_LETTER_STATUS                 = 79;
   static DICTIONARY_TASK_TYPE                     = 80;
   static DICTIONARY_FORMULA_ATTRIBUTE_TYPE        = 83;
+  static DICTIONARY_REGION_SORT_TYPE              = 84;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

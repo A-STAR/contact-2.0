@@ -1,18 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IVisit, IConfirmOperation } from '../../visit-prepare.interface';
+import { IVisit } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
-
-import { DialogFunctions } from 'app/core/dialog';
 
 @Component({
   selector: 'app-visit-prepare-dialog',
   templateUrl: './visit-prepare-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VisitPrepareDialogComponent extends DialogFunctions implements OnInit {
+export class VisitPrepareDialogComponent {
 
   @Input() actionData: IGridAction;
 
@@ -20,36 +18,8 @@ export class VisitPrepareDialogComponent extends DialogFunctions implements OnIn
 
   dialog = null;
 
-  private prepareVisitsCount: number;
-  private visitsCount: number;
-
   constructor(
-    private visitPrepareService: VisitPrepareService,
-  ) {
-    super();
-  }
-
-  ngOnInit(): void {
-    this.prepareVisitsCount = this.visitPrepareService.getVisitsCount(this.actionData.payload);
-    this.visitsCount = (this.actionData.selection && this.actionData.selection.length) || 0;
-    if ((this.prepareVisitsCount < this.visitsCount)
-      && !this.visitPrepareService.isFilterAction(this.actionData.payload)) {
-      this.setDialog('visitPrepareConfirm');
-    } else {
-      this.setDialog('visitPrepare');
-    }
-  }
-
-  get confirmOperation(): IConfirmOperation {
-    return {
-      count: this.visitsCount - this.prepareVisitsCount,
-      total: this.visitsCount
-    };
-  }
-
-  onConfirm(): void {
-    this.setDialog('visitPrepare');
-  }
+    private visitPrepareService: VisitPrepareService) {}
 
   onCreate(visit: IVisit): void {
     this.visitPrepareService

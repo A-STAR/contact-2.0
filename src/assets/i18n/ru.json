@@ -2190,6 +2190,19 @@
           "code": "Код",
           "name": "Имя"
         }
+      },
+      "letter": {
+        "title": "Массоввое формирование писем",
+        "dialog": {
+          "templateId": "Шаблон",
+          "formatCode": "Формат",
+          "regLetter": "Регистрировать письма",
+          "addressTypes": "Тип адреса",
+          "avoidDuplication": "Исключить дублирование адресов",
+          "ignoreWrongAddress": "Исключить адреса со статусом \"Неверный\"",
+          "sortRule": "Сортировка",
+          "reportId": "Реестр"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2468,7 +2481,7 @@
         "debtId": "ID долга",
         "fullName": "ФИО",
         "messageTemplate": "Шаблон",
-        "msgStatusCode": "Статус",
+        "msgStatusName": "Статус",
         "personRole": "Роль",
         "promiseDate": "Обещанная дата",
         "resultName": "Результат",
@@ -3501,6 +3514,7 @@
         "openDebtCard": "Открыть карточку долга",
         "openIncomingCall": "Открыть входящий звонок по долгу",
         "openUserDetail": "Открыть карточку оператора",
+        "openUserById": "Открыть карточку оператора",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",
         "prepareVisit": "Подготовить выезд",
@@ -3524,7 +3538,8 @@
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
-        "changePersonType": "Изменить тип персоны"
+        "changePersonType": "Изменить тип персоны",
+        "letterGenerate": "Массовое формирование писем"
       }
     },
     "filter": {

@@ -1,16 +1,4 @@
 <app-dialog-action
-  *ngIf="isDialog('visitCancelConfirm')"
-  actionMode="warning"
-  actionTranslationKey="default.dialog.confirm.confirmMessage"
-  actionMessage="default.buttons.ok"
-  titleTranslationKey="default.dialog.confirm.confirmTitle"
-  [messageParams]="confirmOperation"
-  (action)="onConfirm()"
-  (cancel)="onCloseDialog()">
-</app-dialog-action>
-
-<app-dialog-action
-  *ngIf="isDialog('visitCancel')"
   actionTranslationKey="massOperations.visit.message"
   actionMessage="default.yesNo.Yes"
   titleTranslationKey="massOperations.visit.title"

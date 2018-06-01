@@ -2,7 +2,7 @@ import { IAppState } from './state.interface';
 
 import * as auth from '@app/core/auth/auth.reducer';
 import * as calls from '@app/core/calls/call.reducer';
-import * as campaigns from '@app/routes/utilities/campaigns/campaigns.reducer';
+import * as campaigns from '@app/routes/utilities/campaigns/campaigns/campaigns.reducer';
 import * as constants from '@app/routes/admin/constants/constants.reducer';
 import * as contractorsAndPortfolios from '@app/routes/admin/contractors/contractors-and-portfolios.reducer';
 import * as dictionaries from '@app/routes/admin/dictionaries/dictionaries.reducer';

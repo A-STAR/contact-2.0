@@ -19,6 +19,7 @@ export interface IAction {
   addOptions?: IAddOption[];
   params?: string[];
   payload?: IActionPayload;
+  selection?: any[];
   asyncMode?: boolean;
   outputConfig?: IDynamicLayoutConfig;
 }

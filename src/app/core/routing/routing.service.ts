@@ -13,6 +13,26 @@ export class RoutingService {
   }
 
   /**
+   * Navigates to `url` (must be relative to `/`) using params as route .
+   * If any param is not found in `params` - it is retrieved from route params
+   *
+   * Example:
+   * ```typescript
+   * this.routingService.navigateToUrl('/debtor/{debtorId}/debt/{debtId}/address/{addressId}', { addressId: 1 })
+   * ```
+   * This will get `debtorId` and `debtId` from router and use `addressId = 1`
+   */
+  navigateToUrl(url: string, params: Record<string, string> = {}): Promise<boolean> {
+    const absoluteUrl = url.replace(/\{.+?\}/gi, chunk => {
+      const key = chunk.slice(1, -1);
+      return params[key]
+        ? params[key]
+        : this.getRouteParam(this.route, key);
+    });
+    return this.router.navigateByUrl(absoluteUrl);
+  }
+
+  /**
    * Navigates to the closest parent route from child regardless of how many url segments there are in the child route
    *
    * @param route current route

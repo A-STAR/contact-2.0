@@ -1,6 +1,7 @@
 <div class="flex vertical">
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
   </div>
   <div class="flex-item grow mb-lg">
     <app-dynamic-layout
@@ -8,9 +9,6 @@
       [data]="formData$ | async"
       [templates]="templates"
     ></app-dynamic-layout>
-  </div>
-  <div class="flex-item">
-    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
   </div>
 </div>
 
@@ -56,6 +54,7 @@
 <ng-template #addresses>
   <app-address-grid
     [debtId]="debtId"
+    [debtorId]="debtorId"
     [personId]="personId"
     [personRole]="contactPersonRole"
     (add)="onAddressAdd()"

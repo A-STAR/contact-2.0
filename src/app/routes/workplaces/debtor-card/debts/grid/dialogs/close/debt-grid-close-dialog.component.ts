@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
@@ -41,7 +42,7 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
   @Output() submit = new EventEmitter<void>();
 
   controls: Array<IDynamicFormControl> = [
-    { controlName: 'reasonCode', type: 'select', options: [] },
+    { controlName: 'reasonCode', type: 'select', options: [], required: true },
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.closeDebt.${control.controlName}` }) as IDynamicFormControl);
 
@@ -54,6 +55,10 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {}
+
+  get isSubmitDisabled(): boolean {
+    return !this.form.canSubmit;
+  }
 
   ngAfterViewInit(): void {
     this.formDataSubscription = combineLatest(
@@ -68,7 +73,9 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
         .filter(term => term.parentCode === this.statusCode)
         .map(toOption('code', 'name'));
 
+      // This is why we have dynamic layout, this is ugly
       reasonCodeControl.required = this.isReasonCodeRequired(reasonCodeRequired, this.statusCode);
+      this.form.form.get('reasonCode').setValidators(reasonCodeControl.required ? Validators.required : null);
 
       this.cdRef.markForCheck();
     });

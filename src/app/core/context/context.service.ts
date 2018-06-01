@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged, first, share } from 'rxjs/operators';
+import { distinctUntilChanged, first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { equals } from 'ramda';
 
@@ -23,8 +23,6 @@ export class ContextService {
     this.entityAttributesService.bag$,
     this.userConstantsService.bag(),
     this.userPermissionsService.bag(),
-  ).pipe(
-    share(),
   );
 
   constructor(

@@ -216,7 +216,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     const debtId = this.route.snapshot.paramMap.get('debtId');
     const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
-      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 

@@ -1,0 +1,9 @@
+<app-dialog-action
+  actionMode="warning"
+  actionTranslationKey="default.dialog.confirm.confirmMessage"
+  actionMessage="default.buttons.ok"
+  titleTranslationKey="default.dialog.confirm.confirmTitle"
+  [messageParams]="confirmParams"
+  (action)="onConfirm()"
+  (cancel)="onClose()">
+</app-dialog-action>

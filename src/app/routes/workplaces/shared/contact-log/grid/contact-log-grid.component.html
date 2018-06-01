@@ -1,14 +1,17 @@
-<app-simple-grid
+<app-action-grid
+  #grid
   persistenceKey="[grid] workplaces/shared/contact-log"
+  metadataKey="contactSearchFull"
   [actions]="actions"
-  [columns]="columns"
+  [toolbarItems]="hideToolbar ? null : toolbarItems"
+  [fullHeight]="true"
   [rows]="contactLogList"
-  [selection]="selected"
-  [toolbar]="hideToolbar ? null : toolbarItems"
-  (action)="onAction($event)"
-  (selectRow)="onSelect($event)"
+  [rowCount]="rowCount"
+  (selectRow)="onSelect()"
   (dblClick)="onEdit($event)"
-></app-simple-grid>
+  (request)="onRequest()"
+  (action)="onAction($event)"
+></app-action-grid>
 
 <app-downloader
   #downloader

@@ -7,6 +7,7 @@ import { catchError, distinctUntilChanged, finalize, first, map, mergeMap } from
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
+import { IGuiObjectDef } from '@app/core/layout/layout.interface';
 import { IQueryParam, IQueryParams } from './data.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
@@ -121,12 +122,7 @@ export class DataService {
     return this.layoutService.currentGuiObject$.pipe(
       first(),
       mergeMap(item => {
-        const originalHeaders = options.headers
-          ? options.headers
-          : new HttpHeaders();
-        const headers = item && item.id && method !== DataService.METHOD_GET
-          ? originalHeaders.set('X-Gui-Object', item.id.toString())
-          : originalHeaders;
+        const headers = this.buildHeaders(method, options, item);
         return this.request(method, url, routeParams, { ...options, headers, responseType: 'json' });
       }),
     );
@@ -141,8 +137,24 @@ export class DataService {
    * @param options Other HTTP options, like `body` etc.
    */
   private blobRequest(method: string, url: string, routeParams: object, options: RequestOptions = {}): Observable<Blob> {
-    return this.request(method, url, routeParams, { ...options, responseType: 'blob', observe: 'response' })
-      .map(response => new Blob([ response.body ], { type: response.headers.get('content-type') }));
+    return this.layoutService.currentGuiObject$.pipe(
+      first(),
+      mergeMap(item => {
+        const headers = this.buildHeaders(method, options, item);
+        return this.request(method, url, routeParams, { ...options, headers, responseType: 'blob', observe: 'response' }).pipe(
+          map(response => new Blob([ response.body ], { type: response.headers.get('content-type') })),
+        );
+      }),
+    );
+  }
+
+  private buildHeaders(method: string, options: RequestOptions, guiObjectDef: IGuiObjectDef): any {
+    const originalHeaders = options.headers
+      ? options.headers
+      : new HttpHeaders();
+    return guiObjectDef && guiObjectDef.id && method !== DataService.METHOD_GET
+      ? originalHeaders.set('X-Gui-Object', guiObjectDef.id.toString())
+      : originalHeaders;
   }
 
   private request(

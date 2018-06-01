@@ -14,6 +14,7 @@ import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
+import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { DataUploaders,
   IOpenFileResponse,
@@ -58,7 +59,7 @@ export class DataUploadComponent extends DialogFunctions
       action: 'delete',
       params: [],
       addOptions: [],
-      enabled: (_, __, row) => !!row,
+      enabled: (params: IContextMenuParams) => !!params.selection,
     },
   ];
 

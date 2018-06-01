@@ -1,0 +1,308 @@
+{
+  "key": "routes/workplaces/debtor/debt-create",
+  "items": [
+    {
+      "type": "group",
+      "groupType": "vertical",
+      "size": 100,
+      "children": [
+        {
+          "type": "group",
+          "groupType": "vertical",
+          "size": 100,
+          "children": [
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "enabled": false,
+                  "label": "widgets.debt.grid.id",
+                  "name": "id",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 25
+                },
+                {
+                  "filterParams": null,
+                  "filterType": "portfolios",
+                  "label": "widgets.debt.grid.portfolioId",
+                  "name": "portfolioId",
+                  "type": "control",
+                  "controlType": "gridselect",
+                  "validators": {
+                    "required": true
+                  },
+                  "size": 25
+                },
+                {
+                  "enabled": false,
+                  "label": "widgets.debt.grid.bankId",
+                  "lookupKey": "contractors",
+                  "name": "bankId",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 25
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionIsTrue",
+                    "value": "DEBT_EDIT"
+                  },
+                  "label": "widgets.debt.grid.contract",
+                  "name": "contract",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 25
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "label": "widgets.debt.grid.creditName",
+                  "name": "creditName",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 25
+                },
+                {
+                  "dictCode": 3,
+                  "label": "widgets.debt.grid.creditTypeCode",
+                  "name": "creditTypeCode",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 25
+                },
+                {
+                  "label": "widgets.debt.grid.creditStartDate",
+                  "name": "creditStartDate",
+                  "type": "control",
+                  "controlType": "date",
+                  "size": 25
+                },
+                {
+                  "label": "widgets.debt.grid.creditEndDate",
+                  "name": "creditEndDate",
+                  "type": "control",
+                  "controlType": "date",
+                  "size": 25
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "dictCode": 11,
+                  "label": "widgets.debt.grid.debtReasonCode",
+                  "name": "debtReasonCode",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 16.66
+                },
+                {
+                  "label": "widgets.debt.grid.startDate",
+                  "name": "startDate",
+                  "type": "control",
+                  "controlType": "date",
+                  "size": 16.66
+                },
+                {
+                  "label": "widgets.debt.grid.dpd",
+                  "name": "dpd",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 16.66
+                },
+                {
+                  "label": "widgets.debt.grid.currencyId",
+                  "lookupKey": "currencies",
+                  "name": "currencyId",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": true
+                  },
+                  "size": 16.66
+                },
+                {
+                  "label": "widgets.debt.grid.debtAmount",
+                  "name": "debtAmount",
+                  "type": "control",
+                  "controlType": "text",
+                  "validators": {
+                    "required": true
+                  },
+                  "size": 16.66
+                },
+                {
+                  "label": "widgets.debt.grid.totalAmount",
+                  "name": "totalAmount",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 16.66
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "dictCode": 61,
+                  "label": "widgets.debt.grid.stageCode",
+                  "name": "stageCode",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 20
+                },
+                {
+                  "label": "widgets.debt.grid.debtDate",
+                  "name": "debtDate",
+                  "type": "control",
+                  "controlType": "date",
+                  "size": 20
+                },
+                {
+                  "label": "widgets.debt.grid.account",
+                  "name": "account",
+                  "type": "control",
+                  "controlType": "text",
+                  "size": 20
+                },
+                {
+                  "dictCode": 26,
+                  "label": "widgets.debt.grid.regionCode",
+                  "name": "regionCode",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 20
+                },
+                {
+                  "dictCode": 6,
+                  "label": "widgets.debt.grid.branchCode",
+                  "name": "branchCode",
+                  "type": "control",
+                  "controlType": "select",
+                  "size": 20
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "groupType": "horizontal",
+              "children": [
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT1_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 198
+                  },
+                  "dictCode": 34,
+                  "label": "widgets.debt.grid.dict1Code",
+                  "name": "dict1Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 198
+                    }
+                  },
+                  "size": 25
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT2_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 199
+                  },
+                  "dictCode": 35,
+                  "label": "widgets.debt.grid.dict2Code",
+                  "name": "dict2Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 199
+                    }
+                  },
+                  "size": 25
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT3_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 200
+                  },
+                  "dictCode": 36,
+                  "label": "widgets.debt.grid.dict3Code",
+                  "name": "dict3Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 200
+                    }
+                  },
+                  "size": 25
+                },
+                {
+                  "enabled": {
+                    "operator": "permissionNotEmpty",
+                    "value": "DEBT_DICT4_EDIT_LIST"
+                  },
+                  "display": {
+                    "operator": "entityIsUsed",
+                    "value": 201
+                  },
+                  "dictCode": 37,
+                  "label": "widgets.debt.grid.dict4Code",
+                  "name": "dict4Code",
+                  "type": "control",
+                  "controlType": "select",
+                  "validators": {
+                    "required": {
+                      "operator": "entityIsMandatory",
+                      "value": 201
+                    }
+                  },
+                  "size": 25
+                }
+              ]
+            },
+            {
+              "type": "control",
+              "controlType": "textarea",
+              "label": "widgets.debt.grid.comment",
+              "name": "comment"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "plugins": [
+    {
+      "type": "gridselect",
+      "from": "portfolioId",
+      "to": "bankId",
+      "key": "contractorId"
+    }
+  ]
+}

@@ -1,11 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { first } from 'rxjs/operators/first';
 
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-
 import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
-
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { addGridLabel, isEmpty } from '@app/core/utils';
@@ -29,7 +36,7 @@ export class PhoneGridComponent implements OnInit {
   ].map(addGridLabel('debtor.information.phone.grid'));
 
   phones: IPhone[];
-
+  private selectedPhone: IPhone;
   private selectedPhoneId: number;
 
   constructor(
@@ -40,6 +47,7 @@ export class PhoneGridComponent implements OnInit {
   ngOnInit(): void {
     this.phoneService
       .fetchAll(this.entityTypeId, this.entityId, false)
+      .pipe(first())
       .subscribe(phones => {
         this.phones = phones.filter(phone => !phone.isInactive);
         this.cdRef.markForCheck();
@@ -50,19 +58,17 @@ export class PhoneGridComponent implements OnInit {
     return !!this.selectedPhone;
   }
 
-  get selectedPhone(): IPhone {
-    return (this.phones || []).find(phone => phone.id === this.selectedPhoneId);
-  }
-
   onSelect(phones: IPhone[]): void {
     this.selectedPhoneId = isEmpty(phones)
       ? null
       : phones[0].id;
+    this.selectedPhone = phones && phones.length && phones[0];
     this.cdRef.markForCheck();
   }
 
   onDoubleClick(phone: IPhone): void {
     this.selectedPhoneId = phone.id;
+    this.selectedPhone = phone;
     if (this.canRegisterSelectedPhone) {
       this.action.emit(this.selectedPhoneId);
     }

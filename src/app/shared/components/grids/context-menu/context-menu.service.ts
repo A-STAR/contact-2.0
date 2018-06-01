@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
 import { MenuItemDef } from 'ag-grid';
-import { IContextMenuOptions, IContextMenuSimpleOptions } from './context-menu.interface';
+import { IContextMenuOptions, IContextMenuSimpleOptions, IContextMenuParams } from './context-menu.interface';
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -74,7 +74,7 @@ export class ContextMenuService {
         selection: options.selection
       }),
       disabled: action.enabled
-        ? !action.enabled.call(null, MetadataActionType.SINGLE, options.selected, options.selection.node.data)
+        ? !action.enabled.call(null, this.setPermParams(action, MetadataActionType.SINGLE, options))
         : false,
     };
   }
@@ -83,7 +83,7 @@ export class ContextMenuService {
     return {
       name: this.translateAction(action),
       disabled: action.enabled
-        ? !action.enabled.call(null, MetadataActionType.ALL, options.selected, options.selection.node.data)
+        ? !action.enabled.call(null, this.setPermParams(action, MetadataActionType.ALL, options))
         : false,
     };
   }
@@ -110,7 +110,7 @@ export class ContextMenuService {
     return {
       name: this.translateService.instant(`default.grid.actions.actionForSelection`),
       disabled: action.enabled ?
-        !action.enabled.call(null, MetadataActionType.SELECTED, options.selected, options.selection.node.data) : false,
+        !action.enabled.call(null, this.setPermParams(action, MetadataActionType.SELECTED, options)) : false,
       action: () => options.cb({
         metadataAction: {
           ...action,
@@ -126,9 +126,8 @@ export class ContextMenuService {
       name: this.translateService.instant(`default.grid.actions.actionForAll`),
       disabled: action.enabled ? !action.enabled.call(
         null,
-        MetadataActionType.ALL,
-        options.selected,
-        options.selection.node.data) : false,
+        this.setPermParams(action, MetadataActionType.ALL, options)
+        ) : false,
       action: () => options.cb({
         metadataAction: {
           ...action,
@@ -148,5 +147,16 @@ export class ContextMenuService {
 
   private isAllowedAction(action: IMetadataAction): boolean {
     return !action.id || this.customOperationService.isAllowedOperation(action.id);
+  }
+
+  private setPermParams(action: IMetadataAction, type: MetadataActionType, options: IContextMenuOptions): IContextMenuParams {
+    return {
+      action: {
+        ...action,
+        type
+      },
+      selected: options.selected,
+      selection: options.selection.node.data
+    };
   }
 }

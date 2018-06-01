@@ -244,6 +244,11 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       map(email => email && !email.isInactive)
     );
 
+  readonly isEmailInactive$ = this.selectedEmail$
+    .pipe(
+      map(email => email && !!email.isInactive)
+    );
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -262,7 +267,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
-      enabled: combineLatestAnd([ this.canBlock$, this.isEmailActive$ ]),
+      enabled: combineLatestAnd([ this.canBlock$, this.isEmailInactive$ ]),
       action: () => this.setDialog('unblock')
     },
     {
@@ -296,10 +301,10 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
-    // TODO(d.maltsev): persist selection
     this.emailService.fetchAll(this.entityType, this.entityId)
       .subscribe(emails => {
         this._emails = emails;
+        this.selectedEmail$.next(null);
         this.cdRef.markForCheck();
       });
   }

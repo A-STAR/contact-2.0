@@ -26,11 +26,13 @@ import { Debt } from '@app/entities';
 })
 export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnInit {
 
-  readonly debts$ = this.debtorService.debts$;
+  debts: Debt[];
 
-  selectedDebt$ = new BehaviorSubject<Debt>(null);
+  readonly selectedDebt$ = this.debtorService.debt$;
 
-  selection$ = new BehaviorSubject<Debt[]>(null);
+  readonly debtId$ = this.debtorService.debtId$;
+
+  selection: Debt[] = [];
 
   readonly canAdd$ = this.userPermissionsService.bag()
     .pipe(
@@ -84,6 +86,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CLEAR,
+      label: 'widgets.debt.toolbar.terminate',
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
         {
@@ -139,7 +142,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
   dialog: string;
 
-  private debtUpdateSub: Subscription;
+  private debtsSub: Subscription = new Subscription();
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -152,27 +155,38 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
   }
 
   ngOnInit(): void {
-    this.debts$
+    const selectionSub = this.debtorService.debt$
       .pipe(first())
-      .subscribe(debts => {
-        this.selection$.next([ debts[0] ]);
-        this.selectedDebt$.next(debts[0]);
+      .subscribe(debt => {
+        this.selection = [ debt ];
         this.cdRef.markForCheck();
       });
+    const debtsSub = this.debtorService.debts$
+      .subscribe(debts => {
+        this.debts = debts;
+        this.cdRef.markForCheck();
+      });
+
+    this.debtsSub.add(selectionSub);
+    this.debtsSub.add(debtsSub);
   }
 
   ngOnDestroy(): void {
-    this.debtUpdateSub.unsubscribe();
+    this.debtsSub.unsubscribe();
   }
 
   onDoubleClick(debt: Debt): void {
-    this.selectedDebt$.next(debt);
-    this.onEdit();
+    if (debt) {
+      this.debtId$.next(debt.id);
+      this.onEdit();
+    }
   }
 
   onSelect(debts: Debt[]): void {
     if (debts && debts.length) {
-      this.selectedDebt$.next(debts[0]);
+      this.debtId$.next(debts[0].id);
+      this.routingService.navigate([
+        `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${debts[0].id}` ], this.route);
     }
   }
 
@@ -193,7 +207,9 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
   }
 
   private onEdit(): void {
-    this.routingService.navigate([ 'debt' ], this.route);
+    this.routingService.navigate([
+      `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${this.debtId$.value}/edit/debt`
+    ], this.route);
   }
 
   private fetch(): void {

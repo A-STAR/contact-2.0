@@ -18,6 +18,7 @@ import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { Debt, Person } from '@app/entities';
 import { catchError } from 'rxjs/operators/catchError';
+import { equals } from 'ramda';
 
 @Injectable()
 export class DebtorService {
@@ -59,6 +60,7 @@ export class DebtorService {
     .pipe(
       filter(Boolean),
       switchMap(debtorId => this.workplacesService.fetchDebtsForPerson(debtorId)),
+      distinctUntilChanged(equals),
     );
 
   readonly isCompany$ = this.debtor$

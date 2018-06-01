@@ -76,6 +76,11 @@ export interface IAGridExportableColumn {
   name: string;
 }
 
+export interface IAGridRequestAddParam {
+  name: string;
+  value: string;
+}
+
 export interface IAGridRequestParams {
   currentPage?: number;
   pageSize?: number;
@@ -94,6 +99,7 @@ export interface IAGridRequest {
   };
   sorting?: IAGridSorter[];
   filtering?: FilterObject;
+  additionalParameters?: IAGridRequestAddParam;
 }
 
 export interface IAGridResponse<T> {
