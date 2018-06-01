@@ -56,6 +56,10 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
     private userDictionariesService: UserDictionariesService,
   ) {}
 
+  get isSubmitDisabled(): boolean {
+    return !this.form.canSubmit;
+  }
+
   ngAfterViewInit(): void {
     this.formDataSubscription = combineLatest(
       this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE),
