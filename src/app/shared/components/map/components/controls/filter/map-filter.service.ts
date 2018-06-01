@@ -7,7 +7,7 @@ import {
 } from '../toolbar/map-toolbar.interface';
 import { MapFilters } from './map-filter.interface';
 
-import { LayersService } from '@app/core/map-providers/layers/map-layers.service';
+import { LayersService, LayerGroup, Layer } from '@app/core/map-providers/layers/map-layers.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 import { isEmpty } from '@app/core/utils';
@@ -63,58 +63,72 @@ export class MapFilterService<T> {
       case MapFilters.VISIT_STATUS:
       case MapFilters.TOGGLE_INACTIVE:
         this.layersService
-          .getGroups()
-          .forEach(g => {
-            const layer = g.getLayersByType(LayerType.MARKER)[0];
+          .getLayers()
+          .forEach(l => {
+            const layer = l.isGroup ? (l as LayerGroup<T>).getLayersByType(LayerType.MARKER)[0] : l as Layer<T>;
             if (layer) {
               const _shouldShow = this.defaultItems[item.filter as MapFilters](layer, params);
-              _shouldShow ? g.show() : g.hide();
+              _shouldShow ? l.show() : l.hide();
             }
           });
         break;
+      // now applies for groups only
       case MapFilters.TOGGLE_ACCURACY:
         this.layersService
-          .getGroups()
-          .forEach(g => {
-            const layerIds = g.getLayersByType(LayerType.CIRCLE)
-            .map(l => l.id);
-
-            this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
-          });
-        break;
-      case MapFilters.TOGGLE_ADDRESSES:
-        this.layersService
-          .getGroups()
-          .forEach(g => {
-            const layerIds = g
-              .getLayersByType(LayerType.MARKER)
-              .filter(m => (m.data as any).addressLatitude && (m.data as any).addressLongitude && !(m.data as any).isContact)
-              .map(l => l.id);
+          .getLayers()
+          .forEach((g: LayerGroup<T>) => {
+            if (g.isGroup) {
+              const layerIds = g.getLayersByType(LayerType.CIRCLE).map(l => l.id);
 
               this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+            }
           });
         break;
+      // now applies for groups only
+      case MapFilters.TOGGLE_ADDRESSES:
+        this.layersService
+          .getLayers()
+          .forEach((g: LayerGroup<T>) => {
+            if (g.isGroup) {
+              const layerIds = g
+                .getLayersByType(LayerType.MARKER)
+                .filter(m => (m.data as any).addressLatitude
+                  && (m.data as any).addressLongitude && !(m.data as any).isContact)
+                .map(l => l.id);
+
+              this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+            }
+          });
+        break;
+      // now applies for groups only
       case MapFilters.DISTANCE:
         this.layersService
-          .getGroups()
-          .forEach(g => {
-            g
-            .getLayersByType(LayerType.MARKER)
-            .filter(m => this.defaultItems[item.filter as MapFilters](m, params))
-            .map(l => this.mapService.setIcon(l, 'addressByContact', params));
+          .getLayers()
+          .forEach((g: LayerGroup<T>) => {
+            if (g.isGroup) {
+              g
+              .getLayersByType(LayerType.MARKER)
+              .filter(m => this.defaultItems[item.filter as MapFilters](m, params))
+              .map(l => this.mapService.setIcon(l, 'addressByContact', params));
+            }
           });
         break;
       default:
          if (typeof item.filter === 'function') {
           this.layersService
-          .getGroups()
+          .getLayers()
           .forEach(g => {
-            g
-            .getLayers()
-            .forEach(l => {
-              const _show = this.defaultItems[item.filter as MapFilters](l, params);
-              _show ? g.showByIds([l.id]) : g.hideByIds([l.id]);
-            });
+            if (g.isGroup) {
+              (g as LayerGroup<T>)
+                .getLayers()
+                .forEach(l => {
+                  const _show = (item.filter as IMapFilterFn)(l, params);
+                  _show ? (g as LayerGroup<T>).showByIds([l.id]) : (g as LayerGroup<T>).hideByIds([l.id]);
+                });
+            } else {
+              const _show = (item.filter as IMapFilterFn)((g as Layer<T>), params);
+              _show ? (g as Layer<T>).show() : (g as Layer<T>).hide();
+            }
           });
          } else {
            throw new Error(`Unknown filter type: ${item.filter}`);

@@ -88,6 +88,16 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     this.action.emit(this.value);
   }
 
+  selectAll(): void {
+    this.options.forEach(o => o.checked = true);
+    this.cdRef.markForCheck();
+  }
+
+  deselectAll(): void {
+    this.options.forEach(o => o.checked = false);
+    this.cdRef.markForCheck();
+  }
+
   getIconCls(): string {
     return this.isLeft ? 'menu-arrow-left fa-caret-left' : 'menu-arrow-right fa-caret-right';
   }
