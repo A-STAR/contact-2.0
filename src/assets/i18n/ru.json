@@ -849,8 +849,7 @@
           "createDateTime": "Дата создания",
           "sendDateTime": "Фактическая дата отправки",
           "userFullName": "Оператор",
-          "templateName": "Название шаблона",
-          "letterExport": "Сохранение файла письма"
+          "templateName": "Название шаблона"
         }
       }
     },
@@ -3539,7 +3538,8 @@
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
         "changePersonType": "Изменить тип персоны",
-        "letterGenerate": "Массовое формирование писем"
+        "letterGenerate": "Массовое формирование писем",
+        "letterExport": "Сохранение файла письма"
       }
     },
     "filter": {

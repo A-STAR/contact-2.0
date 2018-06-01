@@ -849,8 +849,7 @@
           "createDateTime": "Created",
           "sendDateTime": "Send date",
           "userFullName": "Operator",
-          "templateName": "Template",
-          "letterExport": "Letter export"
+          "templateName": "Template"
         }
       }
     },
@@ -3539,7 +3538,8 @@
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
         "changePersonType": "Change person type",
-        "letterGenerate": "Letter generation"
+        "letterGenerate": "Letter generation",
+        "letterExport": "Letter export"
       }
     },
     "filter": {

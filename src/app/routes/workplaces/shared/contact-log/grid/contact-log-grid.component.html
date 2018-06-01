@@ -2,7 +2,6 @@
   #grid
   persistenceKey="[grid] workplaces/shared/contact-log"
   metadataKey="contactSearchFull"
-  [actions]="actions"
   [toolbarItems]="hideToolbar ? null : toolbarItems"
   [fullHeight]="true"
   [rows]="contactLogList"
@@ -10,10 +9,5 @@
   (selectRow)="onSelect()"
   (dblClick)="onEdit($event)"
   (request)="onRequest()"
-  (action)="onAction($event)"
 ></app-action-grid>
 
-<app-downloader
-  #downloader
-  entityTranslationKey="entities.letters.gen.singular"
-></app-downloader>
