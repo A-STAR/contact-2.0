@@ -83,13 +83,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private person: Person;
 
-  private canViewSubscription: Subscription;
-  private contactDetailsChangeSub: Subscription;
-  private debtSubscription: Subscription;
-  private busSubscription: Subscription;
-  private callSubscription: Subscription;
-  private activeCallSubscription: Subscription;
-  private phonesSub: Subscription;
   private subs = new Subscription();
 
   private _columns: ISimpleGridColumn<IPhone>[] = [
