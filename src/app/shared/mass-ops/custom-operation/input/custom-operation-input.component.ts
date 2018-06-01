@@ -8,7 +8,7 @@ import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dyna
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
-import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
+import { CustomOperationParamsComponent } from '../params/custom-operation-params.component';
 
 import { invert } from '@app/core/utils';
 
@@ -18,7 +18,7 @@ import { invert } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomOperationInputComponent implements OnInit, AfterViewInit {
-  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
+  @ViewChild(CustomOperationParamsComponent) params: CustomOperationParamsComponent;
 
   @Input() key: string;
   @Input() inputParams: ICustomOperationParams[];
@@ -39,13 +39,13 @@ export class CustomOperationInputComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.isDisabled$ = this.layout.canSubmit().pipe(
+    this.isDisabled$ = this.params.layout.canSubmit().pipe(
       map(invert),
     );
   }
 
   onSubmit(): void {
-    this.submit.emit(this.layout.getData());
+    this.submit.emit(this.params.layout.getData());
   }
 
   onClose(): void {
