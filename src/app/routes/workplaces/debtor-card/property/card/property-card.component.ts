@@ -84,11 +84,10 @@ export class DebtorPropertyCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action = this.debtorService.debtorId$.flatMap(personId => this.propertyId
-      ? this.propertyService.update(personId, this.propertyId, this.form.serializedUpdates)
-      : this.propertyService.create(personId, this.form.serializedUpdates)
-    );
-
+    const debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
+    const action = this.propertyId
+      ? this.propertyService.update(debtorId, this.propertyId, this.form.serializedUpdates)
+      : this.propertyService.create(debtorId, this.form.serializedUpdates);
     action.subscribe(() => {
       this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SAVED);
       this.onBack();
