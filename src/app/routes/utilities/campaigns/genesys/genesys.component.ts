@@ -18,6 +18,7 @@ import {
   DynamicLayoutItemType,
   IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import { IGenesysStatisticsRecord } from '@app/routes/utilities/campaigns/genesys/statistics/statistics.interface';
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { GenesysService } from '@app/routes/utilities/campaigns/genesys/genesys.service';
@@ -53,12 +54,12 @@ export class GenesysCampaignsComponent implements OnInit {
           {
             type: DynamicLayoutItemType.TEMPLATE,
             value: 'campaigns',
-            size: 50,
+            size: 60,
           },
           {
             type: DynamicLayoutItemType.TEMPLATE,
             value: 'statistics',
-            size: 30,
+            size: 20,
           },
           {
             type: DynamicLayoutItemType.GROUP,
@@ -112,6 +113,8 @@ export class GenesysCampaignsComponent implements OnInit {
 
   rows: IGenesysCampaign[] = [];
   rowCount = 0;
+
+  statisticsRows: IGenesysStatisticsRecord[] = [];
 
   templates: Record<string, TemplateRef<any>>;
 
@@ -187,31 +190,14 @@ export class GenesysCampaignsComponent implements OnInit {
   private fetchCampaignStatistics(campaignId: number): void {
     this.customOperationService
       .execute(CustomOperation.PBX_CAMPAIGN_STATISTICS, {} as any, { campaignId })
-      .subscribe(data => this.setCampaignStatistics(data));
+      .subscribe(
+        response => this.setCampaignStatistics(response.data),
+        () => this.setCampaignStatistics(null),
+      );
   }
 
-  private setCampaignStatistics(data: any): void {
-    // tslint:disable-next-line:no-console
-    console.log(data);
+  private setCampaignStatistics(data: IGenesysStatisticsRecord[]): void {
+    this.statisticsRows = data;
+    this.cdRef.markForCheck();
   }
-
-  // private getActionData(actionId: number): IAction {
-  //   const metadataAction = this.getMetadataAction(actionId);
-  //   return {
-  //     id: metadataAction.id,
-  //     name: metadataAction.action,
-  //     addOptions: metadataAction.addOptions,
-  //     params: metadataAction.params,
-  //     payload: {
-  //       type: metadataAction.type,
-  //       data: [
-  //         metadataAction.params
-  //           .map(param => this.context[param])
-  //           .filter(Boolean)
-  //       ]
-  //     },
-  //     asyncMode: metadataAction.asyncMode,
-  //     outputConfig: metadataAction.outputConfig
-  //   };
-  // }
 }
