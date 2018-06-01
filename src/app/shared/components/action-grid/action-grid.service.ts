@@ -202,6 +202,10 @@ export class ActionGridService {
       operator: ContextOperator.PERMISSION_IS_TRUE,
       value: 'OPERATOR_DETAIL_VIEW'
     }),
+    openUserById: _ => ({
+      operator: ContextOperator.PERMISSION_IS_TRUE,
+      value: 'OPERATOR_DETAIL_VIEW'
+    }),
     paymentsCancel: _ => ({
       operator: ContextOperator.PERMISSION_IS_TRUE,
       value: 'PAYMENT_CANCEL'

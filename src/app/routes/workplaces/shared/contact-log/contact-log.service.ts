@@ -4,11 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
+import { IAGridResponse, IAGridRequestParams } from '@app/shared/components/grid2/grid2.interface';
 import { IContactLog } from './contact-log.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 
 @Injectable()
@@ -24,6 +27,7 @@ export class ContactLogService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
+    private gridService: GridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
@@ -34,6 +38,15 @@ export class ContactLogService extends AbstractActionService {
   fetchAll(personId: number, callCenter: boolean): Observable<Array<IContactLog>> {
     return this.dataService.create(this.baseUrl, { personId }, {}, { params: { callCenter } })
       .map(res => res.data)
+      .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.plural').dispatchCallback());
+  }
+
+  fetchGridData(personId: number, callCenter: boolean,
+      filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IContactLog>> {
+
+    const request = this.gridService.buildRequest(params, filters);
+
+    return this.dataService.create(this.baseUrl, { personId }, request, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.plural').dispatchCallback());
   }
 
