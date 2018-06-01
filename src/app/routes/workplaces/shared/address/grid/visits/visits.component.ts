@@ -36,7 +36,7 @@ export class AddressGridVisitsComponent implements OnInit {
     { prop: 'execUserFullName', minWidth: 200, maxWidth: 250 },
     { prop: 'execDateTime', minWidth: 150, maxWidth: 200, renderer: DateTimeRendererComponent },
     { prop: 'comment', minWidth: 150 },
-  ].map(addGridLabel('widgets.address.dialogs.visits'));
+  ].map(addGridLabel('widgets.address.dialogs.visits.grid'));
 
   visits: IVisit[];
 
