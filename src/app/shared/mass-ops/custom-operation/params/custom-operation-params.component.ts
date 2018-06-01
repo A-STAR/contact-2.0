@@ -15,7 +15,8 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 @Component({
   selector: 'app-custom-operation-params',
   templateUrl: './custom-operation-params.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: [ './custom-operation-params.component.scss' ],
 })
 export class CustomOperationParamsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
