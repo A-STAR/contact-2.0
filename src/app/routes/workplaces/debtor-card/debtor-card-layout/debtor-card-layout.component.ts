@@ -14,6 +14,7 @@ import { first, mergeMap, map } from 'rxjs/operators';
 import { equals } from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IDynamicLayoutTemplate } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
@@ -66,6 +67,8 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   ];
   debtorId: number;
   debtId: number;
+
+  readonly entityType = EntityType.DEBT;
 
   private debtSub: Subscription;
   private debtorSub: Subscription;

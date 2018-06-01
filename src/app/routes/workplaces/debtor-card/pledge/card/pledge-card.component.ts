@@ -16,6 +16,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
@@ -58,6 +59,8 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
 
   readonly layoutConfig = layout;
+
+  readonly entityType = EntityType.PLEDGOR;
 
   readonly pledgor$ = this.pledgeCardService.pledgor$;
   readonly isPledgorFormDisabled$ = this.pledgor$.pipe(

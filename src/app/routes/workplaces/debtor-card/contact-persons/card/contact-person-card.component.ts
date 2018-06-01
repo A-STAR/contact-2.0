@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
@@ -52,6 +53,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
 
   @ViewChild('personTitlebar',    { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('personClearButton', { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+
+  readonly entityType = EntityType.PERSON;
 
   readonly paramMap = this.route.snapshot.paramMap;
 

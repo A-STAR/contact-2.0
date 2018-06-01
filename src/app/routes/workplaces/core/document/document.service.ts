@@ -1,29 +1,24 @@
 import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { catchError } from 'rxjs/operators/catchError';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IDocument } from './document.interface';
 
-import { AbstractActionService } from '../../../../core/state/action.service';
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class DocumentService extends AbstractActionService {
-  // TODO(d.maltsev): merge entity attributes service and entity translations service
-  // and move entities there
-  static ENTITY_CONTRACTOR = 13;
-  static ENTITY_PORTFOLIO = 15;
-  static ENTITY_PERSON = 18;
-  static ENTITY_DEBT = 19;
-  static ENTITY_PLEDGOR = 39;
-  static ENTITY_GUARANTOR = 38;
 
   static MESSAGE_DOCUMENT_SAVED = 'MESSAGE_DOCUMENT_SAVED';
-  private static BASE_URL = '/entityTypes/{entityType}/entities/{entityId}/fileattachments';
 
+  private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/fileattachments';
+
+  private errPlural = 'entities.documents.gen.plural';
   private errSingular = 'entities.documents.gen.singular';
 
   constructor(
@@ -35,25 +30,56 @@ export class DocumentService extends AbstractActionService {
     super();
   }
 
-  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IDocument>> {
-    const url = this.getFetchUrl(entityType);
+  fetchForDebt(debtId: number, callCenter: boolean): Observable<Array<IDocument>> {
+    const url = '/debts/{debtId}/fileattachments';
     return this.dataService
-      .readAll(url, { entityId }, { params: { callCenter } })
-      .catch(this.notificationsService.fetchError().entity('entities.documents.gen.plural').dispatchCallback());
+      .readAll(url, { debtId }, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity(this.errPlural).dispatchCallback()),
+      );
+  }
+
+  fetchForPledgor(debtId: number, contractId: number, pledgorId: number, callCenter: boolean): Observable<Array<IDocument>> {
+    const url = '/debts/{debtId}/pledgeContract/{contractId}/pledgor/{pledgorId}/fileattachments';
+    return this.dataService
+      .readAll(url, { debtId, contractId, pledgorId }, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity(this.errPlural).dispatchCallback()),
+      );
+  }
+
+  fetchForGuarantor(debtId: number, contractId: number, guarantorId: number, callCenter: boolean): Observable<Array<IDocument>> {
+    const url = '/debts/{debtId}/guaranteeContract/{contractId}/guarantor/{guarantorId}/fileattachments';
+    return this.dataService
+      .readAll(url, { debtId, contractId, guarantorId }, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity(this.errPlural).dispatchCallback()),
+      );
+  }
+
+  fetchForEntity(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IDocument>> {
+    return this.dataService
+      .readAll(this.baseUrl, { entityType, entityId }, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity(this.errPlural).dispatchCallback()),
+      );
   }
 
   fetch(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<IDocument> {
-    const url = '/entityTypes/{entityType}/entities/{entityId}/fileattachments/{documentId}';
     return this.dataService
-      .read(url, { entityType, entityId, documentId }, { params: { callCenter } })
-      .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
+      .read(`${this.baseUrl}/{documentId}`, { entityType, entityId, documentId }, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback()),
+      );
   }
 
   create(entityType: number, entityId: number, document: IDocument, file: File, callCenter: boolean): Observable<void> {
     const body = file ? { ...document, fileName: file.name } : document;
     return this.dataService
-      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, body, file, { params: { callCenter } })
-      .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
+      .createMultipart(this.baseUrl, { entityType, entityId }, body, file, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.createError().entity(this.errSingular).dispatchCallback()),
+      );
   }
 
   update(
@@ -67,34 +93,18 @@ export class DocumentService extends AbstractActionService {
     const data = { entityType, entityId, documentId };
     const body = file ? { ...document, fileName: file.name } : document;
     return this.dataService
-      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, data, body, file, { params: { callCenter } })
-      .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
+      .updateMultipart(`${this.baseUrl}/{documentId}`, data, body, file, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback()),
+      );
   }
 
   delete(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<void> {
     const data = { entityType, entityId, documentId };
     return this.dataService
-      .delete(`${DocumentService.BASE_URL}/{documentId}`, data, { params: { callCenter } })
-      .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
-  }
-
-  /**
-   * See:
-   * http://confluence.luxbase.int:8090/display/WEB20/File+attachments
-   */
-  private getFetchUrl(entityType: number): string {
-    switch (entityType) {
-      // case DocumentService.ENTITY_CONTRACTOR:
-      // case DocumentService.ENTITY_PORTFOLIO:
-      // case DocumentService.ENTITY_PERSON:
-      //   return `/entityTypes/${entityType}/entities/{entityId}/fileattachments`;
-      case DocumentService.ENTITY_DEBT:
-        return '/debts/{entityId}/fileattachments';
-      // case DocumentService.ENTITY_GUARANTOR:
-      //   return '/guarantors/{entityId}/fileattachments';
-      // case DocumentService.ENTITY_PLEDGOR:
-      //   return '/pledgors/{entityId}/fileattachments';
-    }
-    throw new Error(`No fetch URL provided for entity type (${entityType})`);
+      .delete(`${this.baseUrl}/{documentId}`, data, { params: { callCenter } })
+      .pipe(
+        catchError(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback()),
+      );
   }
 }

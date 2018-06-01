@@ -3,9 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnInit,
   OnDestroy,
-  ViewChild
+  OnInit,
+  ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -13,6 +13,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IDocument } from '@app/routes/workplaces/core/document/document.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -23,7 +24,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
-import { combineLatestOr, combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
+import { addGridLabel, combineLatestOr, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,9 +35,12 @@ import { combineLatestOr, combineLatestAnd, addGridLabel, isEmpty } from '@app/c
 export class DocumentGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit' | 'download' = 'download';
   @Input() callCenter = false;
-  @Input() entityType: number;
-  @Input() hideToolbar = false;
+  @Input() contractId: number;
+  @Input() debtId: number;
   @Input() entityId: number;
+  @Input() entityType: EntityType;
+  @Input() hideToolbar = false;
+  @Input() personId: number;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
 
@@ -52,12 +56,12 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
         {
           label: 'Добавить к долгу',
           enabled: this.canAddToDebt$,
-          action: () => this.onAdd(19)
+          action: () => this.onAdd(EntityType.DEBT)
         },
         {
           label: 'Добавить к должнику',
           enabled: this.canAddToDebtor$,
-          action: () => this.onAdd(18)
+          action: () => this.onAdd(EntityType.PERSON)
         },
       ]
     },
@@ -82,7 +86,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch()
+      action: () => this.fetch(),
     },
   ];
 
@@ -179,11 +183,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   get canAddToDebt$(): Observable<boolean> {
-    return this.canEditOrDelete$(19);
+    return this.canEditOrDelete$(EntityType.DEBT);
   }
 
   get canAddToDebtor$(): Observable<boolean> {
-    return this.canEditOrDelete$(18);
+    return this.canEditOrDelete$(EntityType.PERSON);
   }
 
   private get selectedDocumentEntityTypeCode(): number {
@@ -211,16 +215,28 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.documentService.fetchAll(this.entityType, this.entityId, this.callCenter)
-      .subscribe(documents => {
-        this.documents = documents;
-        this.selectedDocumentId$.next(null);
-        this.cdRef.markForCheck();
-      });
+    this.getFetchSource().subscribe(documents => {
+      this.documents = documents;
+      this.selectedDocumentId$.next(null);
+      this.cdRef.markForCheck();
+    });
   }
 
   private setDialog(dialog: string): void {
     this._dialog = dialog;
     this.cdRef.markForCheck();
+  }
+
+  private getFetchSource(): Observable<any> {
+    switch (this.entityType) {
+      case EntityType.DEBT:
+        return this.documentService.fetchForDebt(this.debtId, this.callCenter);
+      case EntityType.PLEDGOR:
+        return this.documentService.fetchForPledgor(this.debtId, this.contractId, this.personId, this.callCenter);
+      case EntityType.GUARANTOR:
+        return this.documentService.fetchForPledgor(this.debtId, this.contractId, this.personId, this.callCenter);
+      default:
+        return this.documentService.fetchForEntity(this.entityType, this.entityId, this.callCenter);
+    }
   }
 }

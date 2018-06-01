@@ -65,9 +65,10 @@
 </ng-template>
 
 <ng-template #documents>
-  <!-- Documents for debt (term 19 in dictionary 55) -->
   <app-document-grid
-    [entityType]="19"
-    [entityId]="debtId"
+    [debtId]="debtId"
+    [entityType]="entityType"
+    [entityId]="personId"
+    [personId]="personId"
   ></app-document-grid>
 </ng-template>

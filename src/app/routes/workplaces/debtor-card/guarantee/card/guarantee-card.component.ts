@@ -17,6 +17,7 @@ import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
@@ -58,6 +59,8 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
 
   readonly layoutConfig = layout;
+
+  readonly entityType = EntityType.GUARANTOR;
 
   readonly paramMap = this.route.snapshot.paramMap;
 
