@@ -3288,7 +3288,7 @@
         "*": "Could not move {{ entity }}"
       },
       "massOp": "An error occurred while completing the {{ entity }} operation",
-      "customMassOp": "An error occurred while completing the operation",      
+      "customMassOp": "An error occurred while completing the operation",
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
@@ -3509,6 +3509,7 @@
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
+        "openUserById": "Open operator card",
         "openIncomingCall": "Open incoming call",
         "openUserDetail": "Open operator card",
         "paymentsCancel": "Payments cancel",

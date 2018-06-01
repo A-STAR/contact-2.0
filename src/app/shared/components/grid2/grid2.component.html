@@ -1,5 +1,8 @@
 <div class="flex vertical">
-
+  <!-- Toolbar -->
+  <div *ngIf="toolbar" class="flex-item">
+    <app-toolbar-2 [items]="toolbar"></app-toolbar-2>
+  </div>
   <!-- Grid -->
   <div class="flex-item" [ngClass]="{ grow: fullHeight }">
     <ag-grid-angular

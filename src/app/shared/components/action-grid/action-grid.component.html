@@ -45,6 +45,7 @@
     <app-grid2
       #grid
       *ngIf="initialized"
+      [toolbar]="toolbarItems"
       [actions]="gridActions$ | async"
       [columnIds]="columnIds"
       [columns]="columnsDef"
