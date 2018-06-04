@@ -15,7 +15,7 @@ import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 
-import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
+import { ActionDropdownService } from '@app/shared/components/action-dropdown/action-dropdown.service';
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
@@ -26,6 +26,7 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
   templateUrl: './action-dropdown.component.html',
 })
 export class ActionDropdownComponent implements OnInit, OnDestroy {
+
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   @Input() label: string;
@@ -40,13 +41,14 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
   private contextSubscription: Subscription;
 
   constructor(
+    private actionDropdownService: ActionDropdownService,
     private cdRef: ChangeDetectorRef,
-    private customOperationsService: CustomOperationService,
     private debtorService: DebtorService
   ) { }
 
   ngOnInit(): void {
-    this.customOperationsService.fetchOperations()
+    this.actionDropdownService.customOperations$
+      .filter(Boolean)
       .map(operations => operations.map(o => ({ label: o.name, value: o.id })))
       .subscribe(options => {
         this.options = options;

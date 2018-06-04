@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 
 import { ICustomActionData, ICustomOperationParams } from '../custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
@@ -8,25 +6,21 @@ import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dyna
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
-import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
-
-import { invert } from '@app/core/utils';
+import { CustomOperationParamsComponent } from '../params/custom-operation-params.component';
 
 @Component({
   selector: 'app-custom-operation-input',
   templateUrl: './custom-operation-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomOperationInputComponent implements OnInit, AfterViewInit {
-  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
+export class CustomOperationInputComponent implements OnInit {
+  @ViewChild(CustomOperationParamsComponent) params: CustomOperationParamsComponent;
 
   @Input() key: string;
   @Input() inputParams: ICustomOperationParams[];
 
   @Output() submit = new EventEmitter<ICustomActionData>();
   @Output() close = new EventEmitter<ICloseAction>();
-
-  isDisabled$ = of(true);
 
   config: IDynamicLayoutConfig;
 
@@ -38,14 +32,12 @@ export class CustomOperationInputComponent implements OnInit, AfterViewInit {
     this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.inputParams);
   }
 
-  ngAfterViewInit(): void {
-    this.isDisabled$ = this.layout.canSubmit().pipe(
-      map(invert),
-    );
+  get canSubmit(): boolean {
+    return this.params && this.params.canSubmit;
   }
 
   onSubmit(): void {
-    this.submit.emit(this.layout.getData());
+    this.submit.emit(this.params.layout.getData());
   }
 
   onClose(): void {

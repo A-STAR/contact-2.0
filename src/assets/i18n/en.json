@@ -2788,7 +2788,8 @@
             "name": "Name",
             "comment": "Comment"
           }
-        }
+        },
+        "operationId": "Operation"
       },
       "dialog": {
         "title": "Event",

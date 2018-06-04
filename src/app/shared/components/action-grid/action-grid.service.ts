@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import { ContextOperator, IContext } from '@app/core/context/context.interface';
+import { ICustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import {
   IMetadataAction,
   MetadataActionType,
@@ -15,6 +18,7 @@ import {
   IGridActionSelection,
   IGridActionFilterSelection } from '@app/shared/components/action-grid/action-grid.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
 
@@ -27,6 +31,8 @@ export class ActionGridService {
 
   static DefaultSelectionAction = 'showContactHistory';
 
+  static TYPE_CUSTOM_OPERATION = 2;
+
   cbActions: { [key: string]: (action: IGridAction) => any };
 
   private actionPayloads = {
@@ -34,6 +40,8 @@ export class ActionGridService {
     [MetadataActionType.SELECTED]: this.getSelectionPayload,
     [MetadataActionType.SINGLE]: this.getSingleSelectionPayload,
   };
+
+  readonly customOperations$ = new BehaviorSubject<ICustomOperation[]>(null);
 
   readonly actionValidators: { [key: string]: (a?: IMetadataAction) => IContext } = {
     addVisit: _ => ({
@@ -247,9 +255,13 @@ export class ActionGridService {
   };
 
   constructor(
+    private customOperationService: CustomOperationService,
     private massOpsService: MassOperationsService,
   ) {
     this.cbActions = this.createDlgActions();
+
+    this.getCustomOperations()
+      .subscribe(operations => this.customOperations$.next(operations));
   }
 
   getAction(
@@ -429,4 +441,7 @@ export class ActionGridService {
     }), {});
   }
 
+  private getCustomOperations(): Observable<ICustomOperation[]> {
+    return this.customOperationService.fetchOperations(ActionGridService.TYPE_CUSTOM_OPERATION);
+  }
 }

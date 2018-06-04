@@ -24,37 +24,27 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 @Injectable()
 export class CustomOperationService {
-  static TYPE_CUSTOM_OPERATION = 2;
-
-  private operations: ICustomOperation[];
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {
-    this.fetchOperations()
-      .subscribe(operations => this.operations = operations);
-  }
-
-  isAllowedOperation(id: number): boolean {
-    return !!this.operations.find(o => o.id === id);
-  }
-
-  getOperation(id: number): ICustomOperation {
-    return this.operations.find(operation => operation.id === id);
-  }
+  ) { }
 
   getOperationParams(operation: IGridAction): Observable<ICustomOperationParams[]> {
-    return this.dataService.readAll(`/operations/${operation.id}/params`)
-      .map(params => this.filterInputParams(operation, params))
-      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
+    return this.fetchOperationParams(operation.id)
+      .map(params => this.filterInputParams(operation, params));
   }
 
-  fetchOperations(): Observable<ICustomOperation[]> {
+  fetchOperations(operationType: number): Observable<ICustomOperation[]> {
     return this.dataService.readAll('/lookup/operations?operationType={operationType} ', {
-      operationType: CustomOperationService.TYPE_CUSTOM_OPERATION
+      operationType
     })
     .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
+  }
+
+  fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
+    return this.dataService.readAll(`/operations/${operationId}/params`)
+      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
   }
 
   run(operation: IGridAction, params: ICustomOperationParams[], data: ICustomActionData): Observable<ICustomActionData> {

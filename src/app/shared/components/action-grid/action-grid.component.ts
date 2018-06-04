@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { GridOptions } from 'ag-grid';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter, map, takeUntil, delay, switchMap, tap } from 'rxjs/operators';
+import { first, filter, map, takeUntil, delay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { never } from 'rxjs/observable/never';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -54,7 +54,6 @@ import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interfa
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { ContextService } from '@app/core/context/context.service';
-import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -188,7 +187,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
     private contextService: ContextService,
-    private customOperationService: CustomOperationService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
@@ -261,6 +259,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
               return { ...a, isDialog, cb: !isDialog ? this.actionGridService.cbActions[a.action] : null };
             },
         ])),
+        withLatestFrom(this.actionGridService.customOperations$.pipe(filter(Boolean))),
+        map(([ processedActions, operations ]) => processedActions
+          .filter(action => !action.id || operations.find(o => !action.id || o.id === action.id))
+          .map(action => {
+            const customAction = operations.find(a => a.id === action.id);
+            return {
+              ...action,
+              action: customAction ? customAction.name : action.action
+            };
+          })
+        )
       );
     }),
     tap(actions => {
@@ -592,10 +601,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     }
     return params => this.customOperationPerm(params);
   }
-  // TODO(i.lobanov): move isAllowedOperation to actionValidators
+
   private customOperationPerm(params: IContextMenuParams): boolean {
-    return params.action.type === MetadataActionType.ALL ? this.customOperationService.isAllowedOperation(params.action.id)
-      : this.customOperationService.isAllowedOperation(params.action.id) && !!params.selected.length;
+    return params.action.type === MetadataActionType.ALL || !!params.selected.length;
   }
 
   private attachValidator(computedValue: boolean): (params: IContextMenuParams) => boolean {
