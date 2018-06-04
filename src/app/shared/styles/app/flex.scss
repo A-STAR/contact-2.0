@@ -8,11 +8,14 @@
     height: 100%;
     width: 100%;
   }
-  &.justify-between {
-    justify-content: space-between;
-  }
   &.justify-center {
     justify-content: center;
+  }
+  &.justify-end {
+    justify-content: flex-end;
+  }
+  &.justify-between {
+    justify-content: space-between;
   }
   &.align-center {
     align-items: center;

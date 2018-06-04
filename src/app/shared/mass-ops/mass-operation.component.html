@@ -201,3 +201,9 @@
   (close)="onCloseAction($event)"
 >
 </app-mass-confirm>
+
+<app-mass-letter-export
+  *ngIf="isDialog('letterExport')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-mass-letter-export>

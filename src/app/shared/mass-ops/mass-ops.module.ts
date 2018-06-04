@@ -10,6 +10,7 @@ import { DebtResponsibleModule } from './debt-responsible/debt-responsible.modul
 import { DebtStatusModule } from './debt-status/debt-status.module';
 import { EmailModule } from './email/email.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
+import { LetterExportModule } from '@app/shared/mass-ops/letter-export/letter-export.module';
 import { LetterGenerationModule } from './letter-generation/letter-generation.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
@@ -40,6 +41,7 @@ import { MassOperationComponent } from './mass-operation.component';
     DebtStatusModule,
     EmailModule,
     EntityGroupModule,
+    LetterExportModule,
     LetterGenerationModule,
     NextCallDateSetModule,
     OperatorDetailsModule,
@@ -63,6 +65,7 @@ import { MassOperationComponent } from './mass-operation.component';
     DebtStatusModule,
     EmailModule,
     EntityGroupModule,
+    LetterExportModule,
     LetterGenerationModule,
     NextCallDateSetModule,
     OperatorDetailsModule,

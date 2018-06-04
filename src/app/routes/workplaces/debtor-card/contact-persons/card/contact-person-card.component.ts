@@ -34,7 +34,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 import { invert } from '@app/core/utils';
 
-import { layout } from './contact-person-card.layout';
+import { createContactPersonLayout, editContactPersonLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,7 +90,9 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     map(data => data.showContractForm),
   );
 
-  readonly layoutConfig = layout;
+  readonly layoutConfig = this.editing
+    ? editContactPersonLayout
+    : createContactPersonLayout;
 
   readonly contactPersonTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
