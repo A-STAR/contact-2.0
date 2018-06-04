@@ -72,10 +72,16 @@ const routes: Routes = [
       {
         path: 'edit/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'edit/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'edit/email/create',
@@ -242,10 +248,16 @@ const routes: Routes = [
       {
         path: 'edit/guarantee/:contractId/guarantor/:guarantorId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          entityKey: 'guarantorId',
+        },
       },
       {
         path: 'edit/guarantee/:contractId/guarantor/:guarantorId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          entityKey: 'guarantorId',
+        },
       },
 
       // Pledge
@@ -345,6 +357,7 @@ const routes: Routes = [
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
         data: {
+          entityKey: 'pledgorId',
           // tslint:disable-next-line:max-line-length
           parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
@@ -353,6 +366,7 @@ const routes: Routes = [
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
         data: {
+          entityKey: 'pledgorId',
           // tslint:disable-next-line:max-line-length
           parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
@@ -445,6 +459,7 @@ const routes: Routes = [
         path: 'edit/contact/:personId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
         data: {
+          entityKey: 'personId',
           parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
@@ -452,6 +467,7 @@ const routes: Routes = [
         path: 'edit/contact/:personId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
         data: {
+          entityKey: 'personId',
           parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
         },
       },
