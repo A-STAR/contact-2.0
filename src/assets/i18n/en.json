@@ -863,8 +863,7 @@
           "createDateTime": "Created",
           "sendDateTime": "Send date",
           "userFullName": "Operator",
-          "templateName": "Template",
-          "letterExport": "Letter export"
+          "templateName": "Template"
         }
       }
     },
@@ -2216,7 +2215,7 @@
           "ignoreWrongAddress": "Ignore wrong address",
           "sortRule": "Sorting",
           "reportId": "Register"
-        }
+      }
       }
     },
     "nextCallDateSet": {
@@ -2478,7 +2477,10 @@
         "status": "Status",
         "text": "Message text",
         "startDateTime": "Planned sending date",
-        "subject": "Subject"
+        "subject": "Subject",
+        "templateName": "Letter type",
+        "contactAddress": "Address",
+        "createDateTime": "Create date"
       },
       "grid": {
         "comment": "Comments",
@@ -3550,7 +3552,8 @@
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
         "changePersonType": "Change person type",
-        "letterGenerate": "Letter generation"
+        "letterGenerate": "Letter generation",
+        "letterExport": "Letter export"
       }
     },
     "filter": {

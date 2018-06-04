@@ -121,6 +121,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() columnTranslationKey: string;
   @Input() styles: CSSStyleDeclaration;
   @Input() filterData: any;
+  @Input() actionData: any;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
@@ -486,7 +487,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       selection: this.actionGridService.getGridSelection(action, this.selection),
       rowData: action.selection,
       asyncMode: action.metadataAction.asyncMode,
-      outputConfig: action.metadataAction.outputConfig
+      outputConfig: action.metadataAction.outputConfig,
+      actionData: this.actionData
     };
   }
 
@@ -580,10 +582,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   private addPermission(action: IMetadataAction, computedValue: boolean): (params: IContextMenuParams) => boolean {
-      if (!action.id) {
-        return this.attachValidator(computedValue);
+    if (!action.id) {
+      switch (action.action) {
+        case 'letterExport':
+          return params => params.selection.contactType === 5;
+        default:
+          return this.attachValidator(computedValue);
       }
-      return params => this.customOperationPerm(params);
+    }
+    return params => this.customOperationPerm(params);
   }
   // TODO(i.lobanov): move isAllowedOperation to actionValidators
   private customOperationPerm(params: IContextMenuParams): boolean {
