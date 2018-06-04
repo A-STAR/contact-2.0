@@ -12,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { range } from '@app/core/utils';
 
-export const layout: IDynamicLayoutConfig = {
+export const editContactPersonLayout: IDynamicLayoutConfig = {
   key: 'workplaces/debtor-card/contact-persons/card',
   items: [
     {
