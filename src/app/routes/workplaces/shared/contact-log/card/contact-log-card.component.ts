@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -40,7 +39,6 @@ export class ContactLogCardComponent implements OnInit {
   constructor(
     private contactLogService: ContactLogService,
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
@@ -90,18 +88,10 @@ export class ContactLogCardComponent implements OnInit {
   }
 
   onBack(): void {
-    if (this.callCenter) {
-      const campaignId = this.route.snapshot.paramMap.get('campaignId');
-      if (campaignId) {
-        this.routingService.navigate([ `/app/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}` ]);
-      }
-    } else {
-      const debtId = this.route.snapshot.paramMap.get('debtId');
-      const debtorId = this.route.snapshot.paramMap.get('debtorId');
-      if (debtId && debtorId) {
-        this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
-      }
-    }
+    const url = this.callCenter
+      ? '/app/workplaces/call-center/{campaignId}'
+      : '/app/workplaces/debtor/{debtorId}/debt/{debtId}';
+    this.routingService.navigateToUrl(url);
   }
 
   private createDefaultControls(
