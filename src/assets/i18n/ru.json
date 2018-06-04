@@ -801,6 +801,9 @@
           "visitPurposeCode": "Цель выезда"
         }
       },
+      "all": {
+        "title": "Все"
+      },
       "newDebt": {
         "title": "Новые долги"
       },
@@ -815,6 +818,9 @@
       },
       "prepareVisits": {
         "title": "Подготовка выездов"
+      },
+      "closed": {
+        "title": "Закрытые"
       }
     },
     "infoDebt": {
