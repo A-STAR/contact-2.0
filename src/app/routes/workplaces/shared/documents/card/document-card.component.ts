@@ -16,6 +16,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { maxFileSize } from '@app/core/validators';
+import { EntityType } from '@app/core/entity/entity.interface';
 
 @Component({
   selector: 'app-document-card',
@@ -30,11 +31,12 @@ export class DocumentCardComponent implements OnInit {
   private routeData = this.route.snapshot.data;
 
   private callCenter = this.routeData.callCenter;
+  private entityKey = this.routeData.entityKey;
   private readOnly = this.routeData.readOnly;
   private parentUrl = this.routeData.parentUrl;
 
   private documentId = Number(this.routeParamMap.get('documentId'));
-  private entityTypeCode = Number(this.queryParamMap.get('entityType')) || 18;
+  private entityTypeCode = Number(this.queryParamMap.get('entityType')) || EntityType.PERSON;
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
@@ -86,15 +88,10 @@ export class DocumentCardComponent implements OnInit {
 
   onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
+    const entityId = Number(this.routeParamMap.get(this.entityIdKey));
     const action$ = this.documentId
-    ? this.debtorService.debtorId$
-        .switchMap(personId =>
-          this.documentService.update(this.entityTypeCode, personId, this.documentId, document, file, this.callCenter)
-        )
-    : this.debtorService.debtorId$
-        .switchMap(personId =>
-          this.documentService.create(this.entityTypeCode, personId, document, file, this.callCenter)
-        );
+      ? this.documentService.update(this.entityTypeCode, entityId, this.documentId, document, file, this.callCenter)
+      : this.documentService.create(this.entityTypeCode, entityId, document, file, this.callCenter);
 
     action$.pipe(first()).subscribe(() => {
       this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
@@ -112,5 +109,33 @@ export class DocumentCardComponent implements OnInit {
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
+  }
+
+  /**
+   * OK, this is a bit hairy but this is how it works:
+   *
+   * When we navigate to this component, we have `entityTypeCode` query param.
+   *
+   * If it's not a person, we can straight up get it from corresponding route param.
+   *
+   * If it's a person, it can be contact person, guarantor or pledgor.
+   * This is sorted using `entityKey` param in route data.
+   */
+  private get entityIdKey(): string {
+    switch (this.entityTypeCode) {
+      case EntityType.CONTRACTOR:
+        return 'contractorId';
+      case EntityType.DEBT:
+        return 'debtId';
+      case EntityType.GUARANTEE_CONTRACT:
+      case EntityType.PLEDGE_CONTRACT:
+        return 'contractId';
+      case EntityType.PERSON:
+        return this.entityKey;
+      case EntityType.PORTFOLIO:
+        return 'portfolioId';
+      default:
+        return 'personId';
+    }
   }
 }
