@@ -3060,6 +3060,9 @@
     },
     "operations": {
       "gen": { "singular": "operation", "plural" : "operations" }
+    },
+    "persons": {
+      "gen": { "singular": "person", "plural" : "persons" }
     }
   },
   "massOperations": {
