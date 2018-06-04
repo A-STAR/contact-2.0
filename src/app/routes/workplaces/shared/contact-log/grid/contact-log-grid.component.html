@@ -6,6 +6,7 @@
   [fullHeight]="true"
   [rows]="contactLogList"
   [rowCount]="rowCount"
+  [actionData]="{ callCenter: callCenter }"
   (selectRow)="onSelect()"
   (dblClick)="onEdit($event)"
   (request)="onRequest()"

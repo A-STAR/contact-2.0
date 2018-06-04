@@ -26,7 +26,7 @@ export class LetterExportComponent implements OnInit {
     const { debtId, contactId, messageTemplate } = (this.actionData.payload as IGridActionSingleSelection).data;
     this.downloader.name = messageTemplate;
     this.downloader.url =
-      `/debts/${debtId}/letter/${contactId}/file?callCenter=${0}`;
+      `/debts/${debtId}/letter/${contactId}/file?callCenter=${this.actionData.actionData.callCenter ? 1 : 0}`;
     this.downloader.download();
     this.cdRef.markForCheck();
     this.close.emit({ refresh: false });
