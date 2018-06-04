@@ -38,6 +38,7 @@
       <app-tabview-tab [title]="'debtor.documentsTab.title'">
         <app-document-grid
           *ngIf="tabs[3].isInitialised"
+          [addForEntity]="[18, 19]"
           [debtId]="debtId"
           [entityId]="debtId"
           [entityType]="entityType"

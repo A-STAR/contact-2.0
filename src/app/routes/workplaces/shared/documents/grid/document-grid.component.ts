@@ -34,6 +34,7 @@ import { addGridLabel, combineLatestOr, combineLatestAnd, isEmpty } from '@app/c
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit' | 'download' = 'download';
+  @Input() addForEntity: EntityType[];
   @Input() callCenter = false;
   @Input() contractId: number;
   @Input() debtId: number;
@@ -48,47 +49,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   documents: Array<IDocument> = [];
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: combineLatestOr([ this.canAddToDebt$, this.canAddToDebtor$ ]),
-      children: [
-        {
-          label: 'Добавить к долгу',
-          enabled: this.canAddToDebt$,
-          action: () => this.onAdd(EntityType.DEBT)
-        },
-        {
-          label: 'Добавить к должнику',
-          enabled: this.canAddToDebtor$,
-          action: () => this.onAdd(EntityType.PERSON)
-        },
-      ]
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: combineLatestAnd(
-        [ this.canEditOrDelete$(this.selectedDocumentEntityTypeCode), this.selectedDocument$.map(Boolean) ]
-      ),
-      action: () => this.onEdit(this.selectedDocumentId$.value)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
-      enabled: this.selectedDocument$.map(Boolean),
-      action: () => this.onDownload()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: combineLatestAnd(
-        [ this.canEditOrDelete$(this.selectedDocumentEntityTypeCode), this.selectedDocument$.map(Boolean) ]
-      ),
-      action: () => this.setDialog('delete')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
-    },
-  ];
+  toolbarItems: IToolbarItem[];
 
   columns: ISimpleGridColumn<IDocument>[] = [
     { prop: 'docName' },
@@ -115,6 +76,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       .getAction(DocumentService.MESSAGE_DOCUMENT_SAVED)
       .subscribe(() => this.fetch());
 
+    this.toolbarItems = this.buildToolbarItems();
     this.fetch();
   }
 
@@ -182,14 +144,6 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.bag().map(bag => bag.contains('FILE_ATTACHMENT_ADD_LIST', entityTypeCode));
   }
 
-  get canAddToDebt$(): Observable<boolean> {
-    return this.canEditOrDelete$(EntityType.DEBT);
-  }
-
-  get canAddToDebtor$(): Observable<boolean> {
-    return this.canEditOrDelete$(EntityType.PERSON);
-  }
-
   private get selectedDocumentEntityTypeCode(): number {
     const selectedDocument = this.documents.find(document => document.id === this.selectedDocumentId$.value);
     return selectedDocument ? selectedDocument.entityTypeCode : null;
@@ -227,6 +181,62 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
+  private buildToolbarItems(): IToolbarItem[] {
+    return [
+      this.buildToolbarAddButton(),
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        enabled: combineLatestAnd([
+          this.canEditOrDelete$(this.selectedDocumentEntityTypeCode),
+          this.selectedDocument$.map(Boolean),
+        ]),
+        action: () => this.onEdit(this.selectedDocumentId$.value)
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
+        enabled: this.selectedDocument$.map(Boolean),
+        action: () => this.onDownload(),
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_DELETE,
+        enabled: combineLatestAnd([
+          this.canEditOrDelete$(this.selectedDocumentEntityTypeCode),
+          this.selectedDocument$.map(Boolean),
+        ]),
+        action: () => this.setDialog('delete'),
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetch(),
+      },
+    ].filter(Boolean);
+  }
+
+  // See:
+  // http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=109576221
+  private buildToolbarAddButton(): IToolbarItem {
+    switch (this.addForEntity.length) {
+      case 0:
+        return null;
+      case 1:
+        return {
+          type: ToolbarItemTypeEnum.BUTTON_ADD,
+          enabled: this.canEditOrDelete$(this.addForEntity[0]),
+          action: () => this.onAdd(this.addForEntity[0]),
+        };
+      default:
+        return {
+          type: ToolbarItemTypeEnum.BUTTON_ADD,
+          enabled: combineLatestOr(this.addForEntity.map(entity => this.canEditOrDelete$(entity))),
+          children: this.addForEntity.map(entityType => ({
+            label: `routes.workplaces.shared.documents.grid.toolbar.add.${entityType}`,
+            enabled: this.canEditOrDelete$(entityType),
+            action: () => this.onAdd(entityType)
+          })),
+        };
+    }
+  }
+
   private getFetchSource(): Observable<any> {
     switch (this.entityType) {
       case EntityType.DEBT:
@@ -234,7 +244,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       case EntityType.PLEDGOR:
         return this.documentService.fetchForPledgor(this.debtId, this.contractId, this.personId, this.callCenter);
       case EntityType.GUARANTOR:
-        return this.documentService.fetchForPledgor(this.debtId, this.contractId, this.personId, this.callCenter);
+        return this.documentService.fetchForGuarantor(this.debtId, this.contractId, this.personId, this.callCenter);
       default:
         return this.documentService.fetchForEntity(this.entityType, this.entityId, this.callCenter);
     }

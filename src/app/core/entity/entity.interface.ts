@@ -4,8 +4,10 @@
 export enum EntityType {
   CONTRACTOR = 13,
   DEBT = 19,
+  GUARANTEE_CONTRACT = 32,
   GUARANTOR = 38,
   PERSON = 18,
+  PLEDGE_CONTRACT = 63,
   PLEDGOR = 37,
   PORTFOLIO = 15,
 }

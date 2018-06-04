@@ -283,6 +283,20 @@
             "scenario": "Scenario",
             "selectOutcome": "Select Outcome"
           }
+        },
+        "documents": {
+          "grid": {
+            "toolbar": {
+              "add": {
+                "13": "Attach to Contractor",
+                "15": "Attach to Portfolio",
+                "18": "Attach to Person",
+                "19": "Attach to Debt",
+                "32": "Attach to Guarantee Contract",
+                "63": "Attach to Pledge Contract"
+              }
+            }
+          }
         }
       }
     },
