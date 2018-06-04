@@ -3046,6 +3046,9 @@
     },
     "operations": {
       "gen": { "singular": "операции", "plural" : "операций" }
+    },
+    "persons": {
+      "gen": { "singular": "персоны", "plural" : "персон" }
     }
   },
   "massOperations": {
