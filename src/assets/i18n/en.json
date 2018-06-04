@@ -3048,7 +3048,7 @@
       "gen": { "singular": "operation", "plural" : "operations" }
     },
     "persons": {
-      "gen": { "singular": "персоны", "plural" : "персон" }
+      "gen": { "singular": "person", "plural" : "persons" }
     }
   },
   "massOperations": {
