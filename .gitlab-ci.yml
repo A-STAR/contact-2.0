@@ -15,7 +15,7 @@ job_test:
     - npm run test:ci
     # - npm run e2e:ci
     # - npm run build -- --aot --progress=false
-    - npm run build --prod
+    - npm run build:prod
   cache:
     paths:
       - node_modules/
@@ -33,7 +33,7 @@ job_build:
     - npm run lint
     - npm run test:ci -- --coverage
     # - npm run build -- --aot --progress=false
-    - npm run build --prod --build-optimizer
+    - npm run build:optimize
   coverage: /Statements\s*:\s*([\d\.]+)%/
   artifacts:
     name: "frontend_default_build"
