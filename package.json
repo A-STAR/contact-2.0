@@ -11,6 +11,8 @@
     "start:ext": "ng serve --host 0.0.0.0 --port 9000 --aot --disable-host-check",
     "build": "ng build",
     "build:check": "ng build --aot",
+    "build:prod": "ng build --prod",
+    "build:optimize": "ng build --prod --build-optimizer",
     "test": "jest -c jest.config.json",
     "test:watch": "jest -c jest.config.json --watch",
     "test:ci": "jest -c jest.config.json --runInBand",
