@@ -2,7 +2,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
+import * as moment from 'moment';
+
 import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form.interface';
+
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dynamic-form-group',
@@ -50,6 +54,8 @@ export class DynamicFormGroupComponent {
 
   _isCollapsed = false;
 
+  constructor(private translateService: TranslateService) {}
+
   get isCollapsed(): boolean {
     return this._isCollapsed;
   }
@@ -67,11 +73,13 @@ export class DynamicFormGroupComponent {
 
   getControlErrors(control: IDynamicFormControl): Array<any> {
     const errors = this.form.controls[control.controlName].errors;
-    return Object.keys(errors).map(key => ({
-      message: control.validationMessages
-        && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
-      data: errors[key]
-    })).slice(0, 1);
+    return Object.keys(errors)
+      .map(key => ({
+        message: control.validationMessages
+          && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
+        data: this.getControlErrorData(errors[key])
+      }))
+      .slice(0, 1);
   }
 
   onSelectItems(event: ISelectItemsPayload): void {
@@ -80,5 +88,20 @@ export class DynamicFormGroupComponent {
 
   trackByFn(index: number): number {
     return index;
+  }
+
+  private getControlErrorData(error: any): any {
+    const data = error;
+    const key = Object.keys(data)[0];
+    const value = data[key];
+
+    if (value instanceof Date) {
+      const { currentLang, defaultLang } = this.translateService;
+      const lang = currentLang || defaultLang;
+
+      data[key] = moment(value).locale(lang).format('LLL');
+    }
+
+    return data;
   }
 }

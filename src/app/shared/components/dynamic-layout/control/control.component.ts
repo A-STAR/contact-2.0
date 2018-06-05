@@ -3,6 +3,8 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
+import * as moment from 'moment';
+
 import { IDynamicLayoutControl, IDynamicLayoutGridSelectControl } from '../dynamic-layout.interface';
 
 import { ControlService } from '../control/control.service';
@@ -56,7 +58,15 @@ export class ControlComponent {
   private getErrorMessageForControl(control: AbstractControl): string {
     const first = Object.keys(control.errors)[0];
     const message = ControlService.DEFAULT_MESSAGES[first] || first;
-    const params = control.errors[first];
+    let params = control.errors[first];
+
+    if (params instanceof Date) {
+      const { currentLang, defaultLang } = this.translateService;
+      const lang = currentLang || defaultLang;
+
+      params = moment(params).locale(lang).format('LLL');
+    }
+
     return this.translateService.instant(message, params);
   }
 }
