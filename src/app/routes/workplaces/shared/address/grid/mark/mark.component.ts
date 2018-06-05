@@ -44,7 +44,7 @@ export class AddressGridMarkComponent implements OnInit {
     { prop: 'statusCode', minWidth: 150, maxWidth: 200, dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
     { prop: 'debtAmount', minWidth: 150, maxWidth: 200 },
     { prop: 'currencyName', minWidth: 150 },
-  ].map(addGridLabel('widgets.address.dialogs.mark'));
+  ].map(addGridLabel('widgets.address.dialogs.mark.grid'));
 
   debts: Debt[];
   selection: Debt[];
