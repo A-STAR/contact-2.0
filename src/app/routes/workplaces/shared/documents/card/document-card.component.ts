@@ -7,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { IDocument } from '@app/routes/workplaces/core/document/document.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -36,6 +35,7 @@ export class DocumentCardComponent implements OnInit {
   private parentUrl = this.routeData.parentUrl;
 
   private documentId = Number(this.routeParamMap.get('documentId'));
+  private entityId = Number(this.routeParamMap.get(this.entityIdKey));
   private entityTypeCode = Number(this.queryParamMap.get('entityType')) || EntityType.PERSON;
 
   controls: Array<IDynamicFormItem> = null;
@@ -43,7 +43,6 @@ export class DocumentCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorService: DebtorService,
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -53,8 +52,7 @@ export class DocumentCardComponent implements OnInit {
 
   ngOnInit(): void {
     const document$ = this.documentId
-      ? this.debtorService.debtorId$
-          .switchMap(personId => this.documentService.fetch(this.entityTypeCode, personId, this.documentId, this.callCenter))
+      ? this.documentService.fetch(this.entityTypeCode, this.entityId, this.documentId, this.callCenter)
       : of(null);
 
     combineLatest(
@@ -88,10 +86,9 @@ export class DocumentCardComponent implements OnInit {
 
   onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
-    const entityId = Number(this.routeParamMap.get(this.entityIdKey));
     const action$ = this.documentId
-      ? this.documentService.update(this.entityTypeCode, entityId, this.documentId, document, file, this.callCenter)
-      : this.documentService.create(this.entityTypeCode, entityId, document, file, this.callCenter);
+      ? this.documentService.update(this.entityTypeCode, this.entityId, this.documentId, document, file, this.callCenter)
+      : this.documentService.create(this.entityTypeCode, this.entityId, document, file, this.callCenter);
 
     action$.pipe(first()).subscribe(() => {
       this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
