@@ -13,7 +13,10 @@ const routes: Routes = [
   {
     path: '',
     component: GuarantorCardComponent,
-  }
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({
