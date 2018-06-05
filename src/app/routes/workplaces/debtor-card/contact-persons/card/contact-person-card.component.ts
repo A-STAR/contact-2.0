@@ -109,7 +109,11 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     map(person => {
       if (person) {
         const { linkTypeCode, ...rest } = person;
-        return { default: rest, link: { linkTypeCode } };
+        if (linkTypeCode) {
+          return { default: rest, link: { linkTypeCode } };
+        } else {
+          return { default: rest };
+        }
       } else {
         return { default: {}, link: {} };
       }
@@ -166,7 +170,9 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
           this.layout.setData({ default: rest, link: { linkTypeCode } });
         });
     }
-    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    const subscription = this.layout
+      .canSubmitAll(!this.editing)
+      .subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
     this.subscription.add(subscription);
   }
 
@@ -175,9 +181,13 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onContactPersonFormClear(): void {
+    const isDefaultFormDisabled = this.layout.isFormDisabled();
     this.contactPersonCardService.selectContactPerson(null);
     this.layout.resetForm();
     this.layout.resetForm('link');
+    if (isDefaultFormDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onSave(): void {
