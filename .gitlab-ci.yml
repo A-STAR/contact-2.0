@@ -14,7 +14,8 @@ job_test:
     - npm run lint
     - npm run test:ci
     # - npm run e2e:ci
-    - npm run build -- --aot --progress=false
+    # - npm run build -- --aot --progress=false
+    - npm run build --prod
   cache:
     paths:
       - node_modules/
@@ -31,7 +32,8 @@ job_build:
     - npm install
     - npm run lint
     - npm run test:ci -- --coverage
-    - npm run build -- --aot --progress=false
+    # - npm run build -- --aot --progress=false
+    - npm run build --prod
   coverage: /Statements\s*:\s*([\d\.]+)%/
   artifacts:
     name: "frontend_default_build"
@@ -65,7 +67,7 @@ deploy_demo:
   when: manual
   only:
     - dev
-    
+
 deploy_test_e2e:
   stage: deploy
   script:
@@ -77,4 +79,4 @@ deploy_test_e2e:
   when: manual
   only:
     - dev
-    
+
