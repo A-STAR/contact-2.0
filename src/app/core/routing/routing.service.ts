@@ -29,7 +29,7 @@ export class RoutingService {
         ? params[key]
         : this.getRouteParam(this.route, key);
     });
-    return this.router.navigate([ absoluteUrl ], { relativeTo: this.route.root });
+    return this.router.navigate([ absoluteUrl ]);
   }
 
   /**
