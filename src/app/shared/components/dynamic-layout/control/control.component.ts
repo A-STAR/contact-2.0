@@ -58,13 +58,16 @@ export class ControlComponent {
   private getErrorMessageForControl(control: AbstractControl): string {
     const first = Object.keys(control.errors)[0];
     const message = ControlService.DEFAULT_MESSAGES[first] || first;
-    let params = control.errors[first];
+    const params = control.errors[first];
 
     if (params instanceof Date) {
       const { currentLang, defaultLang } = this.translateService;
       const lang = currentLang || defaultLang;
 
-      params = moment(params).locale(lang).format('LLL');
+      const key = Object.keys(params)[0];
+      const value = params[key];
+
+      params[key] = moment(value).locale(lang).format('LLL');
     }
 
     return this.translateService.instant(message, params);
