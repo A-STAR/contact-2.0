@@ -7,7 +7,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { fromEvent } from 'rxjs/observable/fromEvent';
 import { Subscription } from 'rxjs/Subscription';
+import { filter, throttleTime, tap } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -42,7 +44,7 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
     { controlName: 'isClosedDebt', type: 'checkbox' },
   ].map(addFormLabel('modules.incomingCall.filter.form'));
 
-  private openIncomingCallDataSub: Subscription;
+  private subscription = new Subscription();
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -52,17 +54,14 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
-    if (debtId) {
-      this.patchControl('debtId', debtId);
-      this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
-      this.onSearchClick();
-    }
+    this.patchControl('debtId', debtId);
+    this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
+    this.onSearchClick();
+    this.addEnterPressListener();
   }
 
   ngOnDestroy(): void {
-    if (this.openIncomingCallDataSub) {
-      this.openIncomingCallDataSub.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   onSearchClick(): void {
@@ -82,5 +81,18 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
       control.patchValue(data);
       control.markAsDirty();
     }
+  }
+
+  private addEnterPressListener(): void {
+    const subscription = fromEvent(document, 'keyup')
+      .pipe(
+        filter((event: KeyboardEvent) => event.keyCode === 13),
+        throttleTime(300),
+        tap(this.onClearClick.bind(this)),
+        tap(this.onSearchClick.bind(this)),
+      )
+      .subscribe();
+
+    this.subscription.add(subscription);
   }
 }
