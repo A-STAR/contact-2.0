@@ -59,13 +59,12 @@ export class ControlComponent {
     const first = Object.keys(control.errors)[0];
     const message = ControlService.DEFAULT_MESSAGES[first] || first;
     const params = control.errors[first];
+    const key = Object.keys(params)[0];
+    const value = params[key];
 
-    if (params instanceof Date) {
+    if (value instanceof Date) {
       const { currentLang, defaultLang } = this.translateService;
       const lang = currentLang || defaultLang;
-
-      const key = Object.keys(params)[0];
-      const value = params[key];
 
       params[key] = moment(value).locale(lang).format('LLL');
     }
