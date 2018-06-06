@@ -21,7 +21,7 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 import { ICloseAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { ILetterGenerationParams } from './letter-generation.interface';
+import { ILetterGenerationParams, ILetterGenerationResult } from './letter-generation.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { LetterGenerationService } from './letter-generation.service';
@@ -52,6 +52,8 @@ export class LetterGenerationComponent implements OnInit {
     ignoreWrongAddress: 1
   };
 
+  result: ILetterGenerationResult;
+
   private personRole: number;
 
   constructor(
@@ -79,7 +81,10 @@ export class LetterGenerationComponent implements OnInit {
   onSubmit(): void {
     this.letterGenerationService
       .generate(this.actionData.payload, this.personRole, this.layout.getData())
-      .subscribe(() => this.close.emit({ refresh: false }));
+      .subscribe(result => {
+        this.result = result;
+        this.cdRef.markForCheck();
+      });
   }
 
   onClose(): void {

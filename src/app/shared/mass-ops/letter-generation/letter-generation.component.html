@@ -1,4 +1,4 @@
-<app-dialog (close)="onClose()">
+<app-dialog (close)="onClose()" *ngIf="!result">
   <div dialog-header>
     <h3>{{ 'widgets.mass.letter.title' | translate }}</h3>
   </div>
@@ -17,4 +17,8 @@
 </app-dialog>
 
 <app-letter-generation-result
+  *ngIf="result"
+  [letterGuid]="result.letterGuid"
+  [reportGuid]="result.reportGuid"
+  (close)="onClose()"
 ></app-letter-generation-result>

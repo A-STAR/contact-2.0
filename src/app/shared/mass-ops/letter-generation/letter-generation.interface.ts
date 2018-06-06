@@ -8,3 +8,8 @@ export interface ILetterGenerationParams {
   sortRule?: number[];
   reportId?: number;
 }
+
+export interface ILetterGenerationResult {
+  letterGuid: string;
+  reportGuid: string;
+}
