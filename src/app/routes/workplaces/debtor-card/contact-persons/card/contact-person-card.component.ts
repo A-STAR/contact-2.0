@@ -27,6 +27,7 @@ import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
@@ -133,6 +134,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     private contactPersonsService: ContactPersonsService,
     private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
@@ -159,6 +161,15 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
       }
     });
     this.subscription.add(subscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (!this.editing) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('link');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
