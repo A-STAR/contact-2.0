@@ -91,17 +91,16 @@ export class DynamicFormGroupComponent {
   }
 
   private getControlErrorData(error: any): any {
-    const data = error;
-    const key = Object.keys(data)[0];
-    const value = data[key];
+    const key = Object.keys(error)[0];
+    const value = error[key];
 
     if (value instanceof Date) {
       const { currentLang, defaultLang } = this.translateService;
       const lang = currentLang || defaultLang;
 
-      data[key] = moment(value).locale(lang).format('LLL');
+      error[key] = moment(value).locale(lang).format('LLL');
     }
 
-    return data;
+    return error;
   }
 }
