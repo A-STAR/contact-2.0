@@ -1,0 +1,15 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.mass.letter.dialog.title' | translate }}</h3>
+  </div>
+
+  <app-dynamic-layout
+    [layout]="config"
+    [data]="{ default: {} }"
+  ></app-dynamic-layout>
+
+  <div dialog-footer>
+    <app-button color="primary" type="start" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button type="close" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>
