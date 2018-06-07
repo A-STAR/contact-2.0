@@ -196,7 +196,9 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
         });
     }
 
-    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    const subscription = this.showContractForm
+      ? this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit))
+      : this.guarantor$.pipe(map(Boolean)).subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
     this.subscription.add(subscription);
   }
 
