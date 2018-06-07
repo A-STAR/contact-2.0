@@ -9,7 +9,7 @@ import { of } from 'rxjs/observable/of';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { EmailService } from '../email.service';
+import { EmailService } from '@app/routes/workplaces/core/email/email.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 

@@ -85,11 +85,11 @@ const routes: Routes = [
       },
       {
         path: 'edit/email/create',
-        loadChildren: './information/email/card/email-card.module#EmailCardModule',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
       },
       {
         path: 'edit/email/:emailId',
-        loadChildren: './information/email/card/email-card.module#EmailCardModule',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
       },
       {
         path: 'edit/employment/create',

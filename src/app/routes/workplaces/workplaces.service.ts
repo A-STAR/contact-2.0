@@ -18,7 +18,7 @@ export class WorkplacesService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
-  static CONTACT_TYPE_OFFICE_VISIT  = 8;
+  static CONTACT_TYPE_OFFICE_VISIT = 8;
 
   constructor(
     private dataService: DataService,
