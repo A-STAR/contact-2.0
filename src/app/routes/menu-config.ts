@@ -1,6 +1,7 @@
 import { IMenuConfig } from './menu-config.interface';
+import { of } from 'rxjs/observable/of';
 
-export const menuConfig: IMenuConfig = {
+const config: IMenuConfig = {
 
   // Компоненты:
   menuItemHome: {
@@ -236,3 +237,12 @@ export const menuConfig: IMenuConfig = {
     docs: null,
   }
 };
+
+export const menuConfig = Object.keys(config)
+  .reduce((acc, key) => ({
+    ...acc,
+    [key]: {
+      ...config[key],
+      permission: config[key].permission || of(true)
+    }
+  }), {});
