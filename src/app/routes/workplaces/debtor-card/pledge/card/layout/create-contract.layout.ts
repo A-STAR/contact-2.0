@@ -330,21 +330,21 @@ export const createContractLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
-                  form: 'property',
+                  form: 'propertyValue',
                   label: 'Залоговая стоимость',
                   name: 'pledgeValue',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
-                  form: 'property',
+                  form: 'propertyValue',
                   label: 'Рыночная стоимость',
                   name: 'marketValue',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.SELECT,
-                  form: 'property',
+                  form: 'propertyValue',
                   label: 'Валюта',
                   lookupKey: 'currencies',
                   name: 'currencyId',
@@ -354,11 +354,11 @@ export const createContractLayout: IDynamicLayoutConfig = {
                       value: [
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.property.value.pledgeValue',
+                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.pledgeValue',
                         },
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.property.value.marketValue',
+                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.marketValue',
                         },
                       ],
                     },

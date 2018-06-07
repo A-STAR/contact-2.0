@@ -76,7 +76,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     map(([ person, property ]) => {
       return {
         default: person ? person : {},
-        property: property ? property : {},
+        property: property ? { name: property.propertyName, typeCode: property.propertyType } : {},
       };
     }),
   );
@@ -210,6 +210,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.layout.resetForm();
         this.layout.resetForm('contract');
         this.layout.resetForm('property');
+        this.layout.resetForm('propertyValue');
       });
       this.subscription.add(routerSubscription);
     }
@@ -268,6 +269,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const isDisabled = this.layout.isFormDisabled('property');
     this.pledgeCardService.selectProperty(null);
     this.layout.resetForm('property');
+    this.layout.resetForm('propertyValue');
     if (isDisabled) {
       this.layout.disableFormGroup('property');
     }
