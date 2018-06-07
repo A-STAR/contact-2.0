@@ -8,12 +8,13 @@ import { map } from 'rxjs/operators/map';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 
-import { IEmail, IEmailSchedule } from '../email.interface';
+import { IEmail, IEmailSchedule } from '@app/routes/workplaces/core/email/email.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { EmailService } from '../email.service';
+import { EmailService } from '@app/routes/workplaces/core/email/email.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -24,6 +25,7 @@ import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/co
 
 import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+
 import { Debt } from '@app/entities';
 
 @Component({
@@ -33,24 +35,17 @@ import { Debt } from '@app/entities';
 })
 export class EmailGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() campaignId: number;
+  @Input() debtId: number;
   @Input() entityId: number;
   @Input() entityType = 18;
   @Input() ignorePermissions = false;
   @Input() personRole = 1;
 
-  @Input() set debt (debt: Debt) {
-    this.debt$.next(debt);
-  }
-
   private selectedEmailId: number;
-
-  private debt$ = new BehaviorSubject<Debt>(null);
 
   selectedEmail$ = new BehaviorSubject<IEmail>(null);
 
   columns: ISimpleGridColumn<IEmail>[] = [];
-
-  readonly debtId$ = this.debt$.pipe(map(debt => debt ? debt.id : null));
 
   /*
   contextMenuOptions: IContextMenuItem[] = [
@@ -84,6 +79,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
     private notificationsService: NotificationsService,
+    private repositoryService: RepositoryService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
@@ -171,7 +167,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       personRole: this.personRole,
       emailId: this.selectedEmailId
     };
-    this.emailService.scheduleEmail(this.debt$.value.id, data).subscribe(() => this.onSubmitSuccess());
+    this.emailService.scheduleEmail(this.debtId, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
@@ -225,7 +221,10 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
         .pipe(
           map(hasPermission => hasPermission || this.ignorePermissions),
         ),
-      this.debt$.map(debt => this.workplacesService.isDebtActive(debt)),
+      this.repositoryService.fetch(Debt, { id: this.debtId }).pipe(
+        map(debts => debts[0]),
+        map(debt => debt && this.workplacesService.isDebtActive(debt))
+      ),
       this.selectedEmail$.flatMap(email => email
         ? this.userPermissionsService
             .contains('EMAIL_SINGLE_ADDRESS_TYPE_LIST', email.typeCode)

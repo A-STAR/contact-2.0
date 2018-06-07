@@ -65,26 +65,42 @@ import { TaskService } from '@app/core/task/task.service';
     RepositoryModule.forRoot(),
     RepositoryModule.withEntity({
       entityClass: User,
-      urls: [ '/users/{id}' ],
+      urls: [
+        '/users/{id}',
+      ],
     }),
     RepositoryModule.withEntity({
       entityClass: Person,
-      urls: [ '/persons/{id}' ],
+      urls: [
+        '/persons/{id}',
+      ],
     }),
     RepositoryModule.withEntity({
       entityClass: Debt,
-      urls: [ { url: '/debts/{id}', queryParams: [ 'callCenter' ] }, '/persons/{personId}/debts' ],
+      urls: [
+        {
+          url: '/debts/{id}',
+          queryParams: [
+            'callCenter',
+          ],
+        },
+        '/persons/{personId}/debts',
+      ],
     }),
     RepositoryModule.withEntity({
       entityClass: Phone,
       urls: [
         {
           url: '/entityTypes/{entityType}/entities/{entityId}/phones',
-          queryParams: [ 'callCenter' ]
+          queryParams: [
+            'callCenter',
+          ],
         },
         {
           url: '/entityTypes/{entityType}/entities/{entityId}/phones/{phoneId}',
-          queryParams: [ 'callCenter' ]
+          queryParams: [
+            'callCenter',
+          ],
         },
       ],
     }),

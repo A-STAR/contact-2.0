@@ -35,7 +35,7 @@
     [contactType]="1"
     [debtId]="debtId"
     [personId]="guarantorId"
-    [personRole]="contactPersonRole"
+    [personRole]="guarantorRole"
     (add)="onPhoneAdd()"
     (dblClick)="onPhoneRegister($event)"
     (edit)="onPhoneEdit($event)"
@@ -48,12 +48,20 @@
     [debtId]="debtId"
     [debtorId]="debtorId"
     [personId]="guarantorId"
-    [personRole]="contactPersonRole"
+    [personRole]="guarantorRole"
     (add)="onAddressAdd()"
     (dblClick)="onAddressRegister($event)"
     (edit)="onAddressEdit($event)"
     (register)="onAddressRegister($event)"
   ></app-address-grid>
+</ng-template>
+
+<ng-template #emails>
+  <app-email-grid
+    [debtId]="debtId"
+    [entityId]="guarantorId"
+    [personRole]="guarantorRole"
+  ></app-email-grid>
 </ng-template>
 
 <ng-template #documents>

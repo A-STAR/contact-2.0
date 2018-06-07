@@ -56,6 +56,14 @@
   ></app-address-grid>
 </ng-template>
 
+<ng-template #emails>
+  <app-email-grid
+    [debtId]="debtId"
+    [entityId]="pledgorId"
+    [personRole]="pledgorRole"
+  ></app-email-grid>
+</ng-template>
+
 <ng-template #documents>
   <app-document-grid
     [addForEntity]="[18, 63]"

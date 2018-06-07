@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ScheduleModule } from './schedule/schedule.module';
 import { SharedModule } from '@app/shared/shared.module';
+import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { EmailGridComponent } from './email-grid.component';
 
@@ -10,7 +11,8 @@ import { EmailGridComponent } from './email-grid.component';
   imports: [
     CommonModule,
     ScheduleModule,
-    SharedModule
+    SharedModule,
+    WorkplacesSharedModule,
   ],
   exports: [
     EmailGridComponent,
@@ -18,8 +20,5 @@ import { EmailGridComponent } from './email-grid.component';
   declarations: [
     EmailGridComponent,
   ],
-  entryComponents: [
-    EmailGridComponent,
-  ]
 })
-export class EmailGridModule { }
+export class EmailGridModule {}

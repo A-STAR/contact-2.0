@@ -6,8 +6,8 @@ import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEmailSchedule } from '@app/routes/workplaces/core/email/email.interface';
 import { IOption, INamedValue } from '@app/core/converter/value-converter.interface';
-import { IEmailSchedule } from '../../../email.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';

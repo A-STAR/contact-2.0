@@ -44,7 +44,7 @@
       <app-tabview-tab [title]="tabs[2].title">
         <app-email-grid
           *ngIf="tabs[2].isInitialised"
-          [debt]="debt$ | async"
+          [debtId]="debtId$ | async"
           [entityId]="debtorId$ | async"
           [personRole]="personRole"
         ></app-email-grid>
