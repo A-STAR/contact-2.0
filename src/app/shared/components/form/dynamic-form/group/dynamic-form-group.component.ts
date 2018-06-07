@@ -2,11 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import * as moment from 'moment';
-
 import { IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload } from '../dynamic-form.interface';
-
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dynamic-form-group',
@@ -32,6 +28,10 @@ export class DynamicFormGroupComponent {
     required: 'validation.fieldRequired',
     min: 'validation.fieldMin',
     max: 'validation.fieldMax',
+    minDate: 'validation.fieldMinDate',
+    maxDate: 'validation.fieldMaxDate',
+    minDateTime: 'validation.fieldMinDateTime',
+    maxDateTime: 'validation.fieldMaxDateTime',
     minlength: 'validation.fieldMinLength',
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
@@ -54,8 +54,6 @@ export class DynamicFormGroupComponent {
 
   _isCollapsed = false;
 
-  constructor(private translateService: TranslateService) {}
-
   get isCollapsed(): boolean {
     return this._isCollapsed;
   }
@@ -77,7 +75,7 @@ export class DynamicFormGroupComponent {
       .map(key => ({
         message: control.validationMessages
           && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
-        data: this.getControlErrorData(errors[key])
+        data: errors[key]
       }))
       .slice(0, 1);
   }
@@ -88,19 +86,5 @@ export class DynamicFormGroupComponent {
 
   trackByFn(index: number): number {
     return index;
-  }
-
-  private getControlErrorData(error: any): any {
-    const key = Object.keys(error)[0];
-    const value = error[key];
-
-    if (value instanceof Date) {
-      const { currentLang, defaultLang } = this.translateService;
-      const lang = currentLang || defaultLang;
-
-      error[key] = moment(value).locale(lang).format('LLL');
-    }
-
-    return error;
   }
 }

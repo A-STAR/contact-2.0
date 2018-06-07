@@ -17,7 +17,6 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey, valuesToOptions } from '@app/core/utils';
-import { minDate } from '@app/core/validators';
 
 const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
 
@@ -119,8 +118,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
         label: labelKey('startDateTime'),
         controlName: 'startDateTime',
         type: 'datetimepicker',
-        minDate: new Date(),
-        validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
+        minDateTime: moment().subtract(3, 'd').toDate(),
         required: true
       },
       {

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 import { DateTimeService } from '../datetime.service';
@@ -38,7 +39,8 @@ export class DatePickerComponent implements ControlValueAccessor, Validator {
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
-  ) {}
+    private translateService: TranslateService,
+  ) { }
 
   get disabled(): boolean {
     return this._disabled;
@@ -73,11 +75,14 @@ export class DatePickerComponent implements ControlValueAccessor, Validator {
 
   validate(): any {
     const value = moment(this._value, 'L');
+    const { currentLang, defaultLang } = this.translateService;
+    const lang = currentLang || defaultLang;
+
     switch (true) {
       case this._value && this.minDate && value.isBefore(this.minDate):
-        return { min: { minValue: moment(this.minDate).format('L') } };
+        return { min: { minValue: moment(this.minDate).locale(lang).format('L') } };
       case this._value && this.maxDate && value.isAfter(this.maxDate):
-        return { max: { maxValue: moment(this.maxDate).format('L') } };
+        return { max: { maxValue: moment(this.maxDate).locale(lang).format('L') } };
       default:
         return null;
     }
