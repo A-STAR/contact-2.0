@@ -607,6 +607,7 @@
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
     "fieldMax": "The value must be less than {{ maxValue }}",
+    "fieldMinDateTime": "The value must be greater than {{ minValue }}",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
