@@ -12,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { range } from '@app/core/utils';
 
-export const editLayout: IDynamicLayoutConfig = {
+export const createPropertyLayout: IDynamicLayoutConfig = {
   key: 'workplaces/debtor-card/guarantee/card',
   items: [
     {
@@ -30,7 +30,7 @@ export const editLayout: IDynamicLayoutConfig = {
             {
               type: DynamicLayoutItemType.GROUP,
               groupType: DynamicLayoutGroupType.VERTICAL,
-              size: 50,
+              size: 33,
               children: [
                 {
                   type: DynamicLayoutItemType.TEMPLATE,
@@ -62,14 +62,6 @@ export const editLayout: IDynamicLayoutConfig = {
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.SELECT,
-                  form: 'contract',
-                  dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE,
-                  label: 'Тип ответственности',
-                  name: 'contractTypeCode',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXTAREA,
                   form: 'contract',
                   label: 'Комментарий',
@@ -84,7 +76,7 @@ export const editLayout: IDynamicLayoutConfig = {
             {
               type: DynamicLayoutItemType.GROUP,
               groupType: DynamicLayoutGroupType.VERTICAL,
-              size: 50,
+              size: 33,
               children: [
                 {
                   type: DynamicLayoutItemType.TEMPLATE,
@@ -305,6 +297,76 @@ export const editLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.TEMPLATE,
                   value: 'personClearButton',
+                },
+              ],
+            },
+            {
+              type: DynamicLayoutItemType.GROUP,
+              groupType: DynamicLayoutGroupType.VERTICAL,
+              size: 33,
+              children: [
+                {
+                  type: DynamicLayoutItemType.TEMPLATE,
+                  value: 'propertyTitlebar',
+                },
+                {
+                  type: DynamicLayoutItemType.CONTROL,
+                  controlType: DynamicLayoutControlType.TEXT,
+                  form: 'property',
+                  label: 'Название',
+                  name: 'name',
+                },
+                {
+                  type: DynamicLayoutItemType.CONTROL,
+                  controlType: DynamicLayoutControlType.SELECT,
+                  form: 'property',
+                  dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
+                  label: 'Тип имущества',
+                  name: 'typeCode',
+                  validators: {
+                    required: true,
+                  },
+                },
+                {
+                  type: DynamicLayoutItemType.CONTROL,
+                  controlType: DynamicLayoutControlType.TEXT,
+                  form: 'property',
+                  label: 'Залоговая стоимость',
+                  name: 'pledgeValue',
+                },
+                {
+                  type: DynamicLayoutItemType.CONTROL,
+                  controlType: DynamicLayoutControlType.TEXT,
+                  form: 'property',
+                  label: 'Рыночная стоимость',
+                  name: 'marketValue',
+                },
+                {
+                  type: DynamicLayoutItemType.CONTROL,
+                  controlType: DynamicLayoutControlType.SELECT,
+                  form: 'property',
+                  label: 'Валюта',
+                  lookupKey: 'currencies',
+                  name: 'currencyId',
+                  validators: {
+                    required: {
+                      operator: ContextOperator.OR,
+                      value: [
+                        {
+                          operator: ContextOperator.NOT_NULL,
+                          value: 'layout.workplaces/debtor-card/pledge/card.forms.property.value.pledgeValue',
+                        },
+                        {
+                          operator: ContextOperator.NOT_NULL,
+                          value: 'layout.workplaces/debtor-card/pledge/card.forms.property.value.marketValue',
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  type: DynamicLayoutItemType.TEMPLATE,
+                  value: 'propertyClearButton',
                 },
               ],
             },

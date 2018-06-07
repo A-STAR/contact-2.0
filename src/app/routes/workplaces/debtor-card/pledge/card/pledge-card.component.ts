@@ -35,7 +35,7 @@ import { PropertyService } from '@app/routes/workplaces/core/property/property.s
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
-import { editPledgeLayout } from './layout';
+import { editLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +59,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
 
-  readonly layoutConfig = editPledgeLayout;
+  readonly layoutConfig = editLayout;
 
   readonly entityType = EntityType.PLEDGOR;
 

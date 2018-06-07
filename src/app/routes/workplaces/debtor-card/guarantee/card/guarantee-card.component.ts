@@ -37,7 +37,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 import { invert } from '@app/core/utils';
 
-import { editGuaranteeLayout } from './layout';
+import { editLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +59,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
 
-  readonly layoutConfig = editGuaranteeLayout;
+  readonly layoutConfig = editLayout;
 
   readonly entityType = EntityType.GUARANTOR;
 
