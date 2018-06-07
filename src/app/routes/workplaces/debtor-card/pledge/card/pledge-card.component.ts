@@ -54,8 +54,8 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
-  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:      TemplateRef<any>;
+  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate:   TemplateRef<any>;
   @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
 

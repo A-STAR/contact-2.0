@@ -25,7 +25,7 @@ export const createContractLayout: IDynamicLayoutConfig = {
           type: DynamicLayoutItemType.GROUP,
           groupType: DynamicLayoutGroupType.HORIZONTAL,
           mode: DynamicLayoutGroupMode.SPLITTERS,
-          size: 50,
+          size: 100,
           children: [
             {
               type: DynamicLayoutItemType.GROUP,
@@ -307,38 +307,6 @@ export const createContractLayout: IDynamicLayoutConfig = {
                   value: 'personClearButton',
                 },
               ],
-            },
-          ],
-        },
-        {
-          type: DynamicLayoutItemType.GROUP,
-          groupType: DynamicLayoutGroupType.TABS,
-          size: 50,
-          children: [
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Удостоверения личности',
-              value: 'identification',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'История трудоустройства',
-              value: 'employment',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Адреса',
-              value: 'addresses',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Телефоны',
-              value: 'phones',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Документы',
-              value: 'documents',
             },
           ],
         },
