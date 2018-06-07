@@ -76,7 +76,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     map(([ person, property ]) => {
       return {
         default: person ? person : {},
-        property: property ? { name: property.propertyName, typeCode: property.propertyType } : {},
+        property: property ? property : {},
       };
     }),
   );
@@ -235,19 +235,6 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get title(): string {
-    switch (true) {
-      case this.createMode:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.add';
-      case this.addPledgorMode:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor';
-      case this.addPropertyMode:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.addProperty';
-      default:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.edit';
-    }
-  }
-
   onContactFormClear(): void {
     const isDisabled = this.layout.isFormDisabled('contract');
     this.layout.resetForm('contract');
@@ -279,20 +266,21 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const contractData = this.layout.getData('contract');
     const pledgorData = this.layout.getData();
     const propertyData = this.layout.getData('property');
+    const propertyValueData = this.layout.getData('propertyValue');
 
     if (this.createMode) {
       this.pledgeCardService
-        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData, propertyValueData)
         .subscribe(() => this.onSuccess());
     }
     if (this.addPledgorMode) {
       this.pledgeCardService
-        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, pledgorData, propertyData)
+        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, pledgorData, propertyData, propertyValueData)
         .subscribe(() => this.onSuccess());
     }
     if (this.addPropertyMode) {
       this.pledgeCardService
-        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, propertyData)
+        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, propertyData, propertyValueData)
         .subscribe(() => this.onSuccess());
     }
     if (this.editMode) {

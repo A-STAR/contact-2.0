@@ -268,7 +268,7 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                   controlType: DynamicLayoutControlType.TEXT,
                   form: 'property',
                   label: 'Название',
-                  name: 'name',
+                  name: 'propertyName',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
@@ -276,7 +276,7 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                   form: 'property',
                   dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
                   label: 'Тип имущества',
-                  name: 'typeCode',
+                  name: 'propertyType',
                   validators: {
                     required: true,
                   },
@@ -284,21 +284,21 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
-                  form: 'property',
+                  form: 'propertyValue',
                   label: 'Залоговая стоимость',
                   name: 'pledgeValue',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
-                  form: 'property',
+                  form: 'propertyValue',
                   label: 'Рыночная стоимость',
                   name: 'marketValue',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.SELECT,
-                  form: 'property',
+                  form: 'propertyValue',
                   label: 'Валюта',
                   lookupKey: 'currencies',
                   name: 'currencyId',
@@ -308,11 +308,11 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                       value: [
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.property.value.pledgeValue',
+                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.pledgeValue',
                         },
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.property.value.marketValue',
+                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.marketValue',
                         },
                       ],
                     },

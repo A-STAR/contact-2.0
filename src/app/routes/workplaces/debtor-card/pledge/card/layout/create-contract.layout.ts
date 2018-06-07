@@ -314,7 +314,7 @@ export const createContractLayout: IDynamicLayoutConfig = {
                   controlType: DynamicLayoutControlType.TEXT,
                   form: 'property',
                   label: 'Название',
-                  name: 'name',
+                  name: 'propertyName',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
@@ -322,7 +322,7 @@ export const createContractLayout: IDynamicLayoutConfig = {
                   form: 'property',
                   dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
                   label: 'Тип имущества',
-                  name: 'typeCode',
+                  name: 'propertyType',
                   validators: {
                     required: true,
                   },
