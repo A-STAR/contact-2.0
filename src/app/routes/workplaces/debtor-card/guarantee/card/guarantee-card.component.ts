@@ -19,6 +19,7 @@ import { isEmpty } from 'ramda';
 
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
@@ -37,7 +38,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 import { invert } from '@app/core/utils';
 
-import { editLayout } from './layout';
+import { editLayout, createContractLayout, createGuarantorLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,8 +59,6 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
   @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:      TemplateRef<any>;
   @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate:   TemplateRef<any>;
-
-  readonly layoutConfig = editLayout;
 
   readonly entityType = EntityType.GUARANTOR;
 
@@ -130,6 +129,8 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   };
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
+
+  readonly layoutConfig = this.getLayout();
 
   private subscription = new Subscription();
 
@@ -323,5 +324,15 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private openPersonSearch(): void {
     this.popupOutletService.open(this.modules, 'select-person', this.injector);
+  }
+
+  private getLayout(): IDynamicLayoutConfig {
+    if (this.editing) {
+      return editLayout;
+    } else {
+      return this.showContractForm
+        ? createContractLayout
+        : createGuarantorLayout;
+    }
   }
 }

@@ -25,66 +25,12 @@ export const createGuarantorLayout: IDynamicLayoutConfig = {
           type: DynamicLayoutItemType.GROUP,
           groupType: DynamicLayoutGroupType.HORIZONTAL,
           mode: DynamicLayoutGroupMode.SPLITTERS,
-          size: 50,
+          size: 100,
           children: [
             {
               type: DynamicLayoutItemType.GROUP,
               groupType: DynamicLayoutGroupType.VERTICAL,
-              size: 50,
-              children: [
-                {
-                  type: DynamicLayoutItemType.TEMPLATE,
-                  value: 'contractTitlebar',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.TEXT,
-                  form: 'contract',
-                  label: 'Номер договора',
-                  name: 'contractNumber',
-                  validators: {
-                    required: true,
-                  },
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.DATE,
-                  form: 'contract',
-                  label: 'Начало',
-                  name: 'contractStartDate',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.DATE,
-                  form: 'contract',
-                  label: 'Окончание',
-                  name: 'contractEndDate',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.SELECT,
-                  form: 'contract',
-                  dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE,
-                  label: 'Тип ответственности',
-                  name: 'contractTypeCode',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.TEXTAREA,
-                  form: 'contract',
-                  label: 'Комментарий',
-                  name: 'comment',
-                },
-                {
-                  type: DynamicLayoutItemType.TEMPLATE,
-                  value: 'contractClearButton',
-                },
-              ],
-            },
-            {
-              type: DynamicLayoutItemType.GROUP,
-              groupType: DynamicLayoutGroupType.VERTICAL,
-              size: 50,
+              size: 100,
               children: [
                 {
                   type: DynamicLayoutItemType.TEMPLATE,
@@ -307,38 +253,6 @@ export const createGuarantorLayout: IDynamicLayoutConfig = {
                   value: 'personClearButton',
                 },
               ],
-            },
-          ],
-        },
-        {
-          type: DynamicLayoutItemType.GROUP,
-          groupType: DynamicLayoutGroupType.TABS,
-          size: 50,
-          children: [
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Удостоверения личности',
-              value: 'identification',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'История трудоустройства',
-              value: 'employment',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Адреса',
-              value: 'addresses',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Телефоны',
-              value: 'phones',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Документы',
-              value: 'documents',
             },
           ],
         },

@@ -18,6 +18,7 @@ import { map } from 'rxjs/operators';
 
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
@@ -35,7 +36,7 @@ import { PropertyService } from '@app/routes/workplaces/core/property/property.s
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
-import { editLayout } from './layout';
+import { editLayout, createContractLayout, createPledgorLayout, createPropertyLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,8 +59,6 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate:   TemplateRef<any>;
   @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
-
-  readonly layoutConfig = editLayout;
 
   readonly entityType = EntityType.PLEDGOR;
 
@@ -151,6 +150,8 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
+
+  readonly layoutConfig = this.getLayout();
 
   private subscription = new Subscription();
 
@@ -388,5 +389,18 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private openPropertySearch(): void {
     this.popupOutletService.open(this.modules, 'select-property', this.injector);
+  }
+
+  private getLayout(): IDynamicLayoutConfig {
+    switch (true) {
+      case this.createMode:
+        return createContractLayout;
+      case this.addPledgorMode:
+        return createPledgorLayout;
+      case this.addPropertyMode:
+        return createPropertyLayout;
+      default:
+        return editLayout;
+    }
   }
 }
