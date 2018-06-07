@@ -18,6 +18,7 @@ import { map } from 'rxjs/operators';
 
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
@@ -26,6 +27,7 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
@@ -34,7 +36,7 @@ import { PropertyService } from '@app/routes/workplaces/core/property/property.s
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
-import { layout } from './pledge-card.layout';
+import { editLayout, createContractLayout, createPledgorLayout, createPropertyLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,12 +55,10 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
-  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:      TemplateRef<any>;
+  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate:   TemplateRef<any>;
   @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
-
-  readonly layoutConfig = layout;
 
   readonly entityType = EntityType.PLEDGOR;
 
@@ -151,6 +151,8 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
 
+  readonly layoutConfig = this.getLayout();
+
   private subscription = new Subscription();
 
   templates: Record<string, TemplateRef<any>>;
@@ -158,6 +160,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private pledgeCardService: PledgeCardService,
     private pledgeService: PledgeService,
@@ -200,6 +203,17 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.subscription.add(propertySubscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (this.createMode) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('contract');
+        this.layout.resetForm('property');
+        this.layout.resetForm('propertyValue');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -221,47 +235,52 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get title(): string {
-    switch (true) {
-      case this.createMode:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.add';
-      case this.addPledgorMode:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.addPledgor';
-      case this.addPropertyMode:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.addProperty';
-      default:
-        return 'routes.workplaces.debtorCard.pledge.card.titles.edit';
+  onContactFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled('contract');
+    this.layout.resetForm('contract');
+    if (isDisabled) {
+      this.layout.disableFormGroup('contract');
     }
   }
 
-  onPledgorFormClear(): void {
+  onPersonFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled();
     this.pledgeCardService.selectPledgor(null);
     this.layout.resetForm();
+    if (isDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onPropertyFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled('property');
     this.pledgeCardService.selectProperty(null);
     this.layout.resetForm('property');
+    this.layout.resetForm('propertyValue');
+    if (isDisabled) {
+      this.layout.disableFormGroup('property');
+    }
   }
 
   onSave(): void {
     const contractData = this.layout.getData('contract');
     const pledgorData = this.layout.getData();
     const propertyData = this.layout.getData('property');
+    const propertyValueData = this.layout.getData('propertyValue');
 
     if (this.createMode) {
       this.pledgeCardService
-        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData)
+        .createPledge(this.debtId, this.pledgorId, this.propertyId, contractData, pledgorData, propertyData, propertyValueData)
         .subscribe(() => this.onSuccess());
     }
     if (this.addPledgorMode) {
       this.pledgeCardService
-        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, pledgorData, propertyData)
+        .addPledgor(this.debtId, this.contractId, this.pledgorId, this.propertyId, pledgorData, propertyData, propertyValueData)
         .subscribe(() => this.onSuccess());
     }
     if (this.addPropertyMode) {
       this.pledgeCardService
-        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, propertyData)
+        .addProperty(this.debtId, this.contractId, this.pledgorId, this.propertyId, propertyData, propertyValueData)
         .subscribe(() => this.onSuccess());
     }
     if (this.editMode) {
@@ -360,5 +379,18 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private openPropertySearch(): void {
     this.popupOutletService.open(this.modules, 'select-property', this.injector);
+  }
+
+  private getLayout(): IDynamicLayoutConfig {
+    switch (true) {
+      case this.createMode:
+        return createContractLayout;
+      case this.addPledgorMode:
+        return createPledgorLayout;
+      case this.addPropertyMode:
+        return createPropertyLayout;
+      default:
+        return editLayout;
+    }
   }
 }
