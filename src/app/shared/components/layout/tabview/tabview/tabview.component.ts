@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
@@ -13,7 +12,6 @@ import {
   ChangeDetectorRef,
   OnInit,
   OnDestroy,
-  AfterViewInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -30,12 +28,26 @@ import { TabViewTabComponent } from '../tab/tab.component';
   templateUrl: 'tabview.component.html',
 })
 
-export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {
+export class TabViewComponent implements OnInit, OnDestroy {
   private static MENU_BTN_SPACE = 50;
 
-  @ViewChildren('tabHeader') tabHeaders: QueryList<ElementRef>;
+  private tabHeaders: QueryList<ElementRef>;
+  private tabs: QueryList<TabViewTabComponent>;
 
-  @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
+  @ViewChildren('tabHeader') set tabHeaderElements(tabHeaders: QueryList<ElementRef>) {
+    this.tabHeaders = tabHeaders;
+    if (tabHeaders.length) {
+      setTimeout(() => {
+        this.setDimensions();
+        this.setInitialTab();
+      });
+    }
+  }
+
+  @ContentChildren(TabViewTabComponent) set tabViews(tabs: QueryList<TabViewTabComponent>) {
+    this.tabs = tabs;
+    this.cdRef.markForCheck();
+  }
 
   @Input() fullHeight = false;
   @Input() noMargin = false;
@@ -57,23 +69,6 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
     this.layoutSubscription = this.layoutService.contentDimension$
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
-  }
-
-  ngAfterContentInit(): void {
-    const activeTabs = this.tabs.filter(tab => tab.active);
-
-    // if no active tab is set, activate the first
-    if (!activeTabs.length) {
-      this.onSelectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.tabHeaderDimensions = this.tabHeaders.map(tabHeader => ({
-      left: tabHeader.nativeElement.offsetLeft,
-      width: tabHeader.nativeElement.clientWidth,
-    }));
-    this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
@@ -161,5 +156,21 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
 
   private getTabIndex(tab: TabViewTabComponent): number {
     return this.tabs.toArray().findIndex(el => el === tab);
+  }
+
+  private setDimensions(): void {
+    this.tabHeaderDimensions = this.tabHeaders.map(tabHeader => ({
+      left: tabHeader.nativeElement.offsetLeft,
+      width: tabHeader.nativeElement.clientWidth,
+    }));
+  }
+
+  private setInitialTab(): void {
+    const activeTabs = this.tabs.filter(tab => tab.active);
+
+    // if no active tab is set, activate the first
+    if (!activeTabs.length && this.tabs.length) {
+      this.onSelectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
+    }
   }
 }
