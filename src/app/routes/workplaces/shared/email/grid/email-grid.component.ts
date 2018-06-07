@@ -35,7 +35,6 @@ import { Debt } from '@app/entities';
 })
 export class EmailGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() campaignId: number;
-  @Input() debtId: number;
   @Input() entityId: number;
   @Input() entityType = 18;
   @Input() ignorePermissions = false;
@@ -60,6 +59,8 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     },
   ];
   */
+
+  private debtId = Number(this.route.snapshot.paramMap.get('debtId'));
 
   private _emails: Array<any> = [];
   private canViewSubscription: Subscription;
