@@ -95,8 +95,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                   controlType: DynamicLayoutControlType.SELECT,
                   dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Тип',
                   name: 'typeCode',
@@ -108,8 +117,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Фамилия/Название',
                   name: 'lastName',
@@ -131,8 +149,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Имя',
                   name: 'firstName',
@@ -151,8 +178,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Отчество',
                   name: 'middleName',
@@ -171,8 +207,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Дата рождения',
                   name: 'birthDate',
@@ -191,8 +236,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Место рождения',
                   name: 'birthPlace',
@@ -211,8 +265,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   dictCode: UserDictionariesService.DICTIONARY_GENDER,
                   label: 'Пол',
@@ -233,8 +296,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Семейное положение',
                   name: 'familyStatusCode',
@@ -254,8 +326,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ],
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Образование',
                   name: 'educationCode',
@@ -286,8 +367,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     ],
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: `Строковый атрибут ${i}`,
                   name: `stringValue${i}`,
@@ -296,8 +386,17 @@ export const createContractLayout: IDynamicLayoutConfig = {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXTAREA,
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_COMMENT_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Комментарий',
                   name: 'comment',
