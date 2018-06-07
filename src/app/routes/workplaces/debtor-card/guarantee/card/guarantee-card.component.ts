@@ -29,6 +29,7 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
@@ -139,6 +140,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     private guaranteeCardService: GuaranteeCardService,
     private guaranteeService: GuaranteeService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
@@ -166,8 +168,16 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
         this.layout.enableFormGroup();
       }
     });
-
     this.subscription.add(subscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (!this.editing) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('contract');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -193,10 +203,21 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscription.unsubscribe();
   }
 
-  onGuarantorFormClear(): void {
+  onContractFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled('contract');
+    this.layout.resetForm('contract');
+    if (isDisabled) {
+      this.layout.disableFormGroup('contract');
+    }
+  }
+
+  onPersonFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled();
     this.guaranteeCardService.selectGuarantor(null);
     this.layout.resetForm();
-    this.layout.resetForm('contract');
+    if (isDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onSave(): void {

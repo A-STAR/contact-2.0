@@ -26,6 +26,7 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PledgeCardService } from './pledge-card.service';
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
@@ -158,6 +159,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private pledgeCardService: PledgeCardService,
     private pledgeService: PledgeService,
@@ -200,6 +202,16 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.subscription.add(propertySubscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (this.createMode) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('contract');
+        this.layout.resetForm('property');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -234,14 +246,30 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onPledgorFormClear(): void {
+  onContactFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled('contract');
+    this.layout.resetForm('contract');
+    if (isDisabled) {
+      this.layout.disableFormGroup('contract');
+    }
+  }
+
+  onPersonFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled();
     this.pledgeCardService.selectPledgor(null);
     this.layout.resetForm();
+    if (isDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onPropertyFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled('property');
     this.pledgeCardService.selectProperty(null);
     this.layout.resetForm('property');
+    if (isDisabled) {
+      this.layout.disableFormGroup('property');
+    }
   }
 
   onSave(): void {
