@@ -51,6 +51,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
   @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
   @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
   @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
@@ -177,6 +178,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
       employment: this.employmentTemplate,
       addresses: this.addressesTemplate,
       phones: this.phonesTemplate,
+      emails: this.emailsTemplate,
       documents: this.documentsTemplate,
       contractTitlebar: this.contractTitlebarTemplate,
       contractClearButton: this.contractClearButtonTemplate,
