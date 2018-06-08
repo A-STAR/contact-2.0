@@ -1,11 +1,9 @@
-import { Observable } from 'rxjs/Observable';
-
 export interface IMenuConfigItem {
   text: string;
   link: string;
   icon: string;
   docs: string;
-  permission?: Observable<boolean>;
+  permission?: string[];
 }
 
 export interface IMenuConfig {

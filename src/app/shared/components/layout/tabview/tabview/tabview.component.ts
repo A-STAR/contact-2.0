@@ -13,6 +13,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ILayoutDimension } from '@app/layout/layout.interface';
@@ -37,6 +38,7 @@ export class TabViewComponent implements OnInit, OnDestroy {
   @ViewChildren('tabHeader') set tabHeaderElements(tabHeaders: QueryList<ElementRef>) {
     this.tabHeaders = tabHeaders;
     if (tabHeaders.length) {
+      // TODO: find a better way
       setTimeout(() => {
         this.setDimensions();
         this.setInitialTab();
@@ -57,21 +59,28 @@ export class TabViewComponent implements OnInit, OnDestroy {
   private tabHeaderDimensions: Partial<ILayoutDimension>[] = [];
 
   private layoutSubscription: Subscription;
+  private routerSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private el: ElementRef,
     private renderer: Renderer2,
-    private layoutService: LayoutService
+    private router: Router,
+    private layoutService: LayoutService,
   ) { }
 
   ngOnInit(): void {
     this.layoutSubscription = this.layoutService.contentDimension$
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
+
+    this.routerSubscription = this.router.events
+      .filter(event => event instanceof NavigationEnd)
+      .subscribe(() => this.cdRef.markForCheck());
   }
 
   ngOnDestroy(): void {
+    this.routerSubscription.unsubscribe();
     this.layoutSubscription.unsubscribe();
   }
 

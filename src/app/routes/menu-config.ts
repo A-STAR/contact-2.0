@@ -1,7 +1,5 @@
-import { IMenuConfig } from './menu-config.interface';
-import { of } from 'rxjs/observable/of';
 
-const config: IMenuConfig = {
+export const menuConfig = {
 
   // Компоненты:
   menuItemHome: {
@@ -153,6 +151,15 @@ const config: IMenuConfig = {
     link: '/app/workplaces/tasks',
     icon: 'co-m-tasks',
     docs: 'work_task',
+    permission: [
+      'WORK_TASK_TAB_ALL',
+      'WORK_TASK_TAB_NEW',
+      'WORK_TASK_TAB_PROBLEM',
+      'WORK_TASK_TAB_SEARCH_INFORMATION',
+      'WORK_TASK_TAB_TOCONTRACTOR',
+      'WORK_TASK_TAB_PREPARE_VISITS',
+      'WORK_TASK_TAB_CLOSE'
+    ]
   },
   debts: {
     text: 'sidebar.nav.menu.DEBTS',
@@ -237,12 +244,3 @@ const config: IMenuConfig = {
     docs: null,
   }
 };
-
-export const menuConfig = Object.keys(config)
-  .reduce((acc, key) => ({
-    ...acc,
-    [key]: {
-      ...config[key],
-      permission: config[key].permission || of(true)
-    }
-  }), {});

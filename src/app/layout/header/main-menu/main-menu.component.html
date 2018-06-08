@@ -1,13 +1,10 @@
 <ul class="flex">
-  <ng-container *ngFor="let item of menuItems$ | async">
-    <li
-      *ngIf="item.permission | async"
-      class="flex-item menu-item"
-      [routerLink]="item.link"
-      routerLinkActive="active"
-      [title]="item.text | translate"
-    >
-      {{ item.text | translate }}
-    </li>
-  </ng-container>
+  <li *ngFor="let item of menuItems$ | async"
+    class="flex-item menu-item"
+    [routerLink]="item.link"
+    routerLinkActive="active"
+    [title]="item.text | translate"
+  >
+    {{ item.text | translate }}
+  </li>
 </ul>
