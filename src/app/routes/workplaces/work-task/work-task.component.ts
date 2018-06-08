@@ -28,6 +28,7 @@ export class WorkTaskComponent {
     { rowIdKey: 'debtId', key: 'workTask.SearchInformation', title: label('searchInformation.title'), isInitialised: false },
     { rowIdKey: 'debtId', key: 'workTask.DebtToContractor', title: label('debtToContractor.title'), isInitialised: false },
     { rowIdKey: 'id', key: 'workTask.PrepareVisits', title: label('prepareVisits.title'), isInitialised: false },
+    { rowIdKey: 'debtId', key: 'workTask.CustomStatus', title: label('customStatus.title'), isInitialised: false },
     { rowIdKey: 'debtId', key: 'workTask.Close', title: label('closed.title'), isInitialised: false },
   ];
 

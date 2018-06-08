@@ -819,6 +819,9 @@
       "prepareVisits": {
         "title": "Подготовка выездов"
       },
+      "customStatus": {
+        "title": "Пользовательские статусы"
+      },
       "closed": {
         "title": "Закрытые"
       }
