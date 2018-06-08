@@ -54,7 +54,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
     this.routeIdSubscription.unsubscribe();
   }
 
-  get debtors(): any {
-    return Array.from(this.debtorService.debtors).map(debtor => debtor.split(':'));
+  get debtors(): Array<number[]> {
+    return Array.from(this.debtorService.debtors as Map<number, number>);
   }
 }
