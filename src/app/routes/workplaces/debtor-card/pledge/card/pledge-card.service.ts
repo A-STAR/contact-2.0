@@ -28,6 +28,7 @@ export class PledgeCardService {
   selectProperty(property: any): void {
     const nextProperty = property
       ? {
+          id: property.id,
           propertyName: property.name,
           propertyType: property.typeCode || property.type,
         }
@@ -55,8 +56,9 @@ export class PledgeCardService {
     contractFormData: any,
     pledgorFormData: any,
     propertyFormData: any,
+    propertyValueFormData: any,
   ): Observable<void> {
-    const { pledgeValue, marketValue, currencyId } = propertyFormData;
+    const { pledgeValue, marketValue, currencyId } = propertyValueFormData;
     return combineLatest([
       this.savePledgor(pledgorId, pledgorFormData),
       this.saveProperty(pledgorId, propertyId, propertyFormData),
@@ -105,8 +107,9 @@ export class PledgeCardService {
     propertyId: number,
     pledgorFormData: any,
     propertyFormData: any,
+    propertyValueFormData: any,
   ): Observable<void> {
-    const { pledgeValue, marketValue, currencyId } = propertyFormData;
+    const { pledgeValue, marketValue, currencyId } = propertyValueFormData;
     return combineLatest([
       this.savePledgor(pledgorId, pledgorFormData),
       this.saveProperty(pledgorId, propertyId, propertyFormData),
@@ -147,8 +150,9 @@ export class PledgeCardService {
     pledgorId: number,
     propertyId: number,
     propertyFormData: any,
+    propertyValueFormData: any,
   ): Observable<void> {
-    const { pledgeValue, marketValue, currencyId } = propertyFormData;
+    const { pledgeValue, marketValue, currencyId } = propertyValueFormData;
     return this.saveProperty(pledgorId, propertyId, propertyFormData).pipe(
       mergeMap((createdPropertyId) => {
         const pledgor = {
@@ -211,14 +215,17 @@ export class PledgeCardService {
   }
 
   private saveProperty(pledgorId: number, propertyId: number, propertyFormData: any): Observable<number> {
+    const payload = {
+      typeCode: propertyFormData.propertyType,
+    };
     return this.property$.pipe(
       mergeMap(property => {
         if (property) {
           return of(property.id);
         } else {
           return propertyId
-            ? this.propertyService.update(pledgorId, propertyId, propertyFormData).pipe(mapTo(propertyId))
-            : this.propertyService.create(pledgorId, propertyFormData);
+            ? this.propertyService.update(pledgorId, propertyId, payload).pipe(mapTo(propertyId))
+            : this.propertyService.create(pledgorId, payload);
         }
       }),
     );

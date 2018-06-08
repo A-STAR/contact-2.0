@@ -41,7 +41,13 @@ export class AddressService extends AbstractActionService {
   create(entityType: number, entityId: number, callCenter: boolean, address: IAddress): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { entityType, entityId }, address, { params: { callCenter } })
-      .catch(this.notificationsService.createError().entity(`${this.entity}.singular`).dispatchCallback());
+      .catch(
+        this.notificationsService
+          .createError()
+          .context('widgets.address.card')
+          .entity(`${this.entity}.singular`)
+          .dispatchCallback()
+      );
   }
 
   update(
@@ -53,7 +59,13 @@ export class AddressService extends AbstractActionService {
   ): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address, { params: { callCenter } })
-      .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
+      .catch(
+        this.notificationsService
+          .updateError()
+          .context('widgets.address.card')
+          .entity(`${this.entity}.singular`)
+          .dispatchCallback()
+      );
   }
 
   block(

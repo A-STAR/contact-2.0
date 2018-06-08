@@ -27,6 +27,7 @@ import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
@@ -49,6 +50,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
   @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
   @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
   @ViewChild('personTitlebar',    { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
@@ -109,7 +111,11 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     map(person => {
       if (person) {
         const { linkTypeCode, ...rest } = person;
-        return { default: rest, link: { linkTypeCode } };
+        if (linkTypeCode) {
+          return { default: rest, link: { linkTypeCode } };
+        } else {
+          return { default: rest };
+        }
       } else {
         return { default: {}, link: {} };
       }
@@ -129,6 +135,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     private contactPersonsService: ContactPersonsService,
     private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
@@ -142,6 +149,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
       employment: this.employmentTemplate,
       addresses: this.addressesTemplate,
       phones: this.phonesTemplate,
+      emails: this.emailsTemplate,
       documents: this.documentsTemplate,
       personTitlebar: this.personTitlebarTemplate,
       personClearButton: this.personClearButtonTemplate,
@@ -155,6 +163,15 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
       }
     });
     this.subscription.add(subscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (!this.editing) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('link');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -166,7 +183,9 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
           this.layout.setData({ default: rest, link: { linkTypeCode } });
         });
     }
-    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    const subscription = this.layout
+      .canSubmitAll(!this.editing)
+      .subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
     this.subscription.add(subscription);
   }
 
@@ -175,9 +194,13 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onContactPersonFormClear(): void {
+    const isDefaultFormDisabled = this.layout.isFormDisabled();
     this.contactPersonCardService.selectContactPerson(null);
     this.layout.resetForm();
     this.layout.resetForm('link');
+    if (isDefaultFormDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onSave(): void {

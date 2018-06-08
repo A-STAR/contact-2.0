@@ -6,8 +6,6 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { DebtorEmailCardComponent } from './email-card.component';
 
-import { EmailService } from '../email.service';
-
 const routes: Routes = [
   {
     path: '',
@@ -27,8 +25,5 @@ const routes: Routes = [
   declarations: [
     DebtorEmailCardComponent,
   ],
-  providers: [
-    EmailService
-  ]
 })
-export class EmailCardModule { }
+export class EmailCardModule {}
