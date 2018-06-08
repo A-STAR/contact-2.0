@@ -144,7 +144,7 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.pbxState$
-        .map(pbxState => pbxState && (pbxState.lineStatus === PBXStateEnum.PBX_NOCALL || pbxState.lineStatus === null)),
+        .map(pbxState => pbxState && pbxState.lineStatus === PBXStateEnum.PBX_NOCALL),
     ]);
   }
 
