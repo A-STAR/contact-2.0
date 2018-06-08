@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged, first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilChanged, finalize, first, map, shareReplay } from 'rxjs/operators';
 import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
@@ -14,6 +14,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 @Injectable()
 export class ContextService {
+
   private appContext$ = combineLatest(
     this.store.pipe(
       // TODO(d.maltsev): remove ContextOperator.EVAL
@@ -25,6 +26,8 @@ export class ContextService {
     this.userPermissionsService.bag(),
   );
 
+  private streams = new Map<string, Observable<any>>();
+
   constructor(
     private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
@@ -34,28 +37,28 @@ export class ContextService {
 
   /**
    * Returns Observable that emits the result of context evaluation.
-   *
-   * CAUTION:
-   * Absolutely make sure to dispose of it once you don't need it anymore!
-   *
-   * Don't use it in getters (it will create new stream on every getter call), i.e:
-   * ```typescript
-   * class Foo {
-   *  get foo(): Observable<boolean> {
-   *    return this.contextService.calculate(this.context)
-   *  }
-   * }
-   * ```
    */
   calculate(context: IContext): Observable<any> {
+    const serializedContext = this.serializeContext(context);
+    return this.streams.has(serializedContext)
+      ? this.streams.get(serializedContext)
+      : this.createStream(serializedContext, context);
+  }
+
+  private createStream(serializedContext: string, context: IContext): Observable<any> {
     const storeReferences = this.findStoreReferences(context);
-    return this.appContext$.pipe(
-      select(([ state, attributes, constants, permissions ]) => {
+    const stream = this.appContext$.pipe(
+      map(([ state, attributes, constants, permissions ]) => {
         const value = storeReferences.reduce((acc, key) => ({ ...acc, [key]: this.getStateSlice(state, key) }), {});
         const appContext = { state: value, attributes, constants, permissions };
         return this.calculateFromStore(appContext, context);
       }),
+      // Using `shareReplay` instead of `share` because new subscribers will always need last emitted value
+      shareReplay(1),
+      finalize(() => this.streams.delete(serializedContext)),
     );
+    this.streams.set(serializedContext, stream);
+    return stream;
   }
 
   private findStoreReferences(context: IContext): string[] {
@@ -146,5 +149,9 @@ export class ContextService {
       default:
         return null;
     }
+  }
+
+  private serializeContext(context: IContext): string {
+    return JSON.stringify(context);
   }
 }
