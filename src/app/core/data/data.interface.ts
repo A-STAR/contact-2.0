@@ -16,3 +16,8 @@ export interface IMassInfoResponse {
     total: number;
   };
 }
+
+export interface IFileResponse {
+  blob: Blob;
+  name: string;
+}

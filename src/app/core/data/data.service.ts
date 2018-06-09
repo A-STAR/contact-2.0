@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { empty } from 'rxjs/observable/empty';
-import { catchError, distinctUntilChanged, finalize, first, map, mergeMap } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { catchError, distinctUntilChanged, finalize, first, map, mergeMap } from 'rxjs/operators';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 import { IGuiObjectDef } from '@app/core/layout/layout.interface';
-import { IQueryParam, IQueryParams } from './data.interface';
+import { IQueryParam, IQueryParams, IFileResponse } from './data.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { ConfigService } from '@app/core/config/config.service';
@@ -65,7 +65,7 @@ export class DataService {
       .map(response => response.data || []);
   }
 
-  readBlob(url: string, routeParams: object = {}): Observable<Blob> {
+  readBlob(url: string, routeParams: object = {}): Observable<IFileResponse> {
     return this.blobRequest(DataService.METHOD_GET, url, routeParams);
   }
 
@@ -85,7 +85,7 @@ export class DataService {
     return this.jsonRequest(DataService.METHOD_POST, url, params, { ...options, body: data });
   }
 
-  createBlob(url: string, routeParams: object = {}, body: object): Observable<Blob> {
+  createBlob(url: string, routeParams: object = {}, body: object): Observable<IFileResponse> {
     return this.blobRequest(DataService.METHOD_POST, url, routeParams, { body });
   }
 
@@ -136,13 +136,21 @@ export class DataService {
    * @param routeParams Params like {id} etc.
    * @param options Other HTTP options, like `body` etc.
    */
-  private blobRequest(method: string, url: string, routeParams: object, options: RequestOptions = {}): Observable<Blob> {
+  private blobRequest(
+    method: string,
+    url: string,
+    routeParams: object,
+    options: RequestOptions = {},
+  ): Observable<IFileResponse> {
     return this.layoutService.currentGuiObject$.pipe(
       first(),
       mergeMap(item => {
         const headers = this.buildHeaders(method, options, item);
         return this.request(method, url, routeParams, { ...options, headers, responseType: 'blob', observe: 'response' }).pipe(
-          map(response => new Blob([ response.body ], { type: response.headers.get('content-type') })),
+          map(response => ({
+            name: this.getFileName(response),
+            blob: new Blob([ response.body ], { type: response.headers.get('content-type') }),
+          })),
         );
       }),
     );
@@ -220,5 +228,16 @@ export class DataService {
       const re = RegExp(`{${id}}`, 'gi');
       return acc.replace(re, params[id]);
     }, url);
+  }
+
+  private getFileName(response: HttpResponse<any>): string {
+    const contentDisposition = response.headers.get('content-disposition');
+    if (contentDisposition) {
+      const matches = contentDisposition.match(/^attachment; filename="(.+)";$/);
+      if (matches && matches[1]) {
+        return matches[1];
+      }
+    }
+    return null;
   }
 }

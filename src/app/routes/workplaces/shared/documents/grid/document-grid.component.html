@@ -21,6 +21,6 @@
 <app-downloader
   #downloader
   [entityTranslationKey]="'entities.documents.gen.singular'"
-  [name]="selectedDocumentFileName$ | async"
+  [fallbackName]="selectedDocumentFileName$ | async"
   [url]="selectedDocumentURL$ | async">
 </app-downloader>
