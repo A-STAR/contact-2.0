@@ -153,7 +153,7 @@ export class InfoDebtComponent {
       )
       .subscribe(rows => {
         const detailRow = action.selection.node;
-        this.downloader.name = detailRow.data.templateName;
+        this.downloader.fallbackName = detailRow.data.templateName;
         this.downloader.url = `/debts/${rows[0].debtId}/letter/${detailRow.data.letterId}/file`;
         this.downloader.download();
       });
