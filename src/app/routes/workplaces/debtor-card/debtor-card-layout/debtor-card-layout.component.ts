@@ -52,18 +52,54 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   dialog: 'registerContact' = null;
   // nice, isn't it?
   tabs = [
-    { isInitialised: true },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
+    {
+      isInitialised: true,
+      permission: this.userPermissionsService.has('DEBT_FULL_INFO_ALL_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('DEBT_FULL_INFO_ALL_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('CONTACT_LOG_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('FILE_ATTACHMENT_VIEW_LIST')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('CONTACT_PERSON_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('GUARANTEE_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PLEDGE_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PROPERTY_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('IDENTITY_DOCUMENT_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('EMPLOYMENT_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PERSON_ACTION_LOG_VIEW')
+    },
   ];
   debtorId: number;
   debtId: number;
