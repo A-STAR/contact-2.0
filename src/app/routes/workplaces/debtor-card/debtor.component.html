@@ -2,8 +2,8 @@
   <div class="flex-item">
     <div class="flex horizontal mb">
       <div *ngFor="let debtor of debtors" class="flex-item">
-        <a [routerLink]="'/app/workplaces/debtor/' + debtor[0] + '/debt/' + debtor[1]" class="ph">
-          Debtor {{ debtor[0] }}, Debt {{ debtor[1] }}
+        <a class="ph" [routerLink]="'/app/workplaces/debtor/' + debtor[0] + '/debt/' + debtor[1]">
+          {{ getDebtorName(debtor[0]) | async }}
         </a>
       </div>
     </div>

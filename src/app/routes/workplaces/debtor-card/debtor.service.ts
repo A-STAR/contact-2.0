@@ -38,8 +38,8 @@ export class DebtorService {
     private workplacesService: WorkplacesService,
   ) {}
 
-  get debtors(): Map<number, number> {
-    return this._debtors;
+  get debtors(): IterableIterator<[number, number]> {
+    return this._debtors.entries();
   }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
@@ -148,6 +148,12 @@ export class DebtorService {
   }
 
   addTab(debtorId: number, debtId: number): void {
+    const hasDebtor = this._debtors.has(debtorId);
+
+    if (hasDebtor) {
+      this._debtors.delete(debtorId);
+    };
+
     this._debtors.set(debtorId, debtId);
   }
 

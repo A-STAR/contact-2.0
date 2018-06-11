@@ -7,11 +7,15 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
+
+import { Person } from '@app/entities';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from './debtor.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,11 +32,12 @@ export class DebtorComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private debtorService: DebtorService,
-    private route: ActivatedRoute,
-    private router: Router,
+    private repositoryService: RepositoryService,
   ) {}
 
   ngOnInit(): void {
@@ -60,8 +65,19 @@ export class DebtorComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get debtors(): Array<[number, number]> {
-    return Array.from(this.debtorService.debtors as Map<number, number>);
+  get debtors(): IterableIterator<[number, number]> {
+    return this.debtorService.debtors;
+  }
+
+  getDebtorName(id: number): Observable<string> {
+    return this.repositoryService
+      .fetch(Person, { id: id })
+      .pipe(
+        map((response: Person[]) => {
+          const person: Partial<Person> = response[0];
+          return `${person.lastName} ${person.firstName}`;
+        }),
+      );
   }
 
   onNavigationEnd(event: NavigationEnd): void {
