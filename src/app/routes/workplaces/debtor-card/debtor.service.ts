@@ -152,7 +152,7 @@ export class DebtorService {
 
     if (hasDebtor) {
       this._debtors.delete(debtorId);
-    };
+    }
 
     this._debtors.set(debtorId, debtId);
   }
