@@ -5,9 +5,9 @@
   </div>
   <div class="flex-item grow">
     <app-dynamic-layout
-      *ngIf="templates"
-      layout="debt"
-      [data]="{ default: debt }"
+      *ngIf="templates && layoutConfig"
+      [layout]="layoutConfig"
+      [data]="data | async"
       [templates]="templates"
     ></app-dynamic-layout>
   </div>
@@ -15,20 +15,20 @@
 
 <ng-template #debtComponents>
   <app-debt-component-grid
-    [debtId]="debtId"
+    [debtId]="debtId$ | async"
   ></app-debt-component-grid>
 </ng-template>
 
 <ng-template #portfolioLog>
   <app-portfolio-log-grid
     *ngIf="canViewPortfolioLog$ | async"
-    [debtId]="debtId"
+    [debtId]="debtId$ | async"
   ></app-portfolio-log-grid>
 </ng-template>
 
 <ng-template #componentLog>
   <app-component-log-grid
     *ngIf="canViewComponentLog$ | async"
-    [debtId]="debtId"
+    [debtId]="debtId$ | async"
   ></app-component-log-grid>
 </ng-template>

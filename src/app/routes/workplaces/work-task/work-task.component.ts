@@ -22,11 +22,14 @@ export class WorkTaskComponent {
   selectedTabIndex = 0;
 
   grids: IGridDef[] = [
-    { rowIdKey: 'debtId', key: 'workTask.NewDebt', title: label('newDebt.title'), isInitialised: true },
+    { rowIdKey: 'debtId', key: 'workTask.All', title: label('all.title'), isInitialised: true },
+    { rowIdKey: 'debtId', key: 'workTask.NewDebt', title: label('newDebt.title'), isInitialised: false },
     { rowIdKey: 'debtId', key: 'workTask.ProblemDebt', title: label('problemDebt.title'), isInitialised: false },
     { rowIdKey: 'debtId', key: 'workTask.SearchInformation', title: label('searchInformation.title'), isInitialised: false },
     { rowIdKey: 'debtId', key: 'workTask.DebtToContractor', title: label('debtToContractor.title'), isInitialised: false },
-    { rowIdKey: 'id', key: 'workTask.PrepareVisits', title: label('prepareVisits.title'), isInitialised: false }
+    { rowIdKey: 'id', key: 'workTask.PrepareVisits', title: label('prepareVisits.title'), isInitialised: false },
+    { rowIdKey: 'debtId', key: 'workTask.CustomStatus', title: label('customStatus.title'), isInitialised: false },
+    { rowIdKey: 'debtId', key: 'workTask.Close', title: label('closed.title'), isInitialised: false },
   ];
 
   constructor(private cdRef: ChangeDetectorRef) { }

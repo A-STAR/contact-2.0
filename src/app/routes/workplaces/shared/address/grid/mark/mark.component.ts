@@ -9,7 +9,6 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IDebt } from './mark.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
@@ -19,6 +18,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey, addGridLabel, isEmpty } from '@app/core/utils';
+import { Debt } from '@app/entities';
 
 const labelKey = makeKey('widgets.address.dialogs.mark.form');
 
@@ -38,16 +38,16 @@ export class AddressGridMarkComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  columns: ISimpleGridColumn<IDebt>[] = [
+  columns: ISimpleGridColumn<Debt>[] = [
     { prop: 'id', minWidth: 75, maxWidth: 150 },
     { prop: 'contract', minWidth: 150, maxWidth: 200 },
     { prop: 'statusCode', minWidth: 150, maxWidth: 200, dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
     { prop: 'debtAmount', minWidth: 150, maxWidth: 200 },
     { prop: 'currencyName', minWidth: 150 },
-  ].map(addGridLabel('widgets.address.dialogs.mark'));
+  ].map(addGridLabel('widgets.address.dialogs.mark.grid'));
 
-  debts: IDebt[];
-  selection: IDebt[];
+  debts: Debt[];
+  selection: Debt[];
 
   controls = [
     { controlName: 'purposeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
@@ -74,7 +74,7 @@ export class AddressGridMarkComponent implements OnInit {
     return !isEmpty(this.selection);
   }
 
-  onSelect(selection: IDebt[]): void {
+  onSelect(selection: Debt[]): void {
     this.selection = selection;
     this.cdRef.markForCheck();
   }

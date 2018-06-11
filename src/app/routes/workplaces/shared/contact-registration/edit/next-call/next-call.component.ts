@@ -17,10 +17,6 @@ export class ContactRegistrationNextCallComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  readonly canDisplayForm$ = this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)),
-  );
-
   readonly isNextCallDateRequired$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && outcome.nextCallMode === 3),
   );

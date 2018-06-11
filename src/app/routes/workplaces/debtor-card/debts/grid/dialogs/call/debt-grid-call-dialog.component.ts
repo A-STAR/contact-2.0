@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 
-import { IDebt } from '@app/core/debt/debt.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtService } from '@app/core/debt/debt.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+
+import { Debt } from '@app/entities';
 
 @Component({
   selector: 'app-debt-grid-call-dialog',
@@ -14,7 +15,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtGridCallDialogComponent {
-  @Input() debt: IDebt;
+  @Input() debt: Debt;
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -37,10 +38,10 @@ export class DebtGridCallDialogComponent {
     [DebtGridCallDialogComponent.NEXT_CALL_CONTROL]: DebtGridCallDialogComponent.MIN_DATE_TIME,
   };
 
-  constructor(private debtService: DebtService) {}
+  constructor(private debtorService: DebtorService) {}
 
   onSubmit(): void {
-    this.debtService.setNextCallDate(this.debt.id, this.form.serializedUpdates).subscribe(() => {
+    this.debtorService.setNextCallDate(this.debt.id, this.form.serializedUpdates).subscribe(() => {
       this.submit.emit();
       // TODO(d.maltsev): close in container if there are no errors
       this.close.emit();

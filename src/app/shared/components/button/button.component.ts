@@ -7,6 +7,7 @@ import { ButtonService } from '@app/core/button/button.service';
 @Component({
   selector: 'app-button',
   templateUrl: 'button.component.html',
+  styleUrls: ['./button.components.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
@@ -23,7 +24,9 @@ export class ButtonComponent {
   constructor(private buttonService: ButtonService) {}
 
   get buttonClass(): string {
-    return (this.btnClass ? this.btnClass + ' ' : '') + this.buttonService.getClass(this.color, this.withBtnClass);
+    return (this.btnClass ? this.btnClass + ' ' : '')
+    // + (this.iconClass ? 'btn-icon ' : '')
+    + this.buttonService.getClass(this.color, this.withBtnClass);
   }
 
   get iconClass(): string {

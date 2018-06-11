@@ -7,7 +7,11 @@ const path = require('path');
 const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
 
 module.exports = async function() {
-  const browser = await puppeteer.launch({});
+  const browser = await puppeteer.launch({
+    args: [
+      '--force-color-profile=srgb|generic-rgb|color-spin-gamma24',
+    ],
+  });
   mkdirp.sync(DIR);
   fs.writeFileSync(path.join(DIR, 'wsEndpoint'), browser.wsEndpoint());
 

@@ -13,7 +13,7 @@ import {
 } from './dynamic-layout.interface';
 
 import { AttributeService } from './attribute/attribute.service';
-import { ContextService } from './context.service';
+import { ContextService } from '@app/core/context/context.service';
 import { ControlService } from './control/control.service';
 import { MetadataService } from './metadata.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -121,6 +121,7 @@ export class DynamicLayoutService {
       return of(true);
     }
     return typeof item[prop] === 'object'
+      // Used to be .pipe(share()) which resulted in forms getting stuck with 'pending' status
       ? this.contextService.calculate(item[prop])
       : of(item[prop]);
   }

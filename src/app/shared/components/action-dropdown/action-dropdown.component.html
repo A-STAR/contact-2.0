@@ -1,0 +1,19 @@
+<div appDropdown [fitWidthToContent]="true">
+  <div #dropdownTrigger>
+    <app-button [label]="label"></app-button>
+  </div>
+  <div #dropdownContent>
+    <div class="list-group m0">
+      <a class="list-group-item" *ngFor="let option of options" (click)="onOptionClick(option)">
+        {{ option.label }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<app-mass-operation
+  *ngIf="actionData"
+  [type]="actionData.name || actionData.id"
+  [actionData]="actionData"
+  (close)="onCloseAction()"
+></app-mass-operation>

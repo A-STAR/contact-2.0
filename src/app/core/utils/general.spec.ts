@@ -1,4 +1,12 @@
-import { range, deepFilterAndMap, IncId, binaryFromArray, toBoolArray, toBoolSizedArray } from './general';
+import {
+  range,
+  deepFilterAndMap,
+  IncId,
+  binaryFromArray,
+  toBoolArray,
+  toBoolSizedArray,
+  pickExisting,
+} from './general';
 
 describe('General helper:', () => {
 
@@ -208,6 +216,35 @@ describe('General helper:', () => {
 
       result = toBoolSizedArray(-5, 5);
       expect(result).toEqual([false, false, true, false, true]);
+    });
+  });
+
+  describe('pickExisting', () => {
+    it('should return partial copy of an object with existing props', () => {
+      let obj = pickExisting({});
+      expect(obj).toEqual({});
+
+      obj = pickExisting({ a: 1, b: null });
+      expect(obj).toEqual({ a: 1 });
+
+      obj = pickExisting({ a: 1, b: 0 });
+      expect(obj).toEqual({ a: 1, b: 0 });
+
+      obj = pickExisting({ a: 1, b: '' });
+      expect(obj).toEqual({ a: 1, b: '' });
+
+      obj = pickExisting({ a: 1, b: undefined });
+      expect(obj).toEqual({ a: 1 });
+
+      obj = pickExisting({ a: 1, b: false });
+      expect(obj).toEqual({ a: 1 });
+
+      obj = pickExisting(5);
+      expect(obj).toEqual(5);
+
+      obj = pickExisting(null);
+      expect(obj).toEqual(null);
+
     });
   });
 

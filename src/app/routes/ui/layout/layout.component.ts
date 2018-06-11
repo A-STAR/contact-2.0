@@ -24,6 +24,7 @@ interface IRow {
 })
 export class LayoutComponent implements OnInit {
   @ViewChild('foo', { read: TemplateRef }) foo: TemplateRef<any>;
+  @ViewChild('actions', { read: TemplateRef }) actions: TemplateRef<any>;
 
   readonly data = {
     default: {
@@ -55,6 +56,33 @@ export class LayoutComponent implements OnInit {
                 label: 'Collapse Me!',
                 collapsible: true,
                 children: [
+                  {
+                    type: DynamicLayoutItemType.TEMPLATE,
+                    value: 'actions',
+                    context: {
+                      actions: [{
+                        action: 'customOperation',
+                        params: [
+                          'debtId'
+                        ],
+                        id: 1,
+                        asyncMode: false,
+                        outputConfig: {
+                          key: 'operationOutput',
+                          items: [{
+                            type: 'template',
+                            value: 'grid',
+                            context: {
+                              columns: [
+                                { prop: 'column1', label: 'column1' },
+                                { prop : 'column2', label: 'column2' }
+                              ]
+                            }
+                          }]
+                        }
+                      }]
+                    }
+                  },
                   {
                     type: DynamicLayoutItemType.ATTRIBUTE,
                     label: 'Formula #1',
@@ -163,6 +191,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.templates = {
       foo: this.foo,
+      actions: this.actions
     };
   }
 }

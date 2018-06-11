@@ -13,6 +13,7 @@ module.exports = async function() {
   const browser = await puppeteer.launch({
     args: [
       `--window-size=${width},${height}`,
+      '--force-color-profile=srgb|generic-rgb|color-spin-gamma24',
     ],
     headless: false,
     slowMo: 250,

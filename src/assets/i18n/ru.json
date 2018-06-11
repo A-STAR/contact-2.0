@@ -274,7 +274,8 @@
                 "form": {
                   "statusChange": "Причина перевода в пользовательский статус"
                 }
-              }
+              },
+              "prompt": "Вы действительно хотите зарегистрировать контакт по выбранному исходу?"
             }
           },
           "tree": {
@@ -282,10 +283,38 @@
             "scenario": "Сценарий разговора",
             "selectOutcome": "Выберите исход"
           }
+        },
+        "documents": {
+          "grid": {
+            "toolbar": {
+              "add": {
+                "13": "Добавить к контрагенту",
+                "15": "Добавить к портфелю",
+                "18": "Добавить к персоне",
+                "19": "Добавить к долгу",
+                "32": "Добавить к договору поручительства",
+                "63": "Добавить к договору залога"
+              }
+            }
+          }
         }
       }
     },
     "utilities": {
+      "campaigns": {
+        "genesys": {
+          "statistics": {
+            "grid": {
+              "complete": "Обработано",
+              "errors": "Ошибок",
+              "not_started": "Не обрабатывалось",
+              "postponed": "Запланирована обработка",
+              "processing": "Обрабатывается",
+              "total_chains": "Всего"
+            }
+          }
+        }
+      },
       "formulas": {
         "grid": {
           "id": "ID",
@@ -375,6 +404,7 @@
     }
   },
   "system": {
+    "accessDenied": "Доступ ограничен",
     "notifications": {
       "tasks": {
         "created": "создано {{ n }}",
@@ -771,6 +801,9 @@
           "visitPurposeCode": "Цель выезда"
         }
       },
+      "all": {
+        "title": "Все"
+      },
       "newDebt": {
         "title": "Новые долги"
       },
@@ -785,6 +818,12 @@
       },
       "prepareVisits": {
         "title": "Подготовка выездов"
+      },
+      "customStatus": {
+        "title": "Пользовательские статусы"
+      },
+      "closed": {
+        "title": "Закрытые"
       }
     },
     "infoDebt": {
@@ -835,6 +874,18 @@
           "sendDateTime": "Фактическая дата отправки",
           "userFullName": "Оператор",
           "subject": "Тема",
+          "templateName": "Название шаблона"
+        }
+      },
+      "letter": {
+        "title": "Письма",
+        "grid": {
+          "letterId": "ID",
+          "address": "Адрес",
+          "statusCode": "Статус",
+          "createDateTime": "Дата создания",
+          "sendDateTime": "Фактическая дата отправки",
+          "userFullName": "Оператор",
           "templateName": "Название шаблона"
         }
       }
@@ -1273,6 +1324,7 @@
   "debtor": {
     "title": "Карточка должника",
     "id": "ID",
+    "actions": "Операции",
     "firstName": "Имя",
     "lastName": "Фамилия",
     "middleName": "Отчество",
@@ -1281,6 +1333,7 @@
     "reward": "Размер вознаграждения",
     "shortInfo": "Краткая иформация",
     "stageCode": "Стадия",
+    "successUpdate": "Информация о должнике с ID {{ id }} была успешно обновлена",
     "utc": "Местное время должника",
     "identityDocs": {
       "title": "Удостоверения личности",
@@ -2173,6 +2226,19 @@
           "code": "Код",
           "name": "Имя"
         }
+      },
+      "letter": {
+        "title": "Массоввое формирование писем",
+        "dialog": {
+          "templateId": "Шаблон",
+          "formatCode": "Формат",
+          "regLetter": "Регистрировать письма",
+          "addressTypes": "Тип адреса",
+          "avoidDuplication": "Исключить дублирование адресов",
+          "ignoreWrongAddress": "Исключить адреса со статусом \"Неверный\"",
+          "sortRule": "Сортировка",
+          "reportId": "Реестр"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2206,6 +2272,7 @@
       "card": {
         "typeCode": "Тип",
         "phoneNumber": "Номер телефона",
+        "phone": "Номер телефона",
         "stopAutoSms": "Не отправлять автоматические SMS",
         "stopAutoInfo": "Запретить голосовое информирование",
         "comment": "Комментарий"
@@ -2434,7 +2501,10 @@
         "status": "Статус",
         "text": "Текст сообщения",
         "startDateTime": "Планируемая дата отправки",
-        "subject": "Тема"
+        "subject": "Тема",
+        "templateName": "Тип письма",
+        "contactAddress": "Адрес",
+        "createDateTime": "Дата формирования"
       },
       "grid": {
         "comment": "Комментарий",
@@ -2448,7 +2518,7 @@
         "debtId": "ID долга",
         "fullName": "ФИО",
         "messageTemplate": "Шаблон",
-        "msgStatusCode": "Статус",
+        "msgStatusName": "Статус",
         "personRole": "Роль",
         "promiseDate": "Обещанная дата",
         "resultName": "Результат",
@@ -2742,7 +2812,8 @@
             "name": "Имя",
             "comment": "Комментарий"
           }
-        }
+        },
+        "operationId": "Операция"
       },
       "dialog": {
         "title": "Мероприятие",
@@ -2757,6 +2828,16 @@
       },
       "errors": {
         "start": "Произошла ошибка при попытке стартовать мероприятия с ID {{ eventId }}"
+      }
+    },
+    "customOperation": {
+      "dialog": {
+        "input": {
+          "title": "Введите параметры"
+        },
+        "output": {
+          "title": "Результат операции"
+        }
       }
     }
   },
@@ -2842,7 +2923,16 @@
         "gen": { "plural": "общей информации о должнике" }
       }
     },
+    "debtor": {
+      "gen": { "singular": "должника", "plural": "списка должников" },
+      "info": {
+        "gen": { "plural": "общей информации о должнике" }
+      }
+    },
     "debts": {
+      "gen": { "singular": "долга", "plural": "списка долгов" }
+    },
+    "debt": {
       "gen": { "singular": "долга", "plural": "списка долгов" }
     },
     "massOps": {
@@ -2883,7 +2973,7 @@
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     },
     "contacts": {
-      "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
+      "gen": { "singular": "контактного лица", "plural": "контактных лиц" }
     },
     "documents": {
       "gen": { "singular": "вложения", "plural": "вложений" }
@@ -2977,6 +3067,12 @@
     },
     "letterTemplates": {
       "gen": { "singular": "шаблона письма", "plural" : "шаблонов писем" }
+    },
+    "operations": {
+      "gen": { "singular": "операции", "plural" : "операций" }
+    },
+    "persons": {
+      "gen": { "singular": "персоны", "plural" : "персон" }
     }
   },
   "massOperations": {
@@ -3236,6 +3332,7 @@
         "*": "При перемещении {{ entity }} произошла ошибка"
       },
       "massOp": "При совершении операции {{ entity }} произошла ошибка",
+      "customMassOp": "При совершении операции произошла ошибка",
       "update": {
         "403": "У вас недостаточно прав для изменения {{ entity }}",
         "*": "При изменении {{ entity }} произошла ошибка"
@@ -3458,6 +3555,7 @@
         "openDebtCard": "Открыть карточку долга",
         "openIncomingCall": "Открыть входящий звонок по долгу",
         "openUserDetail": "Открыть карточку оператора",
+        "openUserById": "Открыть карточку оператора",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",
         "prepareVisit": "Подготовить выезд",
@@ -3481,7 +3579,9 @@
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
-        "changePersonType": "Изменить тип персоны"
+        "changePersonType": "Изменить тип персоны",
+        "letterGenerate": "Массовое формирование писем",
+        "letterExport": "Сохранение файла письма"
       }
     },
     "filter": {

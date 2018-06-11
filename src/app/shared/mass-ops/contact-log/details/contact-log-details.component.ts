@@ -25,6 +25,7 @@ export class ContactLogDetailsComponent {
   @Input()
   set actionData(action: IGridAction) {
     const payload = this.actionGridService.buildRequest(action.payload);
+    this.contactFullName = this.getFullName(action.rowData);
     this.entityId = Object.keys(payload).map(key => payload[key])[0];
     this.contacts$ = combineLatest(
             this.userDictionariesService
@@ -42,11 +43,6 @@ export class ContactLogDetailsComponent {
           });
   }
 
-  @Input()
-  set rowData(row: any) {
-    this.contactFullName = (row && row.personFullName) || '';
-  }
-
   @Output() close = new EventEmitter<boolean>();
 
   contactFullName: string;
@@ -54,7 +50,7 @@ export class ContactLogDetailsComponent {
   columnIds = [
     'contactDateTime',
     'contactType',
-    'msgStatusCode',
+    'msgStatusName',
     'contract',
     'createDateTime',
     'personRole',
@@ -99,7 +95,7 @@ export class ContactLogDetailsComponent {
     switch (propName) {
       case 'personRole':
         return this.dicts[UserDictionariesService.DICTIONARY_PERSON_ROLE].find(term => term.code === contact[propName]).name;
-      case 'msgStatusCode':
+      case 'msgStatusName':
         const dict = this.getContactType(contact);
         return dict ? dict.find(term => term.code === contact[propName]).name : contact[propName];
       case 'contactType':
@@ -110,7 +106,9 @@ export class ContactLogDetailsComponent {
   }
 
   private processContacts(contacts: IContact[]): any {
-    return contacts.map(contact => Object.keys(contact)
+    return contacts
+    .sort((a: IContact, b: IContact) => +new Date(b.contactDateTime) - +new Date(a.contactDateTime))
+    .map(contact => Object.keys(contact)
       .filter(key => this.columnIds.includes(key))
       .reduce((acc, propName) => (
         {
@@ -119,6 +117,10 @@ export class ContactLogDetailsComponent {
         }
       ), {})
     );
+  }
+
+  private getFullName(row: any): string {
+    return row && (row.personFullName || row.fullName) || '';
   }
 
 }

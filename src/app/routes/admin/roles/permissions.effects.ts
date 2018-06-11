@@ -93,6 +93,7 @@ export class PermissionsEffects {
           this.rolesFetchAction,
           this.userPermissionsService.createRefreshAction(),
           { type: PermissionsService.ROLE_DELETE_SUCCESS },
+          { type: PermissionsService.ROLE_SELECTED, payload: { role: null } },
         ])
         .catch(this.notifications.deleteError().entity('entities.roles.gen.singular').callback());
     });
@@ -151,6 +152,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
           { type: PermissionsService.PERMISSION_DELETE_SUCCESS },
+          { type: PermissionsService.PERMISSION_SELECTED, payload: null },
         ])
         .catch(this.notifications.deleteError().entity('entities.permissions.gen.singular').callback());
     });

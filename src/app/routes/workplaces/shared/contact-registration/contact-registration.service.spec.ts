@@ -8,7 +8,7 @@ import { IOutcome, IContactRegistrationParams } from './contact-registration.int
 
 import { ContactRegistrationService } from './contact-registration.service';
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
-import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
+import { Debt } from '@app/entities';
 
 class MockDataService {
   create(): Observable<any> {
@@ -23,7 +23,7 @@ class MockDataService {
 }
 
 class MockDebtsService {
-  getDebt(debtId: number): Observable<IDebt> {
+  getDebt(debtId: number): Observable<Debt> {
     return of(null);
   }
 }

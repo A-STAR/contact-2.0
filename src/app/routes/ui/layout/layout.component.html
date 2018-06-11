@@ -11,3 +11,9 @@
     [rows]="rows"
   ></app-simple-grid>
 </ng-template>
+
+<ng-template #actions let-context="context">
+  <app-action-dropdown
+    [actions]="context.actions"
+  ></app-action-dropdown>
+</ng-template>

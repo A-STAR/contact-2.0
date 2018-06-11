@@ -92,12 +92,12 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
 
   @Input()
   set selection(selection: T[]) {
-    if (!isEmpty(selection) && this.gridApi) {
-      const ids = selection.map(item => item && item[this.idKey]).filter(item => item !== undefined);
-      this.gridApi.forEachNodeAfterFilterAndSort(node => {
-        const isSelected = ids.includes(node.data[this.idKey]);
-        node.setSelected(isSelected);
-      });
+    if (!isEmpty(selection)) {
+      this.selectionIds = selection.map(item => item && item[this.idKey]).filter(item => item !== undefined);
+      if (this.gridApi && this.selectionIds) {
+        this.selectNodes(this.selectionIds);
+        this.selectionIds = null;
+      }
       this.cdRef.markForCheck();
     }
   }
@@ -110,6 +110,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
   private persistenceClearSub: Subscription;
   private routeChangeSub: Subscription;
   private settingsReseted = false;
+  private selectionIds: any[];
 
   gridOptions: GridOptions = {
     defaultColDef: {
@@ -258,13 +259,16 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridsService.restoreSortModel(this.persistenceKey, this.gridApi);
+    if (this.selectionIds) {
+      this.selectNodes(this.selectionIds);
+      this.selectionIds = null;
+    }
     this.updateToolbar();
   }
 
   private onSelectionChanged(): void {
     const selection = this.gridApi.getSelectedRows();
-    this.
-    selectRow.emit(selection);
+    this.selectRow.emit(selection);
     this.updateToolbar();
   }
 
@@ -292,6 +296,13 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
         // shortcut: 'Alt+R'
       },
     ];
+  }
+
+  private selectNodes(ids: any[]): void {
+    this.gridApi.forEachNodeAfterFilterAndSort(node => {
+      const isSelected = ids.includes(node.data[this.idKey]);
+      node.setSelected(isSelected);
+    });
   }
 
   private saveSettings(): void {

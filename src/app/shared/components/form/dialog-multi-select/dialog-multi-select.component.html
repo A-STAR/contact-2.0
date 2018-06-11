@@ -46,6 +46,13 @@
   </div>
 </app-dialog>
 
+
+<label>
+  <span class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </span>
+</label>
 <span class="input-group">
   <span class="form-control" (click)="onShowDialog()">
     <ng-container [ngSwitch]="selectionLength">

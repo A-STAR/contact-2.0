@@ -1,23 +1,31 @@
 <div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="{ title: 'routes.workplaces.incomingCall.search.title' }"></app-titlebar>
-  </div>
   <div class="flex-item grow">
-    <app-area layout="column">
-      <app-area initialSize="10" layout="row">
-        <app-area initialSize="1">
-          <app-incoming-call-filter></app-incoming-call-filter>
-        </app-area>
-        <app-area initialSize="5">
-          <app-incoming-call-debtor-grid></app-incoming-call-debtor-grid>
-        </app-area>
-      </app-area>
-      <app-area initialSize="5">
-        <app-incoming-call-phone-grid></app-incoming-call-phone-grid>
-      </app-area>
-      <app-area initialSize="3">
-        <app-incoming-call-debtor-card></app-incoming-call-debtor-card>
-      </app-area>
-    </app-area>
+    <app-dynamic-layout
+      [layout]="layout"
+      [templates]="templates"
+    ></app-dynamic-layout>
   </div>
 </div>
+
+
+<ng-template #incomingCallTitlebar>
+  <app-titlebar [titlebar]="{ title: 'routes.workplaces.incomingCall.search.title' }"></app-titlebar>
+</ng-template>
+
+<ng-template #incomingCallFilter>
+  <app-incoming-call-filter></app-incoming-call-filter>
+</ng-template>
+
+<ng-template #incomingCallDebtorGrid>
+  <app-incoming-call-debtor-grid></app-incoming-call-debtor-grid>
+</ng-template>
+
+<ng-template #incomingCallPhoneGrid>
+  <app-incoming-call-phone-grid></app-incoming-call-phone-grid>
+</ng-template>
+
+<ng-template #incomingCallDebtorCard>
+  <app-incoming-call-debtor-card></app-incoming-call-debtor-card>
+</ng-template>
+
+

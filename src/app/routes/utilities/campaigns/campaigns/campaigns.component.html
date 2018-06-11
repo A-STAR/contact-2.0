@@ -1,0 +1,50 @@
+<app-campaigns-edit
+  *ngIf="isDialog('CAMPAIGN_ADD')"
+  (submit)="createCampaign($event)"
+  (cancel)="closeDialog()">
+</app-campaigns-edit>
+
+<app-campaigns-edit
+  *ngIf="isDialog('CAMPAIGN_EDIT')"
+  [campaign]="selectedCampaign | async"
+  (submit)="updateCampaign($event)"
+  (cancel)="closeDialog()">
+</app-campaigns-edit>
+
+<app-dialog-action
+  *ngIf="isDialog('CAMPAIGN_REMOVE')"
+  [titleTranslationKey]="'utilities.campaigns.remove.title'"
+  [actionTranslationKey]="'utilities.campaigns.remove.confirmMessage'"
+  [messageParams]="selectedCampaign | async"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemove()"
+  (cancel)="closeDialog()">
+</app-dialog-action>
+
+<app-area layout="column">
+  <app-area>
+    <app-simple-grid
+      persistenceKey="[grid] utilities/campaigns"
+      [columns]="columns"
+      [rows]="campaigns"
+      [toolbar]="toolbarItems"
+      (selectRow)="onSelectCampaign($event)"
+      (dblClick)="onCampaignDblClick()">
+    </app-simple-grid>
+  </app-area>
+  <app-area>
+    <app-participants></app-participants>
+    <!-- Mayble we'll use this later -->
+    <!--
+    <app-tabview [fullHeight]="true" [noMargin]="true" (selectTab)="onTabSelect($event)">
+      <app-tabview-tab [title]="'utilities.campaigns.tabs.participants'">
+        <app-participants *ngIf="tabs[0].isInitialised"></app-participants>
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'utilities.campaigns.tabs.statistics'">
+        <app-statistics *ngIf="tabs[1].isInitialised"></app-statistics>
+      </app-tabview-tab>
+    </app-tabview>
+    -->
+  </app-area>
+</app-area>

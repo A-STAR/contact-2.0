@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
@@ -26,6 +27,7 @@ import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
@@ -33,7 +35,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 import { invert } from '@app/core/utils';
 
-import { layout } from './contact-person-card.layout';
+import { createContactPersonLayout, editContactPersonLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,17 +50,15 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
   @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
   @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
   @ViewChild('personTitlebar',    { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('personClearButton', { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
 
-  readonly paramMap = this.route.snapshot.paramMap;
+  readonly entityType = EntityType.PERSON;
 
-  /**
-   * Contact person link ID in pivot table
-   */
-  readonly contactId = Number(this.paramMap.get('contactId'));
+  readonly paramMap = this.route.snapshot.paramMap;
 
   /**
    * Debt ID
@@ -80,7 +80,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
    */
   readonly contactPersonRole = 4;
 
-  readonly editing = Boolean(this.contactId);
+  readonly editing = this.route.snapshot.data.edit;
 
   readonly contactPerson$ = this.contactPersonCardService.contactPerson$;
 
@@ -92,7 +92,9 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     map(data => data.showContractForm),
   );
 
-  readonly layoutConfig = layout;
+  readonly layoutConfig = this.editing
+    ? editContactPersonLayout
+    : createContactPersonLayout;
 
   readonly contactPersonTitlebar: ITitlebar = {
     title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
@@ -109,7 +111,11 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     map(person => {
       if (person) {
         const { linkTypeCode, ...rest } = person;
-        return { default: rest, link: { linkTypeCode } };
+        if (linkTypeCode) {
+          return { default: rest, link: { linkTypeCode } };
+        } else {
+          return { default: rest };
+        }
       } else {
         return { default: {}, link: {} };
       }
@@ -129,6 +135,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     private contactPersonsService: ContactPersonsService,
     private contactRegistrationService: ContactRegistrationService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
@@ -142,6 +149,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
       employment: this.employmentTemplate,
       addresses: this.addressesTemplate,
       phones: this.phonesTemplate,
+      emails: this.emailsTemplate,
       documents: this.documentsTemplate,
       personTitlebar: this.personTitlebarTemplate,
       personClearButton: this.personClearButtonTemplate,
@@ -155,6 +163,15 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
       }
     });
     this.subscription.add(subscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (!this.editing) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('link');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -166,7 +183,9 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
           this.layout.setData({ default: rest, link: { linkTypeCode } });
         });
     }
-    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    const subscription = this.layout
+      .canSubmitAll(!this.editing)
+      .subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
     this.subscription.add(subscription);
   }
 
@@ -175,9 +194,13 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onContactPersonFormClear(): void {
+    const isDefaultFormDisabled = this.layout.isFormDisabled();
     this.contactPersonCardService.selectContactPerson(null);
     this.layout.resetForm();
     this.layout.resetForm('link');
+    if (isDefaultFormDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onSave(): void {
@@ -221,7 +244,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     const debtId = this.route.snapshot.paramMap.get('debtId');
     const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
-      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 

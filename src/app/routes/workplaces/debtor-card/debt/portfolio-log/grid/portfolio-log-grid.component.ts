@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 
 import { IPortfolioLogEntry } from '../portfolio-log.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -8,6 +8,7 @@ import { PortfolioLogService } from '../portfolio-log.service';
 import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { makeKey, addGridLabel } from '@app/core/utils';
+import { first } from 'rxjs/operators/first';
 
 const label = makeKey('widgets.debt');
 
@@ -17,8 +18,12 @@ const label = makeKey('widgets.debt');
   host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PortfolioLogGridComponent implements OnInit {
-  @Input() debtId: number;
+export class PortfolioLogGridComponent {
+  @Input() set debtId(debtId: number) {
+    if (this._debtId !== debtId) {
+      this.fetch(debtId);
+    }
+  }
 
   columns: Array<ISimpleGridColumn<IPortfolioLogEntry>> = [
     { prop: 'portfolioName', minWidth: 150, maxWidth: 250 },
@@ -33,18 +38,12 @@ export class PortfolioLogGridComponent implements OnInit {
   ];
 
   private _entries: IPortfolioLogEntry[];
+  private _debtId: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private portfolioLogService: PortfolioLogService,
   ) {}
-
-  ngOnInit(): void {
-    this.portfolioLogService.readAll(this.debtId).subscribe(entries => {
-      this._entries = entries;
-      this.cdRef.markForCheck();
-    });
-  }
 
   getEntries(directionCode: number): IPortfolioLogEntry[] {
     return (this._entries || []).filter(entry => entry.directionCode === directionCode);
@@ -52,6 +51,19 @@ export class PortfolioLogGridComponent implements OnInit {
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
+  }
+
+  private fetch(debtId: number): void {
+    if (debtId) {
+      this.portfolioLogService
+        .readAll(debtId)
+        .pipe(first())
+        .subscribe(entries => {
+          this._entries = entries;
+          this._debtId = debtId;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
 }

@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { map } from 'rxjs/operators/map';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtComponentService } from '../debt-component.service';
@@ -13,8 +14,8 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
 import { addGridLabel } from '@app/core/utils';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +23,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
   selector: 'app-debt-component-grid',
   templateUrl: './debt-component-grid.component.html',
 })
-export class DebtComponentGridComponent implements OnDestroy {
+export class DebtComponentGridComponent implements OnDestroy, OnInit {
   @Input() action: 'edit' = 'edit';
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
@@ -45,6 +46,10 @@ export class DebtComponentGridComponent implements OnDestroy {
   ].map(addGridLabel('widgets.debt.component.grid'));
 
   components: IDebtComponent[] = [];
+
+  readonly canViewDebtComponent$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_VIEW');
+
+  readonly canEditDebtComponent$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_EDIT');
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -85,7 +90,10 @@ export class DebtComponentGridComponent implements OnDestroy {
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+
     this.fetchSubscription = combineLatest(
       this.canViewDebtComponent$,
       this.debtId$,
@@ -111,10 +119,9 @@ export class DebtComponentGridComponent implements OnDestroy {
     this.busSubscription.unsubscribe();
   }
 
-  get selectedDebtComponent$(): Observable<IDebtComponent> {
-    return this.selectedDebtComponentId$
-      .map(id => this.components.find(component => component.id === id));
-  }
+  readonly selectedDebtComponent$ = this.selectedDebtComponentId$.pipe(
+    map(id => this.components.find(component => component.id === id))
+  );
 
   onSelect(debtComponents: IDebtComponent[]): void {
     this.selectedDebtComponentId$.next(debtComponents[0].id);
@@ -161,13 +168,5 @@ export class DebtComponentGridComponent implements OnDestroy {
   private clear(): void {
     this.components = [];
     this.cdRef.markForCheck();
-  }
-
-  private get canViewDebtComponent$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_VIEW');
-  }
-
-  private get canEditDebtComponent$(): Observable<boolean> {
-    return this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_EDIT');
   }
 }

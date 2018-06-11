@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChildren, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators';
 
+import { IActionGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IGridDef, IInfoDebtEntry, IGridColumn } from './info-debt.interface';
 
 import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
 
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { GridComponent } from './grid/grid.component';
 
 import { makeKey } from '../../../core/utils';
@@ -22,6 +25,7 @@ export class InfoDebtComponent {
   private selectedRows$ = new BehaviorSubject<IInfoDebtEntry[]>(null);
 
   @ViewChildren(GridComponent) gridComponents: QueryList<GridComponent>;
+  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
 
   selectedTabIndex = 0;
 
@@ -46,6 +50,16 @@ export class InfoDebtComponent {
     { dataType: 3, name: 'subject' },
     { dataType: 3, name: 'templateName' },
   ].map(col => ({ ...col, label: label(`email.grid.${col.name}`)}));
+
+  letterGridColumns: IGridColumn[] = [
+    { dataType: 1, name: 'letterId' },
+    { dataType: 3, name: 'address' },
+    { dataType: 6, name: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_EMAIL_STATUS },
+    { dataType: 2, name: 'createDateTime' },
+    { dataType: 2, name: 'sendDateTime' },
+    { dataType: 3, name: 'userFullName' },
+    { dataType: 3, name: 'templateName' },
+  ].map(col => ({ ...col, label: label(`letter.grid.${col.name}`)}));
 
   grids: IGridDef[] = [
     {
@@ -86,6 +100,21 @@ export class InfoDebtComponent {
       title: label('email.title'),
       isInitialised: false,
       columns: this.emailGridColumns
+    },
+    {
+      rowIdKey: 'letterId',
+      gridKey$: this.selectedRows$
+        .map(rows => rows && rows[0])
+        .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/letter`),
+      title: label('letter.title'),
+      isInitialised: false,
+      actions: [
+        {
+          action: 'letterExport',
+          label: 'modules.infoDebt.letter.grid',
+        }
+      ],
+      columns: this.letterGridColumns
     }
   ];
 
@@ -115,5 +144,18 @@ export class InfoDebtComponent {
   onSelect(): void {
     this.selectedRows$.next(this.selection);
     this.cdRef.markForCheck();
+  }
+
+  onAction(action: IActionGridAction): void {
+    this.selectedRows$
+      .pipe(
+        first()
+      )
+      .subscribe(rows => {
+        const detailRow = action.selection.node;
+        this.downloader.fallbackName = detailRow.data.templateName;
+        this.downloader.url = `/debts/${rows[0].debtId}/letter/${detailRow.data.letterId}/file`;
+        this.downloader.download();
+      });
   }
 }

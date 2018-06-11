@@ -274,7 +274,8 @@
                 "form": {
                   "statusChange": "Status Change Reason"
                 }
-              }
+              },
+              "prompt": "Are you sure, you want to register contact by this outcome?"
             }
           },
           "tree": {
@@ -282,10 +283,38 @@
             "scenario": "Scenario",
             "selectOutcome": "Select Outcome"
           }
+        },
+        "documents": {
+          "grid": {
+            "toolbar": {
+              "add": {
+                "13": "Attach to Contractor",
+                "15": "Attach to Portfolio",
+                "18": "Attach to Person",
+                "19": "Attach to Debt",
+                "32": "Attach to Guarantee Contract",
+                "63": "Attach to Pledge Contract"
+              }
+            }
+          }
         }
       }
     },
     "utilities": {
+      "campaigns": {
+        "genesys": {
+          "statistics": {
+            "grid": {
+              "complete": "Complete",
+              "errors": "Errors",
+              "not_started": "Not Started",
+              "postponed": "Postponed",
+              "processing": "Processing",
+              "total_chains": "Total"
+            }
+          }
+        }
+      },
       "formulas": {
         "grid": {
           "id": "ID",
@@ -375,6 +404,7 @@
     }
   },
   "system": {
+    "accessDenied": "Access Denied",
     "notifications": {
       "tasks": {
         "created": "created {{ n }}",
@@ -771,6 +801,9 @@
           "visitPurposeCode": "Visit purpose"
         }
       },
+      "all": {
+        "title": "All"
+      },
       "newDebt": {
         "title": "New Debts"
       },
@@ -785,6 +818,12 @@
       },
       "prepareVisits": {
         "title": "Prepare Visits"
+      },
+      "customStatus": {
+        "title": "Custom Status"
+      },
+      "closed": {
+        "title": "Closed"
       }
     },
     "infoDebt": {
@@ -835,6 +874,18 @@
           "sendDateTime": "Send date",
           "userFullName": "Operator",
           "subject": "Subject",
+          "templateName": "Template"
+        }
+      },
+      "letter": {
+        "title": "Letters",
+        "grid": {
+          "letterId": "ID",
+          "address": "Address",
+          "statusCode": "Status",
+          "createDateTime": "Created",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
           "templateName": "Template"
         }
       }
@@ -1273,6 +1324,7 @@
   "debtor": {
     "title": "Debtor",
     "id": "ID",
+    "actions": "Actions",
     "firstName": "Name",
     "lastName": "Family name",
     "middleName": "Middle name",
@@ -1281,6 +1333,7 @@
     "reward": "Remuneration",
     "shortInfo": "Short info",
     "stageCode": "Stage",
+    "successUpdate": "Successfully updated debtor with ID {{ id }}",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -2173,6 +2226,19 @@
           "code": "Code",
           "name": "Name"
         }
+      },
+      "letter": {
+        "title": "Letter generation",
+        "dialog": {
+          "templateId": "Template",
+          "formatCode": "Format",
+          "regLetter": "Register letter",
+          "addressTypes": "Address type",
+          "avoidDuplication": "Avoid duplication",
+          "ignoreWrongAddress": "Ignore wrong address",
+          "sortRule": "Sorting",
+          "reportId": "Register"
+      }
       }
     },
     "nextCallDateSet": {
@@ -2434,7 +2500,10 @@
         "status": "Status",
         "text": "Message text",
         "startDateTime": "Planned sending date",
-        "subject": "Subject"
+        "subject": "Subject",
+        "templateName": "Letter type",
+        "contactAddress": "Address",
+        "createDateTime": "Create date"
       },
       "grid": {
         "comment": "Comments",
@@ -2448,7 +2517,7 @@
         "debtId": "Debt id",
         "fullName": "Full name",
         "messageTemplate": "Template",
-        "msgStatusCode": "Status",
+        "msgStatusName": "Status",
         "personRole": "Role",
         "promiseDate": "Promise date",
         "resultName": "Result",
@@ -2742,7 +2811,8 @@
             "name": "Name",
             "comment": "Comment"
           }
-        }
+        },
+        "operationId": "Operation"
       },
       "dialog": {
         "title": "Event",
@@ -2757,6 +2827,16 @@
       },
       "errors": {
         "start": "Error has been occurred when tried to start schedule events with the ID {{ eventId }}"
+      }
+    },
+    "customOperation": {
+      "dialog": {
+        "input": {
+          "title": "Enter parameters"
+        },
+        "output": {
+          "title": "Operations result"
+        }
       }
     }
   },
@@ -2842,7 +2922,16 @@
         "gen": { "plural": "debtor general information" }
       }
     },
+    "debtor": {
+      "gen": { "singular": "debtor", "plural": "debtors" },
+      "info": {
+        "gen": { "plural": "debtor general information" }
+      }
+    },
     "debts": {
+      "gen": { "singular": "debt", "plural": "debts" }
+    },
+    "debt": {
       "gen": { "singular": "debt", "plural": "debts" }
     },
     "massOps": {
@@ -2977,6 +3066,12 @@
     },
     "letterTemplates": {
       "gen": { "singular": "letter template", "plural" : "letter templates" }
+    },
+    "operations": {
+      "gen": { "singular": "operation", "plural" : "operations" }
+    },
+    "persons": {
+      "gen": { "singular": "person", "plural" : "persons" }
     }
   },
   "massOperations": {
@@ -3236,6 +3331,7 @@
         "*": "Could not move {{ entity }}"
       },
       "massOp": "An error occurred while completing the {{ entity }} operation",
+      "customMassOp": "An error occurred while completing the operation",
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
@@ -3456,6 +3552,7 @@
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
+        "openUserById": "Open operator card",
         "openIncomingCall": "Open incoming call",
         "openUserDetail": "Open operator card",
         "paymentsCancel": "Payments cancel",
@@ -3481,7 +3578,9 @@
         "debtOutsourcingExclude": "Exclude from outsourcing",
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
-        "changePersonType": "Change person type"
+        "changePersonType": "Change person type",
+        "letterGenerate": "Letter generation",
+        "letterExport": "Letter export"
       }
     },
     "filter": {

@@ -56,7 +56,7 @@ export class GridsService {
           ? {
               field: column.prop,
               headerName: this.translateService.instant(column.label) || id,
-              hide: column.isGroup,
+              hide: column.isGroup || column.hide,
               minWidth: column.minWidth,
               maxWidth: column.maxWidth,
               valueGetter: column.valueGetter,

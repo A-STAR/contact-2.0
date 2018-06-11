@@ -1,27 +1,14 @@
 <div class="flex vertical">
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
   </div>
   <div class="flex-item grow mb-lg">
-    <!-- <app-metadata-form
-      #linkForm
-      [config]="linkFormConfig"
-      [data]="contactPerson$ | async"
-    ></app-metadata-form>
-    <app-metadata-form
-      #contactPersonForm
-      [config]="contactPersonFormConfig"
-      [data]="contactPerson$ | async"
-      [disabled]="isContactPersonFormDisabled$ | async"
-    ></app-metadata-form> -->
     <app-dynamic-layout
       [layout]="layoutConfig"
       [data]="formData$ | async"
       [templates]="templates"
     ></app-dynamic-layout>
-  </div>
-  <div class="flex-item">
-    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
   </div>
 </div>
 
@@ -35,7 +22,7 @@
 
 <ng-template #identification>
   <app-identity-grid
-    [personId]="contactId"
+    [personId]="personId"
     (add)="onIdentityAdd()"
     (dblClick)="onIdentityEdit($event)"
     (edit)="onIdentityEdit($event)"
@@ -44,7 +31,7 @@
 
 <ng-template #employment>
   <app-employment-grid
-    [personId]="contactId"
+    [personId]="personId"
     (add)="onEmploymentAdd()"
     (dblClick)="onEmploymentEdit($event)"
     (edit)="onEmploymentEdit($event)"
@@ -55,7 +42,7 @@
   <app-phone-grid
     [contactType]="phoneContactType"
     [debtId]="debtId"
-    [personId]="contactId"
+    [personId]="personId"
     [personRole]="contactPersonRole"
     (add)="onPhoneAdd()"
     (dblClick)="onPhoneRegister($event)"
@@ -64,10 +51,18 @@
   ></app-phone-grid>
 </ng-template>
 
+<ng-template #emails>
+  <app-email-grid
+    [entityId]="personId"
+    [personRole]="personRole"
+  ></app-email-grid>
+</ng-template>
+
 <ng-template #addresses>
   <app-address-grid
     [debtId]="debtId"
-    [personId]="contactId"
+    [debtorId]="debtorId"
+    [personId]="personId"
     [personRole]="contactPersonRole"
     (add)="onAddressAdd()"
     (dblClick)="onAddressRegister($event)"
@@ -77,9 +72,11 @@
 </ng-template>
 
 <ng-template #documents>
-  <!-- Documents for debt (term 19 in dictionary 55) -->
   <app-document-grid
-    [entityType]="19"
-    [entityId]="debtId"
+    [addForEntity]="[18]"
+    [debtId]="debtId"
+    [entityType]="entityType"
+    [entityId]="personId"
+    [personId]="personId"
   ></app-document-grid>
 </ng-template>

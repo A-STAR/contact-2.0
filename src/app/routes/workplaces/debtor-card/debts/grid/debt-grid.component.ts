@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { map } from 'rxjs/operators';
+import { map, distinctUntilChanged, first } from 'rxjs/operators';
 
-import { IDebt } from '@app/core/debt/debt.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -16,7 +15,8 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DateRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
 import { DialogFunctions } from '@app/core/dialog';
 
-import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
+import { Debt } from '@app/entities';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,27 +24,33 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
   selector: 'app-debt-grid',
   templateUrl: './debt-grid.component.html',
 })
-export class DebtGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  readonly debts$ = this.debtorCardService.debts$;
-  readonly selectedDebt$ = this.debtorCardService.selectedDebt$;
+export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnInit {
 
-  readonly selection$ = this.debtorCardService.selectedDebt$.pipe(
-    map(debt => debt ? [ debt ] : []),
-  );
+  debts: Debt[];
+
+  readonly selectedDebt$ = this.debtorService.debt$;
+
+  readonly debtId$ = this.debtorService.debtId$;
+
+  selection: Debt[] = [];
 
   readonly canAdd$ = this.userPermissionsService.bag()
-    .map(bag => (
-      bag.has('DEBT_ADD') &&
-      bag.notEmptyAllOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
-    ))
-    .distinctUntilChanged();
+    .pipe(
+      map(bag => (
+        bag.has('DEBT_ADD') &&
+        bag.notEmptyAllOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
+      )),
+      distinctUntilChanged()
+    );
 
   readonly canEdit$ = this.userPermissionsService.bag()
-    .map(bag => (
-      bag.hasOneOf([ 'DEBT_EDIT', 'DEBT_PORTFOLIO_EDIT', 'DEBT_COMPONENT_AMOUNT_EDIT' ]) ||
-      bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
-    ))
-    .distinctUntilChanged();
+    .pipe(
+      map(bag => (
+        bag.hasOneOf([ 'DEBT_EDIT', 'DEBT_PORTFOLIO_EDIT', 'DEBT_COMPONENT_AMOUNT_EDIT' ]) ||
+        bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
+      )),
+      distinctUntilChanged()
+    );
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -80,6 +86,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CLEAR,
+      label: 'widgets.debt.toolbar.terminate',
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
         {
@@ -114,7 +121,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     },
   ];
 
-  columns: ISimpleGridColumn<IDebt>[] = [
+  columns: ISimpleGridColumn<Debt>[] = [
     { prop: 'id' },
     { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
     { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
@@ -135,10 +142,11 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
   dialog: string;
 
-  private debtUpdateSub: Subscription;
+  private debtsSub: Subscription = new Subscription();
 
   constructor(
-    private debtorCardService: DebtorCardService,
+    private cdRef: ChangeDetectorRef,
+    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
@@ -147,25 +155,39 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   }
 
   ngOnInit(): void {
-    this.debtUpdateSub = this.debtorCardService
-      .getAction('DEBTOR_DEBT_UPDATED')
-      .subscribe(_ => this.fetch());
+    const selectionSub = this.debtorService.debt$
+      .pipe(first())
+      .subscribe(debt => {
+        this.selection = [ debt ];
+        this.cdRef.markForCheck();
+      });
+    const debtsSub = this.debtorService.debts$
+      .subscribe(debts => {
+        this.debts = debts;
+        this.cdRef.markForCheck();
+      });
+
+    this.debtsSub.add(selectionSub);
+    this.debtsSub.add(debtsSub);
   }
 
   ngOnDestroy(): void {
-    this.debtUpdateSub.unsubscribe();
+    this.debtsSub.unsubscribe();
   }
 
-  onDoubleClick(debt: IDebt): void {
-    this.debtorCardService.selectDebt(debt.id);
-    this.onEdit();
+  onDoubleClick(debt: Debt): void {
+    if (debt) {
+      this.debtId$.next(debt.id);
+      this.onEdit();
+    }
   }
 
-  onSelect(debts: IDebt[]): void {
-    const debtId = isEmpty(debts)
-      ? null
-      : debts[0].id;
-    this.debtorCardService.selectDebt(debtId);
+  onSelect(debts: Debt[]): void {
+    if (debts && debts.length) {
+      this.debtId$.next(debts[0].id);
+      this.routingService.navigate([
+        `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${debts[0].id}` ], this.route);
+    }
   }
 
   onDialogClose(): void {
@@ -185,11 +207,13 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   }
 
   private onEdit(): void {
-    this.routingService.navigate([ 'debt' ], this.route);
+    this.routingService.navigate([
+      `/app/workplaces/debtor/${this.debtorService.debtorId$.value}/debt/${this.debtId$.value}/edit/debt`
+    ], this.route);
   }
 
   private fetch(): void {
-    this.debtorCardService.refreshDebts();
+    this.debtorService.refreshDebts();
   }
 
   private onChangeStatus(): void {

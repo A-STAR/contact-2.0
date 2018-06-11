@@ -6,7 +6,7 @@
     <app-dynamic-form [controls]="controls" [data]="{}"></app-dynamic-form>
   </div>
   <div dialog-footer>
-    <button class="btn btn-success" (click)="onSubmit()">
+    <button class="btn btn-success" [disabled]="isSubmitDisabled" (click)="onSubmit()">
       <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate }}
     </button>
     <button class="btn btn-default" (click)="onClose()">

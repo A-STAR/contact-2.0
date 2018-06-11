@@ -2,18 +2,24 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as R from 'ramda';
 
-import { ILabeledValue } from '../../../core/converter/value-converter.interface';
+import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 import { IMetadataDefs, TRendererType } from './grid.interface';
-import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
-import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
-import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import {
+  IAGridColumn,
+  IAGridRequest,
+  IAGridRequestParams,
+  IAGridSorter,
+  IAGridRequestAddParam,
+} from '@app/shared/components/grid2/grid2.interface';
+import { IMetadataColumn } from '@app/core/metadata/metadata.interface';
+import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
-import { MetadataService } from '../../../core/metadata/metadata.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { MetadataService } from '@app/core/metadata/metadata.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
-import { TYPE_CODES } from '../../../core/utils/index';
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
+import { TYPE_CODES } from '@app/core/utils/index';
 
 @Injectable()
 export class GridService {
@@ -30,7 +36,7 @@ export class GridService {
    * @param {FilterObject} filters
    * @returns {IAGridRequest}
    */
-  buildRequest(params: IAGridRequestParams, filters?: FilterObject): IAGridRequest {
+  buildRequest(params: IAGridRequestParams, filters?: FilterObject, addParams?: IAGridRequestAddParam): IAGridRequest {
     const request: IAGridRequest = {};
     const { sorters, currentPage, pageSize } = params;
 
@@ -49,6 +55,10 @@ export class GridService {
         pageNumber: currentPage,
         resultsPerPage: pageSize
       };
+    }
+
+    if (addParams) {
+      request.additionalParameters = addParams;
     }
 
     return request;

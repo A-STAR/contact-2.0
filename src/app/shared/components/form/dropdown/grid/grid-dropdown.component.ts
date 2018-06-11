@@ -28,7 +28,16 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() label: string;
   @Input() required: boolean;
 
-  @Input() rows: Array<T>;
+  @Input() set rows(data: Array<T>) {
+    this._rows = data;
+    if (this._rows && this._selectionKey) {
+      this.setSelection(this.valueGetter, this._selectionKey);
+    }
+  }
+
+  get rows(): T[] {
+    return this._rows;
+  }
 
   @Input()
   set controlDisabled(value: boolean) {
@@ -39,7 +48,9 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
+  private _rows: T[];
   private _selection: T;
+  private _selectionKey: string;
   private _isDisabled = false;
 
   constructor(
@@ -73,11 +84,11 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
 
   writeValue(value: string): void {
     const { valueGetter } = this;
-    this._selection = (this.rows || []).find(row => {
-      const rowValue = typeof valueGetter === 'function' ? valueGetter(row) : row[valueGetter];
-      return rowValue === value;
-    });
-    this.cdRef.markForCheck();
+    if (!this.rows) {
+      this._selectionKey = value;
+    } else {
+      this.setSelection(valueGetter, value);
+    }
   }
 
   registerOnChange(fn: Function): void {
@@ -109,6 +120,15 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     }
     this.dropdown.close();
     this.onSelect.emit(row);
+  }
+
+  private setSelection(valueGetter: string | ((row: T) => string), value: string): void {
+    this._selection = (this.rows || []).find(row => {
+      const rowValue = typeof valueGetter === 'function' ? valueGetter(row) : row[valueGetter];
+      return rowValue === value;
+    });
+    this._selectionKey = null;
+    this.cdRef.markForCheck();
   }
 
   private propagateChange: Function = () => {};

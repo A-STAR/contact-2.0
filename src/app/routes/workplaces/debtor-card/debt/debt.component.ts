@@ -1,25 +1,25 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
   TemplateRef,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs/observable/of';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '@app/core/debt/debt.interface';
-
-import { DebtService } from '@app/core/debt/debt.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
+import { Debt } from '@app/entities';
 import { invert } from '@app/core/utils';
 
 @Component({
@@ -28,42 +28,39 @@ import { invert } from '@app/core/utils';
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
 })
-export class DebtComponent implements AfterViewInit, OnInit {
+export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
   @ViewChild('debtComponents', { read: TemplateRef }) debtComponents: TemplateRef<any>;
   @ViewChild('portfolioLog', { read: TemplateRef }) portfolioLog: TemplateRef<any>;
   @ViewChild('componentLog', { read: TemplateRef }) componentLog: TemplateRef<any>;
 
-  debt: IDebt;
+  data = new BehaviorSubject<{ default?: Debt }>({});
   templates: Record<string, TemplateRef<any>>;
 
   isDisabled$ = of(true);
+  readonly isEditMode = !this.router.url.includes('edit/debt/create');
 
-  readonly displayDebtData = this.debtorCardService.selectedDebt$.pipe(map(Boolean));
-
+  readonly debtId$ = this.debtorService.debtId$;
+  readonly displayDebtData = this.debtId$.pipe(map(Boolean));
   readonly canViewComponentLog$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
   readonly canViewPortfolioLog$ = this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
+  private debtSub: Subscription;
 
-  readonly debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
-  readonly debtId   = Number(this.route.snapshot.paramMap.get('debtId'));
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
-    private route: ActivatedRoute,
+    private debtorService: DebtorService,
+    private router: Router,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
+
     if (this.isEditMode) {
-      this.debtService
-        .fetch(null, this.debtId)
-        .subscribe(debt => {
-          this.debt = debt;
-          this.cdRef.markForCheck();
-        });
+      this.debtSub = this.debtorService.debt$
+        .subscribe(debt => this.data.next({ default: debt }));
+    } else {
+      this.data.next({});
     }
 
     this.templates = {
@@ -81,31 +78,36 @@ export class DebtComponent implements AfterViewInit, OnInit {
 
   onSubmit(): void {
     if (this.isEditMode) {
-      this.debtService
-        .update(this.debtorId, this.debtId, this.layout.getData())
+      this.debtorService
+        .updateDebt(this.layout.getData())
         .subscribe(() => {
-          this.debtorCardService.refreshDebts();
+          this.debtorService.refreshDebts();
           this.onBack();
         });
     } else {
-      this.debtService
-        .create(this.debtorId, this.layout.getData())
+      this.debtorService
+        .createDebt(this.layout.getData())
         .subscribe(() => {
-          this.debtorCardService.refreshDebts();
+          this.debtorService.refreshDebts();
           this.onBack();
         });
     }
   }
 
   onBack(): void {
-    const debtId = this.route.snapshot.paramMap.get('debtId');
-    const debtorId = this.route.snapshot.paramMap.get('debtorId');
+    const debtId = this.debtorService.debtId$.value;
+    const debtorId = this.debtorService.debtorId$.value;
     if (debtId && debtorId) {
-      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.routingService.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 
-  private get isEditMode(): boolean {
-    return this.route.snapshot.url.join('/').indexOf('create') === -1;
+  ngOnDestroy(): void {
+    if (this.debtSub) {
+      this.debtSub.unsubscribe();
+    }
   }
+
+  readonly layoutConfig = this.isEditMode ? 'debt' : 'debt-create';
+
 }

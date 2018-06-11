@@ -41,6 +41,7 @@ import {
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from './toolbar/toolbar.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -92,12 +93,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() rowCount = 0;
   @Input() rowHeight = 32;
   @Input() rowIdKey = 'id';
-  @Input() rowSelection = 'multiple';
+  @Input() rowSelection;
   @Input() rows: any[] = [];
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
   @Input() translateColumnLabels = false;
+  @Input() toolbar: IToolbarItem[];
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -827,7 +829,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
-      rowSelection: this.rowSelection,
+      // Ideally, when this.rowSelection is falsy we should add `suppressRowClickSelection: true` but now it would break the grid
+      // See https://www.ag-grid.com/javascript-grid-selection
+      rowSelection: this.rowSelection ? this.rowSelection : 'multiple',
       showToolPanel: false,
       suppressMenuHide: false,
       suppressPaginationPanel: true,

@@ -1,0 +1,62 @@
+<app-mass-operation
+  *ngIf="actionData"
+  [type]="actionData.id"
+  [actionData]="actionData"
+  (close)="onCloseAction()"
+></app-mass-operation>
+
+<app-dynamic-layout
+  *ngIf="templates"
+  [layout]="layout"
+  [templates]="templates"
+></app-dynamic-layout>
+
+<ng-template #campaigns>
+  <app-action-grid
+    metadataKey="pbxCampaigns"
+    persistenceKey="pbxCampaigns"
+    [fullHeight]="true"
+    [rows]="rows"
+    [rowCount]="rowCount"
+    (request)="onRequest()"
+    (selectRow)="onSelectRow($event)"
+  ></app-action-grid>
+</ng-template>
+
+<ng-template #statistics>
+  <app-genesys-statistics
+    [statistics]="statisticsRows"
+  ></app-genesys-statistics>
+</ng-template>
+
+<ng-template #start>
+  <app-button
+    *ngIf="canStart$ | async"
+    type="start"
+    (click)="onStart()"
+  ></app-button>
+</ng-template>
+
+<ng-template #stop>
+  <app-button
+    *ngIf="canStop$ | async"
+    type="stop"
+    (click)="onStop()"
+  ></app-button>
+</ng-template>
+
+<ng-template #load>
+  <app-button
+    *ngIf="canLoad$ | async"
+    type="load"
+    (click)="onLoad()"
+  ></app-button>
+</ng-template>
+
+<ng-template #unload>
+  <app-button
+    *ngIf="canUnload$ | async"
+    type="unload"
+    (click)="onUnload()"
+  ></app-button>
+</ng-template>

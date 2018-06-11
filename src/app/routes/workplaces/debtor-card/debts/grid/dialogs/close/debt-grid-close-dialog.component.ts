@@ -9,20 +9,19 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators/first';
-import { switchMap } from 'rxjs/operators/switchMap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '@app/core/debt/debt.interface';
+import { Debt } from '@app/entities';
 import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '@app/core/debt/debt.service';
+import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,14 +35,14 @@ import { toOption } from '@app/core/utils';
 export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() debt: IDebt;
+  @Input() debt: Debt;
   @Input() statusCode: number;
 
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
 
   controls: Array<IDynamicFormControl> = [
-    { controlName: 'reasonCode', type: 'select', options: [] },
+    { controlName: 'reasonCode', type: 'select', options: [], required: true },
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.closeDebt.${control.controlName}` }) as IDynamicFormControl);
 
@@ -51,11 +50,15 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
-    private debtorCardService: DebtorCardService,
+    private debtorService: DebtorService,
+    private workplacesService: WorkplacesService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {}
+
+  get isSubmitDisabled(): boolean {
+    return !this.form.canSubmit;
+  }
 
   ngAfterViewInit(): void {
     this.formDataSubscription = combineLatest(
@@ -70,7 +73,9 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
         .filter(term => term.parentCode === this.statusCode)
         .map(toOption('code', 'name'));
 
+      // This is why we have dynamic layout, this is ugly
       reasonCodeControl.required = this.isReasonCodeRequired(reasonCodeRequired, this.statusCode);
+      this.form.form.get('reasonCode').setValidators(reasonCodeControl.required ? Validators.required : null);
 
       this.cdRef.markForCheck();
     });
@@ -85,15 +90,14 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
       ...this.form.serializedUpdates,
       statusCode: this.statusCode
     };
-    this.debtorCardService.personId$
-      .pipe(
-        switchMap(personId => this.debtService.changeStatus(personId, this.debt.id, data, false)),
-        first()
-      )
+    const debtorId = this.debtorService.debtorId$.value;
+    if (debtorId) {
+      this.workplacesService.changeStatus(debtorId, this.debt.id, data, false)
       .subscribe(() => {
         this.submit.emit();
         this.onClose();
       });
+    }
   }
 
   onClose(): void {

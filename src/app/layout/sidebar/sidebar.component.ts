@@ -51,9 +51,7 @@ export class SidebarComponent implements OnInit {
 
   onSidebarToggle(): void {
     this.settingsService.toggleLayoutSetting('isCollapsed');
-    if (this.isCollapsed) {
-      this.showTitle = false;
-    }
+    this.showTitle = !this.showTitle;
     this.cdRef.markForCheck();
   }
 

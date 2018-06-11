@@ -6,11 +6,11 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtService } from '@app/core/debt/debt.service';
 import { IncomingCallService } from '../../incoming-call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -46,20 +46,17 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
     private incomingCallService: IncomingCallService,
+    private route: ActivatedRoute,
   ) {}
 
   ngAfterViewInit(): void {
-    this.openIncomingCallDataSub =
-      this.debtService.incomingCallSearchParams
-        .subscribe(data => {
-          if (data && data.debtId) {
-            this.patchControl('debtId', data.debtId);
-            this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
-            this.onSearchClick();
-          }
-        });
+    const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
+    if (debtId) {
+      this.patchControl('debtId', debtId);
+      this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
+      this.onSearchClick();
+    }
   }
 
   ngOnDestroy(): void {

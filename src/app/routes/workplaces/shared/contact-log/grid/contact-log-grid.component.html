@@ -1,9 +1,14 @@
-<app-simple-grid
+<app-action-grid
+  #grid
   persistenceKey="[grid] workplaces/shared/contact-log"
-  [columns]="columns"
+  metadataKey="contactSearchFull"
+  [toolbarItems]="hideToolbar ? null : toolbarItems"
+  [fullHeight]="true"
   [rows]="contactLogList"
-  [selection]="selected"
-  [toolbar]="hideToolbar ? null : toolbarItems"
-  (selectRow)="onSelect($event)"
+  [rowCount]="rowCount"
+  [actionData]="{ callCenter: callCenter }"
+  (selectRow)="onSelect()"
   (dblClick)="onEdit($event)"
-></app-simple-grid>
+  (request)="onRequest()"
+></app-action-grid>
+

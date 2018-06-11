@@ -1,9 +1,11 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
+import { ICustomOperation, ICustomOperationParams } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import {
   IDynamicFormItem, IDynamicFormConfig, IDynamicFormSelectControl, IDynamicFormControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -11,9 +13,9 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
-import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { CustomOperationParamsComponent } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { addGridLabel } from '@app/core/utils';
@@ -26,6 +28,7 @@ import { addGridLabel } from '@app/core/utils';
 export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('addParams') addParamsForm:  DynamicFormComponent;
+  @ViewChild('dynamicParams') addDynamicParamsForm: CustomOperationParamsComponent;
 
   @Input() groupId: number;
   @Input() eventId: number;
@@ -38,6 +41,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   addParamsControls: Array<Partial<IDynamicFormItem>[]> = [];
   addParamsData: any;
+  addDynamicParams: ICustomOperationParams[];
 
   selectedType: Partial<IScheduleType>;
 
@@ -46,6 +50,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private selectedPersonRoles$ = new BehaviorSubject<number>(null);
   private selectedPersonRolesSub: Subscription;
+
+  private selectedOperation$ = new BehaviorSubject<number>(null);
+  private selectedOperationSub: Subscription;
 
   private formControlsFactory = {
     eventTypeCode: {
@@ -109,6 +116,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     modeCode: { controlName: 'modeCode', type: 'select', required: true },
     delay: { controlName: 'delay', type: 'number', min: 0, required: true },
     stage: { controlName: 'stage', type: 'select', required: true },
+    operationId: {
+      controlName: 'operationId',
+      type: 'select',
+      required: true,
+      onChange: () => this.onOperationSelect()
+    },
   };
 
   constructor(
@@ -131,10 +144,11 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       ),
       this.scheduleEventService.constants$,
       this.scheduleEventService.fetchGroups(),
-      this.scheduleEventService.fetchUsers()
+      this.scheduleEventService.fetchUsers(),
+      this.scheduleEventService.fetchCustomOperations()
     )
     .pipe(first())
-    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users]) => {
+    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users, operations]) => {
       const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
       const groupsByEntityType = this.scheduleEventService.getGroupsByEntityType(groups);
 
@@ -192,6 +206,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           canEdit,
           groupsByEntityType[22],
           UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING
+        ),
+        this.createOperationTypeControls(
+          canEdit,
+          operations
         )
       ];
 
@@ -222,6 +240,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           this.cdRef.markForCheck();
         });
 
+      this.selectedOperationSub = this.selectedOperation$
+        .filter(Boolean)
+        .do(() => this.addDynamicParams = null)
+        .flatMap(operationId => this.scheduleEventService.fetchOperationParams(operationId))
+        .subscribe(params => {
+          this.addDynamicParams = params;
+          this.cdRef.markForCheck();
+        });
+
       this.cdRef.markForCheck();
     });
   }
@@ -229,6 +256,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.selectedEventTypeCodeSub.unsubscribe();
     this.selectedPersonRolesSub.unsubscribe();
+    this.selectedOperationSub.unsubscribe();
   }
 
   get selectedEventTypeCode(): number {
@@ -251,12 +279,17 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   get canSubmit(): boolean {
     return this.selectedEventTypeCode === this.currentAddParamsForm
       && this.eventTypeForms.find(form => form && form.canSubmit)
-      && this.eventTypeForms.map(dform => dform && dform.form).every(form => !form || form.valid);
+      && this.eventTypeForms.map(dform => dform && dform.form).every(form => !form || form.valid)
+      && (!this.addDynamicParamsForm || this.addDynamicParamsForm.canSubmit);
   }
 
   get serializedUpdates(): IScheduleType {
-    const formData = this.addParamsForm && this.addParamsForm.serializedValue;
-    return this.serializeScheduleType(formData || {});
+    const formData = this.addParamsForm ? this.addParamsForm.serializedValue : {};
+    const dynamicData = this.addDynamicParamsForm ? this.addDynamicParamsForm.layout.getData() : {};
+    return this.serializeScheduleType({
+      ...formData,
+      ...dynamicData
+    });
   }
 
   onEventTypeSelect(): void {
@@ -273,6 +306,11 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   onPersonRoleSelect(): void {
     const personRoleControl = this.addParamsForm.getControl('personRoles');
     this.selectedPersonRoles$.next(personRoleControl.value);
+  }
+
+  onOperationSelect(): void {
+    const operationControl = this.addParamsForm.getControl('operationId');
+    this.selectedOperation$.next(operationControl.value);
   }
 
   private createFormControls(controls: any): Partial<IDynamicFormControl>[] {
@@ -374,6 +412,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         markAsDirty: !this.eventId
       },
       checkGroup: { disabled: !canEdit }
+    });
+  }
+
+  private createOperationTypeControls(canEdit: boolean, operations: ICustomOperation[]): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
+      operationId: {
+        disabled: !canEdit,
+        options: operations.map(o => ({ label: o.name, value: o.id }))
+      }
     });
   }
 

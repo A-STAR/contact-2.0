@@ -128,7 +128,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
       this.data = {
         ...data,
         autoCommentIds: data && data.autoCommentIds
-          ? data.autoCommentIds.split(',')
+          ? data.autoCommentIds.split(',').map(Number)
           : null,
         nextCallDays: data && data.nextCallFormula
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
@@ -171,7 +171,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
 
     const data = {
       ...formData,
-      ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
+      ...(autoCommentIds ? { autoCommentIds: autoCommentIds.length ? autoCommentIds.join(',') : null } : {}),
       ...(template ? { [template.name]: template.value || null } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value || null } : {}),
       ...(isEmpty(attributes) ? {} : { attributes }),

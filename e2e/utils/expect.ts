@@ -8,12 +8,16 @@ export const expectToMatchUrl = async (url: string) => {
   return expect(await getUrl() === '/' + url);
 };
 
-export const expectToMatchScreenshot = async (threshold = 0.1) => {
+export const expectToMatchScreenshot = async () => {
   await pause();
   const page: Page = global['__PAGE__'];
+  await page.waitForFunction(() => document.querySelectorAll('app-spinner').length === 0);
   const screenshot = await page.screenshot();
   expect(screenshot)['toMatchImageSnapshot']({
-    failureThreshold: `${threshold}`,
-    failureThresholdType: 'percent'
+    customDiffConfig: {
+      threshold: 0.01,
+    },
+    failureThreshold: 0,
+    failureThresholdType: 'percent',
   });
 };

@@ -1,5 +1,6 @@
 <app-grid2
   *ngIf="columns$ | async"
+  [actions]="actions"
   [columns]="columns$ | async"
   [fullHeight]="true"
   [persistenceKey]="'info-debt-detail-grid'"
@@ -11,4 +12,5 @@
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
+  (action)="onAction($event)"
 ></app-grid2>

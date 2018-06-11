@@ -6,7 +6,7 @@ import { getIn } from 'immutable';
 import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IEntityDef, IRepositoryFetchAction, RepositoryActionType } from './repository.interface';
+import { IEntityDef, IRepositoryFetchAction, RepositoryActionType, RepositoryStatus } from './repository.interface';
 
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
@@ -32,17 +32,24 @@ export class RepositoryService {
         const entity = getIn(state, [ 'repository', entityName ], {});
         const status = getIn(entity, [ 'index', serializedParams, 'status' ], null);
         const data = getIn(entity, [ 'data' ], {});
-        if (status === null) {
-          this.dispatchFetchAction(entityName, params);
-          return null;
-        } else {
+        if (status === RepositoryStatus.SUCCESS) {
           const primaryKeys = getIn(entity, [ 'index', serializedParams, 'primaryKeys' ], []);
           return primaryKeys.map(primaryKey => this.buildEntity(entityClass, data[primaryKey]));
         }
+        if (status === null) {
+          this.dispatchFetchAction(entityName, params, serializedParams);
+        }
+        return null;
       }),
       filter(Boolean),
       distinctUntilChanged(),
     );
+  }
+
+  refresh<T>(entityClass: Type<T>, params: Record<string, any>): void {
+    const entityName = entityClass.name;
+    const serializedParams = serializeParams(params);
+    this.dispatchFetchAction(entityName, params, serializedParams);
   }
 
   private buildEntity<T>(entityClass: Type<T>, data: any): T {
@@ -65,10 +72,10 @@ export class RepositoryService {
     return entity;
   }
 
-  private dispatchFetchAction(entityName: string, params: Record<string, any>): void {
+  private dispatchFetchAction(entityName: string, params: Record<string, any>, serializedParams: string): void {
     const action: IRepositoryFetchAction = {
       type: RepositoryActionType.FETCH,
-      payload: { entityName, params },
+      payload: { entityName, params, serializedParams },
     };
     this.store.dispatch(action);
   }

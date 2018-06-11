@@ -13,7 +13,10 @@ const routes: Routes = [
   {
     path: '',
     component: ContactPersonCardComponent,
-  }
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

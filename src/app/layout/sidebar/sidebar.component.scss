@@ -1,11 +1,13 @@
 @import "../../shared/styles/app/variables";
 
 $menu-item-border-width: 3px;
+$layout-sidebar-width: 240px;
+$layout-sidebar-width-collapsed: initial;
 
 nav {
   background-color: $brand-primary-light;
   border-right: 1px solid #ddd;
-  width: $layout-sidebar-width;
+  width: $layout-sidebar-width !important;
   transition: width 0.2s;
 
   ul {
@@ -27,12 +29,9 @@ nav {
       }
 
       .menu-item {
-        display: flex;
-        align-items: center;
         overflow: hidden;
 
         .icon-container {
-          display: flex;
           height: 38px;
           margin-right: 10px;
 
@@ -55,7 +54,7 @@ nav {
   }
 
   &.collapsed {
-    width: $layout-sidebar-width-collapsed;
+    width: $layout-sidebar-width-collapsed !important;
 
     ul > li {
       padding-right: 0;
@@ -76,6 +75,7 @@ nav {
     .toggle-title {
       display: none;
       overflow-x: hidden;
+
       &.showTitle {
         display: inline;
         animation: showTitle 0.1s;

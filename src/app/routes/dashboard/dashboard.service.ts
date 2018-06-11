@@ -27,7 +27,7 @@ export class DashboardService {
   private baseUrl = '/dashboard';
 
   private static readonly PRIMARY_COLOR = '#4a445f';
-  private static readonly PRIMARY_COLOR_LIGHT = '#4a445fa1';
+  private static readonly PRIMARY_COLOR_LIGHT = '#8c879a';
   private static readonly GREEN_COLOR = '#80da00';
 
   promiseCountStatusOptions: ChartOptions = {
@@ -35,7 +35,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -44,7 +44,7 @@ export class DashboardService {
     legend: {
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -53,7 +53,7 @@ export class DashboardService {
     legend: {
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -63,7 +63,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -73,7 +73,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };
@@ -83,7 +83,7 @@ export class DashboardService {
       position: 'bottom',
       labels: {
         fontSize: 11,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'Roboto',
       }
     }
   };

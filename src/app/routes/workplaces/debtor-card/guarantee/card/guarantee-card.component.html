@@ -1,7 +1,7 @@
 <div class="flex vertical">
   <div class="flex-item">
     <app-button type="back" (click)="onBack()"></app-button>
-    <h1>{{ 'routes.workplaces.debtorCard.guarantee.card.titles.addGuarantor' | translate }}</h1>
+    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
   </div>
   <div class="flex-item grow mb-lg">
     <app-dynamic-layout
@@ -10,14 +10,11 @@
       [templates]="templates"
     ></app-dynamic-layout>
   </div>
-  <div class="flex-item">
-    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
-  </div>
 </div>
 
 <ng-template #identification>
   <app-identity-grid
-    [personId]="contactId"
+    [personId]="guarantorId"
     (add)="onIdentityAdd()"
     (dblClick)="onIdentityEdit($event)"
     (edit)="onIdentityEdit($event)"
@@ -26,7 +23,7 @@
 
 <ng-template #employment>
   <app-employment-grid
-    [personId]="contactId"
+    [personId]="guarantorId"
     (add)="onEmploymentAdd()"
     (dblClick)="onEmploymentEdit($event)"
     (edit)="onEmploymentEdit($event)"
@@ -37,8 +34,8 @@
   <app-phone-grid
     [contactType]="1"
     [debtId]="debtId"
-    [personId]="contactId"
-    [personRole]="contactPersonRole"
+    [personId]="guarantorId"
+    [personRole]="guarantorRole"
     (add)="onPhoneAdd()"
     (dblClick)="onPhoneRegister($event)"
     (edit)="onPhoneEdit($event)"
@@ -49,8 +46,9 @@
 <ng-template #addresses>
   <app-address-grid
     [debtId]="debtId"
-    [personId]="contactId"
-    [personRole]="contactPersonRole"
+    [debtorId]="debtorId"
+    [personId]="guarantorId"
+    [personRole]="guarantorRole"
     (add)="onAddressAdd()"
     (dblClick)="onAddressRegister($event)"
     (edit)="onAddressEdit($event)"
@@ -58,11 +56,21 @@
   ></app-address-grid>
 </ng-template>
 
+<ng-template #emails>
+  <app-email-grid
+    [entityId]="guarantorId"
+    [personRole]="guarantorRole"
+  ></app-email-grid>
+</ng-template>
+
 <ng-template #documents>
-  <!-- Documents for debt (term 19 in dictionary 55) -->
   <app-document-grid
-    [entityType]="19"
-    [entityId]="debtId"
+    [addForEntity]="[18, 32]"
+    [contractId]="contractId"
+    [debtId]="debtId"
+    [entityType]="entityType"
+    [entityId]="guarantorId"
+    [personId]="guarantorId"
   ></app-document-grid>
 </ng-template>
 
@@ -75,7 +83,7 @@
 </ng-template>
 
 <ng-template #contractClearButton>
-  <app-button *ngIf="!(edit$ | async)" type="clear" (click)="onContactFormClear()"></app-button>
+  <app-button *ngIf="!(edit$ | async)" type="clear" (click)="onContractFormClear()"></app-button>
 </ng-template>
 
 <ng-template #personClearButton>

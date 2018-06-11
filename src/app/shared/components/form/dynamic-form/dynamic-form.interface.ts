@@ -167,6 +167,8 @@ export interface IDynamicFormRangeControl extends IDynamicFormBaseControl {
   min?: number;
   max?: number;
   debounce?: number;
+  showInput?: boolean;
+  logarithmic?: boolean;
 }
 
 export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {
