@@ -12,16 +12,17 @@ import {
   ChangeDetectorRef,
   OnInit,
   OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { tap, filter, switchMap, first, delay } from 'rxjs/operators';
 
 import { ILayoutDimension } from '@app/layout/layout.interface';
 import { LayoutService } from '@app/layout/layout.service';
 
 import { TabViewTabComponent } from '../tab/tab.component';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,25 +32,18 @@ import { TabViewTabComponent } from '../tab/tab.component';
   templateUrl: 'tabview.component.html',
 })
 
-export class TabViewComponent implements OnInit, OnDestroy {
+export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit {
   private static MENU_BTN_SPACE = 50;
 
-  private tabHeaders$ = new BehaviorSubject<QueryList<ElementRef>>(null);
-  private tabs$ = new BehaviorSubject<QueryList<TabViewTabComponent>>(null);
-
-  @ViewChildren('tabHeader') set tabHeaderElements(tabHeaders: QueryList<ElementRef>) {
-    this.tabHeaders$.next(tabHeaders);
-  }
-
-  @ContentChildren(TabViewTabComponent) set tabViews(tabs: QueryList<TabViewTabComponent>) {
-    this.tabs$.next(tabs);
-  }
+  @ViewChildren('tabHeader') tabHeaders: QueryList<ElementRef>;
+  @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
 
   @Input() fullHeight = false;
   @Input() noMargin = false;
 
   @Output() selectTab = new EventEmitter<number>();
 
+  private defaultTabHeaderDimensions: Partial<ILayoutDimension>[] = [];
   private tabHeaderDimensions: Partial<ILayoutDimension>[] = [];
 
   private layoutSubscription: Subscription;
@@ -72,24 +66,21 @@ export class TabViewComponent implements OnInit, OnDestroy {
     this.routerSubscription = this.router.events
       .filter(event => event instanceof NavigationEnd)
       .subscribe(() => this.cdRef.markForCheck());
+  }
 
-    this.tabsSubscriptions = this.tabs$
+  ngAfterViewInit(): void {
+    this.defaultTabHeaderDimensions = this.tabHeaders.map(header => ({
+      left: header.nativeElement.offsetLeft,
+      width: header.nativeElement.clientWidth
+    }));
+
+    this.tabsSubscriptions = combineLatest(this.tabs.map(tab => tab.visible$))
       .pipe(
-        tap(() => {
-          this.tabHeaderDimensions = [];
-          this.cdRef.markForCheck();
-        }),
-        switchMap(() =>
-          this.tabHeaders$
-            .pipe(
-              filter(tabHeaders => tabHeaders && !!tabHeaders.length),
-              first(),
-            )
-        ),
-        delay(0)
+        // filter(visibility => !visibility.includes(null)),
+        distinctUntilChanged()
       )
-      .subscribe(() => {
-        this.setDimensions();
+      .subscribe(visibility => {
+        this.setDimensions(visibility);
         this.setInitialTab();
         this.cdRef.markForCheck();
       });
@@ -102,19 +93,17 @@ export class TabViewComponent implements OnInit, OnDestroy {
   }
 
   get visibleTabs(): TabViewTabComponent[] {
-    return this.tabs.filter((_, index) => this.isHeaderTabVisible(index));
+    return this.tabs
+      .filter((_, index) => this.isHeaderTabVisible(index))
+      .filter(tab => tab.visible !== false);
   }
 
   get hiddenTabs(): TabViewTabComponent[] {
-    return this.tabs.filter((_, index) => !this.isHeaderTabVisible(index));
-  }
-
-  get tabHeaders(): QueryList<ElementRef> {
-    return this.tabHeaders$.value;
-  }
-
-  get tabs(): QueryList<TabViewTabComponent> {
-    return this.tabs$.value;
+    // const tabs = this.tabs
+    //   .filter((_, index) => !this.isHeaderTabVisible(index));
+    return this.tabs
+      .filter((_, index) => !this.isHeaderTabVisible(index))
+      .filter(tab => tab.visible !== false);
   }
 
   isHeaderTabVisible(tabIndex: number): boolean {
@@ -136,7 +125,7 @@ export class TabViewComponent implements OnInit, OnDestroy {
     const activeIndex = this.tabs.toArray().findIndex(el => el.active);
 
     // deactivate all tabs
-    this.tabs.toArray().forEach(el => el.active = false);
+    this.tabs.forEach(el => el.active = false);
 
     // activate the tab the user has clicked on only if the selection is different
     tab.active = true;
@@ -192,11 +181,16 @@ export class TabViewComponent implements OnInit, OnDestroy {
     return this.tabs.toArray().findIndex(el => el === tab);
   }
 
-  private setDimensions(): void {
-    this.tabHeaderDimensions = this.tabHeaders.map(tabHeader => ({
-      left: tabHeader.nativeElement.offsetLeft,
-      width: tabHeader.nativeElement.clientWidth,
-    }));
+  private setDimensions(visibility: boolean[]): void {
+    let left = 0;
+    this.tabHeaderDimensions = this.defaultTabHeaderDimensions.map((dim, i) => {
+      const tabDimension = {
+        left,
+        width: visibility[i] ? dim.width : 0,
+      };
+      left += tabDimension.width;
+      return tabDimension;
+    });
   }
 
   private setInitialTab(): void {
