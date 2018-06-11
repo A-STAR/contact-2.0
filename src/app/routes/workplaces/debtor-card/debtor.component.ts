@@ -56,6 +56,14 @@ export class DebtorComponent implements OnInit, OnDestroy {
     this.subscription.add(routeNavigateSubscription);
   }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  get debtors(): Array<[number, number]> {
+    return Array.from(this.debtorService.debtors as Map<number, number>);
+  }
+
   onNavigationEnd(event: NavigationEnd): void {
     const urlSegment = event.url.split('/').slice(3, 7);
 
@@ -71,14 +79,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
       const debtId = Number(urlSegment[debtIdx + 1]);
       this.onDebtIdChange(debtId);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  get debtors(): Array<[number, number]> {
-    return Array.from(this.debtorService.debtors as Map<number, number>);
   }
 
   private onDebtorIdChange(debtorId: number): void {
