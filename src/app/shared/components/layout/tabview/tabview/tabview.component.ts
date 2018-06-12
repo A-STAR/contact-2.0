@@ -22,7 +22,7 @@ import { LayoutService } from '@app/layout/layout.service';
 
 import { TabViewTabComponent } from '../tab/tab.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, delay } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,8 +76,8 @@ export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.tabsSubscriptions = combineLatest(this.tabs.map(tab => tab.visible$))
       .pipe(
-        // filter(visibility => !visibility.includes(null)),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        delay(0)
       )
       .subscribe(visibility => {
         this.setDimensions(visibility);
@@ -93,17 +93,19 @@ export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get visibleTabs(): TabViewTabComponent[] {
-    return this.tabs
-      .filter((_, index) => this.isHeaderTabVisible(index))
-      .filter(tab => tab.visible !== false);
+    return this.tabHeaderDimensions.length && this.tabHeaderWidth > 0
+      ? this.tabs
+        .filter((_, index) => this.isHeaderTabVisible(index))
+        .filter(tab => tab.visible !== false)
+      : this.tabs.toArray();
   }
 
   get hiddenTabs(): TabViewTabComponent[] {
-    // const tabs = this.tabs
-    //   .filter((_, index) => !this.isHeaderTabVisible(index));
-    return this.tabs
-      .filter((_, index) => !this.isHeaderTabVisible(index))
-      .filter(tab => tab.visible !== false);
+    return this.tabHeaderDimensions.length && this.tabHeaderWidth > 0
+      ? this.tabs
+        .filter((_, index) => !this.isHeaderTabVisible(index))
+        .filter(tab => tab.visible !== false)
+      : [];
   }
 
   isHeaderTabVisible(tabIndex: number): boolean {
@@ -113,7 +115,7 @@ export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit {
     const feetsInView = activeIndex > tabIndex
       ? tabHeader.left + tabHeader.width < this.tabHeaderWidth - activeTabHeader.width
       : tabHeader.left + tabHeader.width < this.tabHeaderWidth;
-    return !tabHeader.width || activeIndex === tabIndex || feetsInView;
+    return activeIndex === tabIndex || feetsInView;
   }
 
   onSelectTab(event: MouseEvent, tab: TabViewTabComponent): void {
@@ -194,11 +196,12 @@ export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setInitialTab(): void {
-    const activeTabs = this.tabs.filter(tab => tab.active);
+    const tabs = this.tabs.filter(tab => !tab.disabled && tab.visible);
+    const activeTabs = tabs.filter(tab => tab.active);
 
     // if no active tab is set, activate the first
-    if (!activeTabs.length && this.tabs.length) {
-      this.onSelectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
+    if (!activeTabs.length && tabs.length) {
+      this.onSelectTab(null, tabs[0]);
     }
   }
 }
