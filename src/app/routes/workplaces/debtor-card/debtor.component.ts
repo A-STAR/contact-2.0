@@ -75,7 +75,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       .pipe(
         map((response: Person[]) => {
           const person: Partial<Person> = response[0];
-          return `${person.lastName} ${person.firstName}`;
+          return `${person.lastName} ${person.firstName} ${person.middleName}`;
         }),
       );
   }
