@@ -1,15 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators/first';
-import { map } from 'rxjs/operators/map';
 import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
-import { EmailService } from '../email.service';
+import { EmailService } from '@app/routes/workplaces/core/email/email.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -29,39 +28,34 @@ export class DebtorEmailCardComponent implements OnInit {
   controls: Array<IDynamicFormItem> = null;
   email: any;
 
-  private emailId: number;
-  private entityId: number;
-  private entityType = 18;
+  private routeData = this.route.snapshot.data;
+  private parentUrl = this.routeData.parentUrl;
+  private entityKey = this.routeData.entityKey;
+
+  private params = this.route.snapshot.paramMap;
+  private emailId = Number(this.params.get('emailId'));
+  private personId = Number(this.params.get(this.entityKey));
+
+  private entityType = EntityType.PERSON;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorService: DebtorService,
     private emailService: EmailService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
     combineLatest(
-      this.emailId$,
-      this.entityId$
-    )
-    .flatMap(([ emailId, entityId ]) =>
-      combineLatest(
-        of(emailId),
-        of(entityId),
-        this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
-        emailId ? this.userPermissionsService.has('EMAIL_EDIT') : of(true),
-        emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : of(true),
-        emailId ? this.emailService.fetch(this.entityType, entityId, emailId) : of(null)
-      )
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
+      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : of(true),
+      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : of(true),
+      this.emailId ? this.emailService.fetch(this.entityType, this.personId, this.emailId) : of(null)
     )
     .pipe(first())
-    .subscribe(([ emailId, entityId, options, canEdit, canEditComment, email ]) => {
-      this.emailId = emailId;
-      this.entityId = entityId;
+    .subscribe(([ options, canEdit, canEditComment, email ]) => {
       this.controls = [
         { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
         { label: labelKey('email'), controlName: 'email', type: 'text', required: true, disabled: !canEdit },
@@ -72,17 +66,10 @@ export class DebtorEmailCardComponent implements OnInit {
     });
   }
 
-  readonly emailId$: Observable<number> = this.route.params.pipe( map(params => params.emailId) );
-
-  readonly entityId$: Observable<number> = combineLatest(this.debtorService.debtorId$, this.route.params)
-    .pipe(
-      map(([ personId, params ]) => params.contactId || personId)
-    );
-
   onSubmit(): void {
     const action = this.emailId
-      ? this.emailService.update(this.entityType, this.entityId, this.emailId, this.form.serializedUpdates)
-      : this.emailService.create(this.entityType, this.entityId, this.form.serializedUpdates);
+      ? this.emailService.update(this.entityType, this.personId, this.emailId, this.form.serializedUpdates)
+      : this.emailService.create(this.entityType, this.personId, this.form.serializedUpdates);
 
     action.subscribe(() => {
       this.emailService.dispatchSaveAction();
@@ -91,9 +78,13 @@ export class DebtorEmailCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const url = this.router.url.split('/').filter(Boolean).slice(0, -2).join('/');
-    this.router.navigate([ url ]);
+    if (this.parentUrl) {
+      this.routingService.navigateToUrl(this.parentUrl);
+    } else {
+      this.routingService.navigateToParent(this.route);
+    }
   }
+
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;

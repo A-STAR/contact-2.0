@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IGridDef, IWorkTaskEntry } from './work-task.interface';
 
@@ -9,7 +7,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 
 import { makeKey } from '../../../core/utils';
-import { first } from 'rxjs/operators';
 
 const label = makeKey('modules.workTask');
 
@@ -83,18 +80,9 @@ export class WorkTaskComponent {
     private userPermissionsService: UserPermissionsService
   ) { }
 
-  get availableGrids$(): Observable<IGridDef[]> {
-    return combineLatest(this.grids.map(g => g.permission))
-      .map(permissions => permissions.map((p, i) => p && this.grids[i]).filter(Boolean));
-  }
-
   onTabSelect(tabIndex: number): void {
-    this.availableGrids$
-      .pipe(first())
-      .subscribe(grids => {
-        grids[tabIndex].isInitialised = true;
-        this.selectedTabIndex = tabIndex;
-        this.cdRef.markForCheck();
-      });
+    this.grids[tabIndex].isInitialised = true;
+    this.selectedTabIndex = tabIndex;
+    this.cdRef.markForCheck();
   }
 }

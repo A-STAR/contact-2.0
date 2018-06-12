@@ -819,6 +819,9 @@
       "prepareVisits": {
         "title": "Prepare Visits"
       },
+      "customStatus": {
+        "title": "Custom Status"
+      },
       "closed": {
         "title": "Closed"
       }

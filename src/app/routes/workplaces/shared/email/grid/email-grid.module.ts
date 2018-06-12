@@ -10,7 +10,7 @@ import { EmailGridComponent } from './email-grid.component';
   imports: [
     CommonModule,
     ScheduleModule,
-    SharedModule
+    SharedModule,
   ],
   exports: [
     EmailGridComponent,
@@ -18,8 +18,5 @@ import { EmailGridComponent } from './email-grid.component';
   declarations: [
     EmailGridComponent,
   ],
-  entryComponents: [
-    EmailGridComponent,
-  ]
 })
-export class EmailGridModule { }
+export class EmailGridModule {}

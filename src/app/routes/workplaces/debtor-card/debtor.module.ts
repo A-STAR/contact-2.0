@@ -85,11 +85,17 @@ const routes: Routes = [
       },
       {
         path: 'edit/email/create',
-        loadChildren: './information/email/card/email-card.module#EmailCardModule',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'edit/email/:emailId',
-        loadChildren: './information/email/card/email-card.module#EmailCardModule',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'debtorId',
+        },
       },
       {
         path: 'edit/employment/create',
@@ -259,6 +265,22 @@ const routes: Routes = [
           entityKey: 'guarantorId',
         },
       },
+      {
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/email/create',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'guarantorId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/guarantee/{contractId}/guarantor/{guarantorId}',
+        },
+      },
+      {
+        path: 'edit/guarantee/:contractId/guarantor/:guarantorId/email/:emailId',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'guarantorId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/guarantee/{contractId}/guarantor/{guarantorId}',
+        },
+      },
 
       // Pledge
       {
@@ -371,6 +393,24 @@ const routes: Routes = [
           parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
         },
       },
+      {
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/email/create',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
+        },
+      },
+      {
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/email/:emailId',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'pledgorId',
+          // tslint:disable-next-line:max-line-length
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/pledge/{contractId}/pledgor/{pledgorId}/property/{propertyId}',
+        },
+      },
 
       // Contact Persons:
       {
@@ -466,6 +506,22 @@ const routes: Routes = [
       {
         path: 'edit/contact/:personId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
+        },
+      },
+      {
+        path: 'edit/contact/:personId/email/create',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
+        data: {
+          entityKey: 'personId',
+          parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',
+        },
+      },
+      {
+        path: 'edit/contact/:personId/email/:emailId',
+        loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
         data: {
           entityKey: 'personId',
           parentUrl: '/app/workplaces/debtor/{debtorId}/debt/{debtId}/edit/contact/{personId}',

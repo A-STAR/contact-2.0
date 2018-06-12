@@ -371,19 +371,10 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
               type: DynamicLayoutItemType.TEMPLATE,
               enabled: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
-                value: 'IDENTITY_DOCUMENT_VIEW',
+                value: 'PHONE_VIEW',
               },
-              label: 'Удостоверения личности',
-              value: 'identification',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
-                operator: ContextOperator.PERMISSION_IS_TRUE,
-                value: 'EMPLOYMENT_VIEW',
-              },
-              label: 'История трудоустройства',
-              value: 'employment',
+              label: 'Телефоны',
+              value: 'phones',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
@@ -398,28 +389,37 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
               type: DynamicLayoutItemType.TEMPLATE,
               enabled: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
-                value: 'PHONE_VIEW',
+                value: 'EMAIL_VIEW',
               },
-              label: 'Телефоны',
-              value: 'phones',
+              label: 'Email-адреса',
+              value: 'emails',
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
               enabled: {
-                operator: ContextOperator.OR,
-                value: [
-                  {
-                    operator: ContextOperator.PERMISSION_CONTAINS,
-                    value: [ 'FILE_ATTACHMENT_VIEW_LIST', 18 ],
-                  },
-                  {
-                    operator: ContextOperator.PERMISSION_CONTAINS,
-                    value: [ 'FILE_ATTACHMENT_VIEW_LIST', 63 ],
-                  },
-                ],
+                operator: ContextOperator.PERMISSION_CONTAINS,
+                value: [ 'FILE_ATTACHMENT_VIEW_LIST', 18 ],
               },
               label: 'Документы',
               value: 'documents',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'IDENTITY_DOCUMENT_VIEW',
+              },
+              label: 'Удостоверения личности',
+              value: 'identification',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              enabled: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'EMPLOYMENT_VIEW',
+              },
+              label: 'История трудоустройства',
+              value: 'employment',
             },
           ],
         },

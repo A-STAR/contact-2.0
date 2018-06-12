@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators/map';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
@@ -33,6 +33,7 @@ import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+
 import { Debt, Person } from '@app/entities';
 
 @Component({
@@ -107,8 +108,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-
-    const phonesSub = this.phoneService.fetchAll(this.entityType, this._personId$.value, this.callCenter)
+    const phonesSub = this._personId$
+      .pipe(
+        switchMap(personId => this.phoneService.fetchAll(this.entityType, personId, this.callCenter))
+      )
       .subscribe(phones => {
         this.phones = phones;
         this.selectedPhoneId$.next(null);

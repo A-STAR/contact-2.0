@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IEmailSchedule } from '../../email.interface';
-
+import { IEmailSchedule } from '@app/routes/workplaces/core/email/email.interface';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { FormComponent } from './form/form.component';

@@ -98,7 +98,7 @@ export class ControlService implements OnDestroy {
     });
   }
 
-  canSubmitAll(): Observable<boolean> {
+  canSubmitAll(mustBeNotEmpty: boolean = false): Observable<boolean> {
     return this.store.pipe(
       select((state: any) => getIn(state, [ 'layout', this.key, 'forms' ], {})),
       select(forms => {
@@ -107,10 +107,15 @@ export class ControlService implements OnDestroy {
           const status = getIn(forms, [ name, 'status' ], false);
           return acc && [ 'VALID', 'DISABLED' ].includes(status);
         }, true);
+        const hasValue = groups.reduce((acc, name) => {
+          const value = getIn(forms, [ name, 'value' ], {});
+          const valueNotEmpty = Object.keys(value).reduce((a, k) => a || Boolean(value[k]), false);
+          return acc && valueNotEmpty || !mustBeNotEmpty;
+        }, true);
         const dirty = groups.reduce((acc, name) => {
           return acc || getIn(forms, [ name, 'dirty' ], false);
         }, false);
-        return valid && dirty;
+        return valid && hasValue && dirty;
       })
     );
   }
@@ -132,6 +137,13 @@ export class ControlService implements OnDestroy {
   setData(data: Record<string, any>): void {
     this.data = data;
     this.patchFormGroups();
+  }
+
+  isFormDisabled(form: string = ControlService.DEFAULT_GROUP_NAME): boolean {
+    const group = this.groups.get(form);
+    return group
+      ? group.disabled
+      : null;
   }
 
   getFormGroupForControl(control: IDynamicLayoutControl): FormGroup {

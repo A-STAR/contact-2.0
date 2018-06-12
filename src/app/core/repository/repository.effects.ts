@@ -72,13 +72,10 @@ export class RepositoryEffects {
     if (url) {
       const queryParams = getQueryParams(url, params);
       const routeParams = !isSimpleUrl(url) ? pickDifference(queryParams, params) : params;
-
       return this.dataService.readAll(getUrl(url), routeParams, { params: queryParams }).pipe(
         catchError(this.notificationsService.fetchError().entity(entityName).dispatchCallback()),
       );
     }
-    this.notificationsService.fetchError().entity(entityName).dispatch();
     return empty();
   }
-
 }
