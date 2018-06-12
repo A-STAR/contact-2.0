@@ -1,6 +1,6 @@
 <app-tabview [fullHeight]="true" (selectTab)="onTabSelect($event)">
   <ng-container *ngFor="let grid of availableGrids$ | async">
-    <app-tabview-tab [title]="grid.title" *ngIf="grid.permission | async">
+    <app-tabview-tab [title]="grid.title" [visible]="grid.permission | async">
       <app-work-task-grid
         *ngIf="grid.isInitialised"
         [gridKey]="grid.key"

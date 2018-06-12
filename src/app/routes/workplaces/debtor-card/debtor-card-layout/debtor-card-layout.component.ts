@@ -66,7 +66,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     },
     {
       isInitialised: false,
-      permission: this.userPermissionsService.has('FILE_ATTACHMENT_VIEW_LIST')
+      permission: this.userPermissionsService.containsOne('FILE_ATTACHMENT_VIEW_LIST', [ 18, 19 ])
     },
     {
       isInitialised: false,
@@ -94,7 +94,7 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
     },
     {
       isInitialised: false,
-      permission: this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+      permission: this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 19)
     },
     {
       isInitialised: false,
