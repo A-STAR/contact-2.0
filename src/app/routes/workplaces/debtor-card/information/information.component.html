@@ -15,7 +15,7 @@
   <!-- Contact Info Tabstrip -->
   <div class="flex-item grow">
     <app-tabview [fullHeight]="true" (selectTab)="onTabSelect($event)" [noMargin]="true">
-      <app-tabview-tab [title]="tabs[0].title">
+      <app-tabview-tab [title]="tabs[0].title" [visible]="tabs[0].permission | async">
         <app-phone-grid
           *ngIf="tabs[0].isInitialised"
           [contactType]="phoneContactType"
@@ -28,7 +28,7 @@
           (register)="onPhoneRegister($event)"
         ></app-phone-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="tabs[1].title">
+      <app-tabview-tab [title]="tabs[1].title" [visible]="tabs[1].permission | async">
         <app-address-grid
           *ngIf="tabs[1].isInitialised"
           [debtId]="debtId$ | async"
@@ -41,7 +41,7 @@
           (register)="onAddressRegister($event)"
         ></app-address-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="tabs[2].title">
+      <app-tabview-tab [title]="tabs[2].title" [visible]="tabs[2].permission | async">
         <app-email-grid
           *ngIf="tabs[2].isInitialised"
           [entityId]="debtorId$ | async"

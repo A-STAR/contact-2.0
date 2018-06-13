@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map, startWith } from 'rxjs/operators';
 
@@ -74,7 +75,7 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  getLastDebtCard(item: IMenuItem): void {
+  private getLastDebtCard(item: IMenuItem): void {
     const lastDebtorCardIds = this.lastDebtCardIds$.value;
 
     if (Boolean(lastDebtorCardIds)) {
@@ -90,7 +91,8 @@ export class SidebarComponent implements OnInit {
           link: lastDebtorCardLink,
           icon: null,
           docs: 'debt_card',
-          children: null
+          children: null,
+          permission: of(true),
         };
 
         (item.children as IMenuItem[]) = [...item.children, lastDebtCard];

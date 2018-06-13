@@ -4,9 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { filter } from 'rxjs/operators/filter';
 import { tap } from 'rxjs/operators/tap';
+import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '../state/state.interface';
 import { IMenuItem, IGuiObject } from './gui-objects.interface';
+
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { menuConfig } from '../../routes/menu-config';
 
@@ -25,6 +28,7 @@ export class GuiObjectsService {
 
   constructor(
     private store: Store<IAppState>,
+    private userPermissionsService: UserPermissionsService
   ) {
     // is it really neccessary?
     this.state$.subscribe(state => this._guiObjects = state.data);
@@ -68,6 +72,9 @@ export class GuiObjectsService {
     const children = guiObject.children;
     return {
       ...menuConfig[guiObject.name],
+      permission: menuConfig[guiObject.name].permission
+        ? this.userPermissionsService.hasOne(menuConfig[guiObject.name].permission)
+        : of(true),
       children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
     };
   }
