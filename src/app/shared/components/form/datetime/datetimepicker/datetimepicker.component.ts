@@ -3,6 +3,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 
 import { DateTimeService } from '@app/shared/components/form/datetime/datetime.service';
@@ -50,7 +51,8 @@ export class DateTimePickerComponent implements ControlValueAccessor, Validator 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
-  ) {}
+    private translateService: TranslateService,
+  ) { }
 
   get displaySeconds(): boolean {
     return this._displaySeconds;
@@ -82,11 +84,14 @@ export class DateTimePickerComponent implements ControlValueAccessor, Validator 
 
   validate(): any {
     const value = moment(this.value, this.dateTimeFormat);
+    const { currentLang, defaultLang } = this.translateService;
+    const lang = currentLang || defaultLang;
+
     switch (true) {
       case this.value && this.minDateTime && value.isBefore(this.minDateTime):
-        return { min: { minValue: moment(this.minDateTime).format(this.dateTimeFormat) } };
+        return { min: { minValue: moment(this.minDateTime).locale(lang).format(this.dateTimeFormat) } };
       case this.value && this.maxDateTime && value.isAfter(this.maxDateTime):
-        return { max: { maxValue: moment(this.maxDateTime).format(this.dateTimeFormat) } };
+        return { max: { maxValue: moment(this.maxDateTime).locale(lang).format(this.dateTimeFormat) } };
       default:
         return null;
     }
