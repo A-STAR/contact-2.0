@@ -4,13 +4,13 @@
   </app-area>
   <app-area>
     <app-tabview [fullHeight]="true" (selectTab)="onTabSelect($event)" [noMargin]="true">
-      <app-tabview-tab [title]="'debtor.paymentsTab.title'">
+      <app-tabview-tab [title]="'debtor.paymentsTab.title'" [visible]="tabs[0].permission | async">
         <app-payment-grid
           *ngIf="tabs[0].isInitialised"
           [debtId]="debtId$ | async"
         ></app-payment-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.promisesTab.title'">
+      <app-tabview-tab [title]="'debtor.promisesTab.title'" [visible]="tabs[1].permission | async">
         <app-promise-grid
           *ngIf="tabs[1].isInitialised"
           [debtId]="debtId$ | async"
