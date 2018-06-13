@@ -15,6 +15,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { RepositoryService } from '@app/core/repository/repository.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 
 @Injectable()
 export class DebtorService {
@@ -36,6 +37,7 @@ export class DebtorService {
     private repo: RepositoryService,
     private userPermissionsService: UserPermissionsService,
     private workplacesService: WorkplacesService,
+    private layoutService: LayoutService
   ) {}
 
   get debtors(): IterableIterator<[number, number]> {
@@ -148,13 +150,9 @@ export class DebtorService {
   }
 
   addTab(debtorId: number, debtId: number): void {
-    const hasDebtor = this._debtors.has(debtorId);
-
-    if (hasDebtor) {
-      this._debtors.delete(debtorId);
-    }
-
     this._debtors.set(debtorId, debtId);
+
+    this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
   }
 
 }
