@@ -8,6 +8,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -18,13 +20,15 @@ import { IMapService } from '@app/core/map-providers/map-providers.interface';
 import {
   IMapToolbarFilter,
   IMapToolbarFilterItem,
-  MapToolbarFilterItemType,
   IMapToolbarActionData,
-  IMapToolbarItem,
+  MapToolbarItemType,
 } from '../toolbar/map-toolbar.interface';
+import { MapFilters, IMapFilterItemAction } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+
 import { MapFilterService } from '@app/shared/components/map/components/controls/filter/map-filter.service';
+
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
-import { MapFilters } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+import { MapFilterItemComponent } from './filter-item/map-filter-item.component';
 
 @Component({
   selector: 'app-map-filter',
@@ -37,6 +41,7 @@ export class MapFilterComponent<T> implements OnInit {
   @Output() action = new EventEmitter<IMapToolbarActionData>();
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
+  @ViewChildren(MapFilterItemComponent) items: QueryList<MapFilterItemComponent>;
 
   container: HTMLElement;
   private map: any;
@@ -52,42 +57,50 @@ export class MapFilterComponent<T> implements OnInit {
     this.map = this.mapService.getMap();
   }
 
-  isDisabled(item: IMapToolbarFilterItem | IMapToolbarItem): Observable<boolean> {
+  onAction(action: IMapFilterItemAction): void {
+    if (this.shouldCloseDropdown(action.item)) {
+      this.dropdown.close();
+    }
+
+    this.handleAction(action);
+
+    if (action.item.filter) {
+      this.mapFilterService.applyFilter(action.item, action.value);
+    }
+
+    if (action.item.action) {
+      this.action.emit({ item: action.item, value: action.value, map: this.map });
+    }
+  }
+
+  isDisabled(item: IMapToolbarFilterItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
-  onChildSelect($event: any, child: IMapToolbarFilterItem): void {
-    if (this.shouldCloseDropdown(child)) {
-      this.dropdown.close();
-    }
-    this.handleToggling($event, child);
-    if (child.filter) {
-      this.mapFilterService.applyFilter(child, $event);
-    }
-    if (child.action) {
-      this.action.emit({ item: child, value: $event, map: this.map });
-    }
+  private shouldCloseDropdown(item: IMapToolbarFilterItem): boolean {
+    return !(item.preserveOnClick || [
+      MapToolbarItemType.CHECKBOX,
+      MapToolbarItemType.SLIDER
+    ].includes(item.type));
   }
 
-  private shouldCloseDropdown(child: IMapToolbarFilterItem): boolean {
-    return !(child.preserveOnClick || [
-      MapToolbarFilterItemType.CHECKBOX,
-      MapToolbarFilterItemType.SLIDER
-    ].includes(child.type));
-  }
-  // TODO(i.lobanov): make declarative in map toolbar filter config
-  // AND MAKE WORK
-  private handleToggling($event: any, child: IMapToolbarFilterItem): void {
-    if ((child.filter as MapFilters) === MapFilters.TOGGLE_ALL) {
-      this.config.children.filter(c => [
-        MapToolbarFilterItemType.DICTIONARY,
-        MapToolbarFilterItemType.LOOKUP
-      ].includes(c.type)).forEach(child_ => child_.checked = $event);
+  private handleAction(action: IMapFilterItemAction): void {
+
+    if ((action.item.filter as MapFilters) === MapFilters.TOGGLE_ALL) {
+
+      this.items
+        .filter(item => Boolean(item.config.filter !== MapFilters.TOGGLE_ALL && (item.menuSelect || item.tickCmp)))
+        .forEach(item => item.changeValue(action.value));
+
     } else if ([
-      MapToolbarFilterItemType.DICTIONARY,
-      MapToolbarFilterItemType.LOOKUP
-    ].includes(child.type)) {
-      this.config.children.filter(c => c.filter === MapFilters.TOGGLE_ALL).forEach(_c => _c.checked = $event);
+      MapToolbarItemType.DICTIONARY,
+      MapToolbarItemType.LOOKUP
+    ].includes(action.item.type)) {
+
+      this.items
+        .filter(c => c.config.filter === MapFilters.TOGGLE_ALL)
+        .forEach(_c => _c.changeValue(action.value));
+
     }
     this.cdRef.markForCheck();
   }

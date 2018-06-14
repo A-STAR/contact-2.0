@@ -5,10 +5,7 @@ import { MapFilters } from '@app/shared/components/map/components/controls/filte
 import { Map } from 'leaflet';
 
 export enum MapToolbarItemType {
-  FILTER = 'filter'
-}
-
-export enum MapToolbarFilterItemType {
+  FILTER = 'filter',
   BUTTON = 'button',
   SEPARATOR = 'separator',
   CHECKBOX = 'checkbox',
@@ -26,28 +23,24 @@ export interface IMapToolbarActionData {
 export type IMapToolbarAction = (data: IMapToolbarActionData) => void;
 
 export interface IMapToolbarElement {
-  type: MapToolbarItemType | MapToolbarFilterItemType;
+  type: MapToolbarItemType;
   action?: IMapToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
 }
 
 export interface IMapToolbarButton extends IMapToolbarElement {
-  icon?: string;
   children?: Array<IMapToolbarElement>;
 }
 
 export interface IMapToolbarFilter {
-  type: MapToolbarItemType;
-  icon?: string;
-  enabled?: Observable<boolean>;
   children?: Array<IMapToolbarFilterItem>;
 }
 
 export type IMapFilterFn = (entity: any, params?: any) => boolean;
 
 export interface IMapToolbarFilterItem {
-  type: MapToolbarFilterItemType;
+  type: MapToolbarItemType;
   filter?: IMapFilterFn | MapFilters;
   action?: IMapToolbarAction | Action;
   enabled?: Observable<boolean>;
