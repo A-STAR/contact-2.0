@@ -5,14 +5,17 @@ import {
   Output,
   EventEmitter,
   Inject,
-  OnInit,
   ViewChild,
   ChangeDetectorRef,
   ViewChildren,
   QueryList,
+  AfterViewInit,
 } from '@angular/core';
+import { filter } from 'rxjs/operators/filter';
+import { first } from 'rxjs/operators/first';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { zip } from 'rxjs/observable/zip';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
@@ -36,7 +39,7 @@ import { MapFilterItemComponent } from './filter-item/map-filter-item.component'
   styleUrls: ['./map-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapFilterComponent<T> implements OnInit {
+export class MapFilterComponent<T> implements AfterViewInit {
   @Input() config: IMapToolbarItem;
   @Output() action = new EventEmitter<IMapToolbarActionData>();
 
@@ -52,9 +55,25 @@ export class MapFilterComponent<T> implements OnInit {
     private mapFilterService: MapFilterService<T>,
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.container = this.mapService.container;
     this.map = this.mapService.getMap();
+
+    const menuSelects$ = this.items.filter(item => Boolean(item.menuSelect)).map(_item => _item.ready$);
+
+    zip(...menuSelects$).pipe(
+      filter(values => values.every(Boolean)),
+      first(),
+    )
+      .subscribe(() => {
+        const toggleAllConfig = this.config.children.find((c: IMapToolbarFilterItem) => c.filter === MapFilters.TOGGLE_ALL);
+        if (toggleAllConfig) {
+          this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
+          this.cdRef.markForCheck();
+        }
+      });
+
+
   }
 
   onAction(action: IMapFilterItemAction): void {
@@ -96,10 +115,14 @@ export class MapFilterComponent<T> implements OnInit {
       MapToolbarItemType.DICTIONARY,
       MapToolbarItemType.LOOKUP
     ].includes(action.item.type)) {
+      const menuSelectCtrls = this.items.filter(item => !!item.menuSelect);
+      const allSelected = menuSelectCtrls.every(i => i.menuSelect.allSelected);
+      const toggleAllCtrl = this.items
+        .find(c => c.config.filter === MapFilters.TOGGLE_ALL);
 
-      this.items
-        .filter(c => c.config.filter === MapFilters.TOGGLE_ALL)
-        .forEach(_c => _c.changeValue(action.value));
+      if (toggleAllCtrl) {
+        toggleAllCtrl.changeValue(allSelected);
+      }
 
     }
     this.cdRef.markForCheck();

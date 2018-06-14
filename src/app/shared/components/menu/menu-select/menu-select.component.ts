@@ -31,6 +31,7 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
   @Input() multi = true;
 
   @Output() action = new EventEmitter<number[]>();
+  @Output() ready = new EventEmitter<void>();
 
   private optionsSubscription: Subscription;
   private value: number[] = [];
@@ -66,6 +67,10 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     return !!this.value.length;
   }
 
+  get allSelected(): boolean {
+    return this.value.length === this._options.length;
+  }
+
   get options(): IMultiSelectOption[] {
     return this._options || [];
   }
@@ -88,13 +93,21 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     this.action.emit(this.value);
   }
 
-  selectAll(): void {
+  selectAll(emitAction: boolean = false): void {
     this.options.forEach(o => o.checked = true);
+    this.value = this.options.map(o => o.value);
+    if (emitAction) {
+      this.action.emit(this.value);
+    }
     this.cdRef.markForCheck();
   }
 
-  deselectAll(): void {
+  deselectAll(emitAction: boolean = false): void {
     this.options.forEach(o => o.checked = false);
+    this.value = [];
+    if (emitAction) {
+      this.action.emit(this.value);
+    }
     this.cdRef.markForCheck();
   }
 
@@ -114,6 +127,8 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
 
   private onOptionsFetch = (options: IMultiSelectOption[]) => {
     this.options = options;
+    this.ready.emit();
+    this.cdRef.markForCheck();
   }
 
 }
