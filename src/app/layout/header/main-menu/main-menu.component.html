@@ -1,5 +1,10 @@
 <ul class="flex">
-  <li *ngFor="let item of menuItems$ | async" class="flex-item menu-item" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
+  <li *ngFor="let item of menuItems$ | async"
+    class="flex-item menu-item"
+    [routerLink]="item.link"
+    routerLinkActive="active"
+    [title]="item.text | translate"
+  >
     {{ item.text | translate }}
   </li>
 </ul>

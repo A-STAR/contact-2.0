@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 export interface IWorkTaskEntry {
   debtId: number;
   personId: number;
@@ -44,4 +46,5 @@ export interface IGridDef {
   key: string;
   rowIdKey?: string;
   title: string;
+  permission?: Observable<boolean>;
 }

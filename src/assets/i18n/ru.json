@@ -283,10 +283,38 @@
             "scenario": "Сценарий разговора",
             "selectOutcome": "Выберите исход"
           }
+        },
+        "documents": {
+          "grid": {
+            "toolbar": {
+              "add": {
+                "13": "Добавить к контрагенту",
+                "15": "Добавить к портфелю",
+                "18": "Добавить к персоне",
+                "19": "Добавить к долгу",
+                "32": "Добавить к договору поручительства",
+                "63": "Добавить к договору залога"
+              }
+            }
+          }
         }
       }
     },
     "utilities": {
+      "campaigns": {
+        "genesys": {
+          "statistics": {
+            "grid": {
+              "complete": "Обработано",
+              "errors": "Ошибок",
+              "not_started": "Не обрабатывалось",
+              "postponed": "Запланирована обработка",
+              "processing": "Обрабатывается",
+              "total_chains": "Всего"
+            }
+          }
+        }
+      },
       "formulas": {
         "grid": {
           "id": "ID",
@@ -579,6 +607,7 @@
     "fieldRequired": "Это обязательное поле",
     "fieldMin": "Значение поля должно быть больше, чем {{ minValue }}",
     "fieldMax": "Значение поля должно быть меньше, чем  {{ maxValue }}",
+    "fieldMinDateTime": "Значение поля должно быть больше, чем {{ minValue }}",
     "fieldMinLength": "Это поле должно быть не короче {{ requiredLength }} символов",
     "fieldDigits": "Это поле должно содержать хотя бы одну цифру",
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
@@ -773,6 +802,9 @@
           "visitPurposeCode": "Цель выезда"
         }
       },
+      "all": {
+        "title": "Все"
+      },
       "newDebt": {
         "title": "Новые долги"
       },
@@ -787,6 +819,12 @@
       },
       "prepareVisits": {
         "title": "Подготовка выездов"
+      },
+      "customStatus": {
+        "title": "Пользовательские статусы"
+      },
+      "closed": {
+        "title": "Закрытые"
       }
     },
     "infoDebt": {
@@ -849,8 +887,7 @@
           "createDateTime": "Дата создания",
           "sendDateTime": "Фактическая дата отправки",
           "userFullName": "Оператор",
-          "templateName": "Название шаблона",
-          "letterExport": "Сохранение файла письма"
+          "templateName": "Название шаблона"
         }
       }
     },
@@ -2236,6 +2273,7 @@
       "card": {
         "typeCode": "Тип",
         "phoneNumber": "Номер телефона",
+        "phone": "Номер телефона",
         "stopAutoSms": "Не отправлять автоматические SMS",
         "stopAutoInfo": "Запретить голосовое информирование",
         "comment": "Комментарий"
@@ -2464,7 +2502,10 @@
         "status": "Статус",
         "text": "Текст сообщения",
         "startDateTime": "Планируемая дата отправки",
-        "subject": "Тема"
+        "subject": "Тема",
+        "templateName": "Тип письма",
+        "contactAddress": "Адрес",
+        "createDateTime": "Дата формирования"
       },
       "grid": {
         "comment": "Комментарий",
@@ -2478,7 +2519,7 @@
         "debtId": "ID долга",
         "fullName": "ФИО",
         "messageTemplate": "Шаблон",
-        "msgStatusCode": "Статус",
+        "msgStatusName": "Статус",
         "personRole": "Роль",
         "promiseDate": "Обещанная дата",
         "resultName": "Результат",
@@ -2772,7 +2813,8 @@
             "name": "Имя",
             "comment": "Комментарий"
           }
-        }
+        },
+        "operationId": "Операция"
       },
       "dialog": {
         "title": "Мероприятие",
@@ -2932,7 +2974,7 @@
       "gen": { "singular": "номера телефона", "plural": "списка номеров телефонов" }
     },
     "contacts": {
-      "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
+      "gen": { "singular": "контактного лица", "plural": "контактных лиц" }
     },
     "documents": {
       "gen": { "singular": "вложения", "plural": "вложений" }
@@ -3029,6 +3071,9 @@
     },
     "operations": {
       "gen": { "singular": "операции", "plural" : "операций" }
+    },
+    "persons": {
+      "gen": { "singular": "персоны", "plural" : "персон" }
     }
   },
   "massOperations": {
@@ -3536,7 +3581,8 @@
         "debtOutsourcingReturn": "Отозвать из аутсорсинга",
         "registerContact": "Регистрация контакта",
         "changePersonType": "Изменить тип персоны",
-        "letterGenerate": "Массовое формирование писем"
+        "letterGenerate": "Массовое формирование писем",
+        "letterExport": "Сохранение файла письма"
       }
     },
     "filter": {

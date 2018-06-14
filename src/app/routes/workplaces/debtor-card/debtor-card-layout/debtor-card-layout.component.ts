@@ -14,6 +14,7 @@ import { first, mergeMap, map } from 'rxjs/operators';
 import { equals } from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IDynamicLayoutTemplate } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
@@ -51,21 +52,59 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   dialog: 'registerContact' = null;
   // nice, isn't it?
   tabs = [
-    { isInitialised: true },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
-    { isInitialised: false },
+    {
+      isInitialised: true,
+      permission: this.userPermissionsService.has('DEBT_FULL_INFO_ALL_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('DEBT_FULL_INFO_ALL_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('CONTACT_LOG_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.containsOne('FILE_ATTACHMENT_VIEW_LIST', [ 18, 19 ])
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('CONTACT_PERSON_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('GUARANTEE_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PLEDGE_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PROPERTY_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('IDENTITY_DOCUMENT_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('EMPLOYMENT_VIEW')
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 19)
+    },
+    {
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PERSON_ACTION_LOG_VIEW')
+    },
   ];
   debtorId: number;
   debtId: number;
+
+  readonly entityType = EntityType.DEBT;
 
   private debtSub: Subscription;
   private debtorSub: Subscription;

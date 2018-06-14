@@ -31,9 +31,11 @@ export class PhoneService extends AbstractActionService {
   }
 
   fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Phone[]> {
-    return this.repo.fetch(Phone, { entityType, entityId, callCenter }).pipe(
-      first()
-    );
+    return this.repo.fetch(Phone, { entityType, entityId, callCenter });
+  }
+
+  refreshPhones(entityType: number, entityId: number, callCenter: boolean): void {
+    this.repo.refresh(Phone, { entityType, entityId, callCenter });
   }
 
   fetch(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<Phone> {
@@ -46,7 +48,13 @@ export class PhoneService extends AbstractActionService {
   create(entityType: number, entityId: number, callCenter: boolean, phone: IPhone): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { entityType, entityId }, phone, { params: { callCenter } })
-      .catch(this.notificationsService.createError().entity(this.singular).dispatchCallback());
+      .catch(
+        this.notificationsService
+          .createError()
+          .context('widgets.phone.card')
+          .entity(this.singular)
+          .dispatchCallback()
+      );
   }
 
   update(
@@ -58,7 +66,13 @@ export class PhoneService extends AbstractActionService {
   ): Observable<void> {
     return this.dataService
       .update(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, phone, { params: { callCenter } })
-      .catch(this.notificationsService.updateError().entity(this.singular).dispatchCallback());
+      .catch(
+        this.notificationsService
+          .updateError()
+          .context('widgets.phone.card')
+          .entity(this.singular)
+          .dispatchCallback()
+      );
   }
 
   block(

@@ -43,6 +43,10 @@ export class DynamicLayoutComponent implements OnInit {
     return this.layoutService.group;
   }
 
+  isFormDisabled(groupName?: string): boolean {
+    return this.controlService.isFormDisabled(groupName);
+  }
+
   enableFormGroup(groupName?: string): void {
     this.controlService.enableFormGroup(groupName);
   }
@@ -55,8 +59,8 @@ export class DynamicLayoutComponent implements OnInit {
     return this.controlService.canSubmit(form);
   }
 
-  canSubmitAll(): Observable<boolean> {
-    return this.controlService.canSubmitAll();
+  canSubmitAll(mustBeNotEmpty: boolean = false): Observable<boolean> {
+    return this.controlService.canSubmitAll(mustBeNotEmpty);
   }
 
   resetForm(form?: string): void {

@@ -12,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { range } from '@app/core/utils';
 
-export const layout: IDynamicLayoutConfig = {
+export const createGuarantorLayout: IDynamicLayoutConfig = {
   key: 'workplaces/debtor-card/guarantee/card',
   items: [
     {
@@ -25,66 +25,12 @@ export const layout: IDynamicLayoutConfig = {
           type: DynamicLayoutItemType.GROUP,
           groupType: DynamicLayoutGroupType.HORIZONTAL,
           mode: DynamicLayoutGroupMode.SPLITTERS,
-          size: 50,
+          size: 100,
           children: [
             {
               type: DynamicLayoutItemType.GROUP,
               groupType: DynamicLayoutGroupType.VERTICAL,
-              size: 50,
-              children: [
-                {
-                  type: DynamicLayoutItemType.TEMPLATE,
-                  value: 'contractTitlebar',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.TEXT,
-                  form: 'contract',
-                  label: 'Номер договора',
-                  name: 'contractNumber',
-                  validators: {
-                    required: true,
-                  },
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.DATE,
-                  form: 'contract',
-                  label: 'Начало',
-                  name: 'contractStartDate',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.DATE,
-                  form: 'contract',
-                  label: 'Окончание',
-                  name: 'contractEndDate',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.SELECT,
-                  form: 'contract',
-                  dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE,
-                  label: 'Тип ответственности',
-                  name: 'contractTypeCode',
-                },
-                {
-                  type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.TEXTAREA,
-                  form: 'contract',
-                  label: 'Комментарий',
-                  name: 'comment',
-                },
-                {
-                  type: DynamicLayoutItemType.TEMPLATE,
-                  value: 'contractClearButton',
-                },
-              ],
-            },
-            {
-              type: DynamicLayoutItemType.GROUP,
-              groupType: DynamicLayoutGroupType.VERTICAL,
-              size: 50,
+              size: 100,
               children: [
                 {
                   type: DynamicLayoutItemType.TEMPLATE,
@@ -95,8 +41,17 @@ export const layout: IDynamicLayoutConfig = {
                   controlType: DynamicLayoutControlType.SELECT,
                   dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Тип',
                   name: 'typeCode',
@@ -108,8 +63,17 @@ export const layout: IDynamicLayoutConfig = {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Фамилия/Название',
                   name: 'lastName',
@@ -131,8 +95,17 @@ export const layout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Имя',
                   name: 'firstName',
@@ -151,8 +124,17 @@ export const layout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Отчество',
                   name: 'middleName',
@@ -171,8 +153,17 @@ export const layout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Дата рождения',
                   name: 'birthDate',
@@ -191,8 +182,17 @@ export const layout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Место рождения',
                   name: 'birthPlace',
@@ -211,8 +211,17 @@ export const layout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   dictCode: UserDictionariesService.DICTIONARY_GENDER,
                   label: 'Пол',
@@ -233,8 +242,17 @@ export const layout: IDynamicLayoutConfig = {
                     ]
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Семейное положение',
                   name: 'familyStatusCode',
@@ -254,8 +272,17 @@ export const layout: IDynamicLayoutConfig = {
                     ],
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Образование',
                   name: 'educationCode',
@@ -286,8 +313,17 @@ export const layout: IDynamicLayoutConfig = {
                     ],
                   },
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_INFO_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: `Строковый атрибут ${i}`,
                   name: `stringValue${i}`,
@@ -296,8 +332,17 @@ export const layout: IDynamicLayoutConfig = {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXTAREA,
                   enabled: {
-                    operator: ContextOperator.PERMISSION_IS_TRUE,
-                    value: 'PERSON_COMMENT_EDIT',
+                    operator: ContextOperator.AND,
+                    value: [
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'GUARANTEE_ADD',
+                      },
+                      {
+                        operator: ContextOperator.PERMISSION_IS_TRUE,
+                        value: 'PERSON_ADD',
+                      },
+                    ],
                   },
                   label: 'Комментарий',
                   name: 'comment',
@@ -307,38 +352,6 @@ export const layout: IDynamicLayoutConfig = {
                   value: 'personClearButton',
                 },
               ],
-            },
-          ],
-        },
-        {
-          type: DynamicLayoutItemType.GROUP,
-          groupType: DynamicLayoutGroupType.TABS,
-          size: 50,
-          children: [
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Удостоверения личности',
-              value: 'identification',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'История трудоустройства',
-              value: 'employment',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Адреса',
-              value: 'addresses',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Телефоны',
-              value: 'phones',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              label: 'Документы',
-              value: 'documents',
             },
           ],
         },

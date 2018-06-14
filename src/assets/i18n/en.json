@@ -283,10 +283,38 @@
             "scenario": "Scenario",
             "selectOutcome": "Select Outcome"
           }
+        },
+        "documents": {
+          "grid": {
+            "toolbar": {
+              "add": {
+                "13": "Attach to Contractor",
+                "15": "Attach to Portfolio",
+                "18": "Attach to Person",
+                "19": "Attach to Debt",
+                "32": "Attach to Guarantee Contract",
+                "63": "Attach to Pledge Contract"
+              }
+            }
+          }
         }
       }
     },
     "utilities": {
+      "campaigns": {
+        "genesys": {
+          "statistics": {
+            "grid": {
+              "complete": "Complete",
+              "errors": "Errors",
+              "not_started": "Not Started",
+              "postponed": "Postponed",
+              "processing": "Processing",
+              "total_chains": "Total"
+            }
+          }
+        }
+      },
       "formulas": {
         "grid": {
           "id": "ID",
@@ -579,6 +607,7 @@
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
     "fieldMax": "The value must be less than {{ maxValue }}",
+    "fieldMinDateTime": "The value must be greater than {{ minValue }}",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
@@ -773,6 +802,9 @@
           "visitPurposeCode": "Visit purpose"
         }
       },
+      "all": {
+        "title": "All"
+      },
       "newDebt": {
         "title": "New Debts"
       },
@@ -787,6 +819,12 @@
       },
       "prepareVisits": {
         "title": "Prepare Visits"
+      },
+      "customStatus": {
+        "title": "Custom Status"
+      },
+      "closed": {
+        "title": "Closed"
       }
     },
     "infoDebt": {
@@ -849,8 +887,7 @@
           "createDateTime": "Created",
           "sendDateTime": "Send date",
           "userFullName": "Operator",
-          "templateName": "Template",
-          "letterExport": "Letter export"
+          "templateName": "Template"
         }
       }
     },
@@ -2202,7 +2239,7 @@
           "ignoreWrongAddress": "Ignore wrong address",
           "sortRule": "Sorting",
           "reportId": "Register"
-        }
+      }
       }
     },
     "nextCallDateSet": {
@@ -2464,7 +2501,10 @@
         "status": "Status",
         "text": "Message text",
         "startDateTime": "Planned sending date",
-        "subject": "Subject"
+        "subject": "Subject",
+        "templateName": "Letter type",
+        "contactAddress": "Address",
+        "createDateTime": "Create date"
       },
       "grid": {
         "comment": "Comments",
@@ -2478,7 +2518,7 @@
         "debtId": "Debt id",
         "fullName": "Full name",
         "messageTemplate": "Template",
-        "msgStatusCode": "Status",
+        "msgStatusName": "Status",
         "personRole": "Role",
         "promiseDate": "Promise date",
         "resultName": "Result",
@@ -2772,7 +2812,8 @@
             "name": "Name",
             "comment": "Comment"
           }
-        }
+        },
+        "operationId": "Operation"
       },
       "dialog": {
         "title": "Event",
@@ -3029,6 +3070,9 @@
     },
     "operations": {
       "gen": { "singular": "operation", "plural" : "operations" }
+    },
+    "persons": {
+      "gen": { "singular": "person", "plural" : "persons" }
     }
   },
   "massOperations": {
@@ -3536,7 +3580,8 @@
         "debtOutsourcingReturn": "Return from outsourcing",
         "registerContact": "Register Contact",
         "changePersonType": "Change person type",
-        "letterGenerate": "Letter generation"
+        "letterGenerate": "Letter generation",
+        "letterExport": "Letter export"
       }
     },
     "filter": {

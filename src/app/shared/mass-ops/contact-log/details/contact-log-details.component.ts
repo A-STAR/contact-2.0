@@ -50,7 +50,7 @@ export class ContactLogDetailsComponent {
   columnIds = [
     'contactDateTime',
     'contactType',
-    'msgStatusCode',
+    'msgStatusName',
     'contract',
     'createDateTime',
     'personRole',
@@ -95,7 +95,7 @@ export class ContactLogDetailsComponent {
     switch (propName) {
       case 'personRole':
         return this.dicts[UserDictionariesService.DICTIONARY_PERSON_ROLE].find(term => term.code === contact[propName]).name;
-      case 'msgStatusCode':
+      case 'msgStatusName':
         const dict = this.getContactType(contact);
         return dict ? dict.find(term => term.code === contact[propName]).name : contact[propName];
       case 'contactType':

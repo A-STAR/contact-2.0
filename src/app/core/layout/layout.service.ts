@@ -18,20 +18,21 @@ export class LayoutService {
     distinctUntilChanged((a, b) => a && b && a.id === b.id),
   );
 
+  readonly navigationStart$ = this.router.events.pipe(
+    filter(event => event instanceof NavigationStart),
+  );
+
+  readonly navigationEnd$ = this.router.events.pipe(
+    filter(event => event instanceof NavigationEnd),
+  );
+
+  lastDebtCardIds$ = new BehaviorSubject<{ debtorId: number, debtId: number }>(null);
+
   constructor(
     private router: Router,
   ) {
-    this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationStart),
-      )
-      .subscribe(() => this.onNavigationStart());
-
-    this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-      )
-      .subscribe((event: NavigationEnd) => this.onNavigationEnd(event));
+    this.navigationStart$.subscribe(() => this.onNavigationStart());
+    this.navigationEnd$.subscribe((event: NavigationEnd) => this.onNavigationEnd(event));
   }
 
   setGuiObjects(guiObjects: any): void {

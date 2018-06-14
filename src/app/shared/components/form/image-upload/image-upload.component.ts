@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { IImage } from './image-upload.interface';
 
-import { DataService } from '../../../../core/data/data.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Component({
   selector: 'app-image-upload',
@@ -37,12 +37,12 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     if (this.url) {
       this.dataService
-      .readBlob(this.url)
-      .pipe(first())
-      .subscribe(image => {
-        this.image = image;
-        this.changeDetectorRef.markForCheck();
-      });
+        .readBlob(this.url)
+        .pipe(first())
+        .subscribe(response => {
+          this.image = response.blob;
+          this.changeDetectorRef.markForCheck();
+        });
     }
   }
 
@@ -97,5 +97,4 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   }
 
   private propagateChange: Function = () => {};
-
 }

@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators/map';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
@@ -33,6 +33,7 @@ import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+
 import { Debt, Person } from '@app/entities';
 
 @Component({
@@ -83,12 +84,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private person: Person;
 
-  private canViewSubscription: Subscription;
-  private contactDetailsChangeSub: Subscription;
-  private debtSubscription: Subscription;
-  private busSubscription: Subscription;
-  private callSubscription: Subscription;
-  private activeCallSubscription: Subscription;
+  private subs = new Subscription();
 
   private _columns: ISimpleGridColumn<IPhone>[] = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE, minWidth: 120 },
@@ -112,20 +108,30 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.debtSubscription = this._debtId$
+    const phonesSub = this._personId$
+      .pipe(
+        switchMap(personId => this.phoneService.fetchAll(this.entityType, personId, this.callCenter))
+      )
+      .subscribe(phones => {
+        this.phones = phones;
+        this.selectedPhoneId$.next(null);
+        this.cdRef.markForCheck();
+      });
+
+    const debtSubscription = this._debtId$
       .flatMap(debtId => debtId ? this.workplacesService.fetchDebt(debtId) : of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();
       });
 
-    this.canViewSubscription = combineLatest(this.canView$, this._personId$)
+    const canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
           this.notificationsService.permissionError().entity('entities.phones.gen.plural').dispatch();
           this.clear();
         } else if (personId) {
-          this.fetch();
+          this.refresh();
         } else {
           this.clear();
         }
@@ -140,12 +146,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.busSubscription = this.phoneService
+    const busSubscription = this.phoneService
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)
-      .subscribe(() => this.fetch());
+      .subscribe(() => this.refresh());
 
 
-    this.callSubscription = this.callService.activeCall$
+    const callSubscription = this.callService.activeCall$
       .filter(Boolean)
       .flatMap(() => this.callService.pbxLineStatus$.map(lineStatus => lineStatus === PBXStateEnum.PBX_DIAL))
       .distinctUntilChanged()
@@ -159,17 +165,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => this.registerContact());
 
-    this.activeCallSubscription = this.callService.activeCall$
+    const activeCallSubscription = this.callService.activeCall$
       .subscribe(call => {
         this.activeCallPhoneId = call && call.phoneId;
         this.phones = [ ...this.phones ];
         this.cdRef.markForCheck();
       });
 
-    this.contactDetailsChangeSub = this.contactRegistrationService
+    const contactDetailsChangeSub = this.contactRegistrationService
       .contactPersonChange$
       .filter(Boolean)
-      .subscribe(_ => this.fetch());
+      .subscribe(_ => this.refresh());
 
     this.personId$
       .filter(Boolean)
@@ -179,17 +185,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.person = person;
         this.cdRef.markForCheck();
       });
+
+      this.subs.add(phonesSub);
+      this.subs.add(debtSubscription);
+      this.subs.add(canViewSubscription);
+      this.subs.add(busSubscription);
+      this.subs.add(callSubscription);
+      this.subs.add(activeCallSubscription);
+      this.subs.add(contactDetailsChangeSub);
   }
 
   ngOnDestroy(): void {
-    this.canViewSubscription.unsubscribe();
-    this.debtSubscription.unsubscribe();
-    this.busSubscription.unsubscribe();
-    this.callSubscription.unsubscribe();
-    this.activeCallSubscription.unsubscribe();
-    if (this.contactDetailsChangeSub) {
-      this.contactDetailsChangeSub.unsubscribe();
-    }
+    this.subs.unsubscribe();
   }
 
   get debtId$(): Observable<number> {
@@ -367,7 +374,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
-      action: () => this.fetch()
+      action: () => this.refresh()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CALL,
@@ -392,7 +399,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onSubmitSuccess(): void {
-    this.fetch();
+    this.refresh();
     this.setDialog();
   }
 
@@ -411,13 +418,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       }));
   }
 
-  private fetch(): void {
-    this.phoneService.fetchAll(this.entityType, this._personId$.value, this.callCenter)
-      .subscribe(phones => {
-        this.phones = phones;
-        this.selectedPhoneId$.next(null);
-        this.cdRef.markForCheck();
-      });
+  private refresh(): void {
+    this.phoneService.refreshPhones(this.entityType, this._personId$.value, this.callCenter);
   }
 
   private clear(): void {

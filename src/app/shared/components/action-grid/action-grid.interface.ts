@@ -46,4 +46,5 @@ export interface IGridAction extends IAction {
   payload: IGridActionPayload;
   selection?: number[][];
   rowData?: any;
+  actionData?: any;
 }

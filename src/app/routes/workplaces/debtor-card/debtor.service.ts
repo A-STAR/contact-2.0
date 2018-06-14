@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { of } from 'rxjs/observable/of';
-import { switchMap } from 'rxjs/operators/switchMap';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter, switchMap, map, distinctUntilChanged, catchError } from 'rxjs/operators';
 
+import { equals } from 'ramda';
+
+import { Debt, Person } from '@app/entities';
 import { IDebtNextCall, IAddressOrPhone } from './debtor.interface';
 
 import { DataService } from '@app/core/data/data.service';
@@ -15,10 +15,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { RepositoryService } from '@app/core/repository/repository.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
-
-import { Debt, Person } from '@app/entities';
-import { catchError } from 'rxjs/operators/catchError';
-import { equals } from 'ramda';
+import { LayoutService } from '@app/core/layout/layout.service';
 
 @Injectable()
 export class DebtorService {
@@ -32,13 +29,20 @@ export class DebtorService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
+  private _debtors = new Map<number, number>();
+
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private repo: RepositoryService,
     private userPermissionsService: UserPermissionsService,
     private workplacesService: WorkplacesService,
+    private layoutService: LayoutService
   ) {}
+
+  get debtors(): IterableIterator<[number, number]> {
+    return this._debtors.entries();
+  }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
   readonly debtorId$ = new BehaviorSubject<number>(null);
@@ -143,6 +147,12 @@ export class DebtorService {
       .pipe(
         catchError(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback())
       );
+  }
+
+  addTab(debtorId: number, debtId: number): void {
+    this._debtors.set(debtorId, debtId);
+
+    this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
   }
 
 }

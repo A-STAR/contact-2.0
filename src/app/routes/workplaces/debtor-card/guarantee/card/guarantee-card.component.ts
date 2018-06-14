@@ -17,7 +17,9 @@ import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
+import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
@@ -28,6 +30,7 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { GuaranteeCardService } from './guarantee-card.service';
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
 import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
@@ -35,7 +38,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 import { invert } from '@app/core/utils';
 
-import { layout } from './guarantee-card.layout';
+import { editLayout, createContractLayout, createGuarantorLayout } from './layout';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,14 +53,15 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
   @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
   @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
   @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
   @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
-  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate: TemplateRef<any>;
+  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:      TemplateRef<any>;
+  @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate:   TemplateRef<any>;
 
-  readonly layoutConfig = layout;
+  readonly entityType = EntityType.GUARANTOR;
 
   readonly paramMap = this.route.snapshot.paramMap;
 
@@ -127,6 +131,8 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
 
+  readonly layoutConfig = this.getLayout();
+
   private subscription = new Subscription();
 
   templates: Record<string, TemplateRef<any>>;
@@ -136,6 +142,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     private guaranteeCardService: GuaranteeCardService,
     private guaranteeService: GuaranteeService,
     private injector: Injector,
+    private layoutService: LayoutService,
     private personService: PersonService,
     private popupOutletService: PopupOutletService,
     private route: ActivatedRoute,
@@ -149,6 +156,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
       employment: this.employmentTemplate,
       addresses: this.addressesTemplate,
       phones: this.phonesTemplate,
+      emails: this.emailsTemplate,
       documents: this.documentsTemplate,
       contractTitlebar: this.contractTitlebarTemplate,
       contractClearButton: this.contractClearButtonTemplate,
@@ -163,8 +171,16 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
         this.layout.enableFormGroup();
       }
     });
-
     this.subscription.add(subscription);
+
+    // One of many reasons route reuse is inconvenient
+    if (!this.editing) {
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetForm();
+        this.layout.resetForm('contract');
+      });
+      this.subscription.add(routerSubscription);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -182,7 +198,9 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
         });
     }
 
-    const subscription = this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
+    const subscription = this.showContractForm
+      ? this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit))
+      : this.guarantor$.pipe(map(Boolean)).subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
     this.subscription.add(subscription);
   }
 
@@ -190,10 +208,21 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscription.unsubscribe();
   }
 
-  onGuarantorFormClear(): void {
+  onContractFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled('contract');
+    this.layout.resetForm('contract');
+    if (isDisabled) {
+      this.layout.disableFormGroup('contract');
+    }
+  }
+
+  onPersonFormClear(): void {
+    const isDisabled = this.layout.isFormDisabled();
     this.guaranteeCardService.selectGuarantor(null);
     this.layout.resetForm();
-    this.layout.resetForm('contract');
+    if (isDisabled) {
+      this.layout.disableFormGroup();
+    }
   }
 
   onSave(): void {
@@ -299,5 +328,15 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private openPersonSearch(): void {
     this.popupOutletService.open(this.modules, 'select-person', this.injector);
+  }
+
+  private getLayout(): IDynamicLayoutConfig {
+    if (this.editing) {
+      return editLayout;
+    } else {
+      return this.showContractForm
+        ? createContractLayout
+        : createGuarantorLayout;
+    }
   }
 }

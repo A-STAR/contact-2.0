@@ -23,4 +23,6 @@ export interface IContactLog {
   userFullName?: string;
   userId?: number;
   formatCode?: number;
+  messageTemplate?: string;
+  tempalteName?: string;
 }

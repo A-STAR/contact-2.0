@@ -1,14 +1,16 @@
 <nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }" (transitionend)="onTransitionEnd($event)">
   <!-- Menu -->
   <ul class="flex-item grow">
-    <li *ngFor="let item of menuItems$ | async" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
-      <div class="menu-item">
-        <div class="icon-container">
-          <i *ngIf="item.icon" [ngClass]="item.icon"></i>
+    <ng-container *ngFor="let item of menuItems$ | async">
+      <li *ngIf="item.permission | async" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
+        <div class="flex align-center menu-item">
+          <div class="flex icon-container flex">
+            <i class="flex align-center" *ngIf="item.icon" [ngClass]="item.icon"></i>
+          </div>
+          <div class="menu-item-title" [ngClass]="{ 'show-title': showTitle }">{{ item.text | translate }}</div>
         </div>
-        <div class="menu-item-title" [ngClass]="{ showTitle: showTitle }">{{ item.text | translate }}</div>
-      </div>
-    </li>
+      </li>
+    </ng-container>
   </ul>
   <!-- Menu -->
   <!-- Collapse button -->

@@ -93,7 +93,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() rowCount = 0;
   @Input() rowHeight = 32;
   @Input() rowIdKey = 'id';
-  @Input() rowSelection = 'multiple';
+  @Input() rowSelection;
   @Input() rows: any[] = [];
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
@@ -829,7 +829,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
-      rowSelection: this.rowSelection,
+      // Ideally, when this.rowSelection is falsy we should add `suppressRowClickSelection: true` but now it would break the grid
+      // See https://www.ag-grid.com/javascript-grid-selection
+      rowSelection: this.rowSelection ? this.rowSelection : 'multiple',
       showToolPanel: false,
       suppressMenuHide: false,
       suppressPaginationPanel: true,

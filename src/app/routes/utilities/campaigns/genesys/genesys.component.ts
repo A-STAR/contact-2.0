@@ -9,6 +9,7 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map } from 'rxjs/operators';
 
+import { CustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IGenesysCampaign, GenesysCampaignStatus, GenesysCampaignType } from './genesys.interface';
@@ -17,7 +18,9 @@ import {
   DynamicLayoutItemType,
   IDynamicLayoutConfig,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import { IGenesysStatisticsRecord } from '@app/routes/utilities/campaigns/genesys/statistics/statistics.interface';
 
+import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { GenesysService } from '@app/routes/utilities/campaigns/genesys/genesys.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
@@ -51,12 +54,12 @@ export class GenesysCampaignsComponent implements OnInit {
           {
             type: DynamicLayoutItemType.TEMPLATE,
             value: 'campaigns',
-            size: 50,
+            size: 60,
           },
           {
             type: DynamicLayoutItemType.TEMPLATE,
             value: 'statistics',
-            size: 30,
+            size: 20,
           },
           {
             type: DynamicLayoutItemType.GROUP,
@@ -111,10 +114,13 @@ export class GenesysCampaignsComponent implements OnInit {
   rows: IGenesysCampaign[] = [];
   rowCount = 0;
 
+  statisticsRows: IGenesysStatisticsRecord[] = [];
+
   templates: Record<string, TemplateRef<any>>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private customOperationService: CustomOperationService,
     private genesysService: GenesysService,
   ) {}
 
@@ -146,6 +152,11 @@ export class GenesysCampaignsComponent implements OnInit {
       ? null
       : this.rows.find(row => row.id === campaignIds[0]);
     this.selectedCampaign$.next(campaign);
+    if (campaign) {
+      this.fetchCampaignStatistics(campaign.id);
+    } else {
+      this.setCampaignStatistics(null);
+    }
   }
 
   onStart(): void {
@@ -176,23 +187,17 @@ export class GenesysCampaignsComponent implements OnInit {
     this.actionData = null;
   }
 
-  // private getActionData(actionId: number): IAction {
-  //   const metadataAction = this.getMetadataAction(actionId);
-  //   return {
-  //     id: metadataAction.id,
-  //     name: metadataAction.action,
-  //     addOptions: metadataAction.addOptions,
-  //     params: metadataAction.params,
-  //     payload: {
-  //       type: metadataAction.type,
-  //       data: [
-  //         metadataAction.params
-  //           .map(param => this.context[param])
-  //           .filter(Boolean)
-  //       ]
-  //     },
-  //     asyncMode: metadataAction.asyncMode,
-  //     outputConfig: metadataAction.outputConfig
-  //   };
-  // }
+  private fetchCampaignStatistics(campaignId: number): void {
+    this.customOperationService
+      .execute(CustomOperation.PBX_CAMPAIGN_STATISTICS, {} as any, { campaignId })
+      .subscribe(
+        response => this.setCampaignStatistics(response.data),
+        () => this.setCampaignStatistics(null),
+      );
+  }
+
+  private setCampaignStatistics(data: IGenesysStatisticsRecord[]): void {
+    this.statisticsRows = data;
+    this.cdRef.markForCheck();
+  }
 }

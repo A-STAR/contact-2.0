@@ -45,6 +45,7 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
     }
   ];
 
+  private selectionSubpscription: Subscription;
   private viewCommentUpdate: Subscription;
 
   constructor(
@@ -79,6 +80,7 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    this.selectionSubpscription.unsubscribe();
     this.viewCommentUpdate.unsubscribe();
   }
 
@@ -102,4 +104,5 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
     this.routingService.navigate([ url ], this.route);
   }
+
 }

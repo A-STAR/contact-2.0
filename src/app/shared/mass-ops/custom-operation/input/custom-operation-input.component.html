@@ -3,14 +3,13 @@
     <h3>{{ 'widgets.customOperation.dialog.input.title' | translate }}</h3>
   </div>
 
-  <app-dynamic-layout
-    style="height: 50vh"
-    [layout]="config"
-    [data]="{ default: {} }"
-  ></app-dynamic-layout>
+  <app-custom-operation-params
+    [key]="key"
+    [params]="inputParams"
+  ></app-custom-operation-params>
 
   <div dialog-footer>
-    <app-button color="primary" type="start" (click)="onSubmit()" [disabled]="isDisabled$ | async"></app-button>
+    <app-button color="primary" type="start" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
     <app-button type="close" (click)="onClose()"></app-button>
   </div>
 </app-dialog>

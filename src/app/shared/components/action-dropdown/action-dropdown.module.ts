@@ -5,6 +5,8 @@ import { ButtonModule } from '@app/shared/components/button/button.module';
 import { DropdownModule } from '@app/shared/components/dropdown/dropdown.module';
 import { MassOpsModule } from '@app/shared/mass-ops/mass-ops.module';
 
+import { ActionDropdownService } from '@app/shared/components/action-dropdown/action-dropdown.service';
+
 import { ActionDropdownComponent } from './action-dropdown.component';
 
 @NgModule({
@@ -20,5 +22,8 @@ import { ActionDropdownComponent } from './action-dropdown.component';
   declarations: [
     ActionDropdownComponent,
   ],
+  providers: [
+    ActionDropdownService
+  ]
 })
 export class ActionDropdownModule { }
