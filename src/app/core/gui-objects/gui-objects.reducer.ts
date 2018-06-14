@@ -1,5 +1,5 @@
 import { IGuiObjectsState } from './gui-objects.interface';
-import { UnsafeAction } from '../../core/state/state.interface';
+import { UnsafeAction } from '@app/core/state/state.interface';
 
 import { GuiObjectsService } from './gui-objects.service';
 
@@ -18,11 +18,11 @@ export function reducer(state: IGuiObjectsState = defaultState, action: UnsafeAc
           ...action.payload
         ]
       };
-      case GuiObjectsService.GUI_OBJECTS_SELECTED:
-        return {
-          ...state,
-          selectedObject: { ...action.payload }
-        };
+    case GuiObjectsService.GUI_OBJECTS_SELECTED:
+      return {
+        ...state,
+        selectedObject: { ...action.payload }
+      };
     default:
       return state;
   }

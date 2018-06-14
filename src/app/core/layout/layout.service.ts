@@ -26,6 +26,8 @@ export class LayoutService {
     filter(event => event instanceof NavigationEnd),
   );
 
+  lastDebtCardIds$ = new BehaviorSubject<{ debtorId: number, debtId: number }>(null);
+
   constructor(
     private router: Router,
   ) {

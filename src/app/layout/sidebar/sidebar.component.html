@@ -7,7 +7,7 @@
           <div class="flex icon-container flex">
             <i class="flex align-center" *ngIf="item.icon" [ngClass]="item.icon"></i>
           </div>
-          <div class="menu-item-title" [ngClass]="{ showTitle: showTitle }">{{ item.text | translate }}</div>
+          <div class="menu-item-title" [ngClass]="{ 'show-title': showTitle }">{{ item.text | translate }}</div>
         </div>
       </li>
     </ng-container>
