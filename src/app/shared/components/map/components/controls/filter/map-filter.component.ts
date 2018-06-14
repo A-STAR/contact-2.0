@@ -18,10 +18,10 @@ import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
 import { IMapService } from '@app/core/map-providers/map-providers.interface';
 import {
-  IMapToolbarFilter,
   IMapToolbarFilterItem,
   IMapToolbarActionData,
   MapToolbarItemType,
+  IMapToolbarItem,
 } from '../toolbar/map-toolbar.interface';
 import { MapFilters, IMapFilterItemAction } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
 
@@ -37,7 +37,7 @@ import { MapFilterItemComponent } from './filter-item/map-filter-item.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapFilterComponent<T> implements OnInit {
-  @Input() config: IMapToolbarFilter;
+  @Input() config: IMapToolbarItem;
   @Output() action = new EventEmitter<IMapToolbarActionData>();
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
