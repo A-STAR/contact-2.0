@@ -24,6 +24,7 @@ export class CallService {
   static CALL_SETTINGS_FETCH = 'CALL_SETTINGS_FETCH';
   static CALL_SETTINGS_CHANGE = 'CALL_SETTINGS_CHANGE';
   static CALL_SETTINGS_FETCH_FAILURE = 'CALL_SETTINGS_FETCH_FAILURE';
+  static CALL_SET = 'CALL_SET';
   static CALL_START = 'CALL_START';
   static CALL_START_SUCCESS = 'CALL_START_SUCCESS';
   static CALL_START_FAILURE = 'CALL_START_FAILURE';
@@ -262,6 +263,13 @@ export class CallService {
     this.store.dispatch({
       type: CallService.PBX_PARAMS_CHANGE,
       payload: params
+    });
+  }
+
+  setCall(call: ICall): void {
+    this.store.dispatch({
+      type: CallService.CALL_SET,
+      payload: call
     });
   }
 
