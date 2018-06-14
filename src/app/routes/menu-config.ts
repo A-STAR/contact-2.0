@@ -158,6 +158,7 @@ export const menuConfig = {
       'WORK_TASK_TAB_SEARCH_INFORMATION',
       'WORK_TASK_TAB_TOCONTRACTOR',
       'WORK_TASK_TAB_PREPARE_VISITS',
+      'WORK_TASK_TAB_CUSTOM_STATUS',
       'WORK_TASK_TAB_CLOSE'
     ]
   },

@@ -68,6 +68,13 @@ export class WorkTaskComponent {
     },
     {
       rowIdKey: 'debtId',
+      key: 'workTask.CustomStatus',
+      title: label('customStatus.title'),
+      isInitialised: false,
+      permission: this.userPermissionsService.hasOne([ 'WORK_TASK_TAB_CUSTOM_STATUS' ])
+    },
+    {
+      rowIdKey: 'debtId',
       key: 'workTask.Close',
       title: label('closed.title'),
       isInitialised: false,
