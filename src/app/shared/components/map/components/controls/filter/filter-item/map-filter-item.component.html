@@ -26,7 +26,7 @@
     *ngSwitchCase="'button'"
     class="btn btn-link dropdown-control-btn dropdown-item-control"
     [disabled]="isDisabled(config) | async"
-    (click)="onAction($event)"
+    (click)="onAction(true)"
   >
     {{ config.label | translate }}
   </button>

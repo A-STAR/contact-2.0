@@ -40,7 +40,11 @@ import { MapFilterItemComponent } from './filter-item/map-filter-item.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapFilterComponent<T> implements AfterViewInit {
-  @Input() config: IMapToolbarItem;
+  @Input() set config(data: IMapToolbarItem) {
+    this._config = data;
+    this._originalConfig = {...data, children: data.children.map(c => ({ ...c })) };
+  }
+
   @Output() action = new EventEmitter<IMapToolbarActionData>();
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
@@ -48,12 +52,18 @@ export class MapFilterComponent<T> implements AfterViewInit {
 
   container: HTMLElement;
   private map: any;
+  private _originalConfig: IMapToolbarItem;
+  private _config: IMapToolbarItem;
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
     private cdRef: ChangeDetectorRef,
     private mapFilterService: MapFilterService<T>,
   ) { }
+
+  get config(): IMapToolbarItem {
+    return this._config;
+  }
 
   ngAfterViewInit(): void {
     this.container = this.mapService.container;
@@ -66,14 +76,8 @@ export class MapFilterComponent<T> implements AfterViewInit {
       first(),
     )
       .subscribe(() => {
-        const toggleAllConfig = this.config.children.find((c: IMapToolbarFilterItem) => c.filter === MapFilters.TOGGLE_ALL);
-        if (toggleAllConfig) {
-          this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
-          this.cdRef.markForCheck();
-        }
+        this.setInitialFilters();
       });
-
-
   }
 
   onAction(action: IMapFilterItemAction): void {
@@ -111,6 +115,17 @@ export class MapFilterComponent<T> implements AfterViewInit {
         .filter(item => Boolean(item.config.filter !== MapFilters.TOGGLE_ALL && (item.menuSelect || item.tickCmp)))
         .forEach(item => item.changeValue(action.value));
 
+    } else if ((action.item.filter as MapFilters) === MapFilters.RESET) {
+      const toggleAllConfig = this.getToggleAllConfig(this._originalConfig);
+      if (toggleAllConfig) {
+        this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
+        const toggleAllCtrl = this.items
+          .find(c => c.config.filter === MapFilters.TOGGLE_ALL);
+        if (toggleAllCtrl) {
+          toggleAllCtrl.changeValue(toggleAllConfig.checked);
+        }
+        this.cdRef.markForCheck();
+      }
     } else if ([
       MapToolbarItemType.DICTIONARY,
       MapToolbarItemType.LOOKUP
@@ -126,6 +141,18 @@ export class MapFilterComponent<T> implements AfterViewInit {
 
     }
     this.cdRef.markForCheck();
+  }
+
+  private setInitialFilters(): void {
+    const toggleAllConfig = this.getToggleAllConfig(this._config);
+    if (toggleAllConfig) {
+      this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
+      this.cdRef.markForCheck();
+    }
+  }
+
+  private getToggleAllConfig(config: IMapToolbarItem): IMapToolbarFilterItem {
+    return config.children.find((c: IMapToolbarFilterItem) => c.filter === MapFilters.TOGGLE_ALL);
   }
 
 }

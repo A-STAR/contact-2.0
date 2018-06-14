@@ -47,7 +47,8 @@ export class MapFilterItemComponent implements OnInit {
       value ? this.menuSelect.selectAll() : this.menuSelect.deselectAll();
     }
     if (this.tickCmp) {
-      this.config.checked = value;
+      this.tickCmp.writeValue(value);
+      // this.config.checked = value;
     }
     // something else
 
