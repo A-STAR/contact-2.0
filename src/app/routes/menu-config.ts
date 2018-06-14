@@ -166,12 +166,28 @@ export const menuConfig = {
     link: '/app/workplaces/debt-processing',
     icon: 'co-m-debt-processing',
     docs: 'ring_up',
+    permission: [
+      'DEBT_PROCESSING_TAB_ALL',
+      'DEBT_PROCESSING_TAB_CALL_BACK',
+      'DEBT_PROCESSING_TAB_CURRENT_JOB',
+      'DEBT_PROCESSING_TAB_VISITS',
+      'DEBT_PROCESSING_TAB_PROMISE_PAY',
+      'DEBT_PROCESSING_TAB_PART_PAY',
+      'DEBT_PROCESSING_TAB_PROBLEM',
+      'DEBT_PROCESSING_TAB_RETURN'
+    ]
   },
   contactProtocol: {
     text: 'sidebar.nav.menu.CONTACT_LOG',
     link: '/app/workplaces/contact-log',
     icon: 'co-m-contact-log',
     docs: 'contact_log',
+    permission: [
+      'CONTACT_LOG_TAB_PROMISE',
+      'CONTACT_LOG_TAB_CONTACT',
+      'CONTACT_LOG_TAB_SMS',
+      'CONTACT_LOG_TAB_EMAIL'
+    ]
   },
   callcenter: {
     text: 'sidebar.nav.menu.CALL_CENTER',
@@ -196,6 +212,11 @@ export const menuConfig = {
     link: '/app/workplaces/outgoing-information',
     icon: 'co-m-communication-out',
     docs: 'info_debt',
+    permission: [
+      'INFO_DEBT_DEBTOR_TAB',
+      'INFO_DEBT_GUARANTOR_TAB',
+      'INFO_DEBT_PLEDGOR_TAB'
+    ]
   },
   searchGroups: {
     text: 'sidebar.nav.menu.SEARCH_GROUPS',
