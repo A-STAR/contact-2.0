@@ -1,10 +1,3 @@
-<app-mass-operation
-  *ngIf="actionData"
-  [type]="actionData.id"
-  [actionData]="actionData"
-  (close)="onCloseAction()"
-></app-mass-operation>
-
 <app-dynamic-layout
   *ngIf="templates"
   [layout]="layout"
