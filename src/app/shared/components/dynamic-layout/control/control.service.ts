@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -8,20 +7,17 @@ import { debounceTime, distinctUntilChanged, first, map } from 'rxjs/operators';
 import { getIn } from 'immutable';
 import { equals } from 'ramda';
 
-import { IAppState } from '@app/core/state/state.interface';
 import {
   DynamicLayoutControlType,
-  DynamicLayoutAction,
   DynamicLayoutItemType,
   IDynamicLayoutControl,
-  IDynamicLayoutChangeStatusAction,
-  IDynamicLayoutChangeValueAction,
   IDynamicLayoutItem,
   IDynamicLayoutItemProperties,
   IDynamicLayoutPlugin,
 } from '../dynamic-layout.interface';
 
 import { EventService } from '../event/event.service';
+import { UIService } from '@app/core/ui/ui.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
@@ -56,7 +52,7 @@ export class ControlService implements OnDestroy {
   constructor(
     private eventService: EventService,
     private formBuilder: FormBuilder,
-    private store: Store<IAppState>,
+    private uiService: UIService,
     private valueConverterService: ValueConverterService,
   ) {}
 
@@ -92,16 +88,17 @@ export class ControlService implements OnDestroy {
   }
 
   canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
-    return this.store.select(state => {
-      const f = getIn(state, [ 'layout', this.key, 'forms', form ], {});
-      return f.dirty && f.status === 'VALID';
-    });
+    return this.uiService.getState(this.key).pipe(
+      map(state => {
+        const f = getIn(state, [ form ], {});
+        return f.dirty && f.status === 'VALID';
+      }),
+    );
   }
 
   canSubmitAll(mustBeNotEmpty: boolean = false): Observable<boolean> {
-    return this.store.pipe(
-      select((state: any) => getIn(state, [ 'layout', this.key, 'forms' ], {})),
-      select(forms => {
+    return this.uiService.getState(this.key).pipe(
+      map(forms => {
         const groups = Array.from(this.groupNames);
         const valid = groups.reduce((acc, name) => {
           const status = getIn(forms, [ name, 'status' ], false);
@@ -152,21 +149,12 @@ export class ControlService implements OnDestroy {
   }
 
   dispatchChangeStatusAction(form: string, status: string): void {
-    const { key } = this;
-    const action: IDynamicLayoutChangeStatusAction = {
-      type: DynamicLayoutAction.CHANGE_FORM_STATUS,
-      payload: { key, form, status },
-    };
-    this.store.dispatch(action);
+    this.uiService.updateState(`${this.key}`, { [form]: { status } });
   }
 
   dispatchChangeValueAction(form: string, dirty: boolean, value: Record<string, any>): void {
-    const { key } = this;
-    const action: IDynamicLayoutChangeValueAction = {
-      type: DynamicLayoutAction.CHANGE_FORM_VALUE,
-      payload: { key, form, dirty, value },
-    };
-    this.store.dispatch(action);
+    this.uiService.updateState(this.key, { [form]: { dirty } });
+    this.uiService.updateState(this.key, { [form]: { value } });
   }
 
   enableFormGroup(formGroupName: string = ControlService.DEFAULT_GROUP_NAME): void {

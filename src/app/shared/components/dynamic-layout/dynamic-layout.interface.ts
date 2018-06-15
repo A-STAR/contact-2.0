@@ -86,33 +86,12 @@ export interface IDynamicLayoutState {
 }
 
 export enum DynamicLayoutAction {
-  CHANGE_FORM_STATUS = '[layout] change form valid',
-  CHANGE_FORM_VALUE = '[layout] change form value',
   FETCH_CONFIG = '[layout] fetch config',
   FETCH_CONFIG_SUCCESS = '[layout] fetch config success',
 }
 
 export interface IDynamicLayoutGenericAction {
   type: DynamicLayoutAction;
-}
-
-export interface IDynamicLayoutChangeStatusAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_FORM_STATUS;
-  payload: {
-    key: string;
-    form: string;
-    status: string;
-  };
-}
-
-export interface IDynamicLayoutChangeValueAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_FORM_VALUE;
-  payload: {
-    key: string;
-    form: string;
-    value: any;
-    dirty: boolean;
-  };
 }
 
 export interface IDynamicLayoutFetchConfigAction extends IDynamicLayoutGenericAction {
@@ -131,7 +110,5 @@ export interface IDynamicLayoutFetchConfigSuccessAction extends IDynamicLayoutGe
 }
 
 export type IDynamicLayoutAction =
-  | IDynamicLayoutChangeStatusAction
-  | IDynamicLayoutChangeValueAction
   | IDynamicLayoutFetchConfigSuccessAction
 ;
