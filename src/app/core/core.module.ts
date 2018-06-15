@@ -9,6 +9,7 @@ import { RepositoryModule } from '@app/core/repository/repository.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
+import { ActionsService } from './actions/actions.service';
 import { ActionsLogService } from './actions-log/actions-log.service';
 import { ButtonService } from './button/button.service';
 import { CallService } from './calls/call.service';
@@ -107,6 +108,7 @@ import { TaskService } from '@app/core/task/task.service';
     UserModule,
   ],
   providers: [
+    ActionsService,
     ActionsLogService,
     ButtonService,
     CallService,

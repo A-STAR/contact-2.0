@@ -39,7 +39,6 @@ export class MassOperationsService {
   }
 
   openDebtCard(actionData: any, onClose?: Function): void {
-
     const { debtId, debtorId, personRole, personId, contractId } = actionData;
 
     switch (personRole) {

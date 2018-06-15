@@ -81,6 +81,23 @@ export class CallService {
       .subscribe(state =>
         this.persistenceService.set(CallService.STORAGE_KEY, state)
       );
+
+    // TODO(i.kibisov): remove mock
+    setTimeout(() => {
+      this.updatePBXState({
+        date: '2018-06-15T08:56:52.111Z',
+        lineStatus: PBXStateEnum.PBX_CALL,
+        payload: null,
+        userStatus: null,
+        username: 'admin-pbx',
+        debtId: 1,
+        debtorId: 1,
+        personId: 1,
+        phoneId: 209,
+        callTypeCode: 1,
+        personRole: 1
+      });
+    }, 12000);
   }
 
   get settings$(): Observable<ICallSettings> {

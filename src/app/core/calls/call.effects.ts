@@ -10,12 +10,13 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { ICallSettings, ICall, PBXStateEnum, IPBXParams } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
 
+import { AuthService } from '@app/core/auth/auth.service';
+import { ActionsService } from '@app/core/actions/actions.service';
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 import { first } from 'rxjs/operators';
-import { AuthService } from '@app/core/auth/auth.service';
 
 const savedState = localStorage.getItem(CallService.STORAGE_KEY);
 
@@ -275,8 +276,15 @@ export class CallEffects {
         });
     });
 
+  @Effect({ dispatch: false })
+  pbxStateAction$ = this.actions
+    .ofType(CallService.PBX_STATE_CHANGE)
+    .filter((action: UnsafeAction) => action.payload)
+    .map((action: UnsafeAction) => this.actionsService.doAction(action.payload));
+
   constructor(
     private actions: Actions,
+    private actionsService: ActionsService,
     private authService: AuthService,
     private callService: CallService,
     private dataService: DataService,

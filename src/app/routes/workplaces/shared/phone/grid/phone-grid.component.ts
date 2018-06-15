@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -76,7 +76,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   dialog = null;
 
-  phones: IPhone[] = [];
+  phones$ = new BehaviorSubject<IPhone[]>([]);
 
   debt: Debt;
 
@@ -105,7 +105,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const phonesSub = this._personId$
@@ -113,7 +113,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         switchMap(personId => this.phoneService.fetchAll(this.entityType, personId, this.callCenter))
       )
       .subscribe(phones => {
-        this.phones = phones;
+        this.phones$.next(phones);
         this.selectedPhoneId$.next(null);
         this.cdRef.markForCheck();
       });
@@ -168,7 +168,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const activeCallSubscription = this.callService.activeCall$
       .subscribe(call => {
         this.activeCallPhoneId = call && call.phoneId;
-        this.phones = [ ...this.phones ];
+        this.phones$.next([ ...this.phones ]);
         this.cdRef.markForCheck();
       });
 
@@ -186,6 +186,29 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
+    const registerContactSub = combineLatest(PhoneService.registerContact$, this.phones$)
+      .pipe(
+        filter(([ action, phones ]) => action && !!phones.length),
+        map(([ action ]) => action),
+        filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
+      )
+      .subscribe(({ phoneId }) => {
+        this.selectedPhoneId$.next(phoneId);
+        this.registerContact();
+        this.cdRef.markForCheck();
+      });
+
+    const setCallSub = combineLatest(PhoneService.setCall$, this.phones$)
+      .pipe(
+        filter(([ action, phones ]) => action && !!phones.length),
+        map(([ action ]) => action),
+        filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
+      )
+      .subscribe(({ phoneId }) => {
+        this.setCall(this.phones.find(p => p.id === phoneId));
+        this.cdRef.markForCheck();
+      });
+
       this.subs.add(phonesSub);
       this.subs.add(debtSubscription);
       this.subs.add(canViewSubscription);
@@ -193,6 +216,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.subs.add(callSubscription);
       this.subs.add(activeCallSubscription);
       this.subs.add(contactDetailsChangeSub);
+      this.subs.add(registerContactSub);
+      this.subs.add(setCallSub);
   }
 
   ngOnDestroy(): void {
@@ -213,6 +238,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get blockDialogDictionaryId(): number {
     return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
+  }
+
+  get phones(): IPhone[] {
+    return this.phones$.value;
   }
 
   getRowClass(): any {
@@ -418,12 +447,25 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       }));
   }
 
+  private setCall(phone: IPhone): void {
+    this.callService.setCall({
+      phoneId: phone.id,
+      debtId: this._debtId$.value,
+      personId: this._personId$.value,
+      personRole: this.personRole,
+      phone: phone.phone,
+      lastName: this.person.lastName,
+      firstName: this.person.firstName,
+      middleName: this.person.middleName
+    });
+  }
+
   private refresh(): void {
     this.phoneService.refreshPhones(this.entityType, this._personId$.value, this.callCenter);
   }
 
   private clear(): void {
-    this.phones = [];
+    this.phones$.next([]);
     this.cdRef.markForCheck();
   }
 

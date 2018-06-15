@@ -43,5 +43,16 @@ export enum PBXStateEnum {
 
 export interface IPBXState {
   lineStatus: PBXStateEnum;
-  userStatus: number;
+  userStatus?: number;
+  date: string;
+  username: string;
+  phoneId?: number;
+  debtId?: number;
+  debtorId?: number;
+  personRole?: number;
+  personId?: number;
+  contractId?: number;
+  callTypeCode?: number;
+  afterCallPeriod?: number;
+  payload?: any;
 }
