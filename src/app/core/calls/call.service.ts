@@ -92,10 +92,11 @@ export class CallService {
         username: 'admin-pbx',
         debtId: 1,
         debtorId: 1,
-        personId: 1,
-        phoneId: 209,
+        personId: 7,
+        phoneId: 180,
         callTypeCode: 1,
-        personRole: 1
+        personRole: 2,
+        contractId: 1,
       });
     }, 12000);
   }

@@ -98,7 +98,7 @@ export class MassOperationsService {
 
   openGuarantorCard(debtorId: number, debtId: number, contractId: number, guarantorId: number): Promise<boolean> {
     return this.routingService.navigate([
-        `/app/workplaces/debtor/${debtorId}/debt/${debtId}/guarantee/${contractId}/guarantor/${guarantorId}`
+        `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/guarantee/${contractId}/guarantor/${guarantorId}`
     ]);
   }
 

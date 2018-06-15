@@ -177,37 +177,43 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(_ => this.refresh());
 
-    this.personId$
-      .filter(Boolean)
-      .flatMap(personId => this.workplacesService.fetchDebtor(personId))
+    this.person$
       .pipe(first())
       .subscribe(person => {
         this.person = person;
         this.cdRef.markForCheck();
       });
 
-    const registerContactSub = combineLatest(PhoneService.registerContact$, this.phones$)
-      .pipe(
-        filter(([ action, phones ]) => action && !!phones.length),
-        map(([ action ]) => action),
-        filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
-      )
-      .subscribe(({ phoneId }) => {
-        this.selectedPhoneId$.next(phoneId);
-        this.registerContact();
-        this.cdRef.markForCheck();
-      });
+    const registerContactSub = combineLatest(
+      PhoneService.registerContact$.filter(Boolean),
+      this.phones$.filter(phones => !!phones.length),
+      this.person$.filter(Boolean),
+      this._debtId$.filter(Boolean)
+    )
+    .pipe(
+      map(([ action ]) => action),
+      filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
+    )
+    .subscribe(({ phoneId }) => {
+      this.selectedPhoneId$.next(phoneId);
+      this.registerContact();
+      this.cdRef.markForCheck();
+    });
 
-    const setCallSub = combineLatest(PhoneService.setCall$, this.phones$)
-      .pipe(
-        filter(([ action, phones ]) => action && !!phones.length),
-        map(([ action ]) => action),
-        filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
-      )
-      .subscribe(({ phoneId }) => {
-        this.setCall(this.phones.find(p => p.id === phoneId));
-        this.cdRef.markForCheck();
-      });
+    const setCallSub = combineLatest(
+      PhoneService.setCall$.filter(Boolean),
+      this.phones$.filter(phones => !!phones.length),
+      this.person$.filter(Boolean),
+      this._debtId$.filter(Boolean)
+    )
+    .pipe(
+      map(([ action ]) => action),
+      filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
+    )
+    .subscribe(({ phoneId }) => {
+      this.setCall(this.phones.find(p => p.id === phoneId));
+      this.cdRef.markForCheck();
+    });
 
       this.subs.add(phonesSub);
       this.subs.add(debtSubscription);
@@ -312,6 +318,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(phone => this.register.emit(phone));
   }
+
+  readonly person$ = this.personId$
+    .filter(Boolean)
+    .flatMap(personId => this.workplacesService.fetchDebtor(personId));
 
   readonly selectedPhone$: Observable<IPhone>  = this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
 
