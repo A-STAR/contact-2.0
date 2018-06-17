@@ -160,27 +160,35 @@ export class GenesysCampaignsComponent implements OnInit {
   }
 
   onStart(): void {
-    this.actionData = {
-      id: 1,
-    };
+    const campaignId = this.selectedCampaign$.value;
+
+    this.customOperationService
+      .execute(CustomOperation.PBX_CAMPAIGN_START, {} as any, { campaignId })
+      .subscribe();
   }
 
   onStop(): void {
-    this.actionData = {
-      id: 1,
-    };
+    const campaignId = this.selectedCampaign$.value;
+
+    this.customOperationService
+      .execute(CustomOperation.PBX_CAMPAIGN_STOP, {} as any, { campaignId })
+      .subscribe();
   }
 
   onLoad(): void {
-    this.actionData = {
-      id: 1,
-    };
+    const campaignId = this.selectedCampaign$.value;
+
+    this.customOperationService
+      .execute(CustomOperation.PBX_CAMPAIGN_LOAD, {} as any, { campaignId })
+      .subscribe();
   }
 
   onUnload(): void {
-    this.actionData = {
-      id: 1,
-    };
+    const campaignId = this.selectedCampaign$.value;
+
+    this.customOperationService
+      .execute(CustomOperation.PBX_CAMPAIGN_UNLOAD, {} as any, { campaignId })
+      .subscribe();
   }
 
   onCloseAction(): void {

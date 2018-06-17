@@ -27,7 +27,9 @@ import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
+import { TaskService } from '@app/core/task/task.service';
 import { ThemesService } from './themes/themes.service';
+import { UIService } from '@app/core/ui/ui.service';
 import { ValueConverterService } from './converter/value-converter.service';
 import { WSService } from './ws/ws.service';
 
@@ -54,7 +56,6 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
-import { TaskService } from '@app/core/task/task.service';
 
 @NgModule({
   imports: [
@@ -129,6 +130,7 @@ import { TaskService } from '@app/core/task/task.service';
     TaskService,
     ThemesService,
     TranslateService,
+    UIService,
     ValueConverterService,
     WSService,
     environment.production
