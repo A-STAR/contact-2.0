@@ -31,10 +31,8 @@ export interface IMapToolbarItem {
   children?: Array<IMapToolbarItem | IMapToolbarFilterItem>;
 }
 
-export type IMapFilterFn = (entity: any, params?: any) => boolean;
-
 export interface IMapToolbarFilterItem extends IMapToolbarItem {
-  filter?: IMapFilterFn | MapFilters;
+  filter?: MapFilters;
   dictCode?: number;
   lookupKey?: string;
   checked?: boolean;

@@ -3,44 +3,37 @@ import { Injectable, Inject } from '@angular/core';
 import { ILayer, LayerType, IMapService } from '@app/core/map-providers/map-providers.interface';
 import {
   IMapToolbarFilterItem,
-  IMapFilterFn,
 } from '../toolbar/map-toolbar.interface';
 import { MapFilters } from './map-filter.interface';
 
 import { LayersService, LayerGroup, Layer } from '@app/core/map-providers/layers/map-layers.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
-import { isEmpty } from '@app/core/utils';
+
+type FilterFn = (layer: ILayer<any>, params: any) => boolean;
 
 @Injectable()
 export class MapFilterService<T> {
-  defaultItems: { [MapFilters: number]: IMapFilterFn } = {
-    [MapFilters.TOGGLE_ALL]: (_, params: boolean) => params,
 
-    [MapFilters.RESET]: (_, __) => true,
+  activeFilters = new Map<MapFilters, number[] | boolean>();
+
+  filters: { [MapFilters: number]: FilterFn } = {
 
     [MapFilters.TOGGLE_INACTIVE]: (layer: ILayer<any>, params: boolean) =>
-      layer.data.isInactive ? params : true,
+      layer.data.isInactive ? !!params : true,
 
     [MapFilters.ADDRESS_STATUS]: (layer: ILayer<any>, params: number[]) =>
-      isEmpty(params) || params.includes(layer.data.statusCode),
+      params.includes(layer.data.statusCode),
 
     [MapFilters.ADDRESS_TYPE]: (layer: ILayer<any>, params: number[]) =>
-      isEmpty(params) ||
       params.includes(layer.data.addressTypeCode || layer.data.typeCode),
 
     [MapFilters.VISIT_STATUS]: (layer: ILayer<any>, params: number[]) =>
-      isEmpty(params) || params.includes(layer.data.visitStatus),
+      params.includes(layer.data.visitStatus),
 
     [MapFilters.CONTACT_TYPE]: (layer: ILayer<any>, params: number[]) =>
-      isEmpty(params) || params.includes(layer.data.contactType),
+      params.includes(layer.data.contactType),
 
-    [MapFilters.TOGGLE_ADDRESSES]: (_, params: boolean) => params,
-
-    [MapFilters.TOGGLE_ACCURACY]: (_, params: boolean) => params,
-
-    [MapFilters.DISTANCE]: (layer: ILayer<any>, params: number) =>
-       layer.data.isContact && layer.data.contactLatitude && layer.data.contactLongitude && Boolean(params)
   };
 
   constructor(
@@ -50,11 +43,8 @@ export class MapFilterService<T> {
 
   applyFilter(item: IMapToolbarFilterItem, params: any): void {
     switch (item.filter) {
-      case MapFilters.TOGGLE_ALL:
-        const shouldShow = this.defaultItems[MapFilters.TOGGLE_ALL](null, params);
-        shouldShow ? this.layersService.show() : this.layersService.hide();
-        break;
       case MapFilters.RESET:
+      case MapFilters.TOGGLE_ALL:
         this.layersService.show();
         break;
       case MapFilters.ADDRESS_STATUS:
@@ -62,15 +52,19 @@ export class MapFilterService<T> {
       case MapFilters.CONTACT_TYPE:
       case MapFilters.VISIT_STATUS:
       case MapFilters.TOGGLE_INACTIVE:
+        this.activeFilters.set(item.filter, params);
         this.layersService
-          .getLayers()
-          .forEach(l => {
-            const layer = l.isGroup ? (l as LayerGroup<T>).getLayersByType(LayerType.MARKER)[0] : l as Layer<T>;
-            if (layer) {
-              const _shouldShow = this.defaultItems[item.filter as MapFilters](layer, params);
-              _shouldShow ? l.show() : l.hide();
-            }
-          });
+            .getLayers()
+            .forEach(l => {
+              const layer = l.isGroup ? (l as LayerGroup<T>).getLayersByType(LayerType.MARKER)[0] : l as Layer<T>;
+              if (layer) {
+                if (this.applyFilters(this.filters[item.filter], layer, params)) {
+                  l.show();
+                } else {
+                  l.hide();
+                }
+              }
+            });
         break;
       // now applies for groups only
       case MapFilters.TOGGLE_ACCURACY:
@@ -80,7 +74,7 @@ export class MapFilterService<T> {
             if (g.isGroup) {
               const layerIds = g.getLayersByType(LayerType.CIRCLE).map(l => l.id);
 
-              this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+              params ? g.hideByIds(layerIds) : g.showByIds(layerIds);
             }
           });
         break;
@@ -96,7 +90,7 @@ export class MapFilterService<T> {
                   && (m.data as any).addressLongitude && !(m.data as any).isContact)
                 .map(l => l.id);
 
-              this.defaultItems[item.filter as MapFilters](null, params) ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+              params ? g.hideByIds(layerIds) : g.showByIds(layerIds);
             }
           });
         break;
@@ -108,32 +102,30 @@ export class MapFilterService<T> {
             if (g.isGroup) {
               g
               .getLayersByType(LayerType.MARKER)
-              .filter(m => this.defaultItems[item.filter as MapFilters](m, params))
+              .filter(m => this.distanceFilter(m, params))
               .map(l => this.mapService.setIcon(l, 'addressByContact', params));
             }
           });
         break;
       default:
-         if (typeof item.filter === 'function') {
-          this.layersService
-          .getLayers()
-          .forEach(g => {
-            if (g.isGroup) {
-              (g as LayerGroup<T>)
-                .getLayers()
-                .forEach(l => {
-                  const _show = (item.filter as IMapFilterFn)(l, params);
-                  _show ? (g as LayerGroup<T>).showByIds([l.id]) : (g as LayerGroup<T>).hideByIds([l.id]);
-                });
-            } else {
-              const _show = (item.filter as IMapFilterFn)((g as Layer<T>), params);
-              _show ? (g as Layer<T>).show() : (g as Layer<T>).hide();
-            }
-          });
-         } else {
-           throw new Error(`Unknown filter type: ${item.filter}`);
-         }
-
+        throw new Error(`Unknown filter type: ${item.filter}`);
     }
+  }
+
+  setActiveFilters(checked: boolean, filters: number[]): void {
+    if (checked) {
+      filters.forEach(filter => typeof this.filters[filter] === 'function' ? this.activeFilters.set(filter, []) : null);
+    } else {
+      this.activeFilters.clear();
+    }
+  }
+
+  private applyFilters(currentFilter: FilterFn, layer: ILayer<any>, params: number[]): boolean {
+    return Array.from(this.activeFilters).reduce((acc, af: [number, number[] | boolean]) => acc ||
+      (typeof this.filters[af[0]] === 'function' ? this.filters[af[0]](layer, af[1]) : acc), currentFilter(layer, params));
+  }
+
+  private distanceFilter(layer: ILayer<any>, params: number): boolean {
+    return layer.data.isContact && layer.data.contactLatitude && layer.data.contactLongitude && Boolean(params);
   }
 }

@@ -42,6 +42,9 @@ import { MapFilterItemComponent } from './filter-item/map-filter-item.component'
 export class MapFilterComponent<T> implements AfterViewInit {
   @Input() set config(data: IMapToolbarItem) {
     this._config = data;
+    this.filters = (data.children || [])
+      .filter((c: IMapToolbarFilterItem) => !!c.filter)
+      .map((c: IMapToolbarFilterItem) => c.filter);
     this._originalConfig = {...data, children: data.children.map(c => ({ ...c })) };
   }
 
@@ -54,6 +57,7 @@ export class MapFilterComponent<T> implements AfterViewInit {
   private map: any;
   private _originalConfig: IMapToolbarItem;
   private _config: IMapToolbarItem;
+  private filters: number[];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
@@ -109,13 +113,13 @@ export class MapFilterComponent<T> implements AfterViewInit {
 
   private handleAction(action: IMapFilterItemAction): void {
 
-    if ((action.item.filter as MapFilters) === MapFilters.TOGGLE_ALL) {
+    if (action.item.filter === MapFilters.TOGGLE_ALL && action.value) {
 
       this.items
         .filter(item => Boolean(item.config.filter !== MapFilters.TOGGLE_ALL && (item.menuSelect || item.tickCmp)))
         .forEach(item => item.changeValue(action.value));
 
-    } else if ((action.item.filter as MapFilters) === MapFilters.RESET) {
+    } else if (action.item.filter === MapFilters.RESET) {
       const toggleAllConfig = this.getToggleAllConfig(this._originalConfig);
       if (toggleAllConfig) {
         this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
@@ -147,6 +151,7 @@ export class MapFilterComponent<T> implements AfterViewInit {
     const toggleAllConfig = this.getToggleAllConfig(this._config);
     if (toggleAllConfig) {
       this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
+      this.mapFilterService.setActiveFilters((toggleAllConfig as IMapToolbarFilterItem).checked, this.filters);
       this.cdRef.markForCheck();
     }
   }
