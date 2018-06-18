@@ -142,6 +142,24 @@ export class CallEffects {
     .map(() => ({ type: CallService.CALL_DROP_SUCCESS }));
 
   @Effect()
+  sendContactIntermediate$ = this.actions
+    .ofType(CallService.PBX_CONTACT_INTERMEDIATE)
+    .switchMap((action: UnsafeAction) => {
+      const { node, phoneId, debtId } = action.payload;
+      return this.sendContactTreeIntermediate(node, phoneId, debtId)
+        .map(() => ({
+          type: CallService.PBX_CONTACT_INTERMEDIATE_SUCCESS,
+          payload: action.payload
+        }))
+        .catch(error => {
+          return [
+            { type: CallService.PBX_CONTACT_INTERMEDIATE_FAILURE },
+            this.notificationService.createError().entity('entities.calls.gen.singular').response(error).action()
+          ];
+        });
+    });
+
+  @Effect()
   fetchCallSettings$ = this.actions
     .ofType(CallService.CALL_SETTINGS_FETCH)
     .mergeMap(() => {
@@ -338,5 +356,10 @@ export class CallEffects {
   private changeParams(params: IPBXParams): Observable<void> {
     return this.dataService
       .update('/pbx/users', {}, params);
+  }
+
+  private sendContactTreeIntermediate(node: number, phoneId: number, debtId: number): Observable<void> {
+    return this.dataService
+      .create('/pbx/contactTreeIntermediate', {}, { node, phoneId, debtId });
   }
 }

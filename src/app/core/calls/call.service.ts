@@ -49,6 +49,9 @@ export class CallService {
   static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
   static PBX_PARAMS_UPDATE = 'PBX_PARAMS_UPDATE';
   static PBX_PARAMS_CHANGE = 'PBX_PARAMS_CHANGE';
+  static PBX_CONTACT_INTERMEDIATE = 'PBX_CONTACT_INTERMEDIATE';
+  static PBX_CONTACT_INTERMEDIATE_SUCCESS = 'PBX_CONTACT_INTERMEDIATE_SUCCESS';
+  static PBX_CONTACT_INTERMEDIATE_FAILURE = 'PBX_CONTACT_INTERMEDIATE_FAILURE';
 
   private isFetching = false;
 
@@ -288,6 +291,17 @@ export class CallService {
     this.store.dispatch({
       type: CallService.CALL_SET,
       payload: call
+    });
+  }
+
+  sendContactTreeIntermediate(node: number, phoneId: number, debtId: number): void {
+    this.store.dispatch({
+      type: CallService.PBX_CONTACT_INTERMEDIATE,
+      payload: {
+        node,
+        phoneId,
+        debtId
+      }
     });
   }
 

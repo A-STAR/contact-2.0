@@ -1,11 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, filter } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
+import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
+import { CallService } from '@app/core/calls/call.service';
 import { ContactRegistrationService } from '../contact-registration.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
@@ -19,15 +24,20 @@ import { isEmpty } from '@app/core/utils';
 })
 export class TreeComponent implements OnInit, OnDestroy {
   nodes = [];
-  selectedNode = null;
   scenario: string = null;
 
+  readonly selectedNode$ = new BehaviorSubject<ITreeNode>(null);
+
   private nodesSub: Subscription;
+  private selectedNodeSub: Subscription;
+  private treeIntermediateSub: Subscription;
 
   constructor(
+    private callService: CallService,
     private contactRegistrationService: ContactRegistrationService,
     private cdRef: ChangeDetectorRef,
     private domSanitizer: DomSanitizer,
+    private route: ActivatedRoute,
     private workplacesService: WorkplacesService,
   ) {}
 
@@ -43,13 +53,43 @@ export class TreeComponent implements OnInit, OnDestroy {
       .subscribe(nodes => {
         this.nodes = nodes;
         this.scenario = null;
-        this.selectedNode = null;
+        this.selectedNode$.next(null);
         this.cdRef.markForCheck();
       });
+
+    this.selectedNodeSub = this.selectedNode$
+      .subscribe(node => {
+        if (node && isEmpty(node.children)) {
+          this.fetchScenario(node.data.id);
+        } else {
+          this.scenario = null;
+          this.cdRef.markForCheck();
+        }
+
+        this.cdRef.markForCheck();
+      });
+
+    this.treeIntermediateSub = combineLatest(
+      this.callService.pbxState$,
+      this.route.queryParams,
+      this.selectedNode$.filter(Boolean)
+    )
+    .pipe(
+      filter(([ state, params, _ ]) => params.activeCallId && +params.activeCallId === state.phoneId),
+    )
+    .subscribe(([ state, _, node ]) =>
+      this.callService.sendContactTreeIntermediate(node.data.code, state.phoneId, state.debtId)
+    );
   }
 
   ngOnDestroy(): void {
     this.nodesSub.unsubscribe();
+    this.selectedNodeSub.unsubscribe();
+    this.treeIntermediateSub.unsubscribe();
+  }
+
+  get selectedNode(): ITreeNode {
+    return this.selectedNode$.value;
   }
 
   get scenarioText(): { text: SafeHtml, translate: boolean } {
@@ -75,11 +115,11 @@ export class TreeComponent implements OnInit, OnDestroy {
   }
 
   onNodeSelect(event: any): void {
-    this.selectNode(event.node);
+    this.selectedNode$.next(event.node);
   }
 
   onNodeDoubleClick(node: any): void {
-    this.selectNode(node);
+    this.selectedNode$.next(node);
     if (node && isEmpty(node.children)) {
       this.contactRegistrationService.mode = IContactRegistrationMode.EDIT;
       this.contactRegistrationService.outcome = node.data;
@@ -88,17 +128,6 @@ export class TreeComponent implements OnInit, OnDestroy {
 
   onCancelClick(): void {
     this.contactRegistrationService.cancelRegistration();
-  }
-
-  private selectNode(node: any): void {
-    this.selectedNode = node;
-    this.cdRef.markForCheck();
-    if (node && isEmpty(node.children)) {
-      this.fetchScenario(node.data.id);
-    } else {
-      this.scenario = null;
-      this.cdRef.markForCheck();
-    }
   }
 
   private fetchScenario(nodeId: number): void {
