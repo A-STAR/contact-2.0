@@ -32,9 +32,8 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   tabs: Observable<ITab[]> = combineLatest(
     ...this.debtorService.debtors
-      .map((debtor: { id: number, debt: number }) => {
+      .map(([ id, debt ]: [ number, number ]) => {
 
-        const { id, debt } = debtor;
         const link = `/app/workplaces/debtor/${id}/debt/${debt}`;
 
         return this.repositoryService

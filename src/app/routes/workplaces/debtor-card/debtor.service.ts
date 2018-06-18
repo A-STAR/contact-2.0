@@ -40,14 +40,8 @@ export class DebtorService {
     private layoutService: LayoutService
   ) {}
 
-  get debtors(): Array<{ id: number, debt: number}> {
-    return Array
-      .from(this._debtors as Map<number, number>)
-      .map((debtor: [number, number]) => {
-        const [ id, debt ] = debtor;
-
-        return { id, debt };
-      });
+  get debtors(): Array<[number, number]> {
+    return Array.from(this._debtors as Map<number, number>);
   }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
