@@ -7,13 +7,13 @@ import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { ICallSettings, ICall, PBXStateEnum, IPBXParams } from './call.interface';
+import { ICallSettings, ICall, PBXStateEnum, IPBXParams, CallTypeEnum } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
-import { ActionsService } from '@app/core/actions/actions.service';
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
+import { DebtApiService } from '@app/core/api/debt.api';
 import { NotificationsService } from '../notifications/notifications.service';
 
 import { first } from 'rxjs/operators';
@@ -280,11 +280,17 @@ export class CallEffects {
   pbxStateAction$ = this.actions
     .ofType(CallService.PBX_STATE_CHANGE)
     .filter((action: UnsafeAction) => action.payload)
-    .map((action: UnsafeAction) => this.actionsService.doAction(action.payload));
+    .map((action: UnsafeAction) => action.payload)
+    .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL
+      && state.debtId
+      && state.phoneId
+      && state.callTypeCode === CallTypeEnum.OUTGOING
+    )
+    .map(state => this.debtApi.openDebtCard(state, null, state.phoneId));
 
   constructor(
     private actions: Actions,
-    private actionsService: ActionsService,
+    private debtApi: DebtApiService,
     private authService: AuthService,
     private callService: CallService,
     private dataService: DataService,

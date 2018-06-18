@@ -9,13 +9,13 @@ import { RepositoryModule } from '@app/core/repository/repository.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
-import { ActionsService } from './actions/actions.service';
 import { ActionsLogService } from './actions-log/actions-log.service';
 import { ButtonService } from './button/button.service';
 import { CallService } from './calls/call.service';
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from './context/context.service';
 import { DataService } from './data/data.service';
+import { DebtApiService } from '@app/core/api/debt.api';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
@@ -108,7 +108,6 @@ import { TaskService } from '@app/core/task/task.service';
     UserModule,
   ],
   providers: [
-    ActionsService,
     ActionsLogService,
     ButtonService,
     CallService,
@@ -117,6 +116,7 @@ import { TaskService } from '@app/core/task/task.service';
     DatePipe,
     DataService,
     DecimalPipe,
+    DebtApiService,
     EntityAttributesService,
     EntityTranslationsService,
     LookupService,

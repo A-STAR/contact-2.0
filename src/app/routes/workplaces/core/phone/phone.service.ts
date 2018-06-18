@@ -1,5 +1,4 @@
 import { Actions } from '@ngrx/effects';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
@@ -18,11 +17,11 @@ import { map } from 'rxjs/operators/map';
 @Injectable()
 export class PhoneService extends AbstractActionService {
   static MESSAGE_PHONE_SAVED = 'MESSAGE_PHONE_SAVED';
+  static MESSAGE_PHONE_INIT = 'MESSAGE_PHONE_INIT';
+  static MESSAGE_PHONE_REGISTER = 'MESSAGE_PHONE_REGISTER';
+  static MESSAGE_PHONE_SET_CALL = 'MESSAGE_PHONE_SET_CALL';
   baseUrl = '/entityTypes/{entityType}/entities/{entityId}/phones';
   singular = 'entities.phones.gen.singular';
-
-  static readonly registerContact$ = new  BehaviorSubject<any>(null);
-  static readonly setCall$ = new BehaviorSubject<any>(null);
 
   constructor(
     protected actions: Actions,
@@ -103,13 +102,5 @@ export class PhoneService extends AbstractActionService {
     return this.dataService
       .delete(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, { params: { callCenter } })
       .catch(this.notificationsService.deleteError().entity(this.singular).dispatchCallback());
-  }
-
-  registerContact(debtId: number, phoneId: number): void {
-    PhoneService.registerContact$.next({ debtId, phoneId });
-  }
-
-  setCall(debtId: number, phoneId: number): void {
-    PhoneService.setCall$.next({ debtId, phoneId });
   }
 }

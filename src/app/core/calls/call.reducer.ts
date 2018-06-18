@@ -27,6 +27,12 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         ...state,
         settings: null
       };
+    case CallService.CALL_SET: {
+      return {
+        ...state,
+        activeCall: action.payload
+      };
+    }
     case CallService.CALL_START:
       return {
         ...state,

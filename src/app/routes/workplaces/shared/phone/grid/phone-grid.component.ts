@@ -8,6 +8,7 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -99,6 +100,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
+    private route: ActivatedRoute,
     private contactRegistrationService: ContactRegistrationService,
     private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
@@ -184,34 +186,22 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    const registerContactSub = combineLatest(
-      PhoneService.registerContact$.filter(Boolean),
+    combineLatest(
+      this.route.queryParams,
+      this.callService.pbxState$.filter(Boolean),
       this.phones$.filter(phones => !!phones.length),
       this.person$.filter(Boolean),
       this._debtId$.filter(Boolean)
     )
     .pipe(
-      map(([ action ]) => action),
-      filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
+      first(),
+      filter(([ params, state ]) => !!params.activeCallId && +params.activeCallId === state.phoneId),
+      map(([ params ]) => params)
     )
-    .subscribe(({ phoneId }) => {
-      this.selectedPhoneId$.next(phoneId);
+    .subscribe(params => {
+      this.setCall(this.phones.find(p => p.id === +params.activeCallId));
+      this.selectedPhoneId$.next(+params.activeCallId);
       this.registerContact();
-      this.cdRef.markForCheck();
-    });
-
-    const setCallSub = combineLatest(
-      PhoneService.setCall$.filter(Boolean),
-      this.phones$.filter(phones => !!phones.length),
-      this.person$.filter(Boolean),
-      this._debtId$.filter(Boolean)
-    )
-    .pipe(
-      map(([ action ]) => action),
-      filter(({ debtId, phoneId }) =>  this._debtId$.value === debtId && phoneId)
-    )
-    .subscribe(({ phoneId }) => {
-      this.setCall(this.phones.find(p => p.id === phoneId));
       this.cdRef.markForCheck();
     });
 
@@ -222,8 +212,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.subs.add(callSubscription);
       this.subs.add(activeCallSubscription);
       this.subs.add(contactDetailsChangeSub);
-      this.subs.add(registerContactSub);
-      this.subs.add(setCallSub);
   }
 
   ngOnDestroy(): void {

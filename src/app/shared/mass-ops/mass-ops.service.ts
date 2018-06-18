@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
@@ -21,6 +22,7 @@ export class MassOperationsService {
   constructor(
     private dataService: DataService,
     private repo: RepositoryService,
+    private route: ActivatedRoute,
     private routingService: RoutingService,
     private notificationsService: NotificationsService,
   ) { }
@@ -99,7 +101,7 @@ export class MassOperationsService {
   openGuarantorCard(debtorId: number, debtId: number, contractId: number, guarantorId: number): Promise<boolean> {
     return this.routingService.navigate([
         `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/guarantee/${contractId}/guarantor/${guarantorId}`
-    ]);
+    ], this.route, { registerCall: 180 });
   }
 
   openPledgorCardByParams(debtorId: number, debtId: number, pledgeId: number, pledgorId: number, onClose: Function = null): void {
@@ -112,7 +114,7 @@ export class MassOperationsService {
 
   openPlegdorCard(debtorId: number, debtId: number, pledgeId: number, pledgorId: number, propertyId: number): Promise<boolean> {
     return this.routingService.navigate([
-        `/app/workplaces/debtor/${debtorId}/debt/${debtId}/pledge/${pledgeId}/pledgor/${pledgorId}/property/${propertyId}`
+        `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/pledge/${pledgeId}/pledgor/${pledgorId}/property/${propertyId}`
     ]);
   }
 

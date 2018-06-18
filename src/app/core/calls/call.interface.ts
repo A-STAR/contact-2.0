@@ -56,3 +56,8 @@ export interface IPBXState {
   afterCallPeriod?: number;
   payload?: any;
 }
+
+export enum CallTypeEnum {
+  INCOMING = 0,
+  OUTGOING = 1
+}
