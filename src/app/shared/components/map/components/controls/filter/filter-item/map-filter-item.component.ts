@@ -1,12 +1,13 @@
 import {
   Component,
-  OnInit,
   EventEmitter,
   Output,
   Input,
   ViewChild,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  AfterViewInit,
+  OnInit,
 } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
@@ -32,20 +33,28 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./map-filter-item.component.scss']
 })
-export class MapFilterItemComponent implements OnInit {
+export class MapFilterItemComponent implements AfterViewInit, OnInit {
   @ViewChild(MenuSelectComponent) menuSelectCmp: MenuSelectComponent;
   @ViewChild(TickComponent) tickCmp: TickComponent;
 
   @Input() config: IMapToolbarFilterItem;
   @Output() action = new EventEmitter<IMapFilterItemAction>();
   ready$ = new BehaviorSubject<IMapFilterMultiSelectOptions>(null);
-  filterId: MapFilters = this.config.filter;
+  filterId: MapFilters;
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) { }
 
+
   ngOnInit(): void {
+    this.filterId = this.config.filter;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.tickCmp && this.filterId != null) {
+      this.ready$.next({ [this.filterId] : this.config.checked });
+    }
   }
 
   changeValue(value: any): void {

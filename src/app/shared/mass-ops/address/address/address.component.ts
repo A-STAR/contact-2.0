@@ -97,6 +97,7 @@ export class AddressComponent implements OnInit {
               filter: MapFilters.TOGGLE_INACTIVE,
               label: 'massOperations.addressesByContacts.filter.showInactives',
               enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
+              checked: true,
             },
             {
               type: MapToolbarItemType.SEPARATOR,

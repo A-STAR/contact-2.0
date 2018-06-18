@@ -10,31 +10,50 @@ import { LayersService, LayerGroup, Layer } from '@app/core/map-providers/layers
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
-type FilterFn = (layer: ILayer<any>, params: any) => boolean;
+type FilterFn = (layer: ILayer<any>, params?: any) => FilterResult;
+
+interface IFilterFnConfig {
+  [MapFilters: number]: FilterFn;
+}
+
+enum FilterResult {
+  HIDE,
+  SHOW,
+  SKIP
+}
 
 @Injectable()
 export class MapFilterService<T> {
 
   activeFilters = new Map<MapFilters, number[] | boolean>();
+  activeVisibilityFilters = new Map<MapFilters, boolean>();
+  originalFilters = new Map<MapFilters, number[] | boolean>();
+  originalVisibilityFilters = new Map<MapFilters, boolean>();
 
-  filters: { [MapFilters: number]: FilterFn } = {
-
-    [MapFilters.TOGGLE_INACTIVE]: (layer: ILayer<any>, params: boolean) =>
-      layer.data.isInactive ? !!params : true,
+  filters: IFilterFnConfig = {
 
     [MapFilters.ADDRESS_STATUS]: (layer: ILayer<any>, params: number[]) =>
-      params.includes(layer.data.statusCode),
+      Number(params.includes(layer.data.statusCode)),
 
     [MapFilters.ADDRESS_TYPE]: (layer: ILayer<any>, params: number[]) =>
-      params.includes(layer.data.addressTypeCode || layer.data.typeCode),
+      Number(params.includes(layer.data.addressTypeCode || layer.data.typeCode)),
 
     [MapFilters.VISIT_STATUS]: (layer: ILayer<any>, params: number[]) =>
-      params.includes(layer.data.visitStatus),
+      Number(params.includes(layer.data.visitStatus)),
 
     [MapFilters.CONTACT_TYPE]: (layer: ILayer<any>, params: number[]) =>
-      params.includes(layer.data.contactType),
+      Number(params.includes(layer.data.contactType)),
 
+    [MapFilters.TOGGLE_INACTIVE]: (layer: ILayer<any>, params: boolean) =>
+      !!layer.data.isInactive ? Number(params) : FilterResult.SKIP
   };
+
+  visibilityFilters: IFilterFnConfig = {
+    [MapFilters.TOGGLE_ADDRESSES]: (_, params: boolean) => Number(params),
+    [MapFilters.TOGGLE_ACCURACY]: (_, params: boolean) => Number(params),
+  };
+
+  private _filters: IMapFilterMultiSelectOptions;
 
   constructor(
       private layersService: LayersService<T>,
@@ -43,54 +62,47 @@ export class MapFilterService<T> {
 
   applyFilter(item: IMapToolbarFilterItem, params: any): void {
     switch (item.filter) {
-      case MapFilters.RESET:
       case MapFilters.TOGGLE_ALL:
-        this.layersService.show();
+        if (params) {
+          // NOTE: visibility and prop filters are not affected
+          this._setActiveFilters(this._filters);
+          this.onFilterChange();
+        } else {
+          this.activeFilters.clear();
+          this.layersService.hide();
+        }
         break;
+      case MapFilters.RESET:
+        this.restoreFilters();
+        this.onFilterChange();
+        break;
+      case MapFilters.TOGGLE_INACTIVE:
       case MapFilters.ADDRESS_STATUS:
       case MapFilters.ADDRESS_TYPE:
       case MapFilters.CONTACT_TYPE:
       case MapFilters.VISIT_STATUS:
-      case MapFilters.TOGGLE_INACTIVE:
         this.activeFilters.set(item.filter, params);
-        this.layersService
-            .getLayers()
-            .forEach(l => {
-              const layer = l.isGroup ? (l as LayerGroup<T>).getLayersByType(LayerType.MARKER)[0] : l as Layer<T>;
-              if (layer) {
-                if (this.applyFilters(this.filters[item.filter], layer, params)) {
-                  l.show();
-                } else {
-                  l.hide();
-                }
-              }
-            });
+        this.onFilterChange();
         break;
       // now applies for groups only
       case MapFilters.TOGGLE_ACCURACY:
+        this.activeVisibilityFilters.set(item.filter, params);
         this.layersService
           .getLayers()
           .forEach((g: LayerGroup<T>) => {
             if (g.isGroup) {
-              const layerIds = g.getLayersByType(LayerType.CIRCLE).map(l => l.id);
-
-              params ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+              this.toggleAccuracy(g, params);
             }
           });
         break;
       // now applies for groups only
       case MapFilters.TOGGLE_ADDRESSES:
+        this.activeVisibilityFilters.set(item.filter, params);
         this.layersService
           .getLayers()
           .forEach((g: LayerGroup<T>) => {
             if (g.isGroup) {
-              const layerIds = g
-                .getLayersByType(LayerType.MARKER)
-                .filter(m => (m.data as any).addressLatitude
-                  && (m.data as any).addressLongitude && !(m.data as any).isContact)
-                .map(l => l.id);
-
-              params ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+              this.toggleAddress(g, params);
             }
           });
         break;
@@ -112,22 +124,100 @@ export class MapFilterService<T> {
     }
   }
 
-  setActiveFilters( filters: IMapFilterMultiSelectOptions, checkAll: boolean = true): void {
-    if (checkAll) {
-      for (const id in filters) {
-        if (filters.hasOwnProperty(id) && typeof this.filters[id] === 'function') {
-          this.activeFilters.set(Number(id), filters[id]);
-        }
-      }
+  setActiveFilters( filters: IMapFilterMultiSelectOptions, showAll: boolean = true): void {
+    this._filters = filters;
+    if (showAll) {
+      this._setActiveFilters(filters);
     } else {
       this.activeFilters.clear();
     }
+    this._setActiveVisibilityFilters(filters);
+    this.originalFilters = new Map(this.activeFilters);
+    this.originalVisibilityFilters = new Map(this.activeVisibilityFilters);
   }
 
-  private applyFilters(currentFilter: FilterFn, layer: ILayer<any>, params: number[]): boolean {
-    return Array.from(this.activeFilters).reduce((acc, af: [number, number[] | boolean]) => acc ||
-      (typeof this.filters[af[0]] === 'function' ? this.filters[af[0]](layer, af[1]) : acc), currentFilter(layer, params));
+  private restoreFilters(): void {
+    this.activeFilters = new Map(this.originalFilters);
+    this.activeVisibilityFilters = new Map(this.originalVisibilityFilters);
   }
+
+  private _setActiveFilters(filters: IMapFilterMultiSelectOptions): void {
+    for (const id in this._filters) {
+      if (filters.hasOwnProperty(id)) {
+        if (typeof this.filters[id] === 'function') {
+          this.activeFilters.set(Number(id), this._filters[id]);
+        }
+      }
+    }
+  }
+
+  private _setActiveVisibilityFilters(filters: IMapFilterMultiSelectOptions): void {
+    for (const id in this._filters) {
+      if (filters.hasOwnProperty(id)) {
+        if (typeof this.visibilityFilters[id] === 'function') {
+          this.activeVisibilityFilters.set(Number(id), this._filters[id] as boolean);
+        }
+      }
+    }
+  }
+
+  private onFilterChange(): void {
+    this.layersService
+      .getLayers()
+      .forEach(l => {
+        const layer = l.isGroup ? (l as LayerGroup<T>).getLayersByType(LayerType.MARKER)[0] : l as Layer<T>;
+        if (layer) {
+          const filterResult = this.applyFilters(layer);
+          if (filterResult === FilterResult.SHOW) {
+            l.show();
+            if (l.isGroup) {
+              this.applyVisibilityFilters(l as LayerGroup<T>);
+            }
+          } else if (filterResult === FilterResult.HIDE) {
+            l.hide();
+          }
+        }
+      });
+  }
+
+  private applyFilters(layer: ILayer<any>): FilterResult {
+    let result = FilterResult.HIDE;
+    this.activeFilters.forEach((value, id) => {
+      if (typeof this.filters[id] === 'function') {
+        const _res = this.filters[id](layer, value);
+        if (_res !== FilterResult.SKIP) {
+          result = result || _res;
+        }
+      }
+    });
+    return result;
+  }
+
+  private applyVisibilityFilters(l: LayerGroup<any>): void {
+    this.activeVisibilityFilters.forEach((value, id) => {
+      if (id === MapFilters.TOGGLE_ACCURACY) {
+        this.toggleAccuracy(l, value);
+      }
+      if (id === MapFilters.TOGGLE_ADDRESSES) {
+        this.toggleAddress(l, value);
+      }
+    });
+  }
+
+  private toggleAddress(g: LayerGroup<T>, params: boolean): void {
+    const layerIds = g
+      .getLayersByType(LayerType.MARKER)
+      .filter(m => (m.data as any).addressLatitude
+        && (m.data as any).addressLongitude && !(m.data as any).isContact)
+      .map(l => l.id);
+    params ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+  }
+
+  private toggleAccuracy(g: LayerGroup<T>, params: boolean): void {
+    const layerIds = g.getLayersByType(LayerType.CIRCLE).map(l => l.id);
+    params ? g.hideByIds(layerIds) : g.showByIds(layerIds);
+  }
+
 
   private distanceFilter(layer: ILayer<any>, params: number): boolean {
     return layer.data.isContact && layer.data.contactLatitude && layer.data.contactLongitude && Boolean(params);

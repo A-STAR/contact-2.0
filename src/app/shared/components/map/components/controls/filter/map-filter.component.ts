@@ -11,11 +11,11 @@ import {
   QueryList,
   AfterViewInit,
 } from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter } from 'rxjs/operators/filter';
 import { first } from 'rxjs/operators/first';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { zip } from 'rxjs/observable/zip';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
@@ -62,6 +62,18 @@ export class MapFilterComponent<T> implements AfterViewInit {
   private map: any;
   private _originalConfig: IMapToolbarItem;
   private _config: IMapToolbarItem;
+  private nonTogglableFilters = [
+    MapFilters.TOGGLE_ALL,
+    MapFilters.TOGGLE_ACCURACY,
+    MapFilters.TOGGLE_ADDRESSES,
+  ];
+  private togglableFilters = [
+    MapFilters.TOGGLE_INACTIVE,
+    MapFilters.ADDRESS_STATUS,
+    MapFilters.ADDRESS_TYPE,
+    MapFilters.CONTACT_TYPE,
+    MapFilters.VISIT_STATUS,
+  ];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
@@ -81,10 +93,10 @@ export class MapFilterComponent<T> implements AfterViewInit {
       .filter(item => Boolean(item.menuSelectCmp || item.tickCmp))
       .map(_item => _item.ready$);
 
-    zip(...menuSelects$).pipe(
-      filter(values => values.every(Boolean)),
-      first(),
-    )
+    combineLatest(...menuSelects$).pipe(
+        filter(values => values.every(Boolean)),
+        first(),
+      )
       .subscribe((filters: IMapFilterMultiSelectOptions[] ) => {
         const normalizedFilters = filters.reduce((acc, f) => ({ ...acc, ...f }) , {});
         this.setInitialFilters(normalizedFilters);
@@ -120,52 +132,64 @@ export class MapFilterComponent<T> implements AfterViewInit {
 
   private handleAction(action: IMapFilterItemAction): void {
 
-    if (action.item.filter === MapFilters.TOGGLE_ALL && action.value) {
+    if (action.item.filter === MapFilters.TOGGLE_ALL) {
 
       this.items
-        .filter(item => Boolean(item.config.filter !== MapFilters.TOGGLE_ALL && (item.menuSelectCmp || item.tickCmp)))
+        .filter(item => Boolean(!this.nonTogglableFilters.includes(item.config.filter) && (item.menuSelectCmp || item.tickCmp)))
         .forEach(item => item.changeValue(action.value));
 
     } else if (action.item.filter === MapFilters.RESET) {
-      const toggleAllConfig = this.getToggleAllConfig(this._originalConfig);
-      if (toggleAllConfig) {
-        this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
-        const toggleAllCtrl = this.items
-          .find(c => c.config.filter === MapFilters.TOGGLE_ALL);
-        if (toggleAllCtrl) {
-          toggleAllCtrl.changeValue(toggleAllConfig.checked);
-        }
-        this.cdRef.markForCheck();
-      }
-    } else if ([
-      MapToolbarItemType.DICTIONARY,
-      MapToolbarItemType.LOOKUP
-    ].includes(action.item.type)) {
-      const menuSelectCtrls = this.items.filter(item => !!item.menuSelectCmp);
-      const allSelected = menuSelectCtrls.every(i => i.menuSelectCmp.allSelected);
-      const toggleAllCtrl = this.items
-        .find(c => c.config.filter === MapFilters.TOGGLE_ALL);
 
-      if (toggleAllCtrl) {
-        toggleAllCtrl.changeValue(allSelected);
-      }
+      this.onReset(MapFilters.TOGGLE_ALL, true);
+      this.onReset(MapFilters.TOGGLE_ADDRESSES);
+      this.onReset(MapFilters.TOGGLE_ACCURACY);
 
+    } else if (this.togglableFilters.includes(action.item.filter)) {
+
+      const cmps = this.items.filter(item => this.togglableFilters.includes(item.config.filter) &&
+        Boolean(item.tickCmp || item.menuSelectCmp));
+
+      const allSelected = cmps.every(i => (i.menuSelectCmp && i.menuSelectCmp.allSelected) || (i.tickCmp && i.tickCmp.value));
+
+      this.changeFilterValue(MapFilters.TOGGLE_ALL, allSelected);
     }
+
     this.cdRef.markForCheck();
+  }
+
+  private onReset(filterType: MapFilters, doAction: boolean = false): void {
+    const config = this.getFilterConfig(filterType, this._originalConfig);
+    if (config) {
+      if (doAction) {
+        this.handleAction({ item: config, value: config.checked });
+      }
+      this.changeFilterValue(filterType, config.checked);
+    }
+  }
+
+  private changeFilterValue(filterType: MapFilters, value: any): void {
+    const cmp = this.getFilterCmp(filterType);
+    if (cmp) {
+      cmp.changeValue(value);
+    }
   }
 
   private setInitialFilters(filters: IMapFilterMultiSelectOptions): void {
-    const toggleAllConfig = this.getToggleAllConfig(this._config);
-    const isAllChecked =  (toggleAllConfig && (toggleAllConfig as IMapToolbarFilterItem).checked) || null;
-    if (toggleAllConfig) {
-      this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
+    const config = this.getFilterConfig(MapFilters.TOGGLE_ALL, this._config);
+    const checked =  (config && config.checked) || null;
+    if (config) {
+      this.handleAction({ item: config, value: config.checked });
     }
-    this.mapFilterService.setActiveFilters(filters, isAllChecked);
+    this.mapFilterService.setActiveFilters(filters, checked);
     this.cdRef.markForCheck();
   }
 
-  private getToggleAllConfig(config: IMapToolbarItem): IMapToolbarFilterItem {
-    return config.children.find((c: IMapToolbarFilterItem) => c.filter === MapFilters.TOGGLE_ALL);
+  private getFilterConfig(filterType: MapFilters, config: IMapToolbarItem): IMapToolbarFilterItem {
+    return config.children.find((c: IMapToolbarFilterItem) => c.filter === filterType);
+  }
+
+  private getFilterCmp(filterType: MapFilters): MapFilterItemComponent {
+    return this.items.find(c => c.config.filter === filterType);
   }
 
 }
