@@ -40,8 +40,14 @@ export class DebtorService {
     private layoutService: LayoutService
   ) {}
 
-  get debtors(): IterableIterator<[number, number]> {
-    return this._debtors.entries();
+  get debtors(): Array<{ id: number, debt: number}> {
+    return Array
+      .from(this._debtors as Map<number, number>)
+      .map((debtor: [number, number]) => {
+        const [ id, debt ] = debtor;
+
+        return { id, debt };
+      });
   }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
@@ -153,6 +159,16 @@ export class DebtorService {
     this._debtors.set(debtorId, debtId);
 
     this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
+  }
+
+  removeTab(debtorId: number): void {
+    this._debtors.delete(debtorId);
+
+    const { debtorId: lastDebtorId } = this.layoutService.lastDebtCardIds$.value;
+
+    if (debtorId === lastDebtorId) {
+      this.layoutService.lastDebtCardIds$.next(null);
+    }
   }
 
 }

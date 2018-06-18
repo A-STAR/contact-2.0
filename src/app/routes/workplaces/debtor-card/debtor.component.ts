@@ -9,13 +9,15 @@ import {
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { filter, map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
+import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from './debtor.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +29,28 @@ import { RepositoryService } from '@app/core/repository/repository.service';
   templateUrl: './debtor.component.html',
 })
 export class DebtorComponent implements OnInit, OnDestroy {
+
+  tabs: Observable<ITab[]> = combineLatest(
+    ...this.debtorService.debtors
+      .map((debtor: { id: number, debt: number }) => {
+
+        const { id, debt } = debtor;
+        const link = `/app/workplaces/debtor/${id}/debt/${debt}`;
+
+        return this.repositoryService
+          .fetch(Person, { id })
+          .pipe(
+            map((persons: Person[]): ITab => {
+              const [ person ] = persons;
+              const title = `${person.lastName} ${person.firstName} ${person.middleName}`;
+
+              return <ITab>{ title, link };
+            }),
+          );
+
+      })
+  );
+
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
   private subscription = new Subscription();
@@ -65,9 +89,10 @@ export class DebtorComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get debtors(): IterableIterator<[number, number]> {
-    return this.debtorService.debtors;
-  }
+  // removeTab(debtorId: number) {
+  //   this.debtorService.removeTab(debtorId);
+  //   // this.cdRef.markForCheck();
+  // }
 
   getDebtorName(id: number): Observable<string> {
     return this.repositoryService
