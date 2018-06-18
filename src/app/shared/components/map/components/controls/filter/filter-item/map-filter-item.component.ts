@@ -15,7 +15,12 @@ import { of } from 'rxjs/observable/of';
 import {
   IMapToolbarFilterItem,
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
-import { IMapFilterItemAction } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+import {
+  IMapFilterItemAction,
+  MapFilters,
+  IMapFilterMultiSelectOptions,
+} from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+import { IMultiSelectOption } from '@app/shared/components/form/select/select.interface';
 
 import { MenuSelectComponent } from '@app/shared/components/menu/menu-select/menu-select.component';
 import { TickComponent } from '@app/shared/components/form/check/tick/tick.component';
@@ -28,12 +33,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   styleUrls: ['./map-filter-item.component.scss']
 })
 export class MapFilterItemComponent implements OnInit {
-  @ViewChild(MenuSelectComponent) menuSelect: MenuSelectComponent;
+  @ViewChild(MenuSelectComponent) menuSelectCmp: MenuSelectComponent;
   @ViewChild(TickComponent) tickCmp: TickComponent;
 
   @Input() config: IMapToolbarFilterItem;
   @Output() action = new EventEmitter<IMapFilterItemAction>();
-  ready$ = new BehaviorSubject<boolean>(false);
+  ready$ = new BehaviorSubject<IMapFilterMultiSelectOptions>(null);
+  filterId: MapFilters = this.config.filter;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -43,20 +49,21 @@ export class MapFilterItemComponent implements OnInit {
   }
 
   changeValue(value: any): void {
-    if (this.menuSelect) {
-      value ? this.menuSelect.selectAll() : this.menuSelect.deselectAll();
+    if (this.menuSelectCmp) {
+      value ? this.menuSelectCmp.selectAll() : this.menuSelectCmp.deselectAll();
     }
     if (this.tickCmp) {
       this.tickCmp.writeValue(value);
-      // this.config.checked = value;
+      this.config.checked = value;
     }
-    // something else
 
     this.cdRef.markForCheck();
   }
 
-  onMenuSelectReady(): void {
-    this.ready$.next(true);
+  onMenuSelectReady($event: IMultiSelectOption[]): void {
+    if (this.filterId != null) {
+      this.ready$.next({ [this.filterId] : $event.map(o => o.value) });
+    }
   }
 
   onAction(value: any): void {

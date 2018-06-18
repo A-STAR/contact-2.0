@@ -4,7 +4,7 @@ import { ILayer, LayerType, IMapService } from '@app/core/map-providers/map-prov
 import {
   IMapToolbarFilterItem,
 } from '../toolbar/map-toolbar.interface';
-import { MapFilters } from './map-filter.interface';
+import { MapFilters, IMapFilterMultiSelectOptions } from './map-filter.interface';
 
 import { LayersService, LayerGroup, Layer } from '@app/core/map-providers/layers/map-layers.service';
 
@@ -112,9 +112,13 @@ export class MapFilterService<T> {
     }
   }
 
-  setActiveFilters(checked: boolean, filters: number[]): void {
-    if (checked) {
-      filters.forEach(filter => typeof this.filters[filter] === 'function' ? this.activeFilters.set(filter, []) : null);
+  setActiveFilters( filters: IMapFilterMultiSelectOptions, checkAll: boolean = true): void {
+    if (checkAll) {
+      for (const id in filters) {
+        if (filters.hasOwnProperty(id) && typeof this.filters[id] === 'function') {
+          this.activeFilters.set(Number(id), filters[id]);
+        }
+      }
     } else {
       this.activeFilters.clear();
     }

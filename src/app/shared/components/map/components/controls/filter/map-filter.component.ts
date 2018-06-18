@@ -26,7 +26,12 @@ import {
   MapToolbarItemType,
   IMapToolbarItem,
 } from '../toolbar/map-toolbar.interface';
-import { MapFilters, IMapFilterItemAction } from '@app/shared/components/map/components/controls/filter/map-filter.interface';
+
+import {
+  MapFilters,
+  IMapFilterItemAction,
+  IMapFilterMultiSelectOptions,
+} from './map-filter.interface';
 
 import { MapFilterService } from '@app/shared/components/map/components/controls/filter/map-filter.service';
 
@@ -37,14 +42,14 @@ import { MapFilterItemComponent } from './filter-item/map-filter-item.component'
   selector: 'app-map-filter',
   templateUrl: './map-filter.component.html',
   styleUrls: ['./map-filter.component.scss'],
+  providers: [
+    MapFilterService,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapFilterComponent<T> implements AfterViewInit {
   @Input() set config(data: IMapToolbarItem) {
     this._config = data;
-    this.filters = (data.children || [])
-      .filter((c: IMapToolbarFilterItem) => !!c.filter)
-      .map((c: IMapToolbarFilterItem) => c.filter);
     this._originalConfig = {...data, children: data.children.map(c => ({ ...c })) };
   }
 
@@ -57,7 +62,6 @@ export class MapFilterComponent<T> implements AfterViewInit {
   private map: any;
   private _originalConfig: IMapToolbarItem;
   private _config: IMapToolbarItem;
-  private filters: number[];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
@@ -73,14 +77,17 @@ export class MapFilterComponent<T> implements AfterViewInit {
     this.container = this.mapService.container;
     this.map = this.mapService.getMap();
 
-    const menuSelects$ = this.items.filter(item => Boolean(item.menuSelect)).map(_item => _item.ready$);
+    const menuSelects$ = this.items
+      .filter(item => Boolean(item.menuSelectCmp || item.tickCmp))
+      .map(_item => _item.ready$);
 
     zip(...menuSelects$).pipe(
       filter(values => values.every(Boolean)),
       first(),
     )
-      .subscribe(() => {
-        this.setInitialFilters();
+      .subscribe((filters: IMapFilterMultiSelectOptions[] ) => {
+        const normalizedFilters = filters.reduce((acc, f) => ({ ...acc, ...f }) , {});
+        this.setInitialFilters(normalizedFilters);
       });
   }
 
@@ -116,7 +123,7 @@ export class MapFilterComponent<T> implements AfterViewInit {
     if (action.item.filter === MapFilters.TOGGLE_ALL && action.value) {
 
       this.items
-        .filter(item => Boolean(item.config.filter !== MapFilters.TOGGLE_ALL && (item.menuSelect || item.tickCmp)))
+        .filter(item => Boolean(item.config.filter !== MapFilters.TOGGLE_ALL && (item.menuSelectCmp || item.tickCmp)))
         .forEach(item => item.changeValue(action.value));
 
     } else if (action.item.filter === MapFilters.RESET) {
@@ -134,8 +141,8 @@ export class MapFilterComponent<T> implements AfterViewInit {
       MapToolbarItemType.DICTIONARY,
       MapToolbarItemType.LOOKUP
     ].includes(action.item.type)) {
-      const menuSelectCtrls = this.items.filter(item => !!item.menuSelect);
-      const allSelected = menuSelectCtrls.every(i => i.menuSelect.allSelected);
+      const menuSelectCtrls = this.items.filter(item => !!item.menuSelectCmp);
+      const allSelected = menuSelectCtrls.every(i => i.menuSelectCmp.allSelected);
       const toggleAllCtrl = this.items
         .find(c => c.config.filter === MapFilters.TOGGLE_ALL);
 
@@ -147,13 +154,14 @@ export class MapFilterComponent<T> implements AfterViewInit {
     this.cdRef.markForCheck();
   }
 
-  private setInitialFilters(): void {
+  private setInitialFilters(filters: IMapFilterMultiSelectOptions): void {
     const toggleAllConfig = this.getToggleAllConfig(this._config);
+    const isAllChecked =  (toggleAllConfig && (toggleAllConfig as IMapToolbarFilterItem).checked) || null;
     if (toggleAllConfig) {
       this.handleAction({ item: toggleAllConfig, value: (toggleAllConfig as IMapToolbarFilterItem).checked });
-      this.mapFilterService.setActiveFilters((toggleAllConfig as IMapToolbarFilterItem).checked, this.filters);
-      this.cdRef.markForCheck();
     }
+    this.mapFilterService.setActiveFilters(filters, isAllChecked);
+    this.cdRef.markForCheck();
   }
 
   private getToggleAllConfig(config: IMapToolbarItem): IMapToolbarFilterItem {

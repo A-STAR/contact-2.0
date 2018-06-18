@@ -9,7 +9,7 @@
     [lookupKey]="config.lookupKey"
     [disabled]="isDisabled(config) | async"
     (action)="onAction($event)"
-    (ready)="onMenuSelectReady()"
+    (ready)="onMenuSelectReady($event)"
   ></app-menu-select>
   <!-- Dict -->
   <app-menu-select
@@ -19,7 +19,7 @@
     [dictCode]="config.dictCode"
     [disabled]="isDisabled(config) | async"
     (action)="onAction($event)"
-    (ready)="onMenuSelectReady()"
+    (ready)="onMenuSelectReady($event)"
   ></app-menu-select>
   <!-- Button -->
   <button

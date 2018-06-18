@@ -31,7 +31,7 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
   @Input() multi = true;
 
   @Output() action = new EventEmitter<number[]>();
-  @Output() ready = new EventEmitter<void>();
+  @Output() ready = new EventEmitter<IMultiSelectOption[]>();
 
   private optionsSubscription: Subscription;
   private value: number[] = [];
@@ -58,7 +58,7 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
       .subscribe(this.onOptionsFetch);
     }
   }
-
+  // TODO(i.lobanov): determine which side menu should open
   get isLeft(): boolean {
     return false;
   }
@@ -127,7 +127,7 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
 
   private onOptionsFetch = (options: IMultiSelectOption[]) => {
     this.options = options;
-    this.ready.emit();
+    this.ready.emit(options);
     this.cdRef.markForCheck();
   }
 
