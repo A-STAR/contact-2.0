@@ -64,7 +64,7 @@ export class MapFilterService<T> {
     switch (item.filter) {
       case MapFilters.TOGGLE_ALL:
         if (params) {
-          // NOTE: visibility and prop filters are not affected
+          // NOTE: visibility filters are not affected
           this._setActiveFilters(this._filters);
           this.onFilterChange();
         } else {
