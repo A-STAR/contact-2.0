@@ -123,7 +123,9 @@ export class TaskService {
   }
 
   private onLetterGeneration(task: ILetterGenerationEvent, message: string): void {
-    this.letterGeneration$.next(task.payload.letter);
+    if (task.statusCode === TaskStatus.FINISH_SUCCESS) {
+      this.letterGeneration$.next(task.payload.letter);
+    }
     this.notificationsService
       .info('system.notifications.tasks.finish.success')
       .params({

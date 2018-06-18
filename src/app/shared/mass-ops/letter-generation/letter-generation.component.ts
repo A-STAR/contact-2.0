@@ -8,6 +8,8 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -29,6 +31,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
+
+import { invert } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,8 +76,10 @@ export class LetterGenerationComponent implements OnInit {
       });
   }
 
-  get isDisabled(): boolean {
-    return !this.layout || !this.layout.canSubmit;
+  get isDisabled(): Observable<boolean> {
+    return this.layout
+      ? this.layout.canSubmit().map(invert)
+      : of(false);
   }
 
   onSubmit(): void {
