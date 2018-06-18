@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
 
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
-import { ILetterGenerationParams, ILetterGenerationResult } from './letter-generation.interface';
+import { ILetterGenerationParams } from './letter-generation.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -20,7 +20,7 @@ export class LetterGenerationService {
     idData: IGridActionPayload,
     personRole: number,
     actionData: ILetterGenerationParams
-  ): Observable<ILetterGenerationResult> {
+  ): Observable<void> {
     return this.dataService
       .create('/async/mass/letters/form', {},
         {

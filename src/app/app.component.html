@@ -5,6 +5,8 @@
   [ngClass]="{ 'collapsed': settings.layout.isCollapsed }"
 ></toaster-container>
 
+<app-task-result></app-task-result>
+
 <div *ngIf="isLoading" [@isLoading] class="loader">
   <div class="loader-content">
     <app-spinner></app-spinner>

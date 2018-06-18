@@ -17,7 +17,8 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 })
 export class LetterGenerationResultComponent implements OnInit {
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
-  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
+  @ViewChild('downloader1', { read: DownloaderComponent }) downloader1: DownloaderComponent;
+  @ViewChild('downloader2', { read: DownloaderComponent }) downloader2: DownloaderComponent;
 
   @Input() letterGuid: string;
   @Input() reportGuid: string;
@@ -73,15 +74,21 @@ export class LetterGenerationResultComponent implements OnInit {
 
   onSubmit(): void {
     const { resultType } = this.layout.getData();
-    resultType.forEach(guid => {
-      this.downloader.name = `${guid}.xlsx`;
-      this.downloader.url = `/tempFile/${guid}`;
-      this.downloader.download();
+
+    resultType.forEach((guid, i) => {
+      const downloader = this.downloaders[i];
+      downloader.url = `/tempFiles/${guid}`;
+      downloader.download();
     });
+
     this.close.emit();
   }
 
   onClose(): void {
     this.close.emit();
+  }
+
+  private get downloaders(): DownloaderComponent[] {
+    return [ this.downloader1, this.downloader2 ];
   }
 }

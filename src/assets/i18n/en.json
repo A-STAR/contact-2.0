@@ -2230,6 +2230,7 @@
       "letter": {
         "title": "Letter generation",
         "dialog": {
+          "title": "Generation result",
           "templateId": "Template",
           "formatCode": "Format",
           "regLetter": "Register letter",
@@ -2237,8 +2238,11 @@
           "avoidDuplication": "Avoid duplication",
           "ignoreWrongAddress": "Ignore wrong address",
           "sortRule": "Sorting",
-          "reportId": "Register"
-      }
+          "reportId": "Register",
+          "resultType": "File types",
+          "fileWithLetters": "File with letters",
+          "register": "Register"
+        }
       }
     },
     "nextCallDateSet": {

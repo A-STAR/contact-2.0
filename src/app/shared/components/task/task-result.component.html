@@ -1,0 +1,6 @@
+<app-letter-generation-result
+  *ngIf="letterResult"
+  [letterGuid]="letterResult.letterGuid"
+  [reportGuid]="letterResult.reportGuid"
+  (close)="onCloseResult()"
+></app-letter-generation-result>

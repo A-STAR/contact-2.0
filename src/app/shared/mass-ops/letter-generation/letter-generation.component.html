@@ -15,10 +15,3 @@
     <app-button type="cancel" (click)="onClose()"></app-button>
   </div>
 </app-dialog>
-
-<app-letter-generation-result
-  *ngIf="result"
-  [letterGuid]="result.letterGuid"
-  [reportGuid]="result.reportGuid"
-  (close)="onClose()"
-></app-letter-generation-result>
