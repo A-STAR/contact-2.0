@@ -9,7 +9,8 @@ import {
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest, map, filter } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { map, filter } from 'rxjs/operators';
 // import { switchMap, toArray, map, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
@@ -30,7 +31,7 @@ import { RepositoryService } from '@app/core/repository/repository.service';
 })
 export class DebtorComponent implements OnInit, OnDestroy {
 
-  tabs$ = combineLatest(
+  tabs$: Observable<ITab[]> = combineLatest(
     ...this.debtorService.debtors
       .map(([ id, debt ]: [ number, number ]) => {
 
