@@ -9,7 +9,8 @@ import {
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { map, filter } from 'rxjs/operators';
+import { combineLatest, map, filter } from 'rxjs/operators';
+// import { switchMap, toArray, map, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -17,7 +18,6 @@ import { ITab } from '@app/shared/components/layout/tabview/header/header.interf
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from './debtor.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +30,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 })
 export class DebtorComponent implements OnInit, OnDestroy {
 
-  tabs: Observable<ITab[]> = combineLatest(
+  tabs$ = combineLatest(
     ...this.debtorService.debtors
       .map(([ id, debt ]: [ number, number ]) => {
 
@@ -49,6 +49,29 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
       })
   );
+
+  // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
+  //   switchMap((debtors: Array<[number, number]>): Observable<ITab>[] => debtors
+  //     .map(([ id, debt ]: [number, number]) => {
+
+  //       const link = `/app/workplaces/debtor/${id}/debt/${debt}`;
+
+  //       return <Observable<ITab>>this.repositoryService
+  //         .fetch(Person, { id })
+  //         .pipe(
+  //           map((persons: Person[]): ITab => {
+  //             const [ person ] = persons;
+  //             const title = `${person.lastName} ${person.firstName} ${person.middleName}`;
+
+  //             return <ITab>{ title, link };
+  //           }),
+  //         );
+
+  //     }),
+  //   ),
+  //   switchMap((tab: Observable<ITab>): Observable<ITab> => tab),
+  //   toArray(),
+  // );
 
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
