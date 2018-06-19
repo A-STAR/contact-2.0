@@ -75,7 +75,9 @@ export class TreeComponent implements OnInit, OnDestroy {
       this.selectedNode$.filter(Boolean)
     )
     .pipe(
-      filter(([ state, params, _ ]) => params.activeCallId && +params.activeCallId === state.phoneId),
+      filter(([ state, params, _ ]) =>
+        params.activeCallId && (+params.activeCallId === state.phoneId || !!state.afterCallPeriod)
+      )
     )
     .subscribe(([ state, _, node ]) =>
       this.callService.sendContactTreeIntermediate(node.data.code, state.phoneId, state.debtId)

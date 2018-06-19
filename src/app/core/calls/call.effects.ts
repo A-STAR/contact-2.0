@@ -14,6 +14,7 @@ import { AuthService } from '@app/core/auth/auth.service';
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { DebtApiService } from '@app/core/api/debt.api';
+import { ProgressBarService } from '@app/shared/components/progressbar/progressbar.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 import { first } from 'rxjs/operators';
@@ -295,7 +296,7 @@ export class CallEffects {
     });
 
   @Effect({ dispatch: false })
-  pbxStateAction$ = this.actions
+  pbxCallAction$ = this.actions
     .ofType(CallService.PBX_STATE_CHANGE)
     .filter((action: UnsafeAction) => action.payload)
     .map((action: UnsafeAction) => action.payload)
@@ -306,12 +307,26 @@ export class CallEffects {
     )
     .map(state => this.debtApi.openDebtCard(state, null, state.phoneId));
 
+  @Effect({ dispatch: false })
+  pbxProcessingAction$ = this.actions
+    .ofType(CallService.PBX_STATE_CHANGE)
+    .filter((action: UnsafeAction) => action.payload)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(state => state.lineStatus === PBXStateEnum.PBX_NOCALL
+      && state.afterCallPeriod
+      && state.callTypeCode === CallTypeEnum.OUTGOING
+    )
+    .map(state => state.afterCallPeriod)
+    .distinctUntilChanged()
+    .map(afterCallPeriod => this.progressBarService.dispatchAction(ProgressBarService.MESSAGE_PROGRESS, afterCallPeriod));
+
   constructor(
     private actions: Actions,
-    private debtApi: DebtApiService,
     private authService: AuthService,
     private callService: CallService,
     private dataService: DataService,
+    private debtApi: DebtApiService,
+    private progressBarService: ProgressBarService,
     private notificationService: NotificationsService
   ) {}
 

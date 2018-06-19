@@ -102,6 +102,16 @@ export class CallService {
         contractId: 1,
       });
     }, 12000);
+
+
+    setTimeout(() => {
+      this.updatePBXState({
+        date: '2018-06-15T08:56:52.111Z',
+        lineStatus: PBXStateEnum.PBX_NOCALL,
+        callTypeCode: 1,
+        afterCallPeriod: 60
+      });
+    }, 30000);
   }
 
   get settings$(): Observable<ICallSettings> {

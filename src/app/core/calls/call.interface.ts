@@ -45,7 +45,7 @@ export interface IPBXState {
   lineStatus: PBXStateEnum;
   userStatus?: number;
   date: string;
-  username: string;
+  username?: string;
   phoneId?: number;
   debtId?: number;
   debtorId?: number;

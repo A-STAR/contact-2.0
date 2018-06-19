@@ -199,7 +199,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       map(([ params ]) => params)
     )
     .subscribe(params => {
-      this.setCall(this.phones.find(p => p.id === +params.activeCallId));
       this.selectedPhoneId$.next(+params.activeCallId);
       this.registerContact();
       this.cdRef.markForCheck();
@@ -443,19 +442,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         firstName: this.person.firstName,
         middleName: this.person.middleName
       }));
-  }
-
-  private setCall(phone: IPhone): void {
-    this.callService.setCall({
-      phoneId: phone.id,
-      debtId: this._debtId$.value,
-      personId: this._personId$.value,
-      personRole: this.personRole,
-      phone: phone.phone,
-      lastName: this.person.lastName,
-      firstName: this.person.firstName,
-      middleName: this.person.middleName
-    });
   }
 
   private refresh(): void {
