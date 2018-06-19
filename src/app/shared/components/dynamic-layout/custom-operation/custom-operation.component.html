@@ -1,0 +1,6 @@
+<app-dynamic-layout
+  *ngIf="config"
+  [layout]="config"
+></app-dynamic-layout>
+
+<app-button [label]="label" (click)="onStart"></app-button>

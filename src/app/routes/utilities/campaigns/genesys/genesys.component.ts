@@ -7,12 +7,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { map } from 'rxjs/operators';
 
 import { CustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
-import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
-import { IGenesysCampaign, GenesysCampaignStatus, GenesysCampaignType } from './genesys.interface';
+import { IGenesysCampaign } from './genesys.interface';
 import {
   DynamicLayoutGroupType,
   DynamicLayoutItemType,
@@ -38,10 +36,6 @@ export class GenesysCampaignsComponent implements OnInit {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IGenesysCampaign>;
   @ViewChild('campaigns', { read: TemplateRef }) campaigns: TemplateRef<any>;
   @ViewChild('statistics', { read: TemplateRef }) statistics: TemplateRef<any>;
-  @ViewChild('start', { read: TemplateRef }) start: TemplateRef<any>;
-  @ViewChild('stop', { read: TemplateRef }) stop: TemplateRef<any>;
-  @ViewChild('load', { read: TemplateRef }) load: TemplateRef<any>;
-  @ViewChild('unload', { read: TemplateRef }) unload: TemplateRef<any>;
 
   readonly layout: IDynamicLayoutConfig = {
     key: 'utilities/campaigns/genesys',
@@ -67,12 +61,24 @@ export class GenesysCampaignsComponent implements OnInit {
             size: 20,
             children: [
               {
-                type: DynamicLayoutItemType.TEMPLATE,
-                value: 'start',
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                id: 11,
+                label: 'Start',
               },
               {
-                type: DynamicLayoutItemType.TEMPLATE,
-                value: 'stop',
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                id: 10,
+                label: 'Stop',
+              },
+              {
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                id: 9,
+                label: 'Load',
+              },
+              {
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                id: 12,
+                label: 'Unload',
               },
             ],
           },
@@ -83,33 +89,31 @@ export class GenesysCampaignsComponent implements OnInit {
 
   private selectedCampaign$ = new BehaviorSubject<IGenesysCampaign>(null);
 
-  readonly canLoad$ = this.selectedCampaign$.pipe(
-    map(c => c && [ GenesysCampaignStatus.NOT_LOADED, GenesysCampaignStatus.UNLOADED ].includes(c.statusCode)),
-  );
+  // readonly canLoad$ = this.selectedCampaign$.pipe(
+  //   map(c => c && [ GenesysCampaignStatus.NOT_LOADED, GenesysCampaignStatus.UNLOADED ].includes(c.statusCode)),
+  // );
 
-  readonly canUnload$ = this.selectedCampaign$.pipe(
-    map(c => c && [ GenesysCampaignStatus.LOADED, GenesysCampaignStatus.STOPPED ].includes(c.statusCode)),
-  );
+  // readonly canUnload$ = this.selectedCampaign$.pipe(
+  //   map(c => c && [ GenesysCampaignStatus.LOADED, GenesysCampaignStatus.STOPPED ].includes(c.statusCode)),
+  // );
 
-  readonly canStart$ = this.selectedCampaign$.pipe(
-    map(c => {
-      return c && [
-        GenesysCampaignStatus.LOADED,
-        GenesysCampaignStatus.STOPPED,
-        GenesysCampaignStatus.UNLOADING,
-      ].includes(c.statusCode);
-    }),
-  );
+  // readonly canStart$ = this.selectedCampaign$.pipe(
+  //   map(c => {
+  //     return c && [
+  //       GenesysCampaignStatus.LOADED,
+  //       GenesysCampaignStatus.STOPPED,
+  //       GenesysCampaignStatus.UNLOADING,
+  //     ].includes(c.statusCode);
+  //   }),
+  // );
 
-  readonly canStop$ = this.selectedCampaign$.pipe(
-    map(c => c && c.statusCode === GenesysCampaignStatus.STARTED),
-  );
+  // readonly canStop$ = this.selectedCampaign$.pipe(
+  //   map(c => c && c.statusCode === GenesysCampaignStatus.STARTED),
+  // );
 
-  readonly canSetOptimizationLevel$ = this.selectedCampaign$.pipe(
-    map(c => c && c.statusCode !== GenesysCampaignStatus.STARTED && c.typeCode === GenesysCampaignType.AUTO_DIALER),
-  );
-
-  actionData: IAction;
+  // readonly canSetOptimizationLevel$ = this.selectedCampaign$.pipe(
+  //   map(c => c && c.statusCode !== GenesysCampaignStatus.STARTED && c.typeCode === GenesysCampaignType.AUTO_DIALER),
+  // );
 
   rows: IGenesysCampaign[] = [];
   rowCount = 0;
@@ -128,10 +132,6 @@ export class GenesysCampaignsComponent implements OnInit {
     this.templates = {
       campaigns: this.campaigns,
       statistics: this.statistics,
-      start: this.start,
-      stop: this.stop,
-      load: this.load,
-      unload: this.unload,
     };
   }
 
@@ -157,42 +157,6 @@ export class GenesysCampaignsComponent implements OnInit {
     } else {
       this.setCampaignStatistics(null);
     }
-  }
-
-  onStart(): void {
-    const campaignId = this.selectedCampaign$.value;
-
-    this.customOperationService
-      .execute(CustomOperation.PBX_CAMPAIGN_START, {} as any, { campaignId })
-      .subscribe();
-  }
-
-  onStop(): void {
-    const campaignId = this.selectedCampaign$.value;
-
-    this.customOperationService
-      .execute(CustomOperation.PBX_CAMPAIGN_STOP, {} as any, { campaignId })
-      .subscribe();
-  }
-
-  onLoad(): void {
-    const campaignId = this.selectedCampaign$.value;
-
-    this.customOperationService
-      .execute(CustomOperation.PBX_CAMPAIGN_LOAD, {} as any, { campaignId })
-      .subscribe();
-  }
-
-  onUnload(): void {
-    const campaignId = this.selectedCampaign$.value;
-
-    this.customOperationService
-      .execute(CustomOperation.PBX_CAMPAIGN_UNLOAD, {} as any, { campaignId })
-      .subscribe();
-  }
-
-  onCloseAction(): void {
-    this.actionData = null;
   }
 
   private fetchCampaignStatistics(campaignId: number): void {
