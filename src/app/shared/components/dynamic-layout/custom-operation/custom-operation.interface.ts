@@ -5,4 +5,5 @@ export interface IDynamicLayoutCustomOperation extends IDynamicLayoutGenericItem
   id: number;
   // Optional:
   label?: string;
+  params?: string[];
 }
