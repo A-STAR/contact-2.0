@@ -14,6 +14,7 @@ export enum ContextOperator {
   PERMISSION_IS_TRUE   = 'permissionIsTrue',
   PERMISSION_NOT_EMPTY = 'permissionNotEmpty',
   PERSON_ATTRIBUTES    = 'personAttributes',
+  UI_STATE             = 'uiState',
 
   // Binary
   CONSTANT_CONTAINS   = 'constantContains',
@@ -35,6 +36,7 @@ export type IContextUnaryOperator =
   | ContextOperator.PERMISSION_IS_TRUE
   | ContextOperator.PERMISSION_NOT_EMPTY
   | ContextOperator.PERSON_ATTRIBUTES
+  | ContextOperator.UI_STATE
 ;
 
 export type IContextBinaryOperator =

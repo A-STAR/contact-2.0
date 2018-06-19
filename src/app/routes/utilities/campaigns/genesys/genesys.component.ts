@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ContextOperator } from '@app/core/context/context.interface';
 import { CustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IGenesysCampaign } from './genesys.interface';
@@ -62,26 +63,127 @@ export class GenesysCampaignsComponent implements OnInit {
             children: [
               {
                 type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                display: {
+                  operator: ContextOperator.OR,
+                  value: [
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        2,
+                      ],
+                    },
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        4,
+                      ],
+                    },
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        7,
+                      ],
+                    },
+                  ],
+                },
                 id: 11,
                 label: 'Start',
                 params: [ 'campaignId' ],
                 size: 100,
               },
-              // {
-              //   type: DynamicLayoutItemType.CUSTOM_OPERATION,
-              //   id: 10,
-              //   label: 'Stop',
-              // },
-              // {
-              //   type: DynamicLayoutItemType.CUSTOM_OPERATION,
-              //   id: 9,
-              //   label: 'Load',
-              // },
-              // {
-              //   type: DynamicLayoutItemType.CUSTOM_OPERATION,
-              //   id: 12,
-              //   label: 'Unload',
-              // },
+              {
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                display: {
+                  operator: ContextOperator.EQUALS,
+                  value: [
+                    {
+                      operator: ContextOperator.UI_STATE,
+                      value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                    },
+                    3,
+                  ],
+                },
+                id: 10,
+                label: 'Stop',
+                params: [ 'campaignId' ],
+                size: 100,
+              },
+              {
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                display: {
+                  operator: ContextOperator.OR,
+                  value: [
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        1,
+                      ],
+                    },
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        5,
+                      ],
+                    },
+                  ],
+                },
+                id: 9,
+                label: 'Load',
+                params: [ 'campaignId' ],
+                size: 100,
+              },
+              {
+                type: DynamicLayoutItemType.CUSTOM_OPERATION,
+                display: {
+                  operator: ContextOperator.OR,
+                  value: [
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        2,
+                      ],
+                    },
+                    {
+                      operator: ContextOperator.EQUALS,
+                      value: [
+                        {
+                          operator: ContextOperator.UI_STATE,
+                          value: 'pbxCampaigns.firstSelectedRow.statusCode',
+                        },
+                        4,
+                      ],
+                    },
+                  ],
+                },
+                id: 12,
+                label: 'Unload',
+                params: [ 'campaignId' ],
+                size: 100,
+              },
             ],
           },
         ],
@@ -90,32 +192,6 @@ export class GenesysCampaignsComponent implements OnInit {
   };
 
   private selectedCampaign$ = new BehaviorSubject<IGenesysCampaign>(null);
-
-  // readonly canLoad$ = this.selectedCampaign$.pipe(
-  //   map(c => c && [ GenesysCampaignStatus.NOT_LOADED, GenesysCampaignStatus.UNLOADED ].includes(c.statusCode)),
-  // );
-
-  // readonly canUnload$ = this.selectedCampaign$.pipe(
-  //   map(c => c && [ GenesysCampaignStatus.LOADED, GenesysCampaignStatus.STOPPED ].includes(c.statusCode)),
-  // );
-
-  // readonly canStart$ = this.selectedCampaign$.pipe(
-  //   map(c => {
-  //     return c && [
-  //       GenesysCampaignStatus.LOADED,
-  //       GenesysCampaignStatus.STOPPED,
-  //       GenesysCampaignStatus.UNLOADING,
-  //     ].includes(c.statusCode);
-  //   }),
-  // );
-
-  // readonly canStop$ = this.selectedCampaign$.pipe(
-  //   map(c => c && c.statusCode === GenesysCampaignStatus.STARTED),
-  // );
-
-  // readonly canSetOptimizationLevel$ = this.selectedCampaign$.pipe(
-  //   map(c => c && c.statusCode !== GenesysCampaignStatus.STARTED && c.typeCode === GenesysCampaignType.AUTO_DIALER),
-  // );
 
   rows: IGenesysCampaign[] = [];
   rowCount = 0;

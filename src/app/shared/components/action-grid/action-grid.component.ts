@@ -57,6 +57,7 @@ import { ContextService } from '@app/core/context/context.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UIService } from '@app/core/ui/ui.service';
 
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -189,6 +190,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     private contextService: ContextService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private uiService: UIService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -348,10 +350,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.cdRef.markForCheck();
   }
 
-  onSelectionAction(selected: Array<number | T>): void {
-    const selection = this.grid instanceof Grid2Component
-      ? this.selection.find(r => r[this.rowIdKey] === selected[0])
-      : selected[0];
+  onSelectionAction(selected: number[] | T[]): void {
+    const selection = this.getFirstSelectedRow(selected);
     this.selectionActionData = this.setDialogData({ metadataAction: this.currentSelectionAction, selection });
     this.gridDetails$.next(this.isGridDetails(this.selectionActionName));
     this.cdRef.markForCheck();
@@ -399,7 +399,16 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     }
   }
 
-  onSelect(selected: number[]): void {
+  onSelect(selected: number[] | T[]): void {
+    if (this.persistenceKey) {
+      /**
+       * Because context service may require access to selected rows in any grid.
+       * This kind can also replace route reuse in future.
+       */
+      this.uiService.updateState(this.persistenceKey, {
+        firstSelectedRow: this.getFirstSelectedRow(selected),
+      });
+    }
     this.selectRow.emit(selected);
   }
 
@@ -440,6 +449,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
+  }
+
+  private getFirstSelectedRow(selected: any): T[] {
+    return this.grid instanceof Grid2Component
+    ? this.selection.find(r => r[this.rowIdKey] === selected[0])
+    : selected[0];
   }
 
   private createCloseAction(actionData: ICloseAction | IActionGridAction): () => any {
