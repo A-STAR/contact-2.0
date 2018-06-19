@@ -60,9 +60,12 @@
               },
               "id": 11,
               "label": "Start",
-              "params": [
-                "campaignId"
-              ],
+              "params": {
+                "campaignId": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.id"
+                }
+              },
               "size": 100
             },
             {
@@ -79,9 +82,12 @@
               },
               "id": 10,
               "label": "Stop",
-              "params": [
-                "campaignId"
-              ],
+              "params": {
+                "campaignId": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.id"
+                }
+              },
               "size": 100
             },
             {
@@ -113,9 +119,12 @@
               },
               "id": 9,
               "label": "Load",
-              "params": [
-                "campaignId"
-              ],
+              "params": {
+                "campaignId": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.id"
+                }
+              },
               "size": 100
             },
             {
@@ -147,9 +156,12 @@
               },
               "id": 12,
               "label": "Unload",
-              "params": [
-                "campaignId"
-              ],
+              "params": {
+                "campaignId": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.id"
+                }
+              },
               "size": 100
             }
           ]

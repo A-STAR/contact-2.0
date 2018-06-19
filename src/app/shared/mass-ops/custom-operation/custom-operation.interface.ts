@@ -27,11 +27,7 @@ export interface ICustomOperationParams {
 
 export enum CustomOperation {
   DEBT_DISTRIBUTION       = 5,
-  PBX_CAMPAIGN_STATISTICS = 7,
-  PBX_CAMPAIGN_START = 11,
-  PBX_CAMPAIGN_STOP = 10,
-  PBX_CAMPAIGN_LOAD = 9,
-  PBX_CAMPAIGN_UNLOAD = 12,
+  PBX_CAMPAIGN_STATISTICS = 8,
 }
 
 export enum OperationControlTypeEnum {
