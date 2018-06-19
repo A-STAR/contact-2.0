@@ -1,8 +1,10 @@
 import { Observable } from 'rxjs/Observable';
 
 export interface ITab {
-  disabled?: boolean;
-  link: string;
+  id?: number;
   title: string;
+  link: string;
+  disabled?: boolean;
+  closable?: boolean;
   hasPermission?: Observable<boolean>;
 }

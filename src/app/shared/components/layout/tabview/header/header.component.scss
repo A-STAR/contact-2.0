@@ -35,6 +35,21 @@ li {
     color: $navbar-default-link-disabled-color;
     cursor: default;
   }
+  &.closable {
+    padding-right: 16px + 11px;
+
+    button {
+      position: absolute;
+      top: 50%;
+      right: (16px / 2);
+      transform: translateY(-7px);
+      padding: initial;
+      border: initial;
+      background: initial;
+      line-height: 0;
+    }
+
+  }
   .selection {
     height: 2px;
     position: absolute;

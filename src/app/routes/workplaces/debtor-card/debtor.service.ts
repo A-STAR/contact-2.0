@@ -151,6 +151,10 @@ export class DebtorService {
   }
 
   addTab(debtorId: number, debtId: number): void {
+    if (this._debtors.get(debtorId) === debtId) {
+      return;
+    }
+
     this._debtors.set(debtorId, debtId);
 
     this.debtors$.next(this.debtors);

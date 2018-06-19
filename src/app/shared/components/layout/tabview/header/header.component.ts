@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+  OnDestroy
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs/observable/of';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ITab } from './header.interface';
@@ -15,6 +24,8 @@ import { ITab } from './header.interface';
 export class TabHeaderComponent implements OnInit, OnDestroy {
   @Input() noMargin = false;
   @Input() tabs: ITab[] = [];
+
+  @Output() tabClose = new EventEmitter<number>();
 
   private tabsPermissionSub: Subscription;
 
@@ -52,5 +63,10 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     if (this.tabsPermissionSub) {
       this.tabsPermissionSub.unsubscribe();
     }
+  }
+
+  closeTab(event: MouseEvent, id: number): void {
+    event.stopPropagation();
+    this.tabClose.emit(id);
   }
 }

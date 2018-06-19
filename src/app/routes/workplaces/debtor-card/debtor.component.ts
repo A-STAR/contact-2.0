@@ -31,44 +31,14 @@ import { RepositoryService } from '@app/core/repository/repository.service';
 })
 export class DebtorComponent implements OnInit, OnDestroy {
 
-  tabs$: Observable<ITab[]> = combineLatest(
+  tabs$: Observable<ITab[]> = combineLatest<ITab>(
     ...this.debtorService.debtors
-      .map(([ id, debt ]: [ number, number ]) => {
-
-        const link = `/app/workplaces/debtor/${id}/debt/${debt}`;
-
-        return this.repositoryService
-          .fetch(Person, { id })
-          .pipe(
-            map((persons: Person[]): ITab => {
-              const [ person ] = persons;
-              const title = `${person.lastName} ${person.firstName} ${person.middleName}`;
-
-              return <ITab>{ title, link };
-            }),
-          );
-
-      })
+      .map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor)),
   );
 
   // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
-  //   switchMap((debtors: Array<[number, number]>): Observable<ITab>[] => debtors
-  //     .map(([ id, debt ]: [number, number]) => {
-
-  //       const link = `/app/workplaces/debtor/${id}/debt/${debt}`;
-
-  //       return <Observable<ITab>>this.repositoryService
-  //         .fetch(Person, { id })
-  //         .pipe(
-  //           map((persons: Person[]): ITab => {
-  //             const [ person ] = persons;
-  //             const title = `${person.lastName} ${person.firstName} ${person.middleName}`;
-
-  //             return <ITab>{ title, link };
-  //           }),
-  //         );
-
-  //     }),
+  //   switchMap((debtors: Array<[number, number]>): Observable<ITab>[] =>
+  //     debtors.map(this.getTab.bind(this))
   //   ),
   //   switchMap((tab: Observable<ITab>): Observable<ITab> => tab),
   //   toArray(),
@@ -112,20 +82,24 @@ export class DebtorComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  // removeTab(debtorId: number) {
-  //   this.debtorService.removeTab(debtorId);
-  //   // this.cdRef.markForCheck();
-  // }
+  getTab([ id, debt ]: [ number, number ]): Observable<ITab> {
+    const link = `/app/workplaces/debtor/${id}/debt/${debt}`;
 
-  getDebtorName(id: number): Observable<string> {
     return this.repositoryService
-      .fetch(Person, { id: id })
+      .fetch(Person, { id })
       .pipe(
-        map((response: Person[]) => {
-          const person: Partial<Person> = response[0];
-          return `${person.lastName} ${person.firstName} ${person.middleName}`;
+        map((persons: Person[]): ITab => {
+          const [ person ] = persons;
+          const title = `${person.lastName} ${person.firstName} ${person.middleName}`;
+
+          return <ITab>{ id, title, link, closable: true };
         }),
       );
+  }
+
+  onTabClose(debtorId: number): void {
+    this.debtorService.removeTab(debtorId);
+    this.cdRef.markForCheck();
   }
 
   onNavigationEnd(event: NavigationEnd): void {

@@ -1,11 +1,14 @@
 <ul [ngClass]="{ 'no-margin': noMargin }">
   <li
     *ngFor="let tab of tabs"
-    routerLinkActive="active"
+    [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
     [routerLink]="tab.link"
-    [class.disabled]="tab.disabled"
+    routerLinkActive="active"
   >
     {{ tab.title | translate }}
+    <button *ngIf="tab.closable" (click)="closeTab($event, tab.id)">
+      <i class="fa fa-close"></i>
+    </button>
     <div class="selection"></div>
   </li>
 </ul>
