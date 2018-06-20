@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import {
   ICustomActionData,
@@ -33,41 +32,23 @@ export class CustomOperationService {
 
   getOperationParams(operation: IGridAction): Observable<ICustomOperationParams[]> {
     return this.fetchOperationParams(operation.id)
-      .map(params => this.filterInputParams(operation, params || []));
+      .map(params => this.filterInputParams(operation, params));
   }
 
   fetchOperations(operationType: number): Observable<ICustomOperation[]> {
     return this.dataService
       .readAll('/lookup/operations?operationType={operationType} ', { operationType })
       .pipe(
-        // TODO(d.maltsev): remove mock!
-        map(data => [ ...data, { id: 1000, name: 'Call List' } ]),
         catchError(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback()),
       );
   }
 
   fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
-    // TODO(d.maltsev): remove mock!
-    return operationId === 1000
-      ? of([
-          {
-            id: 1,
-            name: 'foo',
-            paramTypeCode: 6,
-            sortOrder: 1,
-            systemName: 'foo',
-            isMandatory: false,
-            multiSelect: false,
-            dictNameCode: null,
-            entityTypeIds: null,
-            lookupKey: null,
-          }
-        ])
-      : this.dataService
-          .readAll(`/operations/${operationId}/params`)
-          .pipe(
-            catchError(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback()),
-          );
+    return this.dataService
+      .readAll(`/operations/${operationId}/params`)
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback()),
+      );
   }
 
   run(operation: IGridAction, params: ICustomOperationParams[], data: ICustomActionData): Observable<ICustomActionData> {

@@ -14,24 +14,7 @@ export function reducer(state: IMetadataState = defaultState, action: UnsafeActi
       return {
         ...state,
         [name]: {
-          // TODO(d.maltsev): remove mock
-          actions: action.payload.name === 'workTask.All'
-            ? [
-                ...actions,
-                {
-                  id: 1000,
-                  asyncMode: false,
-                  action: 'callList',
-                  params: [
-                    'debtId',
-                  ],
-                  applyTo: {
-                    selected: true,
-                    all: true,
-                  },
-                },
-              ]
-            : actions,
+          actions,
           columns: data,
           filters: baseFilters,
           defaultAction,
