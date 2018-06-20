@@ -13,6 +13,11 @@ export interface IConfig {
   help: {
     url: string;
   };
+  customOperations: {
+    [key: number]: {
+      url: string;
+    };
+  };
 }
 
 interface MapProviders {
