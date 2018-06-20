@@ -47,6 +47,10 @@ li {
       border: initial;
       background: initial;
       line-height: 0;
+
+      &:hover {
+        text-shadow: 0 0 0.01px currentColor;
+      }
     }
 
   }
