@@ -1,3 +1,9 @@
- :host ::ng-deep app-dynamic-layout-group > div {
+:host ::ng-deep app-dynamic-layout-group > div {
   display: block !important;
+}
+
+iframe {
+  border: none;
+  min-height: 600px;
+  width: 100%;
 }

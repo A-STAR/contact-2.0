@@ -36,15 +36,19 @@ export class CustomOperationService {
   }
 
   fetchOperations(operationType: number): Observable<ICustomOperation[]> {
-    return this.dataService.readAll('/lookup/operations?operationType={operationType} ', {
-      operationType
-    })
-    .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
+    return this.dataService
+      .readAll('/lookup/operations?operationType={operationType} ', { operationType })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback()),
+      );
   }
 
   fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
-    return this.dataService.readAll(`/operations/${operationId}/params`)
-      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
+    return this.dataService
+      .readAll(`/operations/${operationId}/params`)
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback()),
+      );
   }
 
   run(operation: IGridAction, params: ICustomOperationParams[], data: ICustomActionData): Observable<ICustomActionData> {
