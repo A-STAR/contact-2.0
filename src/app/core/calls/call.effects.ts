@@ -15,6 +15,7 @@ import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { DebtApiService } from '@app/core/api/debt.api';
 import { ProgressBarService } from '@app/shared/components/progressbar/progressbar.service';
+import { IncomingCallApiService } from '@app/core/api/incoming-call.api';
 import { NotificationsService } from '../notifications/notifications.service';
 
 import { first } from 'rxjs/operators';
@@ -320,6 +321,16 @@ export class CallEffects {
     .distinctUntilChanged()
     .map(afterCallPeriod => this.progressBarService.dispatchAction(ProgressBarService.MESSAGE_PROGRESS, afterCallPeriod));
 
+  @Effect({ dispatch: false })
+  pbxIncomingCallAction$ = this.actions
+    .ofType(CallService.PBX_STATE_CHANGE)
+    .filter((action: UnsafeAction) => action.payload)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL
+      && state.callTypeCode === CallTypeEnum.INCOMING
+    )
+    .map(state => this.incomingCallApiService.openIncomingCallCard(state.phoneId));
+
   constructor(
     private actions: Actions,
     private authService: AuthService,
@@ -327,6 +338,7 @@ export class CallEffects {
     private dataService: DataService,
     private debtApi: DebtApiService,
     private progressBarService: ProgressBarService,
+    private incomingCallApiService: IncomingCallApiService,
     private notificationService: NotificationsService
   ) {}
 

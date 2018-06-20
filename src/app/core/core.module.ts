@@ -22,6 +22,7 @@ import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
+import { IncomingCallApiService } from '@app/core/api/incoming-call.api';
 import { LayoutService } from '@app/core/layout/layout.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
@@ -123,6 +124,7 @@ import { TaskService } from '@app/core/task/task.service';
     GridFiltersService,
     GuiObjectsService,
     HelpService,
+    IncomingCallApiService,
     LayoutService,
     MetadataService,
     NotificationsService,

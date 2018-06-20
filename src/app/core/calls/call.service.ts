@@ -73,7 +73,13 @@ export class CallService {
     .mergeMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
-    .subscribe(state => this.updatePBXState(state));
+    .subscribe(state => {
+      const pbxState = state || {} as any;
+      pbxState.debtId = state && state.payload ? +state.payload.debtId : null;
+      pbxState.phoneId = state && state.payload ? +state.payload.phoneId : null;
+      pbxState.callTypeCode = state && state.payload ? +state.payload.callTypeCode : null;
+      this.updatePBXState(pbxState);
+    });
 
     this.usePBX$
       .filter(use => !use)
@@ -86,30 +92,39 @@ export class CallService {
       );
 
     // TODO(i.kibisov): remove mock
+    // setTimeout(() => {
+    //   this.updatePBXState({
+    //     date: '2018-06-15T08:56:52.111Z',
+    //     lineStatus: PBXStateEnum.PBX_CALL,
+    //     payload: null,
+    //     userStatus: null,
+    //     username: 'admin-pbx',
+    //     debtId: 1,
+    //     personId: 7,
+    //     phoneId: 180,
+    //     callTypeCode: 1,
+    //     personRole: 2,
+    //     contractId: 1,
+    //   });
+    // }, 12000);
+
+
+    // setTimeout(() => {
+    //   this.updatePBXState({
+    //     date: '2018-06-15T08:56:52.111Z',
+    //     lineStatus: PBXStateEnum.PBX_NOCALL,
+    //     callTypeCode: 1,
+    //     afterCallPeriod: 60
+    //   });
+    // }, 30000);
+
     setTimeout(() => {
       this.updatePBXState({
         date: '2018-06-15T08:56:52.111Z',
         lineStatus: PBXStateEnum.PBX_CALL,
-        payload: null,
-        userStatus: null,
-        username: 'admin-pbx',
-        debtId: 1,
-        debtorId: 1,
-        personId: 7,
+        callTypeCode: 0,
         phoneId: 180,
-        callTypeCode: 1,
-        personRole: 2,
-        contractId: 1,
-      });
-    }, 12000);
-
-
-    setTimeout(() => {
-      this.updatePBXState({
-        date: '2018-06-15T08:56:52.111Z',
-        lineStatus: PBXStateEnum.PBX_NOCALL,
-        callTypeCode: 1,
-        afterCallPeriod: 60
+        personId: 1
       });
     }, 30000);
   }
@@ -304,11 +319,11 @@ export class CallService {
     });
   }
 
-  sendContactTreeIntermediate(node: number, phoneId: number, debtId: number): void {
+  sendContactTreeIntermediate(code: number, phoneId: number, debtId: number): void {
     this.store.dispatch({
       type: CallService.PBX_CONTACT_INTERMEDIATE,
       payload: {
-        node,
+        code,
         phoneId,
         debtId
       }
