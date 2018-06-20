@@ -127,7 +127,7 @@ export class LetterGenerationComponent implements OnInit {
           name: 'addressTypes',
           type: DynamicLayoutItemType.CONTROL,
           controlType: DynamicLayoutControlType.MULTISELECT,
-          dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
+          dictCode: UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
           validators: {
             required: true
           }
