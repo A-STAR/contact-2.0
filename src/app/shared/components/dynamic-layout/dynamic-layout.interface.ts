@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { IContext } from '@app/core/context/context.interface';
 import { IDynamicLayoutAttribute } from './attribute/attribute.interface';
 import { IDynamicLayoutControl } from './control/control.interface';
+import { IDynamicLayoutCustomOperation } from './custom-operation/custom-operation.interface';
 import { IDynamicLayoutGroup } from './group/group.interface';
 import { IDynamicLayoutPlugin } from './event/event.interface';
 import { IDynamicLayoutTemplate } from './template/template.interface';
@@ -35,6 +36,11 @@ export enum DynamicLayoutItemType {
    * References to Angular templates that can be inserted into dynamic layout
    */
   TEMPLATE = 'template',
+
+  /**
+   * Renders custom operation input form
+   */
+  CUSTOM_OPERATION = 'customOperation'
 }
 
 export interface IDynamicLayoutGenericItem {
@@ -54,6 +60,7 @@ export type IDynamicLayoutItem =
   | IDynamicLayoutControl
   | IDynamicLayoutTemplate
   | IDynamicLayoutAttribute
+  | IDynamicLayoutCustomOperation
 ;
 
 export interface IDynamicLayoutConfig {

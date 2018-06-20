@@ -1,6 +1,6 @@
 <app-dynamic-layout
   *ngIf="templates"
-  [layout]="layout"
+  layout="custom-call-campaigns"
   [templates]="templates"
 ></app-dynamic-layout>
 
@@ -22,34 +22,3 @@
   ></app-genesys-statistics>
 </ng-template>
 
-<ng-template #start>
-  <app-button
-    *ngIf="canStart$ | async"
-    type="start"
-    (click)="onStart()"
-  ></app-button>
-</ng-template>
-
-<ng-template #stop>
-  <app-button
-    *ngIf="canStop$ | async"
-    type="stop"
-    (click)="onStop()"
-  ></app-button>
-</ng-template>
-
-<ng-template #load>
-  <app-button
-    *ngIf="canLoad$ | async"
-    type="load"
-    (click)="onLoad()"
-  ></app-button>
-</ng-template>
-
-<ng-template #unload>
-  <app-button
-    *ngIf="canUnload$ | async"
-    type="unload"
-    (click)="onUnload()"
-  ></app-button>
-</ng-template>

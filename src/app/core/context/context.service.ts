@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -19,7 +20,7 @@ export class ContextService {
     this.store.pipe(
       // TODO(d.maltsev): remove ContextOperator.EVAL
       // For now, only changes in layout will be reflected here for performance reasons
-      distinctUntilChanged((a: any, b: any) => equals(a.layout, b.layout)),
+      distinctUntilChanged((a: any, b: any) => equals(a.ui, b.ui)),
     ),
     this.entityAttributesService.bag$,
     this.userConstantsService.bag(),
@@ -30,6 +31,7 @@ export class ContextService {
 
   constructor(
     private entityAttributesService: EntityAttributesService,
+    private router: Router,
     private store: Store<IAppState>,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -68,11 +70,16 @@ export class ContextService {
   private findStoreReferencesRecursively(contexts: IContext[]): IContextExpression[] {
     return contexts.reduce((acc, item) => {
       if (typeof item === 'object') {
-        if (item.operator === ContextOperator.EVAL) {
-          return [ ...acc, item ];
-        } else {
-          const value = Array.isArray(item.value) ? item.value : [ item.value ];
-          return [ ...acc, ...this.findStoreReferencesRecursively(value) ];
+        switch (item.operator) {
+          case ContextOperator.EVAL:
+            return [ ...acc, item ];
+          case ContextOperator.UI_STATE:
+            return [ ...acc, { operator: ContextOperator.EVAL, value: `ui.${this.router.url}:${item.value}` } ];
+          default:
+            return [
+              ...acc,
+              ...this.findStoreReferencesRecursively(Array.isArray(item.value) ? item.value : [ item.value ]),
+            ];
         }
       } else {
         return acc;
@@ -93,6 +100,8 @@ export class ContextService {
   private calculateExpression(appContext: IAppContext, expression: IContextExpression): any {
     if (expression.operator === ContextOperator.EVAL) {
       return appContext.state[expression.value];
+    } else if (expression.operator === ContextOperator.UI_STATE) {
+      return appContext.state[`ui.${this.router.url}:${expression.value}`];
     } else {
       const v = Array.isArray(expression.value)
         ? expression.value.map(e => this.calculateFromStore(appContext, e))
@@ -152,6 +161,6 @@ export class ContextService {
   }
 
   private serializeContext(context: IContext): string {
-    return JSON.stringify(context);
+    return this.router.url + ':' + JSON.stringify(context);
   }
 }
