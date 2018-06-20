@@ -11,7 +11,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { map, filter } from 'rxjs/operators';
-// import { switchMap, toArray, map, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -35,14 +34,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
     ...this.debtorService.debtors
       .map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor)),
   );
-
-  // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
-  //   switchMap((debtors: Array<[number, number]>): Observable<ITab>[] =>
-  //     debtors.map(this.getTab.bind(this))
-  //   ),
-  //   switchMap((tab: Observable<ITab>): Observable<ITab> => tab),
-  //   toArray(),
-  // );
 
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 

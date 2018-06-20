@@ -29,7 +29,6 @@ export class DebtorService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
-  debtors$ = new BehaviorSubject<Array<[number, number]>>([]);
   private _debtors = new Map<number, number>();
 
   constructor(
@@ -151,27 +150,17 @@ export class DebtorService {
   }
 
   addTab(debtorId: number, debtId: number): void {
+    this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
+
     if (this._debtors.get(debtorId) === debtId) {
       return;
     }
 
     this._debtors.set(debtorId, debtId);
-
-    this.debtors$.next(this.debtors);
-
-    this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
   }
 
   removeTab(debtorId: number): void {
     this._debtors.delete(debtorId);
-
-    this.debtors$.next(this.debtors);
-
-    const { debtorId: lastDebtorId } = this.layoutService.lastDebtCardIds$.value;
-
-    if (debtorId === lastDebtorId) {
-      this.layoutService.lastDebtCardIds$.next(null);
-    }
   }
 
 }
