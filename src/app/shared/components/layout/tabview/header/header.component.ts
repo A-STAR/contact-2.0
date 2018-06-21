@@ -16,9 +16,11 @@ export class TabHeaderComponent {
 
   @Input()
   set tabs(tabs: ITab[]) {
-    const tabsWithPermissions = this.setTabPermissions(tabs);
+    if (tabs !== null) {
+      const tabsWithPermissions = this.setTabPermissions(tabs);
 
-    this.tabs$.next(tabsWithPermissions);
+      this.tabs$.next(tabsWithPermissions);
+    }
   }
 
   @Input() noMargin = false;
