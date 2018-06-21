@@ -76,11 +76,15 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
     fromEvent(window, 'message')
       .pipe(
         map((message: MessageEvent) => message.data),
-        filter(message => message.type === 'ready' && message.payload.id === this.id),
+        filter(message => message.type === 'init' && message.direction === 'request' && message.params.id === this.id),
       )
       .subscribe(() => {
         const m = {
-          type: 'operation',
+          type: 'init',
+          direction: 'response',
+          params: {
+            id: this.id,
+          },
           payload: {
             params: this.params,
             value: this.value,
