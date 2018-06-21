@@ -182,7 +182,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     if (this.callCenter) {
       const campaignId = this.route.snapshot.paramMap.get('campaignId');
       if (campaignId) {
-        this.routingService.navigate([ `/app/workplaces/call-center/${campaignId}` ]);
+        this.routingService.navigate([ `/app/workplaces/call-center/${campaignId}/campaign` ]);
       }
     } else {
       const debtId = this.route.snapshot.paramMap.get('debtId');
