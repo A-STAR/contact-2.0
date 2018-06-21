@@ -41,10 +41,6 @@ export class DebtorService {
     private layoutService: LayoutService
   ) {}
 
-  get debtors(): Array<[number, number]> {
-    return Array.from(this._debtors as Map<number, number>);
-  }
-
   readonly debtId$ = new BehaviorSubject<number>(null);
   readonly debtorId$ = new BehaviorSubject<number>(null);
   readonly entityTypeId$ = new BehaviorSubject<number>(null);
@@ -163,6 +159,10 @@ export class DebtorService {
   removeTab(debtorId: number): void {
     this._debtors.delete(debtorId);
     this.debtors$.next(this.debtors);
+  }
+
+  private get debtors(): Array<[number, number]> {
+    return Array.from(this._debtors as Map<number, number>);
   }
 
 }
