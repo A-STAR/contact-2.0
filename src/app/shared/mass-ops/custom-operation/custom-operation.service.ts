@@ -193,7 +193,7 @@ export class CustomOperationService {
         }
       }), {}),
       ...(params || [])
-        .filter(p => [3, 4, 5, 8, 11].includes(p.paramTypeCode))
+        .filter(p => p.paramTypeCode === 0)
         .reduce((acc, p) => ({
           ...acc,
           [p.systemName]: {
