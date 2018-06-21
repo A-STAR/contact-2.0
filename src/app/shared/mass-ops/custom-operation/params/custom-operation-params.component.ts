@@ -12,19 +12,21 @@ import {
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { filter, map } from 'rxjs/operators';
 
 import { ICustomOperationParams } from '../custom-operation.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
+import { CustomOperationParamsService } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.service';
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    CustomOperationParamsService,
+  ],
   selector: 'app-custom-operation-params',
   styleUrls: [ './custom-operation-params.component.scss' ],
   templateUrl: './custom-operation-params.component.html',
@@ -47,9 +49,14 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   constructor(
     private cdRef: ChangeDetectorRef,
     private configService: ConfigService,
+    private customOperationParamsService: CustomOperationParamsService,
     private customOperationService: CustomOperationService,
     private domSanitizer: DomSanitizer,
   ) {}
+
+  get canSubmit(): boolean {
+    return this.canSubmit$.value;
+  }
 
   get thirdPartyUrl(): SafeUrl {
     const url = this.configService.getThirdPartyOperationUrl(this.id);
@@ -72,31 +79,17 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
           this.cdRef.markForCheck();
         });
     }
-
-    fromEvent(window, 'message')
-      .pipe(
-        map((message: MessageEvent) => message.data),
-        filter(message => message.type === 'ready' && message.payload.id === this.id),
-      )
-      .subscribe(() => {
-        const m = {
-          type: 'operation',
-          payload: {
-            params: this.params,
-            value: this.value,
-          }
-        };
-        this.frame.nativeElement.contentWindow.postMessage(m, '*');
-      });
+    this.customOperationParamsService.init(this.id, this.params);
+    this.customOperationParamsService.messages$.subscribe(message => {
+      if (this.frame && this.frame.nativeElement.contentWindow) {
+        this.frame.nativeElement.contentWindow.postMessage(message, '*');
+      }
+    });
   }
 
   ngOnDestroy(): void {
     if (this.canSubmitSub) {
       this.canSubmitSub.unsubscribe();
     }
-  }
-
-  get canSubmit(): boolean {
-    return this.canSubmit$.value;
   }
 }
