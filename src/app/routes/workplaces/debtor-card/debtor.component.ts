@@ -1,16 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  OnDestroy,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
   OnInit,
-  ViewEncapsulation
+  ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, filter } from 'rxjs/operators';
+import { switchMap, map, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -30,10 +31,23 @@ import { RepositoryService } from '@app/core/repository/repository.service';
 })
 export class DebtorComponent implements OnInit, OnDestroy {
 
-  tabs$: Observable<ITab[]> = combineLatest<ITab>(
-    ...this.debtorService.debtors
-      .map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor)),
+  tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
+    map((debtors: Array<[number, number]>): Array<Observable<ITab>> =>
+      debtors.map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor))
+    ),
+    switchMap(
+      (tabs: Array<Observable<ITab>>): Observable<ITab[]> =>
+        tabs.length ? combineLatest(tabs) : of([])
+    ),
   );
+
+  // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
+  //   switchMap((debtors: Array<[number, number]>): Observable<ITab[]> =>
+  //     combineLatest(
+  //       debtors.map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor))
+  //     )
+  //   ),
+  // );
 
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
@@ -55,7 +69,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       this.onDebtorIdChange(debtorId);
       this.onDebtIdChange(debtId);
       this.debtorService.addTab(debtorId, debtId);
-      this.cdRef.markForCheck();
+      // this.cdRef.markForCheck();
     });
 
     this.subscription.add(routeIdSubscription);

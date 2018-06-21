@@ -1,17 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef,
-  OnDestroy
-} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs/observable/of';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Subscription } from 'rxjs/Subscription';
+import { ChangeDetectionStrategy, Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+// import { ChangeDetectionStrategy, Component, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+// import { of } from 'rxjs/observable/of';
 
 import { ITab } from './header.interface';
 
@@ -21,52 +11,37 @@ import { ITab } from './header.interface';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabHeaderComponent implements OnInit, OnDestroy {
+export class TabHeaderComponent implements OnChanges {
+
+  @Input() tabs: ITab[];
   @Input() noMargin = false;
-  @Input() tabs: ITab[] = [];
 
   @Output() tabClose = new EventEmitter<number>();
 
-  private tabsPermissionSub: Subscription;
+  // tabs$ = new BehaviorSubject<ITab[]>(this.tabs);
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private router: Router) {}
+  ngOnChanges(): void { }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   // console.log('Changes', changes.tabs);
+  //   // if (changes.tabs && changes.tabs.currentValue) {
+  //   //   console.log('Changes Tabs', changes.tabs);
 
-  ngOnInit(): void {
-    // if no hasPermission prop was passed, count tab as permitted
-    this.tabsPermissionSub = combineLatest(
-      ...this.tabs.map(tab => tab.hasPermission || of(true)),
-    ).subscribe(permissions => {
-      // presume that first tab is the default one
-      if (!permissions[0]) {
-        // find first permitted tab
-        let permittedTab,
-          index = 0;
-        while ((permissions.length - 1) > index && !permissions[index]) {
-          index++;
-        }
-        permittedTab = this.tabs[index];
-        // set permission for this index as true,
-        // because we are going to navigate to this tab,
-        // so it has to be rendered
-        permissions[index] = true;
-        this.router.navigate([permittedTab.link], { relativeTo: this.route });
-      }
-      this.tabs = this.tabs.filter((_, index) => permissions[index]);
-      this.cdRef.markForCheck();
-    });
-  }
+  //   //   const tabs: ITab[] = this.tabs.map((tab: ITab) => {
 
-  ngOnDestroy(): void {
-    if (this.tabsPermissionSub) {
-      this.tabsPermissionSub.unsubscribe();
-    }
-  }
+  //   //     if (!tab.hasPermission) {
+  //   //       tab.hasPermission = of(true);
+  //   //     }
+
+  //   //     return tab;
+  //   //   });
+
+  //   //   this.tabs$.next(tabs);
+  //   // }
+  // }
 
   closeTab(event: MouseEvent, id: number): void {
     event.stopPropagation();
     this.tabClose.emit(id);
   }
+
 }
