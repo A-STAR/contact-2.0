@@ -1,17 +1,11 @@
 <ul [ngClass]="{ 'no-margin': noMargin }">
-  <!-- <ng-container *ngFor="let tab of tabs$ | async"> -->
-  <ng-container *ngFor="let tab of tabs">
+  <ng-container *ngFor="let tab of tabs$ | async">
     <li
       *ngIf="tab.hasPermission | async"
       [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
       [routerLink]="tab.link"
       routerLinkActive="active"
     >
-    <!-- <li
-      [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
-      [routerLink]="tab.link"
-      routerLinkActive="active"
-    > -->
       {{ tab.title | translate }}
       <button *ngIf="tab.closable" (click)="closeTab($event, tab.id)">
         <i class="fa fa-close"></i>

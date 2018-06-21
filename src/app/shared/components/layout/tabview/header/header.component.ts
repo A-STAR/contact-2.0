@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
-// import { ChangeDetectionStrategy, Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { of } from 'rxjs/observable/of';
 
 import { ITab } from './header.interface';
@@ -11,38 +10,38 @@ import { ITab } from './header.interface';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabHeaderComponent implements OnChanges {
+export class TabHeaderComponent {
 
-  @Input() tabs: ITab[];
+  tabs$ = new BehaviorSubject<ITab[]>([]);
+
+  @Input()
+  set tabs(tabs: ITab[]) {
+    const tabsWithPermissions = this.setTabPermissions(tabs);
+
+    this.tabs$.next(tabsWithPermissions);
+  }
+
   @Input() noMargin = false;
 
   @Output() tabClose = new EventEmitter<number>();
 
-  // tabs$ = new BehaviorSubject<ITab[]>([]);
-
-  // ngOnChanges(): void { }
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log('Changes', changes.tabs);
-    if (changes.tabs) {
-      // console.log('Changes Tabs', changes.tabs);
-
-      const tabs: ITab[] = this.tabs.map((tab: ITab) => {
-
-        if (!tab.hasPermission) {
-          tab.hasPermission = of(true);
-        }
-
-        return tab;
-      });
-
-      // this.tabs$.next(tabs);
-      this.tabs = tabs;
-    }
-  }
-
   closeTab(event: MouseEvent, id: number): void {
     event.stopPropagation();
     this.tabClose.emit(id);
+  }
+
+  private setTabPermissions(tabs: ITab[]): ITab[] {
+
+    const tabsWithPermissions: ITab[] = tabs.map((tab: ITab) => {
+
+      if (!tab.hasPermission) {
+        tab.hasPermission = of(true);
+      }
+
+      return tab;
+    });
+
+    return tabsWithPermissions;
   }
 
 }
