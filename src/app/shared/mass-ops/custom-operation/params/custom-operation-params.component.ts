@@ -79,12 +79,13 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
           this.cdRef.markForCheck();
         });
     }
-    this.customOperationParamsService.init(this.id, this.params);
-    this.customOperationParamsService.messages$.subscribe(message => {
-      if (this.frame && this.frame.nativeElement.contentWindow) {
-        this.frame.nativeElement.contentWindow.postMessage(message, '*');
-      }
-    });
+    this.customOperationParamsService
+      .init(this.id, this.params)
+      .subscribe(message => {
+        if (this.frame && this.frame.nativeElement.contentWindow) {
+          this.frame.nativeElement.contentWindow.postMessage(message, '*');
+        }
+      });
   }
 
   ngOnDestroy(): void {
