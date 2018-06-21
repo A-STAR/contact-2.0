@@ -13,13 +13,21 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { fromEvent } from 'rxjs/observable/fromEvent';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
 
 import { ICustomOperationParams } from '../custom-operation.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import {
+  FrameMessageDirection,
+  FrameMessageType,
+  IFrameRequestMessage,
+  IFrameResponseMessage,
+} from './custom-operation-params.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
@@ -44,12 +52,25 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   private canSubmit$ = new BehaviorSubject<boolean>(false);
   private canSubmitSub: Subscription;
 
+  private messages$ = fromEvent(window, 'message')
+    .pipe(
+      map((message: MessageEvent) => message.data as IFrameRequestMessage),
+      filter(message => message.direction === FrameMessageDirection.REQUEST && message.operationId === this.id),
+      shareReplay(),
+    );
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private configService: ConfigService,
     private customOperationService: CustomOperationService,
     private domSanitizer: DomSanitizer,
+    private lookupService: LookupService,
+    private userDictionariesService: UserDictionariesService,
   ) {}
+
+  get canSubmit(): boolean {
+    return this.canSubmit$.value;
+  }
 
   get thirdPartyUrl(): SafeUrl {
     const url = this.configService.getThirdPartyOperationUrl(this.id);
@@ -73,25 +94,19 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
         });
     }
 
-    fromEvent(window, 'message')
-      .pipe(
-        map((message: MessageEvent) => message.data),
-        filter(message => message.type === 'init' && message.direction === 'request' && message.params.id === this.id),
-      )
-      .subscribe(() => {
-        const m = {
-          type: 'init',
-          direction: 'response',
-          params: {
-            id: this.id,
-          },
-          payload: {
-            params: this.params,
-            value: this.value,
-          }
-        };
-        this.frame.nativeElement.contentWindow.postMessage(m, '*');
-      });
+    this.messages$.subscribe(message => {
+      switch (message.type) {
+        case FrameMessageType.DICTIONARY:
+          this.onDictionaryMessage(message.params);
+          break;
+        case FrameMessageType.INIT:
+          this.onInitMessage();
+          break;
+        case FrameMessageType.LOOKUP:
+          this.onLookupMessage(message.params);
+          break;
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -100,7 +115,47 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
     }
   }
 
-  get canSubmit(): boolean {
-    return this.canSubmit$.value;
+  private onDictionaryMessage(params: any): void {
+    this.userDictionariesService
+      .getDictionary(params.code)
+      .subscribe(payload => {
+        const message: IFrameResponseMessage = {
+          type: FrameMessageType.DICTIONARY,
+          direction: FrameMessageDirection.RESPONSE,
+          operationId: this.id,
+          params,
+          payload,
+        };
+        this.frame.nativeElement.contentWindow.postMessage(message, '*');
+      });
+  }
+
+  private onInitMessage(): void {
+    const message: IFrameResponseMessage = {
+      type: FrameMessageType.INIT,
+      direction: FrameMessageDirection.RESPONSE,
+      operationId: this.id,
+      params: null,
+      payload: {
+        params: this.params,
+        value: this.value,
+      },
+    };
+    this.frame.nativeElement.contentWindow.postMessage(message, '*');
+  }
+
+  private onLookupMessage(params: any): void {
+    this.lookupService
+      .lookup(params.code)
+      .subscribe(payload => {
+        const message: IFrameResponseMessage = {
+          type: FrameMessageType.LOOKUP,
+          direction: FrameMessageDirection.RESPONSE,
+          operationId: this.id,
+          params,
+          payload,
+        };
+        this.frame.nativeElement.contentWindow.postMessage(message, '*');
+      });
   }
 }
