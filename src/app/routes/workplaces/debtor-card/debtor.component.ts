@@ -69,7 +69,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       this.onDebtorIdChange(debtorId);
       this.onDebtIdChange(debtId);
       this.debtorService.addTab(debtorId, debtId);
-      // this.cdRef.markForCheck();
+      this.cdRef.markForCheck();
     });
 
     this.subscription.add(routeIdSubscription);

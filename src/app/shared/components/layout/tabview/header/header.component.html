@@ -1,8 +1,8 @@
 <ul [ngClass]="{ 'no-margin': noMargin }">
-  <!-- <ng-container *ngFor="let tab of tabs$ | async">
-    <li
-      *ngIf="tab.hasPermission | async" -->
+  <!-- <ng-container *ngFor="let tab of tabs$ | async"> -->
   <ng-container *ngFor="let tab of tabs">
+    <!-- <li
+      *ngIf="tab.hasPermission | async" -->
     <li
       [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
       [routerLink]="tab.link"
