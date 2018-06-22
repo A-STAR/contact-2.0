@@ -70,17 +70,17 @@ export class TreeComponent implements OnInit, OnDestroy {
       });
 
     this.treeIntermediateSub = combineLatest(
-      this.callService.pbxState$,
+      this.callService.pbxState$.filter(state => state && !!state.payload),
       this.route.queryParams,
       this.selectedNode$.filter(Boolean)
     )
     .pipe(
       filter(([ state, params, _ ]) =>
-        params.activeCallId && (+params.activeCallId === state.phoneId || !!state.afterCallPeriod)
+        params.activeCallId && (Number(params.activeCallId) === state.payload.phoneId || !!state.payload.afterCallPeriod)
       )
     )
     .subscribe(([ state, _, node ]) =>
-      this.callService.sendContactTreeIntermediate(node.data.code, state.phoneId, state.debtId)
+      this.callService.sendContactTreeIntermediate(node.data.code, state.payload.phoneId, state.payload.debtId)
     );
   }
 

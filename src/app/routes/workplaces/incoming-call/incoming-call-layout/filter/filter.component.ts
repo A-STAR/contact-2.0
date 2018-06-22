@@ -59,15 +59,15 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.incommingSearchSub = combineLatest(
       this.route.queryParams,
-      this.callService.pbxState$.filter(Boolean),
+      this.callService.pbxState$.filter(state => state && !!state.payload),
     )
     .pipe(
       first(),
-      filter(([ params, state ]) => !!params.activeCallId && Number(params.activeCallId) === state.phoneId),
+      filter(([ params, state ]) => !!params.activeCallId && Number(params.activeCallId) === state.payload.phoneId),
       map(([ _, state ]) => state)
     )
     .subscribe(state => {
-      this.incomingCallService.searchParams = { personId: state.personId };
+      this.incomingCallService.searchParams = { personId: state.payload.personId };
       this.cdRef.markForCheck();
     });
   }

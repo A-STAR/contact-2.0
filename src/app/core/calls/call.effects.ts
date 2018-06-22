@@ -301,23 +301,25 @@ export class CallEffects {
     .ofType(CallService.PBX_STATE_CHANGE)
     .filter((action: UnsafeAction) => action.payload)
     .map((action: UnsafeAction) => action.payload)
-    .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL
-      && state.debtId
-      && state.phoneId
-      && state.callTypeCode === CallTypeEnum.OUTGOING
+    .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL)
+    .filter(state => state.payload
+      && state.payload.debtId
+      && state.payload.phoneId
+      && state.payload.callTypeCode === CallTypeEnum.OUTGOING
     )
-    .map(state => this.debtApi.openDebtCard(state, null, state.phoneId));
+    .map(state => this.debtApi.openDebtCard(state.payload, null, state.payload.phoneId));
 
   @Effect({ dispatch: false })
   pbxProcessingAction$ = this.actions
     .ofType(CallService.PBX_STATE_CHANGE)
     .filter((action: UnsafeAction) => action.payload)
     .map((action: UnsafeAction) => action.payload)
-    .filter(state => state.lineStatus === PBXStateEnum.PBX_NOCALL
-      && state.afterCallPeriod
-      && state.callTypeCode === CallTypeEnum.OUTGOING
+    .filter(state => state.lineStatus === PBXStateEnum.PBX_NOCALL)
+    .filter(state => state.payload
+      && state.payload.afterCallPeriod
+      && state.payload.callTypeCode === CallTypeEnum.OUTGOING
     )
-    .map(state => state.afterCallPeriod)
+    .map(state => state.payload.afterCallPeriod)
     .distinctUntilChanged()
     .map(afterCallPeriod => this.progressBarService.dispatchAction(ProgressBarService.MESSAGE_PROGRESS, afterCallPeriod));
 
@@ -326,9 +328,8 @@ export class CallEffects {
     .ofType(CallService.PBX_STATE_CHANGE)
     .filter((action: UnsafeAction) => action.payload)
     .map((action: UnsafeAction) => action.payload)
-    .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL
-      && state.callTypeCode === CallTypeEnum.INCOMING
-    )
+    .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL)
+    .filter(state => state.payload && state.callTypeCode === CallTypeEnum.INCOMING)
     .map(state => this.incomingCallApiService.openIncomingCallCard(state.phoneId));
 
   constructor(

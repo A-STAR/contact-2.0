@@ -92,21 +92,22 @@ export class CallService {
       );
 
     // TODO(i.kibisov): remove mock
-    // setTimeout(() => {
-    //   this.updatePBXState({
-    //     date: '2018-06-15T08:56:52.111Z',
-    //     lineStatus: PBXStateEnum.PBX_CALL,
-    //     payload: null,
-    //     userStatus: null,
-    //     username: 'admin-pbx',
-    //     debtId: 1,
-    //     personId: 7,
-    //     phoneId: 180,
-    //     callTypeCode: 1,
-    //     personRole: 2,
-    //     contractId: 1,
-    //   });
-    // }, 12000);
+    setTimeout(() => {
+      this.updatePBXState({
+        date: '2018-06-15T08:56:52.111Z',
+        lineStatus: PBXStateEnum.PBX_CALL,
+        payload: {
+          debtId: 1,
+          personId: 7,
+          phoneId: 180,
+          callTypeCode: 1,
+          personRole: 2,
+          contractId: 1,
+        },
+        userStatus: null,
+        username: 'admin-pbx',
+      });
+    }, 12000);
 
 
     // setTimeout(() => {
@@ -118,15 +119,17 @@ export class CallService {
     //   });
     // }, 30000);
 
-    setTimeout(() => {
-      this.updatePBXState({
-        date: '2018-06-15T08:56:52.111Z',
-        lineStatus: PBXStateEnum.PBX_CALL,
-        callTypeCode: 0,
-        phoneId: 180,
-        personId: 1
-      });
-    }, 30000);
+    // setTimeout(() => {
+    //   this.updatePBXState({
+    //     date: '2018-06-15T08:56:52.111Z',
+    //     lineStatus: PBXStateEnum.PBX_CALL,
+    //     payload: {
+    //       callTypeCode: 0,
+    //       phoneId: 180,
+    //       personId: 1
+    //     }
+    //   });
+    // }, 30000);
   }
 
   get settings$(): Observable<ICallSettings> {

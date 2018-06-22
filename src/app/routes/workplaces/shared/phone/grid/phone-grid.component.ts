@@ -188,14 +188,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
     combineLatest(
       this.route.queryParams,
-      this.callService.pbxState$.filter(Boolean),
+      this.callService.pbxState$.filter(state => state && !!state.payload),
       this.phones$.filter(phones => !!phones.length),
       this.person$.filter(Boolean),
       this._debtId$.filter(Boolean)
     )
     .pipe(
       first(),
-      filter(([ params, state ]) => !!params.activeCallId && +params.activeCallId === state.phoneId),
+      filter(([ params, state ]) => !!params.activeCallId && +params.activeCallId === state.payload.phoneId),
       map(([ params ]) => params)
     )
     .subscribe(params => {
