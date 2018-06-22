@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { NavigationEnd, Router } from '@angular/router';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, tap } from 'rxjs/operators';
 
 import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
 
@@ -41,6 +41,7 @@ export class SidebarComponent implements OnInit {
       return item && item.children || [ item ];
     }),
     map((items: IMenuItem[]) => items.filter(item => item && item.text)),
+    tap(() => this.cdRef.markForCheck()),
   );
 
   showTitle = false;

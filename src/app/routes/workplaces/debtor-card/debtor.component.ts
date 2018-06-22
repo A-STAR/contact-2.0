@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { switchMap, map, filter } from 'rxjs/operators';
+import { map, switchMap, tap, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -39,12 +39,15 @@ export class DebtorComponent implements OnInit, OnDestroy {
       (tabs: Array<Observable<ITab>>): Observable<ITab[]> =>
         tabs.length ? combineLatest(tabs) : of([])
     ),
+    tap(() => this.cdRef.markForCheck()),
   );
 
   // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
   //   switchMap((debtors: Array<[number, number]>): Observable<ITab[]> =>
   //     combineLatest(
-  //       debtors.map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor))
+  //       debtors.length
+  //         ? debtors.map((debtor: [number, number]): Observable<ITab> => this.getTab(debtor))
+  //         : of([])
   //     )
   //   ),
   // );
@@ -65,10 +68,10 @@ export class DebtorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const routeIdSubscription = this.route.paramMap.subscribe(paramMap => {
       const debtorId = Number(paramMap.get('debtorId'));
-      const debtId   = Number(paramMap.get('debtId'));
+      const debtId = Number(paramMap.get('debtId'));
+      this.onDebtorIdOrDebtIdChange(debtorId, debtId);
       this.onDebtorIdChange(debtorId);
       this.onDebtIdChange(debtId);
-      this.debtorService.addTab(debtorId, debtId);
       this.cdRef.markForCheck();
     });
 
@@ -85,6 +88,31 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onNavigationEnd(event: NavigationEnd): void {
+    const urlSegment = event.url.split('/').slice(3, 7);
+
+    const debtorIdx = urlSegment.indexOf('debtor');
+    const debtIdx = urlSegment.indexOf('debt');
+    const newDebtorId = debtorIdx !== -1;
+    const newDebtId = debtIdx !== -1;
+
+    if (newDebtorId || newDebtId) {
+      const debtorId = Number(urlSegment[debtorIdx + 1]);
+      const debtId = Number(urlSegment[debtIdx + 1]);
+
+      this.onDebtorIdOrDebtIdChange(debtorId, debtId);
+
+      if (newDebtorId) {
+        this.onDebtorIdChange(debtorId);
+      }
+
+      if (newDebtId) {
+        this.onDebtIdChange(debtId);
+      }
+
+    }
   }
 
   getTab([ id, debt ]: [ number, number ]): Observable<ITab> {
@@ -107,21 +135,8 @@ export class DebtorComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  onNavigationEnd(event: NavigationEnd): void {
-    const urlSegment = event.url.split('/').slice(3, 7);
-
-    const debtorIdx = urlSegment.indexOf('debtor');
-    const debtIdx = urlSegment.indexOf('debt');
-
-    if (debtorIdx !== -1) {
-      const debtorId = Number(urlSegment[debtorIdx + 1]);
-      this.onDebtorIdChange(debtorId);
-    }
-
-    if (debtIdx !== -1) {
-      const debtId = Number(urlSegment[debtIdx + 1]);
-      this.onDebtIdChange(debtId);
-    }
+  private onDebtorIdOrDebtIdChange(debtorId: number, debtId: number): void {
+    this.debtorService.openTab(debtorId, debtId);
   }
 
   private onDebtorIdChange(debtorId: number): void {

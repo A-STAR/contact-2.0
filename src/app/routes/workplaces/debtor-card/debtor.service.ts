@@ -146,11 +146,12 @@ export class DebtorService {
       );
   }
 
-  addTab(debtorId: number, debtId: number): void {
+  openTab(debtorId: number, debtId: number): void {
 
-    if (!(this._debtors.get(debtorId) === debtId)) {
-      this._debtors.set(debtorId, debtId);
-      this.debtors$.next(this.debtors);
+    const isDebt = this._debtors.get(debtorId) === debtId;
+
+    if (!isDebt) {
+      this.addTab(debtorId, debtId);
     }
 
     this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
@@ -158,6 +159,11 @@ export class DebtorService {
 
   removeTab(debtorId: number): void {
     this._debtors.delete(debtorId);
+    this.debtors$.next(this.debtors);
+  }
+
+  private addTab(debtorId: number, debtId: number): void {
+    this._debtors.set(debtorId, debtId);
     this.debtors$.next(this.debtors);
   }
 
