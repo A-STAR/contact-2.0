@@ -16,6 +16,7 @@ import { CustomOperationParamsComponent } from '../params/custom-operation-param
 export class CustomOperationInputComponent implements OnInit {
   @ViewChild(CustomOperationParamsComponent) params: CustomOperationParamsComponent;
 
+  @Input() id: number;
   @Input() key: string;
   @Input() inputParams: ICustomOperationParams[];
 

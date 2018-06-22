@@ -4,11 +4,10 @@
   (close)="onCloseAction($event)"
 ></app-mass-operation>
 
-<!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader
   entityTranslationKey="entities.actionsLog.gen.plural"
-  [name]="metadataKey + '.xlsx'"
+  [fallbackName]="metadataKey + '.xlsx'"
   [url]="'/list/excel?name=' + metadataKey"
 ></app-downloader>
 

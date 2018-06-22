@@ -1,29 +1,45 @@
 import {
-  ChangeDetectionStrategy, Component, Input, ViewChild,
-  OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICustomOperationParams } from '../custom-operation.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
+import { ConfigService } from '@app/core/config/config.service';
+import { CustomOperationParamsService } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.service';
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 @Component({
-  selector: 'app-custom-operation-params',
-  templateUrl: './custom-operation-params.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    CustomOperationParamsService,
+  ],
+  selector: 'app-custom-operation-params',
   styleUrls: [ './custom-operation-params.component.scss' ],
+  templateUrl: './custom-operation-params.component.html',
 })
 export class CustomOperationParamsComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
+  @Input() id: number;
   @Input() key: string;
   @Input() params: ICustomOperationParams[];
   @Input() value: any;
+
+  @ViewChild('frame') frame: ElementRef;
+  @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
   config: IDynamicLayoutConfig;
 
@@ -32,26 +48,49 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private customOperationService: CustomOperationService
+    private configService: ConfigService,
+    private customOperationParamsService: CustomOperationParamsService,
+    private customOperationService: CustomOperationService,
+    private domSanitizer: DomSanitizer,
   ) {}
 
+  get canSubmit(): boolean {
+    return this.canSubmit$.value;
+  }
+
+  get thirdPartyUrl(): SafeUrl {
+    const url = this.configService.getThirdPartyOperationUrl(this.id);
+    return url
+      ? this.domSanitizer.bypassSecurityTrustResourceUrl(`${url}?id=${this.id}`)
+      : null;
+  }
+
   ngOnInit(): void {
-    this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.params);
+    if (!this.thirdPartyUrl) {
+      this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.params);
+    }
   }
 
   ngAfterViewInit(): void {
-    this.canSubmitSub = this.layout.canSubmit()
-      .subscribe(canSubmit => {
-        this.canSubmit$.next(canSubmit);
-        this.cdRef.markForCheck();
+    if (this.layout) {
+      this.canSubmitSub = this.layout.canSubmit()
+        .subscribe(canSubmit => {
+          this.canSubmit$.next(canSubmit);
+          this.cdRef.markForCheck();
+        });
+    }
+    this.customOperationParamsService
+      .init(this.id, this.params)
+      .subscribe(message => {
+        if (this.frame && this.frame.nativeElement.contentWindow) {
+          this.frame.nativeElement.contentWindow.postMessage(message, '*');
+        }
       });
   }
 
   ngOnDestroy(): void {
-    this.canSubmitSub.unsubscribe();
-  }
-
-  get canSubmit(): boolean {
-    return this.canSubmit$.value;
+    if (this.canSubmitSub) {
+      this.canSubmitSub.unsubscribe();
+    }
   }
 }

@@ -57,6 +57,7 @@ export class ControlComponent {
     const first = Object.keys(control.errors)[0];
     const message = ControlService.DEFAULT_MESSAGES[first] || first;
     const params = control.errors[first];
+
     return this.translateService.instant(message, params);
   }
 }

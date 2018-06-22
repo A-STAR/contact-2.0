@@ -17,7 +17,7 @@ export class WSService {
   ) {}
 
   connect<T>(url: string): Observable<IWSConnection<T>> {
-    const baseUrl = this.configService.config.api.ws;
+    const baseUrl = 'wss://appservertest.luxbase.int:4100/contact-back-end';
     const listener = new BehaviorSubject<T>(null);
     // TODO: close previous connection when new token emits
     return this.authService.validToken$.pipe(

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { first, map } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 
 import { IImage } from './image-upload.interface';
 
-import { DataService } from '../../../../core/data/data.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Component({
   selector: 'app-image-upload',
@@ -37,15 +37,12 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     if (this.url) {
       this.dataService
-      .readBlob(this.url)
-      .pipe(
-        first(),
-        map(blobResponse => blobResponse.blob)
-      )
-      .subscribe(image => {
-        this.image = image;
-        this.changeDetectorRef.markForCheck();
-      });
+        .readBlob(this.url)
+        .pipe(first())
+        .subscribe(response => {
+          this.image = response.blob;
+          this.changeDetectorRef.markForCheck();
+        });
     }
   }
 
@@ -100,5 +97,4 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
   }
 
   private propagateChange: Function = () => {};
-
 }

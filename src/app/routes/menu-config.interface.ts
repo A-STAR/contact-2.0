@@ -3,6 +3,7 @@ export interface IMenuConfigItem {
   link: string;
   icon: string;
   docs: string;
+  permission?: string[];
 }
 
 export interface IMenuConfig {

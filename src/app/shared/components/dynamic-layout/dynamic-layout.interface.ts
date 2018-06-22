@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { IContext } from '@app/core/context/context.interface';
 import { IDynamicLayoutAttribute } from './attribute/attribute.interface';
 import { IDynamicLayoutControl } from './control/control.interface';
+import { IDynamicLayoutCustomOperation } from './custom-operation/custom-operation.interface';
 import { IDynamicLayoutGroup } from './group/group.interface';
 import { IDynamicLayoutPlugin } from './event/event.interface';
 import { IDynamicLayoutTemplate } from './template/template.interface';
@@ -35,6 +36,11 @@ export enum DynamicLayoutItemType {
    * References to Angular templates that can be inserted into dynamic layout
    */
   TEMPLATE = 'template',
+
+  /**
+   * Renders custom operation input form
+   */
+  CUSTOM_OPERATION = 'customOperation'
 }
 
 export interface IDynamicLayoutGenericItem {
@@ -54,6 +60,7 @@ export type IDynamicLayoutItem =
   | IDynamicLayoutControl
   | IDynamicLayoutTemplate
   | IDynamicLayoutAttribute
+  | IDynamicLayoutCustomOperation
 ;
 
 export interface IDynamicLayoutConfig {
@@ -86,33 +93,12 @@ export interface IDynamicLayoutState {
 }
 
 export enum DynamicLayoutAction {
-  CHANGE_FORM_STATUS = '[layout] change form valid',
-  CHANGE_FORM_VALUE = '[layout] change form value',
   FETCH_CONFIG = '[layout] fetch config',
   FETCH_CONFIG_SUCCESS = '[layout] fetch config success',
 }
 
 export interface IDynamicLayoutGenericAction {
   type: DynamicLayoutAction;
-}
-
-export interface IDynamicLayoutChangeStatusAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_FORM_STATUS;
-  payload: {
-    key: string;
-    form: string;
-    status: string;
-  };
-}
-
-export interface IDynamicLayoutChangeValueAction extends IDynamicLayoutGenericAction {
-  type: DynamicLayoutAction.CHANGE_FORM_VALUE;
-  payload: {
-    key: string;
-    form: string;
-    value: any;
-    dirty: boolean;
-  };
 }
 
 export interface IDynamicLayoutFetchConfigAction extends IDynamicLayoutGenericAction {
@@ -131,7 +117,5 @@ export interface IDynamicLayoutFetchConfigSuccessAction extends IDynamicLayoutGe
 }
 
 export type IDynamicLayoutAction =
-  | IDynamicLayoutChangeStatusAction
-  | IDynamicLayoutChangeValueAction
   | IDynamicLayoutFetchConfigSuccessAction
 ;

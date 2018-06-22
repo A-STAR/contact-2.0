@@ -17,7 +17,7 @@ export interface IMassInfoResponse {
   };
 }
 
-export interface BlobResponse {
+export interface IFileResponse {
   blob: Blob;
-  fileName?: string;
+  name: string;
 }

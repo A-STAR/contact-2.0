@@ -1,46 +1,83 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { filter } from 'rxjs/operators/filter';
-import { Subscription } from 'rxjs/Subscription';
-
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { filter, map } from 'rxjs/operators';
+
+import { Person } from '@app/entities';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
+import { DebtorService } from './debtor.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: 'full-size' },
-  providers: [
-    ContactRegistrationService,
-  ],
+  providers: [ContactRegistrationService],
   selector: 'app-debtor',
   styleUrls: [ './debtor.component.scss' ],
   templateUrl: './debtor.component.html',
 })
 export class DebtorComponent implements OnInit, OnDestroy {
-  private routeNavigateSub: Subscription;
-
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
+  private subscription = new Subscription();
+
   constructor(
-    private contactRegistrationService: ContactRegistrationService,
-    private debtorService: DebtorService,
     private route: ActivatedRoute,
     private router: Router,
+    private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
+    private debtorService: DebtorService,
+    private repositoryService: RepositoryService,
   ) {}
 
   ngOnInit(): void {
-    const debtorId = Number(this.route.snapshot.paramMap.get('debtorId'));
-    const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
+    const routeIdSubscription = this.route.paramMap.subscribe(paramMap => {
+      const debtorId = Number(paramMap.get('debtorId'));
+      const debtId   = Number(paramMap.get('debtId'));
+      this.onDebtorIdChange(debtorId);
+      this.onDebtIdChange(debtId);
+      this.debtorService.addTab(debtorId, debtId);
+      this.cdRef.markForCheck();
+    });
 
-    this.onDebtorIdChange(debtorId);
-    this.onDebtIdChange(debtId);
+    this.subscription.add(routeIdSubscription);
 
-    this.routeNavigateSub = this.router.events
+    const routeNavigateSubscription = this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd)
       )
       .subscribe(event => this.onNavigationEnd(event as NavigationEnd));
+
+    this.subscription.add(routeNavigateSubscription);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  get debtors(): IterableIterator<[number, number]> {
+    return this.debtorService.debtors;
+  }
+
+  getDebtorName(id: number): Observable<string> {
+    return this.repositoryService
+      .fetch(Person, { id: id })
+      .pipe(
+        map((response: Person[]) => {
+          const person: Partial<Person> = response[0];
+          return `${person.lastName} ${person.firstName} ${person.middleName}`;
+        }),
+      );
   }
 
   onNavigationEnd(event: NavigationEnd): void {
@@ -58,10 +95,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
       const debtId = Number(urlSegment[debtIdx + 1]);
       this.onDebtIdChange(debtId);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.routeNavigateSub.unsubscribe();
   }
 
   private onDebtorIdChange(debtorId: number): void {

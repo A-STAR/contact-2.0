@@ -22,20 +22,20 @@
   <!-- Tabstrip -->
   <div class="flex-item grow">
     <app-tabview [fullHeight]="true" [noMargin]="true" (selectTab)="onTabSelect($event)">
-      <app-tabview-tab [title]="'debtor.information.title'">
+      <app-tabview-tab [title]="'debtor.information.title'" [visible]="tabs[0].permission | async">
         <app-debtor-information *ngIf="tabs[0].isInitialised"></app-debtor-information>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.debtsTab.title'">
+      <app-tabview-tab [title]="'debtor.debtsTab.title'" [visible]="tabs[1].permission | async">
         <app-debtor-debts *ngIf="tabs[1].isInitialised"></app-debtor-debts>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.contactLogTab.title'">
+      <app-tabview-tab [title]="'debtor.contactLogTab.title'" [visible]="tabs[2].permission | async">
         <app-contact-log-grid
           *ngIf="tabs[2].isInitialised"
           [debtId]="debtId"
           [personId]="debtorId"
         ></app-contact-log-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.documentsTab.title'">
+      <app-tabview-tab [title]="'debtor.documentsTab.title'" [visible]="tabs[3].permission | async">
         <app-document-grid
           *ngIf="tabs[3].isInitialised"
           [addForEntity]="[18, 19]"
@@ -44,7 +44,7 @@
           [entityType]="entityType"
         ></app-document-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.contactsTab.title'">
+      <app-tabview-tab [title]="'debtor.contactsTab.title'" [visible]="tabs[4].permission | async">
         <app-contact-persons-grid
           *ngIf="tabs[4].isInitialised"
           [personId]="debtorId"
@@ -53,17 +53,17 @@
           (edit)="onEmploymentEdit($event)"
         ></app-contact-persons-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.guarantorsTab.title'">
+      <app-tabview-tab [title]="'debtor.guarantorsTab.title'" [visible]="tabs[5].permission | async">
         <app-guarantee-grid *ngIf="tabs[5].isInitialised"></app-guarantee-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.pledgorsTab.title'">
+      <app-tabview-tab [title]="'debtor.pledgorsTab.title'" [visible]="tabs[6].permission | async">
         <ng-container *ngIf="tabs[6].isInitialised">
           <app-pledge-grid></app-pledge-grid>
           <app-hdivider></app-hdivider>
           <app-debtor-pledge-attributes></app-debtor-pledge-attributes>
         </ng-container>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.propertyTab.title'">
+      <app-tabview-tab [title]="'debtor.propertyTab.title'" [visible]="tabs[7].permission | async">
         <ng-container *ngIf="tabs[7].isInitialised">
           <app-property-grid
             [personId]="debtorId"
@@ -72,22 +72,22 @@
           <app-debtor-property-attributes></app-debtor-property-attributes>
         </ng-container>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async">
+      <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async" [visible]="tabs[8].permission | async">
         <app-identity-grid
           *ngIf="tabs[8].isInitialised"
           [personId]="debtorId"
         ></app-identity-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.employmentRecordTab.title'" [disabled]="isCompany$ | async">
+      <app-tabview-tab [title]="'debtor.employmentRecordTab.title'" [disabled]="isCompany$ | async" [visible]="tabs[9].permission | async">
         <app-employment-grid
           *ngIf="tabs[9].isInitialised"
           [personId]="debtorId"
         ></app-employment-grid>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.attributesTab.title'">
+      <app-tabview-tab [title]="'debtor.attributesTab.title'" [visible]="tabs[10].permission | async">
         <app-debtor-attributes *ngIf="tabs[10].isInitialised"></app-debtor-attributes>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'debtor.actionLogTab.title'">
+      <app-tabview-tab [title]="'debtor.actionLogTab.title'" [visible]="tabs[11].permission | async">
         <app-debtor-action-log
           *ngIf="tabs[11].isInitialised"
           [personId]="debtorId"

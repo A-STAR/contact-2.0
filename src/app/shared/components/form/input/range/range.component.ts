@@ -37,14 +37,22 @@ import { defaultTo } from 'ramda';
   styleUrls: ['./range.component.scss'],
 })
 export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  @Input() min = 0;
-  @Input() max = 100;
+  /**
+   * Min and max values of model value (coords are always 0 - 100)
+   */
+  @Input() min = 10;
+  @Input() max = 10000000;
+
   @Input() label: string;
   @Input() required = false;
   @Input() errors: any;
   @Input() debounce: number;
   @Input() showInput = false;
   @Input() logarithmic = false;
+  /**
+   * Formats decimal digits
+   */
+  @Input() precision = 0;
 
   @Input()
   set isReadonly(value: boolean) {
@@ -60,12 +68,13 @@ export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
   disabled = false;
   readonly = false;
+  minPosition = 0;
+  maxPosition = 100;
+
   private _value: number;
   private _formattedValue: number;
   private debounce$ = new Subject<number>();
   private debounceSub: Subscription;
-  private minLogValue = 10;
-  private maxLogValue = 10000000;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -101,7 +110,7 @@ export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
   }
 
   writeValue(value: number): void {
-    this.value = value || (this.max - this.min) / 2;
+    this.value = value || (this.maxPosition - this.minPosition) / 2;
     this.cdRef.markForCheck();
   }
 
@@ -151,23 +160,23 @@ export class RangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
   }
 
   private fromLogPosition(pos: number): number {
-    // The result should be between 100 an 10000000
-    const minv = Math.log(this.minLogValue);
-    const maxv = Math.log(this.maxLogValue);
+    // The result should be between min and max value
+    const minv = Math.log(this.min);
+    const maxv = Math.log(this.max);
 
     // calculate adjustment factor
-    const scale = (maxv - minv) / (this.max - this.min);
+    const scale = (maxv - minv) / (this.maxPosition - this.minPosition);
 
-    return Math.exp(minv + scale * (pos - this.min));
+    return Number(Math.exp(minv + scale * (pos - this.minPosition)).toFixed(this.precision));
   }
 
   private toLogPosition(value: number): number {
-    const minv = Math.log(this.minLogValue);
-    const maxv = Math.log(this.maxLogValue);
+    const minv = Math.log(this.min);
+    const maxv = Math.log(this.max);
 
-    const scale = (maxv - minv) / (this.max - this.min);
+    const scale = (maxv - minv) / (this.maxPosition - this.minPosition);
 
-    return (Math.log(value) - minv) / scale + this.min;
+    return (Math.log(value) - minv) / scale + this.minPosition;
   }
 
   private propagateChange: Function = () => {};

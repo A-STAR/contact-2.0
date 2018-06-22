@@ -5,33 +5,64 @@ import {
   LayerType,
   ILayer,
   ILayerDef,
+  GeoLayer,
 } from '@app/core/map-providers/map-providers.interface';
 
 import { IncId } from '@app/core/utils';
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
-class LayerGroup<T> {
-  private layers: Map<LayerType, ILayer<T>[]> = new Map();
-  id: number;
+export class Layer<T> implements ILayer<T> {
 
-  constructor(private mapService: IMapService<T>, config: ILayerDef<T>[]) {
+  id: number;
+  isGroup = false;
+  type: LayerType;
+  nativeLayer: GeoLayer;
+  data: any;
+
+  constructor(private mapService: IMapService<T>, layerDef: ILayerDef<T>) {
+    const layer = this.mapService.createLayer(layerDef);
+    this.type = layer.type;
+    this.nativeLayer = layer.nativeLayer;
+    this.data = layer.data;
     this.id = IncId.get().uuid;
-    config.forEach(c => this.createLayer(c));
   }
 
   show(): void {
-    this.getLayers().forEach(l => this.mapService.addToMap(l));
+    this.mapService.addToMap(this);
   }
 
   hide(): void {
-    this.getLayers().forEach(l => this.mapService.removeFromMap(l));
+    this.mapService.removeFromMap(this);
+  }
+
+  remove(): void {
+    this.mapService.removeFromMap(this);
+  }
+}
+
+export class LayerGroup<T> {
+  private layers: Map<LayerType, Layer<T>[]> = new Map();
+  id: number;
+  isGroup = true;
+
+  constructor(private mapService: IMapService<T>, config: ILayerDef<T>[]) {
+    this.id = IncId.get().uuid;
+    config.forEach(c => this.addLayer(new Layer(this.mapService, c)));
+  }
+
+  show(): void {
+    this.getLayers().forEach(l => l.show());
+  }
+
+  hide(): void {
+    this.getLayers().forEach(l => l.remove());
   }
 
   showByIds(ids: number[]): void {
     ids.forEach(id => {
       const layer = this.getLayerById(id);
       if (layer) {
-        this.mapService.addToMap(layer);
+        layer.show();
       }
     });
   }
@@ -40,18 +71,12 @@ class LayerGroup<T> {
     ids.forEach(id => {
       const layer = this.getLayerById(id);
       if (layer) {
-        this.mapService.removeFromMap(layer);
+        layer.hide();
       }
     });
   }
 
-  createLayer(layerDef: ILayerDef<T>): void {
-    const layer = this.mapService.createLayer(layerDef);
-    layer.id = IncId.get().uuid;
-    this.addLayer(layer);
-  }
-
-  addLayer(layer: ILayer<T>): void {
+  addLayer(layer: Layer<T>): void {
     if (!this.layers.has(layer.type)) {
       this.layers.set(layer.type, [ layer ]);
     } else {
@@ -62,13 +87,13 @@ class LayerGroup<T> {
     }
   }
 
-  removeLayer(layer: ILayer<T>): void {
+  removeLayer(layer: Layer<T>): void {
     if (this.layers.has(layer.type)) {
       const layers = this.layers.get(layer.type);
       const layerIndex = layers.findIndex(l => l.id === layer.id);
       if (layerIndex !== -1) {
+        layers[layerIndex].remove();
         layers.splice(layerIndex, 1);
-        this.mapService.removeFromMap(layers[layerIndex]);
       }
     }
   }
@@ -80,66 +105,72 @@ class LayerGroup<T> {
     }
   }
 
-  getLayers(): ILayer<T>[] {
+  getLayers(): Layer<T>[] {
     return Array.from(this.layers.values()).reduce((acc, layers) => acc.concat(layers), []);
   }
 
-  getLayersByType(layerType: LayerType): ILayer<T>[] {
+  getLayersByType(layerType: LayerType): Layer<T>[] {
     return this.layers.get(layerType);
   }
 
-  getLayerById(id: number): ILayer<T> {
+  getLayerById(id: number): Layer<T> {
     return this.getLayers().find(l => l.id === id);
   }
 
-  clear(): void {
-    this.getLayers().forEach(l => this.mapService.removeFromMap(l));
+  remove(): void {
+    this.getLayers().forEach(l => l.remove());
     this.layers.clear();
   }
 }
 
 @Injectable()
 export class LayersService<T> {
-  private groups: LayerGroup<T>[] = [];
+  private _layers: Array<LayerGroup<T> | Layer<T>> = [];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>
   ) {}
 
   show(): void {
-    this.groups.forEach(g => g.show());
+    this._layers.forEach(l => l.show());
   }
 
   hide(): void {
-    this.groups.forEach(g => g.hide());
+    this._layers.forEach(l => l.hide());
   }
 
-  createGroup(layersConfig: ILayerDef<T>[]): LayerGroup<T> {
-    const group = new LayerGroup<T>(this.mapService, layersConfig);
-    this.groups.push(group);
+  createLayer(config: ILayerDef<T>): Layer<T> {
+    const layer = new Layer<T>(this.mapService, config);
+    this._layers.push(layer);
+    return layer;
+  }
+
+  createGroup(config: ILayerDef<T>[]): LayerGroup<T> {
+    const group = new LayerGroup<T>(this.mapService, config);
+    this._layers.push(group);
     return group;
   }
 
-  getGroups(): LayerGroup<T>[] {
-    return this.groups;
+  getLayers(): Array<LayerGroup<T> | Layer<T>> {
+    return this._layers;
   }
 
-  getGroupById(id: number): LayerGroup<T> {
-    return this.groups.find(g => g.id === id);
+  getById(id: number): LayerGroup<T> | Layer<T> {
+    return this._layers.find(l => l.id === id);
   }
 
-  removeGroupById(id: number): void {
-    const groupIndex = this.groups.findIndex(g => g.id === id);
-    if (groupIndex !== -1) {
-      const group = this.groups[groupIndex];
-      group.clear();
-      this.groups.splice(groupIndex, 1);
+  removeById(id: number): void {
+    const layerIndex = this._layers.findIndex(l => l.id === id);
+    if (layerIndex !== -1) {
+      const layer = this._layers[layerIndex];
+      layer.remove();
+      this._layers.splice(layerIndex, 1);
     }
   }
 
   clear(): void {
-    this.groups.forEach(g => g.clear());
-    this.groups = [];
+    this._layers.forEach(l => l.remove());
+    this._layers = [];
   }
 
 }

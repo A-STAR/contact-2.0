@@ -73,6 +73,7 @@ export interface IGridDef {
   title: string;
   actions?: IMetadataAction[];
   columns?: IGridColumn[];
+  permission?: Observable<boolean>;
 }
 
 export interface IGridColumn {

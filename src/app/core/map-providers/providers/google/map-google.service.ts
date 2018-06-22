@@ -171,16 +171,16 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
       this.addComponent(popupRef);
     }
 
-    return { layer: marker, data: data.data, type: data.type };
+    return { nativeLayer: marker, data: data.data, type: data.type };
   }
 
   setIcon(layer: ILayer<T>, configKey: string, params?: any): void {
     if (layer.type === LayerType.MARKER) {
       const iconConfig = this.getIconConfig(configKey, layer.data, params);
-      const oldIcon = (layer.layer as google.maps.Marker).getIcon();
+      const oldIcon = (layer.nativeLayer as google.maps.Marker).getIcon();
       const newIcon = this.createMarkerIcon(iconConfig);
       if (oldIcon !== newIcon) {
-        (layer.layer as google.maps.Marker).setIcon(newIcon);
+        (layer.nativeLayer as google.maps.Marker).setIcon(newIcon);
       }
     }
   }
@@ -278,7 +278,7 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
         popup.close();
       })
     );
-    return { layer: polyline, data: data.data, type: data.type };
+    return { nativeLayer: polyline, data: data.data, type: data.type };
   }
 
   createCircle(data: ILayerDef<T>): ILayer<T> {
@@ -288,7 +288,7 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
       center: data.latlngs as GeoPoint,
       radius: data.radius || 10
     });
-    return { layer: circle, type: data.type, data: data.data };
+    return { nativeLayer: circle, type: data.type, data: data.data };
   }
 
   createPolygon(_: ILayerDef<T>): ILayer<T> {
@@ -345,14 +345,14 @@ export class MapGoogleService<T> extends MapProvider<T> implements IMapService<T
   }
 
   removeFromMap(layer: ILayer<T>): void {
-    if (layer && layer.layer) {
-      (layer.layer as google.maps.Marker).setMap(null);
+    if (layer && layer.nativeLayer) {
+      (layer.nativeLayer as google.maps.Marker).setMap(null);
     }
   }
 
   addToMap(layer: ILayer<T>): void {
-    if (layer && layer.layer && !(layer.layer as GoogleGeoLayer).getMap()) {
-      (layer.layer as google.maps.Marker).setMap(this._map);
+    if (layer && layer.nativeLayer && !(layer.nativeLayer as GoogleGeoLayer).getMap()) {
+      (layer.nativeLayer as google.maps.Marker).setMap(this._map);
     }
   }
 
