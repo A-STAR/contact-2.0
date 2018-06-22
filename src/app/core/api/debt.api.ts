@@ -22,7 +22,7 @@ export class DebtApiService {
     private notificationsService: NotificationsService,
   ) { }
 
-  openDebtCard(actionData: any, onClose?: Function, activeCallId?: number): void {
+  openDebtCard(actionData: any, onClose?: Function, activePhoneId?: number): void {
     const { debtId, debtorId, personRole, personId, contractId } = actionData;
 
     const debtorId$ = debtorId
@@ -36,17 +36,17 @@ export class DebtApiService {
       .subscribe(id => {
         switch (personRole) {
           case 2:
-            this.onAction(() => this.openGuarantorCard(id, debtId, contractId, personId, activeCallId), onClose);
+            this.onAction(() => this.openGuarantorCard(id, debtId, contractId, personId, activePhoneId), onClose);
             break;
           case 3:
-            this.openPledgorCardByParams(id, debtId, contractId, personId, onClose, activeCallId);
+            this.openPledgorCardByParams(id, debtId, contractId, personId, onClose, activePhoneId);
             break;
           case 4:
-            this.onAction(() => this.openContactPersonCard(id, debtId, personId, activeCallId), onClose);
+            this.onAction(() => this.openContactPersonCard(id, debtId, personId, activePhoneId), onClose);
             break;
           case 1:
           default:
-            this.onAction(() => this.openByDebtId(debtId, debtorId, activeCallId), onClose);
+            this.onAction(() => this.openByDebtId(debtId, debtorId, activePhoneId), onClose);
             break;
         }
       });
@@ -75,39 +75,39 @@ export class DebtApiService {
       );
   }
 
-  openByDebtId(debtId: number, debtorId: number, activeCallId?: number): Promise<boolean> {
+  openByDebtId(debtId: number, debtorId: number, activePhoneId?: number): Promise<boolean> {
     return this.routingService.navigate([
       `/app/workplaces/debtor/${debtorId}/debt/${debtId}`
-    ], this.route, { activeCallId });
+    ], this.route, { activePhoneId });
   }
 
   openGuarantorCard(debtorId: number, debtId: number, contractId: number,
-    guarantorId: number, activeCallId?: number): Promise<boolean> {
+    guarantorId: number, activePhoneId?: number): Promise<boolean> {
     return this.routingService.navigate([
         `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/guarantee/${contractId}/guarantor/${guarantorId}`
-    ], this.route, { activeCallId });
+    ], this.route, { activePhoneId });
   }
 
   openPledgorCardByParams(debtorId: number, debtId: number, pledgeId: number,
-    pledgorId: number, onClose: Function = null, activeCallId?: number): void {
+    pledgorId: number, onClose: Function = null, activePhoneId?: number): void {
     this.getFirstPersonPropertyId(pledgorId)
       .subscribe(propertyId => this.onAction(
-        () => this.openPlegdorCard(debtorId, debtId, pledgeId, pledgorId, propertyId, activeCallId),
+        () => this.openPlegdorCard(debtorId, debtId, pledgeId, pledgorId, propertyId, activePhoneId),
         onClose
       ));
   }
 
   openPlegdorCard(debtorId: number, debtId: number, pledgeId: number, pledgorId: number,
-    propertyId: number, activeCallId?: number): Promise<boolean> {
+    propertyId: number, activePhoneId?: number): Promise<boolean> {
     return this.routingService.navigate([
         `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/pledge/${pledgeId}/pledgor/${pledgorId}/property/${propertyId}`
-    ], this.route, { activeCallId });
+    ], this.route, { activePhoneId });
   }
 
-  openContactPersonCard(debtorId: number, debtId: number, personId: number, activeCallId?: number): Promise<boolean> {
+  openContactPersonCard(debtorId: number, debtId: number, personId: number, activePhoneId?: number): Promise<boolean> {
     return this.routingService.navigate([
         `/app/workplaces/debtor/${debtorId}/debt/${debtId}/contact/${personId}`
-    ], this.route, { activeCallId });
+    ], this.route, { activePhoneId });
   }
 
   openIncomingCall(debtId: number): Promise<boolean> {

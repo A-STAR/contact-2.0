@@ -92,22 +92,23 @@ export class CallService {
       );
 
     // TODO(i.kibisov): remove mock
-    // setTimeout(() => {
-    //   this.updatePBXState({
-    //     date: '2018-06-15T08:56:52.111Z',
-    //     lineStatus: PBXStateEnum.PBX_CALL,
-    //     payload: {
-    //       debtId: 1,
-    //       personId: 7,
-    //       phoneId: 180,
-    //       callTypeCode: 1,
-    //       personRole: 2,
-    //       contractId: 1,
-    //     },
-    //     userStatus: null,
-    //     username: 'admin-pbx',
-    //   });
-    // }, 12000);
+    setTimeout(() => {
+      this.updatePBXState({
+        date: '2018-06-15T08:56:52.111Z',
+        lineStatus: PBXStateEnum.PBX_CALL,
+        payload: {
+          callId: 1,
+          debtId: 1,
+          personId: 7,
+          phoneId: 180,
+          callTypeCode: 1,
+          personRole: 2,
+          contractId: 1,
+        },
+        userStatus: null,
+        username: 'admin-pbx',
+      });
+    }, 12000);
 
 
     // setTimeout(() => {
@@ -119,18 +120,18 @@ export class CallService {
     //   });
     // }, 30000);
 
-    setTimeout(() => {
-      this.updatePBXState({
-        date: '2018-06-15T08:56:52.111Z',
-        lineStatus: PBXStateEnum.PBX_CALL,
-        payload: {
-          callTypeCode: 0,
-          phoneId: 180,
-          phoneNumber: '123',
-          personId: 1
-        }
-      });
-    }, 30000);
+    // setTimeout(() => {
+    //   this.updatePBXState({
+    //     date: '2018-06-15T08:56:52.111Z',
+    //     lineStatus: PBXStateEnum.PBX_CALL,
+    //     payload: {
+    //       callTypeCode: 0,
+    //       phoneId: 180,
+    //       phoneNumber: '123',
+    //       personId: 1
+    //     }
+    //   });
+    // }, 30000);
   }
 
   get settings$(): Observable<ICallSettings> {
@@ -323,10 +324,11 @@ export class CallService {
     });
   }
 
-  sendContactTreeIntermediate(code: number, phoneId: number, debtId: number): void {
+  sendContactTreeIntermediate(callId: number, code: number, phoneId: number, debtId: number): void {
     this.store.dispatch({
       type: CallService.PBX_CONTACT_INTERMEDIATE,
       payload: {
+        callId,
         code,
         phoneId,
         debtId

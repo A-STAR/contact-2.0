@@ -76,11 +76,11 @@ export class TreeComponent implements OnInit, OnDestroy {
     )
     .pipe(
       filter(([ state, params, _ ]) =>
-        params.activeCallId && (Number(params.activeCallId) === state.payload.phoneId || !!state.payload.afterCallPeriod)
+        params.activePhoneId && (Number(params.activePhoneId) === state.payload.phoneId || !!state.payload.afterCallPeriod)
       )
     )
     .subscribe(([ state, _, node ]) =>
-      this.callService.sendContactTreeIntermediate(node.data.code, state.payload.phoneId, state.payload.debtId)
+      this.callService.sendContactTreeIntermediate(state.payload.callId, node.data.code, state.payload.phoneId, state.payload.debtId)
     );
   }
 

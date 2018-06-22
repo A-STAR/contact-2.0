@@ -195,11 +195,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     )
     .pipe(
       first(),
-      filter(([ params, state ]) => !!params.activeCallId && +params.activeCallId === state.payload.phoneId),
+      filter(([ params, state ]) => !!params.activePhoneId && +params.activePhoneId === state.payload.phoneId),
       map(([ params ]) => params)
     )
     .subscribe(params => {
-      this.selectedPhoneId$.next(+params.activeCallId);
+      this.selectedPhoneId$.next(+params.activePhoneId);
       this.registerContact();
       this.cdRef.markForCheck();
     });

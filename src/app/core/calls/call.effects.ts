@@ -176,8 +176,8 @@ export class CallEffects {
   sendContactIntermediate$ = this.actions
     .ofType(CallService.PBX_CONTACT_INTERMEDIATE)
     .switchMap((action: UnsafeAction) => {
-      const { node, phoneId, debtId } = action.payload;
-      return this.sendContactTreeIntermediate(node, phoneId, debtId)
+      const { callId, code, phoneId, debtId } = action.payload;
+      return this.sendContactTreeIntermediate(callId, code, phoneId, debtId)
         .map(() => ({
           type: CallService.PBX_CONTACT_INTERMEDIATE_SUCCESS,
           payload: action.payload
@@ -416,8 +416,9 @@ export class CallEffects {
       .update('/pbx/users', {}, params);
   }
 
-  private sendContactTreeIntermediate(node: number, phoneId: number, debtId: number): Observable<void> {
+  private sendContactTreeIntermediate(callId: number, code: number, phoneId: number, debtId: number): Observable<void> {
+    debugger
     return this.dataService
-      .create('/pbx/contactTreeIntermediate', {}, { node, phoneId, debtId });
+      .create('/pbx/contactTreeIntermediate', {}, { callId, code, phoneId, debtId });
   }
 }
