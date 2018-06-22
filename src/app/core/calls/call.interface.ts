@@ -42,6 +42,7 @@ export enum PBXStateEnum {
 }
 
 export interface IPBXStatePayload {
+  callId?: number;
   phoneId?: number;
   debtId?: number;
   personRole?: number;
@@ -49,6 +50,7 @@ export interface IPBXStatePayload {
   contractId?: number;
   callTypeCode?: number;
   afterCallPeriod?: number;
+  phoneNumber?: string;
 }
 
 export interface IPBXState {

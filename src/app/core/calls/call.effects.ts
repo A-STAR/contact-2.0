@@ -10,11 +10,14 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { ICallSettings, ICall, PBXStateEnum, IPBXParams, CallTypeEnum } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
 
+import { Person } from '@app/entities';
+
 import { AuthService } from '@app/core/auth/auth.service';
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { DebtApiService } from '@app/core/api/debt.api';
 import { ProgressBarService } from '@app/shared/components/progressbar/progressbar.service';
+import { RepositoryService } from '@app/core/repository/repository.service';
 import { IncomingCallApiService } from '@app/core/api/incoming-call.api';
 import { NotificationsService } from '../notifications/notifications.service';
 
@@ -135,13 +138,39 @@ export class CallEffects {
     }]);
 
   @Effect()
-  stateChange$ = this.actions
+  stateChangeDrop$ = this.actions
     .ofType(CallService.PBX_STATE_CHANGE)
     .map((action: UnsafeAction) => action.payload)
     .filter(Boolean)
     .withLatestFrom(this.callService.activeCall$)
     .filter(([ pbxState, call ]) => call && pbxState.lineStatus === PBXStateEnum.PBX_NOCALL)
     .map(() => ({ type: CallService.CALL_DROP_SUCCESS }));
+
+  @Effect()
+  stateChangeCall$ = this.actions
+    .ofType(CallService.PBX_STATE_CHANGE)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(state => state && state.payload)
+    .withLatestFrom(this.callService.activeCall$)
+    .filter(([ state, call ]) => state.lineStatus === PBXStateEnum.PBX_CALL && !call)
+    .map(([ state ]) => state.payload)
+    .flatMap(statePayload =>
+      this.repositoryService.fetch(Person, { id: statePayload.personId })
+        .map(person => [ statePayload, person ])
+    )
+    .map(([ statePayload, person ]) => ({
+        type: CallService.CALL_SET,
+        payload: {
+          phoneId: statePayload.phoneId,
+          debtId: statePayload.debtId,
+          personRole: statePayload.personRole,
+          personId: statePayload.personId,
+          phone: statePayload.phoneNumber,
+          firstName: person.firstName,
+          middleName: person.middleName,
+          lastName: person.lastName
+        }
+    }));
 
   @Effect()
   sendContactIntermediate$ = this.actions
@@ -339,6 +368,7 @@ export class CallEffects {
     private dataService: DataService,
     private debtApi: DebtApiService,
     private progressBarService: ProgressBarService,
+    private repositoryService: RepositoryService,
     private incomingCallApiService: IncomingCallApiService,
     private notificationService: NotificationsService
   ) {}
