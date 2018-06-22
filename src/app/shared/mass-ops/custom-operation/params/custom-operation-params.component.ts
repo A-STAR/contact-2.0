@@ -10,7 +10,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 
@@ -42,9 +41,9 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   @ViewChild('frame') frame: ElementRef;
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
+  canSubmit = false;
   config: IDynamicLayoutConfig;
 
-  private canSubmit$ = new BehaviorSubject<boolean>(false);
   private canSubmitSub: Subscription;
 
   constructor(
@@ -56,10 +55,6 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {}
-
-  get canSubmit(): boolean {
-    return this.canSubmit$.value;
-  }
 
   get target(): () => Window {
     return () => this.frame ? this.frame.nativeElement.contentWindow : null;
@@ -77,7 +72,10 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.INIT, () => of(this.params));
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.DICTIONARY, this.getDictionaryHandler());
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.LOOKUP, this.getLookupHandler());
-      this.canSubmit$.next(true);
+      this.frameService.getRequest(this.id, 'validation').subscribe(message => {
+        this.canSubmit = message.params.valid;
+        this.cdRef.markForCheck();
+      });
     } else {
       this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.params);
     }
@@ -87,10 +85,12 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
     if (this.layout) {
       this.canSubmitSub = this.layout.canSubmit()
         .subscribe(canSubmit => {
-          this.canSubmit$.next(canSubmit);
+          this.canSubmit = canSubmit;
           this.cdRef.markForCheck();
         });
     }
+    // Otherwise iframe gets reloaded on every cd cycle, e.g. when `canSubmit` changes
+    this.cdRef.detach();
   }
 
   ngOnDestroy(): void {
