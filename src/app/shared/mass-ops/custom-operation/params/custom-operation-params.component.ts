@@ -72,7 +72,7 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.INIT, () => of(this.params));
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.DICTIONARY, this.getDictionaryHandler());
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.LOOKUP, this.getLookupHandler());
-      this.frameService.getRequest(this.id, 'validation').subscribe(message => {
+      this.frameService.getRequest(this.id, FrameMessageType.VALIDATION).subscribe(message => {
         this.canSubmit = message.params.valid;
         this.cdRef.markForCheck();
       });

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 
+import { FrameMessageType } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.interface';
 import { ICustomActionData, ICustomOperationParams } from '../custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
@@ -48,7 +49,7 @@ export class CustomOperationInputComponent implements OnInit {
   onSubmit(): void {
     if (this.isThirdPartyOperation) {
       this.frameService
-        .sendMessage(this.params.target(), this.id, 'data')
+        .sendMessage(this.params.target(), this.id, FrameMessageType.DATA)
         .subscribe(data => this.submit.emit(data));
     } else {
       this.submit.emit(this.params.layout.getData());
