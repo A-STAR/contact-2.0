@@ -18,6 +18,7 @@ import { DataService } from './data/data.service';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { FrameService } from '@app/core/frame/frame.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
@@ -118,6 +119,7 @@ import 'rxjs/add/operator/withLatestFrom';
     DecimalPipe,
     EntityAttributesService,
     EntityTranslationsService,
+    FrameService,
     LookupService,
     GridFiltersService,
     GuiObjectsService,
