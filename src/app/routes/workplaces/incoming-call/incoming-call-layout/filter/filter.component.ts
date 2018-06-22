@@ -63,11 +63,11 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
     )
     .pipe(
       first(),
-      filter(([ params, state ]) => !!params.activeCallId && Number(params.activeCallId) === state.payload.phoneId),
+      filter(([ params, state ]) => !!params.phoneNumber && params.phoneNumber === state.payload.phoneNumber),
       map(([ _, state ]) => state)
     )
     .subscribe(state => {
-      this.incomingCallService.searchParams = { personId: state.payload.personId };
+      this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
       this.cdRef.markForCheck();
     });
   }
