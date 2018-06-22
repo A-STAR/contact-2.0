@@ -20,7 +20,7 @@ import {
   GeoPoint,
 } from '@app/core/map-providers/map-providers.interface';
 
-import { LayersService } from '@app/core/map-providers/layers/map-layers.service';
+import { LayersService, LayerGroup, Layer } from '@app/core/map-providers/layers/map-layers.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
@@ -115,17 +115,20 @@ export class MapComponent<T> implements AfterViewInit, OnDestroy {
     this.mapService.removeMap();
   }
 
-  addLayers(layers: ILayerDef<T>[][]): void {
+  addLayers(layers: Array<ILayerDef<T>[] | ILayerDef<T>>): void {
     if (layers && layers.length) {
       layers
-        // for each layer group
-        .map(g => this.layersService.createGroup(g))
-        .map(group => {
+        .map(l => Array.isArray(l) ? this.layersService.createGroup(l) : this.layersService.createLayer(l))
+        .map(l => {
           // extend bounds by geo points layers
           if (this.options.fitToData) {
-            group.getLayersByType(LayerType.MARKER).forEach(l => {
-              this.bounds.extend(this.getLatLng(l.layer));
-            });
+            if (l.isGroup) {
+              (l as LayerGroup<T>).getLayersByType(LayerType.MARKER).forEach(_l => {
+                this.bounds.extend(this.getLatLng(_l.nativeLayer));
+              });
+            } else {
+              this.bounds.extend(this.getLatLng((l as Layer<T>).nativeLayer));
+            }
           }
 
         });

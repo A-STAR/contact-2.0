@@ -31,6 +31,7 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
   @Input() multi = true;
 
   @Output() action = new EventEmitter<number[]>();
+  @Output() ready = new EventEmitter<IMultiSelectOption[]>();
 
   private optionsSubscription: Subscription;
   private value: number[] = [];
@@ -57,13 +58,17 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
       .subscribe(this.onOptionsFetch);
     }
   }
-
+  // TODO(i.lobanov): determine which side menu should open
   get isLeft(): boolean {
     return false;
   }
 
   get hasSelection(): boolean {
     return !!this.value.length;
+  }
+
+  get allSelected(): boolean {
+    return this.value.length === this._options.length;
   }
 
   get options(): IMultiSelectOption[] {
@@ -88,6 +93,24 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
     this.action.emit(this.value);
   }
 
+  selectAll(emitAction: boolean = false): void {
+    this.options.forEach(o => o.checked = true);
+    this.value = this.options.map(o => o.value);
+    if (emitAction) {
+      this.action.emit(this.value);
+    }
+    this.cdRef.markForCheck();
+  }
+
+  deselectAll(emitAction: boolean = false): void {
+    this.options.forEach(o => o.checked = false);
+    this.value = [];
+    if (emitAction) {
+      this.action.emit(this.value);
+    }
+    this.cdRef.markForCheck();
+  }
+
   getIconCls(): string {
     return this.isLeft ? 'menu-arrow-left fa-caret-left' : 'menu-arrow-right fa-caret-right';
   }
@@ -104,6 +127,8 @@ export class MenuSelectComponent implements OnInit, OnDestroy {
 
   private onOptionsFetch = (options: IMultiSelectOption[]) => {
     this.options = options;
+    this.ready.emit(options);
+    this.cdRef.markForCheck();
   }
 
 }

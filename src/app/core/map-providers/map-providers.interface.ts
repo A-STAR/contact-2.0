@@ -96,9 +96,10 @@ export type LeafletGeoLayer = Marker |
 export type GeoLayer = GoogleGeoLayer | LeafletGeoLayer;
 
 export interface ILayer<T> {
-  layer: GeoLayer;
+  nativeLayer: GeoLayer;
   id?: number;
   type: LayerType;
+  isGroup?: boolean;
   data?: T;
 }
 

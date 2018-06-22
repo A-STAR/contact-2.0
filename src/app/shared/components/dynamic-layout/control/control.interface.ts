@@ -10,6 +10,7 @@ export enum DynamicLayoutControlType {
   GRIDSELECT      = 'gridselect',
   PASSWORD        = 'password',
   SELECT          = 'select',
+  RANGE           = 'range',
   MULTISELECT     = 'multiselect',
   TEXT            = 'text',
   NUMBER          = 'number',
@@ -62,6 +63,16 @@ export interface IDynamicLayoutTextareaControl extends IDynamicLayoutGenericCont
   controlType: DynamicLayoutControlType;
 }
 
+export interface IDynamicLayoutRangeControl extends IDynamicLayoutGenericControl {
+  controlType: DynamicLayoutControlType.RANGE;
+  min?: number;
+  max?: number;
+  debounce?: number;
+  showInput?: boolean;
+  logarithmic?: boolean;
+  precision?: number;
+}
+
 export type IDynamicLayoutControl =
   | IDynamicLayoutSelectControl
   | IDynamicLayoutDialogSelectControl
@@ -69,6 +80,7 @@ export type IDynamicLayoutControl =
   | IDynamicLayoutGridSelectControl
   | IDynamicLayoutMultiSelectControl
   | IDynamicLayoutNumberControl
+  | IDynamicLayoutRangeControl
   | IDynamicLayoutTextControl
   | IDynamicLayoutTextareaControl
 ;

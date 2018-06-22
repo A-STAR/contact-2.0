@@ -7,7 +7,9 @@
         <app-map-filter
           *ngSwitchCase="'filter'"
           [config]="item"
-          (action)="onAction($event)"></app-map-filter>
+          (action)="onAction($event)"
+        >
+        </app-map-filter>
         <!-- Other items -->
       </ng-container>
   </div>

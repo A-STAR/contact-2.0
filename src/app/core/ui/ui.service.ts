@@ -20,7 +20,7 @@ import { UIActionType } from '@app/core/ui/ui.interface';
 @Injectable()
 export class UIService {
 
-  private uiState$ = this.store.pipe(
+  readonly uiState$ = this.store.pipe(
     select(state => state.ui),
   );
 

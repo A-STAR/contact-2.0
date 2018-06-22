@@ -90,5 +90,11 @@
       *ngSwitchCase="'template'"
       [template]="item"
     ></app-dynamic-layout-template>
+
+    <!-- Custom Operation -->
+    <app-dynamic-layout-custom-operation
+      *ngSwitchCase="'customOperation'"
+      [operation]="item"
+    ></app-dynamic-layout-custom-operation>
   </ng-container>
 </ng-template>

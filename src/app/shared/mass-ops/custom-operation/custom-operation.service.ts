@@ -36,15 +36,19 @@ export class CustomOperationService {
   }
 
   fetchOperations(operationType: number): Observable<ICustomOperation[]> {
-    return this.dataService.readAll('/lookup/operations?operationType={operationType} ', {
-      operationType
-    })
-    .catch(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback());
+    return this.dataService
+      .readAll('/lookup/operations?operationType={operationType} ', { operationType })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.operations.gen.plural').dispatchCallback()),
+      );
   }
 
   fetchOperationParams(operationId: number): Observable<ICustomOperationParams[]> {
-    return this.dataService.readAll(`/operations/${operationId}/params`)
-      .catch(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback());
+    return this.dataService
+      .readAll(`/operations/${operationId}/params`)
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.operations.gen.singular').dispatchCallback()),
+      );
   }
 
   run(operation: IGridAction, params: ICustomOperationParams[], data: ICustomActionData): Observable<ICustomActionData> {
@@ -189,7 +193,7 @@ export class CustomOperationService {
         }
       }), {}),
       ...(params || [])
-        .filter(p => [3, 4, 5, 8, 11].includes(p.paramTypeCode))
+        .filter(p => p.paramTypeCode === 0)
         .reduce((acc, p) => ({
           ...acc,
           [p.systemName]: {
@@ -211,6 +215,6 @@ export class CustomOperationService {
   }
 
   private filterInputParams(operation: IGridAction, params: ICustomOperationParams[]): ICustomOperationParams[] {
-    return params.filter(p => operation.params.indexOf(p.systemName));
+    return params.filter(p => !operation.params.includes(p.systemName));
   }
 }
