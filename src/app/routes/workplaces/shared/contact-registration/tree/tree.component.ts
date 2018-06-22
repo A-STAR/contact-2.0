@@ -79,9 +79,12 @@ export class TreeComponent implements OnInit, OnDestroy {
         params.activePhoneId && (Number(params.activePhoneId) === state.payload.phoneId || !!state.payload.afterCallPeriod)
       )
     )
-    .subscribe(([ state, _, node ]) =>
-      this.callService.sendContactTreeIntermediate(state.payload.callId, node.data.code, state.payload.phoneId, state.payload.debtId)
-    );
+    .subscribe(([ state, _, node ]) => this.callService.sendContactTreeIntermediate(
+      state.payload.pbxCallId,
+      node.data.code,
+      state.payload.phoneId,
+      state.payload.debtId
+    ));
   }
 
   ngOnDestroy(): void {

@@ -73,13 +73,25 @@ export class CallService {
     .mergeMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
-    .subscribe(state => {
-      const pbxState = state || {} as any;
-      pbxState.debtId = state && state.payload ? +state.payload.debtId : null;
-      pbxState.phoneId = state && state.payload ? +state.payload.phoneId : null;
-      pbxState.callTypeCode = state && state.payload ? +state.payload.callTypeCode : null;
-      this.updatePBXState(pbxState);
-    });
+    .pipe(
+      map(state => ({
+        ...state,
+        payload: state && state.payload
+          ? {
+            ...state.payload,
+            pbxCallId: Number(state.payload.pbxCallId),
+            callTypeCode: Number(state.payload.callTypeCode),
+            contractId: Number(state.payload.contractId),
+            debtId: Number(state.payload.debtId),
+            personId: Number(state.payload.personId),
+            personRole: Number(state.payload.personRole),
+            phoneId: Number(state.payload.phoneId),
+            phoneNumber: state.payload.phoneNumber
+          }
+          : {}
+      }))
+    )
+    .subscribe(state => this.updatePBXState(state));
 
     this.usePBX$
       .filter(use => !use)
@@ -92,23 +104,23 @@ export class CallService {
       );
 
     // TODO(i.kibisov): remove mock
-    setTimeout(() => {
-      this.updatePBXState({
-        date: '2018-06-15T08:56:52.111Z',
-        lineStatus: PBXStateEnum.PBX_CALL,
-        payload: {
-          callId: 1,
-          debtId: 1,
-          personId: 7,
-          phoneId: 180,
-          callTypeCode: 1,
-          personRole: 2,
-          contractId: 1,
-        },
-        userStatus: null,
-        username: 'admin-pbx',
-      });
-    }, 12000);
+    // setTimeout(() => {
+    //   this.updatePBXState({
+    //     date: '2018-06-15T08:56:52.111Z',
+    //     lineStatus: PBXStateEnum.PBX_CALL,
+    //     payload: {
+    //       callId: 1,
+    //       debtId: 1,
+    //       personId: 7,
+    //       phoneId: 180,
+    //       callTypeCode: 1,
+    //       personRole: 2,
+    //       contractId: 1,
+    //     },
+    //     userStatus: null,
+    //     username: 'admin-pbx',
+    //   });
+    // }, 12000);
 
 
     // setTimeout(() => {

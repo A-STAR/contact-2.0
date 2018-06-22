@@ -417,7 +417,6 @@ export class CallEffects {
   }
 
   private sendContactTreeIntermediate(callId: number, code: number, phoneId: number, debtId: number): Observable<void> {
-    debugger
     return this.dataService
       .create('/pbx/contactTreeIntermediate', {}, { callId, code, phoneId, debtId });
   }
