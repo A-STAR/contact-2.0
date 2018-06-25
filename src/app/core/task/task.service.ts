@@ -138,10 +138,12 @@ export class TaskService {
 
   private getInfo(task: IFinishSuccessTaskEvent): string {
     const { massInfo } = task.payload;
-    return Object.keys(massInfo)
-      .filter(key => massInfo[key])
-      .map(key => this.translateService.instant(`system.notifications.tasks.${key}`, { n: String(massInfo[key]) }))
-      .join(', ');
+    return massInfo
+      ? Object.keys(massInfo)
+          .filter(key => massInfo[key])
+          .map(key => this.translateService.instant(`system.notifications.tasks.${key}`, { n: String(massInfo[key]) }))
+          .join(', ')
+      : '';
   }
 
   private getCreateDateTime(task: ITaskEvent): string {
