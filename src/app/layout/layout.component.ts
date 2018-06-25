@@ -1,6 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
 import { filter, first, map, mergeMap } from 'rxjs/operators';
 
 import { ActionsLogService } from '@app/core/actions-log/actions-log.service';
@@ -10,6 +9,8 @@ import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.serv
 import { RoutingService } from '@app/core/routing/routing.service';
 import { TaskService } from '@app/core/task/task.service';
 
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
+
 @Component({
   host: { class: 'full-size' },
   selector: 'app-layout',
@@ -17,7 +18,8 @@ import { TaskService } from '@app/core/task/task.service';
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent implements OnInit, OnDestroy {
-  private subscriptions = new Subscription();
+
+  private subscriptions = new SubscriptionBag();
 
   constructor(
     private actionsLogService: ActionsLogService,

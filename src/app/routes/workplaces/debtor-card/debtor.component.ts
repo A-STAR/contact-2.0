@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { filter, map } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
@@ -16,6 +15,8 @@ import { Person } from '@app/entities';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from './debtor.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
+
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +30,7 @@ import { RepositoryService } from '@app/core/repository/repository.service';
 export class DebtorComponent implements OnInit, OnDestroy {
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
-  private subscription = new Subscription();
+  private subscription = new SubscriptionBag();
 
   constructor(
     private route: ActivatedRoute,
