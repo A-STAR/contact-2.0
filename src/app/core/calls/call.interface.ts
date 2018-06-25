@@ -1,13 +1,14 @@
 export interface ICallSettings {
-  useIntPhone?: number;
-  usePreview?: number;
   previewShowRegContact?: number;
-  useMakeCall?: number;
+  useAgentStatus?: number;
   useDropCall?: number;
   useHoldCall?: number;
+  useIntPhone?: number;
+  useMakeCall?: number;
+  usePredictive?: number;
+  usePreview?: number;
   useRetrieveCall?: number;
   useTransferCall?: number;
-  useAgentStatus?: number;
 }
 
 export interface ICall {

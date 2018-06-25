@@ -26,8 +26,9 @@ export interface ICustomOperationParams {
 }
 
 export enum CustomOperation {
-  DEBT_DISTRIBUTION       = 5,
-  PBX_CAMPAIGN_STATISTICS = 8,
+  DEBT_DISTRIBUTION       =  5,
+  PBX_CAMPAIGN_STATISTICS =  8,
+  UPDATE_CAMPAIGN_STATUS  = 13,
 }
 
 export enum OperationControlTypeEnum {
