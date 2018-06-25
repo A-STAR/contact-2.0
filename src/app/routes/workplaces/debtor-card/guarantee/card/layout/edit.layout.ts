@@ -39,6 +39,10 @@ export const editLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXT,
+                  enabled: {
+                    operator: ContextOperator.PERMISSION_IS_TRUE,
+                    value: 'GUARANTEE_EDIT',
+                  },
                   form: 'contract',
                   label: 'Номер договора',
                   name: 'contractNumber',
@@ -49,6 +53,10 @@ export const editLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.DATE,
+                  enabled: {
+                    operator: ContextOperator.PERMISSION_IS_TRUE,
+                    value: 'GUARANTEE_EDIT',
+                  },
                   form: 'contract',
                   label: 'Начало',
                   name: 'contractStartDate',
@@ -56,6 +64,10 @@ export const editLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.DATE,
+                  enabled: {
+                    operator: ContextOperator.PERMISSION_IS_TRUE,
+                    value: 'GUARANTEE_EDIT',
+                  },
                   form: 'contract',
                   label: 'Окончание',
                   name: 'contractEndDate',
@@ -63,6 +75,10 @@ export const editLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.SELECT,
+                  enabled: {
+                    operator: ContextOperator.PERMISSION_IS_TRUE,
+                    value: 'GUARANTEE_EDIT',
+                  },
                   form: 'contract',
                   dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE,
                   label: 'Тип ответственности',
@@ -71,6 +87,10 @@ export const editLayout: IDynamicLayoutConfig = {
                 {
                   type: DynamicLayoutItemType.CONTROL,
                   controlType: DynamicLayoutControlType.TEXTAREA,
+                  enabled: {
+                    operator: ContextOperator.PERMISSION_IS_TRUE,
+                    value: 'GUARANTEE_EDIT',
+                  },
                   form: 'contract',
                   label: 'Комментарий',
                   name: 'comment',
@@ -349,7 +369,7 @@ export const editLayout: IDynamicLayoutConfig = {
                     value: [
                       {
                         operator: ContextOperator.ENTITY_IS_USED,
-                        value: 363 + i,
+                        value: 363 + i - 1,
                       },
                       {
                         operator: ContextOperator.CONSTANT_CONTAINS,
@@ -361,7 +381,7 @@ export const editLayout: IDynamicLayoutConfig = {
                               value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
                             }
                           },
-                          363 + i,
+                          363 + i - 1,
                         ],
                       },
                     ],

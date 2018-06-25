@@ -154,7 +154,7 @@ export const layout: IDynamicLayoutConfig = {
             value: [
               {
                 operator: ContextOperator.ENTITY_IS_USED,
-                value: 363 + i,
+                value: 363 + i - 1,
               },
               {
                 operator: ContextOperator.CONSTANT_CONTAINS,
@@ -166,7 +166,7 @@ export const layout: IDynamicLayoutConfig = {
                       value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
                     }
                   },
-                  363 + i,
+                  363 + i - 1,
                 ],
               },
             ],
