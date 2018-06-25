@@ -1337,7 +1337,11 @@
     "successUpdate": "Successfully updated debtor with ID {{ id }}",
     "utc": "Debtor's local time",
     "close": {
-      "error": "Error while closing card"
+      "error": "Error while closing card",
+      "dialog": {
+        "title": "Debt card close",
+        "message": "Current call will be stopped, continue?"
+      }
     },
     "identityDocs": {
       "title": "Identity documents",

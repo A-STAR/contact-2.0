@@ -162,6 +162,13 @@ export class DebtorService {
     this.debtors$.next(this.debtors);
   }
 
+  closeCard(debtId: number): Observable<void> {
+    return this.dataService.create('/pbx/debt/{debtId}/closeCard', { debtId }, {})
+      .pipe(
+        catchError(this.notificationsService.error('debt.close.error').dispatchCallback()),
+      );
+  }
+
   private addTab(debtorId: number, debtId: number): void {
     this._debtors.set(debtorId, debtId);
     this.debtors$.next(this.debtors);

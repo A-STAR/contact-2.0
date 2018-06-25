@@ -7,16 +7,18 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, switchMap, tap, filter } from 'rxjs/operators';
+import { map, switchMap, tap, filter, first } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { CallService } from '@app/core/calls/call.service';
 import { DebtorService } from './debtor.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
 
@@ -54,12 +56,15 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
+  readonly closePhoneId$ = new BehaviorSubject<number>(null);
+
   private subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private contactRegistrationService: ContactRegistrationService,
     private debtorService: DebtorService,
     private repositoryService: RepositoryService,
@@ -131,8 +136,31 @@ export class DebtorComponent implements OnInit, OnDestroy {
   }
 
   onTabClose(debtorId: number): void {
-    this.debtorService.removeTab(debtorId);
-    this.cdRef.markForCheck();
+    this.callService.activePredictiveCall$
+      .pipe(
+        first()
+      )
+      .subscribe(activePredictiveCall => {
+        if (activePredictiveCall) {
+          this.closePhoneId$.next(debtorId);
+        } else {
+          this.debtorService.removeTab(debtorId);
+        }
+        this.cdRef.markForCheck();
+      });
+  }
+
+  onConfirmTabClose(): void {
+    const debtorId = this.closePhoneId$.value;
+    this.debtorService.closeCard(debtorId)
+      .subscribe(() => {
+        this.debtorService.removeTab(debtorId);
+        this.closePhoneId$.next(null);
+      });
+  }
+
+  onCloseDialog(): void {
+    this.closePhoneId$.next(null);
   }
 
   private onDebtorIdOrDebtIdChange(debtorId: number, debtId: number): void {
