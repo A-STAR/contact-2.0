@@ -296,7 +296,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const debtId = this.route.snapshot.paramMap.get('debtId');
     const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
-      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ]);
     }
   }
 
