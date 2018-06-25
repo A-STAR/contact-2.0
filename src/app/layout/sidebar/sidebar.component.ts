@@ -40,7 +40,7 @@ export class SidebarComponent implements OnInit {
 
       return item && item.children || [ item ];
     }),
-    map((items: IMenuItem[]) => items.filter(item => item && item.text)),
+    map((items: IMenuItem[]) => items.filter(item => item && item.text && item.icon)),
     tap(() => this.cdRef.markForCheck()),
   );
 
@@ -90,7 +90,7 @@ export class SidebarComponent implements OnInit {
         const lastDebtCard: IMenuItem = {
           text: 'sidebar.nav.menu.DEBTOR_CARD',
           link: lastDebtorCardLink,
-          icon: null,
+          icon: 'co-m-debtor-card',
           docs: 'debt_card',
           children: null,
           permission: of(true),

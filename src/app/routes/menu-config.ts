@@ -238,7 +238,7 @@ export const menuConfig = {
     docs: 'inner_call',
   },
   debtCard: {
-    text: null,
+    text: 'sidebar.nav.menu.DEBTOR_CARD',
     link: '/app/workplaces/debtor',
     icon: null,
     docs: 'debt_card',
