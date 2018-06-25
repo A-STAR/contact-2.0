@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 @Injectable()
 export class RoutingService {
@@ -8,8 +8,8 @@ export class RoutingService {
     private router: Router,
   ) {}
 
-  navigate(segments: string[], route: ActivatedRoute = this.route): Promise<boolean> {
-    return this.router.navigate(segments, { relativeTo: route });
+  navigate(segments: string[], route: ActivatedRoute = this.route, queryParams?: Params): Promise<boolean> {
+    return this.router.navigate(segments, { relativeTo: route, queryParams });
   }
 
   /**

@@ -24,6 +24,7 @@ export class CallService {
   static CALL_SETTINGS_FETCH = 'CALL_SETTINGS_FETCH';
   static CALL_SETTINGS_CHANGE = 'CALL_SETTINGS_CHANGE';
   static CALL_SETTINGS_FETCH_FAILURE = 'CALL_SETTINGS_FETCH_FAILURE';
+  static CALL_SET = 'CALL_SET';
   static CALL_START = 'CALL_START';
   static CALL_START_SUCCESS = 'CALL_START_SUCCESS';
   static CALL_START_FAILURE = 'CALL_START_FAILURE';
@@ -48,6 +49,9 @@ export class CallService {
   static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
   static PBX_PARAMS_UPDATE = 'PBX_PARAMS_UPDATE';
   static PBX_PARAMS_CHANGE = 'PBX_PARAMS_CHANGE';
+  static PBX_CONTACT_INTERMEDIATE = 'PBX_CONTACT_INTERMEDIATE';
+  static PBX_CONTACT_INTERMEDIATE_SUCCESS = 'PBX_CONTACT_INTERMEDIATE_SUCCESS';
+  static PBX_CONTACT_INTERMEDIATE_FAILURE = 'PBX_CONTACT_INTERMEDIATE_FAILURE';
 
   private isFetching = false;
 
@@ -69,6 +73,24 @@ export class CallService {
     .mergeMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
+    .pipe(
+      map(state => ({
+        ...state,
+        payload: state && state.payload
+          ? {
+            ...state.payload,
+            pbxCallId: Number(state.payload.pbxCallId),
+            callTypeCode: Number(state.payload.callTypeCode),
+            contractId: Number(state.payload.contractId),
+            debtId: Number(state.payload.debtId),
+            personId: Number(state.payload.personId),
+            personRole: Number(state.payload.personRole),
+            phoneId: Number(state.payload.phoneId),
+            phoneNumber: state.payload.phoneNumber
+          }
+          : {}
+      }))
+    )
     .subscribe(state => this.updatePBXState(state));
 
     this.usePBX$
@@ -262,6 +284,25 @@ export class CallService {
     this.store.dispatch({
       type: CallService.PBX_PARAMS_CHANGE,
       payload: params
+    });
+  }
+
+  setCall(call: ICall): void {
+    this.store.dispatch({
+      type: CallService.CALL_SET,
+      payload: call
+    });
+  }
+
+  sendContactTreeIntermediate(callId: number, code: number, phoneId: number, debtId: number): void {
+    this.store.dispatch({
+      type: CallService.PBX_CONTACT_INTERMEDIATE,
+      payload: {
+        callId,
+        code,
+        phoneId,
+        debtId
+      }
     });
   }
 

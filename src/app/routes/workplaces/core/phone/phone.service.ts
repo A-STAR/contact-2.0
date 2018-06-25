@@ -17,6 +17,9 @@ import { map } from 'rxjs/operators/map';
 @Injectable()
 export class PhoneService extends AbstractActionService {
   static MESSAGE_PHONE_SAVED = 'MESSAGE_PHONE_SAVED';
+  static MESSAGE_PHONE_INIT = 'MESSAGE_PHONE_INIT';
+  static MESSAGE_PHONE_REGISTER = 'MESSAGE_PHONE_REGISTER';
+  static MESSAGE_PHONE_SET_CALL = 'MESSAGE_PHONE_SET_CALL';
   baseUrl = '/entityTypes/{entityType}/entities/{entityId}/phones';
   singular = 'entities.phones.gen.singular';
 
