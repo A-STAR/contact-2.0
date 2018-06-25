@@ -163,6 +163,46 @@
                 }
               },
               "size": 100
+            },
+            {
+              "type": "customOperation",
+              "display": {
+                "operator": "and",
+                "value": [
+                  {
+                    "operator": "not",
+                    "value": {
+                      "operator": "equals",
+                      "value": [
+                        {
+                          "operator": "uiState",
+                          "value": "pbxCampaigns.firstSelectedRow.statusCode"
+                        },
+                        3
+                      ]
+                    }
+                  },
+                  {
+                    "operator": "equals",
+                    "value": [
+                      {
+                        "operator": "uiState",
+                        "value": "pbxCampaigns.firstSelectedRow.typeCode"
+                      },
+                      2
+                    ]
+                  }
+                ]
+              },
+              "id": 14,
+              "label": "Set Mode",
+              "params": {
+                "campaignId": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.id"
+                }
+              },
+              "size": 100
             }
           ]
         }
