@@ -38,7 +38,7 @@ export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit, DoChe
 
   private originalOrderedTabs: TabViewTabComponent[];
 
-  private tabHeaders$ = new BehaviorSubject< QueryList<ElementRef>>(null);
+  private tabHeaders$ = new BehaviorSubject<QueryList<ElementRef>>(null);
   @ViewChildren('tabHeader') set tabHeader(value: QueryList<ElementRef>) {
     this.tabHeaders$.next(value);
     this.setTabsOrder();
@@ -121,12 +121,12 @@ export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit, DoChe
     const visibleTabs = this.visibleTabs;
     const tabIndex = visibleTabs.indexOf(tab);
     const activeIndex = visibleTabs.findIndex(el => el.active);
+    const visibleHeaders = this.tabHeaders && this.tabHeaders.toArray();
 
-    if (activeIndex < 0) {
+    if (activeIndex < 0 || !visibleHeaders || visibleHeaders.length !== visibleTabs.length) {
       return false;
     }
 
-    const visibleHeaders = this.tabHeaders.toArray();
     const headerWidth = this.tabHeaderWidth - TabViewComponent.MENU_BTN_SPACE;
 
     const activeTabHeader = {
