@@ -8,6 +8,8 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -29,6 +31,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
+
+import { invert } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,8 +76,10 @@ export class LetterGenerationComponent implements OnInit {
       });
   }
 
-  get isDisabled(): boolean {
-    return !this.layout || !this.layout.canSubmit;
+  get isDisabled(): Observable<boolean> {
+    return this.layout
+      ? this.layout.canSubmit().map(invert)
+      : of(false);
   }
 
   onSubmit(): void {
@@ -121,7 +127,7 @@ export class LetterGenerationComponent implements OnInit {
           name: 'addressTypes',
           type: DynamicLayoutItemType.CONTROL,
           controlType: DynamicLayoutControlType.MULTISELECT,
-          dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS,
+          dictCode: UserDictionariesService.DICTIONARY_ADDRESS_TYPE,
           validators: {
             required: true
           }
@@ -145,13 +151,13 @@ export class LetterGenerationComponent implements OnInit {
           dictCode: UserDictionariesService.DICTIONARY_REGION_SORT_TYPE,
           controlType: DynamicLayoutControlType.MULTISELECT,
         },
-        {
-          label: this.translateService.instant('widgets.mass.letter.dialog.reportId'),
-          name: 'reportId',
-          type: DynamicLayoutItemType.CONTROL,
-          lookupKey: 'letterReport',
-          controlType: DynamicLayoutControlType.SELECT,
-        },
+        // {
+        //   label: this.translateService.instant('widgets.mass.letter.dialog.reportId'),
+        //   name: 'reportId',
+        //   type: DynamicLayoutItemType.CONTROL,
+        //   lookupKey: 'letterReport',
+        //   controlType: DynamicLayoutControlType.SELECT,
+        // },
       ]
     };
   }

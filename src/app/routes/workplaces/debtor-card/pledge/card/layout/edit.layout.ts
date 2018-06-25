@@ -379,7 +379,7 @@ export const editLayout: IDynamicLayoutConfig = {
           children: [
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'PHONE_VIEW',
               },
@@ -388,7 +388,7 @@ export const editLayout: IDynamicLayoutConfig = {
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'ADDRESS_VIEW',
               },
@@ -397,7 +397,7 @@ export const editLayout: IDynamicLayoutConfig = {
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'EMAIL_VIEW',
               },
@@ -406,7 +406,7 @@ export const editLayout: IDynamicLayoutConfig = {
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.OR,
                 value: [
                   {
@@ -424,7 +424,7 @@ export const editLayout: IDynamicLayoutConfig = {
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'IDENTITY_DOCUMENT_VIEW',
               },
@@ -433,7 +433,7 @@ export const editLayout: IDynamicLayoutConfig = {
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'EMPLOYMENT_VIEW',
               },

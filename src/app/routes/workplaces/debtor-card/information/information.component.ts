@@ -36,7 +36,7 @@ export class DebtorInformationComponent {
     },
     {
       title: 'debtor.information.address.title',
-      isInitialised: true,
+      isInitialised: false,
       permission: this.userPermissionsService.has('ADDRESS_VIEW')
     },
     {

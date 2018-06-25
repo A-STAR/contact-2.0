@@ -16,7 +16,11 @@ export class LetterGenerationService {
     private notificationsService: NotificationsService,
   ) {}
 
-  generate(idData: IGridActionPayload, personRole: number, actionData: ILetterGenerationParams): Observable<void> {
+  generate(
+    idData: IGridActionPayload,
+    personRole: number,
+    actionData: ILetterGenerationParams
+  ): Observable<void> {
     return this.dataService
       .create('/async/mass/letters/form', {},
         {

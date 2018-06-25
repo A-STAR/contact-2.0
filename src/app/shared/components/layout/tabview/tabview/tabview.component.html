@@ -9,11 +9,12 @@
         (click)="onSelectTab($event, tab)"
         [class.active]="tab.active"
         [class.disabled]="tab.disabled"
+        [class.invisible]="!tab.visible || !feetsInView(tab)"
       >
         <a>{{ tab.title | translate }}</a>
         <div class="selection"></div>
       </li>
-      <li menu #tabHeaderMenu *ngIf="hiddenTabs.length">
+      <li menu #tabHeaderMenu *ngIf="menuTabs.length">
         <div appDropdown fitWidthToContent="true">
           <div #dropdownTrigger>
             <i class="fa fa-ellipsis-h"></i>
@@ -21,7 +22,7 @@
           <div #dropdownContent class="dropdown">
             <ul class="list-group m0">
               <li
-                *ngFor="let tab of hiddenTabs"
+                *ngFor="let tab of menuTabs"
                 class="list-group-item b0 clickable"
                 [class.active]="tab.active"
                 (click)="onSelectTab($event, tab)"

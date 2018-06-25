@@ -233,7 +233,7 @@ export class DataService {
   private getFileName(response: HttpResponse<any>): string {
     const contentDisposition = response.headers.get('content-disposition');
     if (contentDisposition) {
-      const matches = contentDisposition.match(/^attachment; filename="(.+)";$/);
+      const matches = contentDisposition.match(/^attachment; filename="(.+)";?$/);
       if (matches && matches[1]) {
         return matches[1];
       }

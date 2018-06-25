@@ -90,7 +90,7 @@ export class DebtApiService {
 
   openByDebtId(debtId: number, debtorId: number, activePhoneId?: number): Promise<boolean> {
     return this.routingService.navigate([
-      `/app/workplaces/debtor/${debtorId}/debt/${debtId}`
+      `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit`
     ], this.route, { activePhoneId });
   }
 

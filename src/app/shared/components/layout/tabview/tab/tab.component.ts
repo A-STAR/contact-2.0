@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
@@ -6,21 +6,26 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   templateUrl: './tab.component.html',
   styleUrls: ['./tab.component.scss'],
 })
-export class TabViewTabComponent implements OnChanges {
+export class TabViewTabComponent {
   @Input() title: string;
   @Input() active = false;
   @Input() closable = false;
   @Input() disabled = false;
 
-  @Input() visible = true;
+  @Input() set visible(value: boolean) {
+    this.visible$.next(value);
+    this.cdRef.markForCheck();
+  }
 
   @Output() onClose = new EventEmitter<number>();
 
-  readonly visible$ = new BehaviorSubject<boolean>(null);
+  readonly visible$ = new BehaviorSubject<boolean>(true);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.visible && (!changes.visible.isFirstChange() || changes.visible.currentValue)) {
-      this.visible$.next(changes.visible.currentValue);
-    }
+  constructor(
+    private cdRef: ChangeDetectorRef
+  ) { }
+
+  get visible(): boolean {
+    return this.visible$.value;
   }
 }

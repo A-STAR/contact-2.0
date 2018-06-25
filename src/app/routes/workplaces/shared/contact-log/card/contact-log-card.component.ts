@@ -89,7 +89,7 @@ export class ContactLogCardComponent implements OnInit {
 
   onBack(): void {
     const url = this.callCenter
-      ? '/app/workplaces/call-center/{campaignId}'
+      ? '/app/workplaces/call-center/{campaignId}/campaign'
       : '/app/workplaces/debtor/{debtorId}/debt/{debtId}';
     this.routingService.navigateToUrl(url);
   }

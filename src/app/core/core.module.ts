@@ -19,6 +19,7 @@ import { DebtApiService } from '@app/core/api/debt.api';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { FrameService } from '@app/core/frame/frame.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
@@ -29,7 +30,9 @@ import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
+import { TaskService } from '@app/core/task/task.service';
 import { ThemesService } from './themes/themes.service';
+import { UIService } from '@app/core/ui/ui.service';
 import { ValueConverterService } from './converter/value-converter.service';
 import { WSService } from './ws/ws.service';
 
@@ -56,7 +59,6 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
-import { TaskService } from '@app/core/task/task.service';
 
 @NgModule({
   imports: [
@@ -120,6 +122,7 @@ import { TaskService } from '@app/core/task/task.service';
     DebtApiService,
     EntityAttributesService,
     EntityTranslationsService,
+    FrameService,
     LookupService,
     GridFiltersService,
     GuiObjectsService,
@@ -133,6 +136,7 @@ import { TaskService } from '@app/core/task/task.service';
     TaskService,
     ThemesService,
     TranslateService,
+    UIService,
     ValueConverterService,
     WSService,
     environment.production
