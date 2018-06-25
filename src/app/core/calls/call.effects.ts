@@ -156,7 +156,7 @@ export class CallEffects {
     .map(([ state ]) => state.payload)
     .flatMap(statePayload =>
       this.repositoryService.fetch(Person, { id: statePayload.personId })
-        .map(person => [ statePayload, person ])
+        .map(([ person ]) => [ statePayload, person ])
     )
     .map(([ statePayload, person ]) => ({
         type: CallService.CALL_SET,
