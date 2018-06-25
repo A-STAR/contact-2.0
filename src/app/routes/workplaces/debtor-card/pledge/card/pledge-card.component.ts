@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
@@ -36,6 +35,7 @@ import { PropertyService } from '@app/routes/workplaces/core/property/property.s
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 import { editLayout, createContractLayout, createPledgorLayout, createPropertyLayout } from './layout';
 
 @Component({
@@ -154,7 +154,7 @@ export class PledgeCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly layoutConfig = this.getLayout();
 
-  private subscription = new Subscription();
+  private subscription = new SubscriptionBag();
 
   templates: Record<string, TemplateRef<any>>;
 
