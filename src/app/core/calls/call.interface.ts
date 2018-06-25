@@ -41,7 +41,27 @@ export enum PBXStateEnum {
   PBX_DIAL = 'dial'
 }
 
+export interface IPBXStatePayload {
+  pbxCallId?: number;
+  phoneId?: number;
+  debtId?: number;
+  personRole?: number;
+  personId?: number;
+  contractId?: number;
+  callTypeCode?: number;
+  afterCallPeriod?: number;
+  phoneNumber?: string;
+}
+
 export interface IPBXState {
   lineStatus: PBXStateEnum;
-  userStatus: number;
+  userStatus?: number;
+  date: string;
+  username?: string;
+  payload?: IPBXStatePayload;
+}
+
+export enum CallTypeEnum {
+  INCOMING = 0,
+  OUTGOING = 1
 }

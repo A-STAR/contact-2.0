@@ -10,23 +10,23 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { of } from 'rxjs/observable/of';
 
+import { FrameMessageType } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.interface';
 import { ICustomOperationParams } from '../custom-operation.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
-import { CustomOperationParamsService } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.service';
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
+import { FrameService } from '@app/core/frame/frame.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    CustomOperationParamsService,
-  ],
   selector: 'app-custom-operation-params',
   styleUrls: [ './custom-operation-params.component.scss' ],
   templateUrl: './custom-operation-params.component.html',
@@ -41,21 +41,23 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   @ViewChild('frame') frame: ElementRef;
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
 
+  canSubmit = false;
   config: IDynamicLayoutConfig;
 
-  private canSubmit$ = new BehaviorSubject<boolean>(false);
   private canSubmitSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private configService: ConfigService,
-    private customOperationParamsService: CustomOperationParamsService,
     private customOperationService: CustomOperationService,
     private domSanitizer: DomSanitizer,
+    private frameService: FrameService,
+    private lookupService: LookupService,
+    private userDictionariesService: UserDictionariesService,
   ) {}
 
-  get canSubmit(): boolean {
-    return this.canSubmit$.value;
+  get target(): () => Window {
+    return () => this.frame ? this.frame.nativeElement.contentWindow : null;
   }
 
   get thirdPartyUrl(): SafeUrl {
@@ -66,7 +68,15 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   }
 
   ngOnInit(): void {
-    if (!this.thirdPartyUrl) {
+    if (this.thirdPartyUrl) {
+      this.frameService.handleRequest(this.target, this.id, FrameMessageType.INIT, () => of(this.params));
+      this.frameService.handleRequest(this.target, this.id, FrameMessageType.DICTIONARY, this.getDictionaryHandler());
+      this.frameService.handleRequest(this.target, this.id, FrameMessageType.LOOKUP, this.getLookupHandler());
+      this.frameService.getRequest(this.id, FrameMessageType.VALIDATION).subscribe(message => {
+        this.canSubmit = message.params.valid;
+        this.cdRef.markForCheck();
+      });
+    } else {
       this.config = this.customOperationService.getActionInputParamsConfig(this.key, this.params);
     }
   }
@@ -75,22 +85,25 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
     if (this.layout) {
       this.canSubmitSub = this.layout.canSubmit()
         .subscribe(canSubmit => {
-          this.canSubmit$.next(canSubmit);
+          this.canSubmit = canSubmit;
           this.cdRef.markForCheck();
         });
     }
-    this.customOperationParamsService
-      .init(this.id, this.params)
-      .subscribe(message => {
-        if (this.frame && this.frame.nativeElement.contentWindow) {
-          this.frame.nativeElement.contentWindow.postMessage(message, '*');
-        }
-      });
+    // Otherwise iframe gets reloaded on every cd cycle, e.g. when `canSubmit` changes
+    this.cdRef.detach();
   }
 
   ngOnDestroy(): void {
     if (this.canSubmitSub) {
       this.canSubmitSub.unsubscribe();
     }
+  }
+
+  private getDictionaryHandler(): any {
+    return params => this.userDictionariesService.getDictionary(params.code);
+  }
+
+  private getLookupHandler(): any {
+    return params => this.lookupService.lookup(params.code);
   }
 }

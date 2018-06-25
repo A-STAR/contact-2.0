@@ -4,13 +4,17 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, filter, map } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { CallService } from '@app/core/calls/call.service';
 import { IncomingCallService } from '../../incoming-call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -25,7 +29,7 @@ import { addFormLabel } from '@app/core/utils';
   styleUrls: [ 'filter.component.scss' ],
   templateUrl: 'filter.component.html',
 })
-export class FilterComponent implements AfterViewInit, OnDestroy {
+export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private static PERSON_ROLE_INITIAL = 1;
@@ -43,12 +47,30 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
   ].map(addFormLabel('modules.incomingCall.filter.form'));
 
   private openIncomingCallDataSub: Subscription;
+  private incommingSearchSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
   ) {}
+
+  ngOnInit(): void {
+    this.incommingSearchSub = combineLatest(
+      this.route.queryParams,
+      this.callService.pbxState$.filter(state => state && !!state.payload),
+    )
+    .pipe(
+      first(),
+      filter(([ params, state ]) => !!params.phoneNumber && params.phoneNumber === state.payload.phoneNumber),
+      map(([ _, state ]) => state)
+    )
+    .subscribe(state => {
+      this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
+      this.cdRef.markForCheck();
+    });
+  }
 
   ngAfterViewInit(): void {
     const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
@@ -60,6 +82,7 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.incommingSearchSub.unsubscribe();
     if (this.openIncomingCallDataSub) {
       this.openIncomingCallDataSub.unsubscribe();
     }

@@ -15,12 +15,15 @@ import { CallService } from './calls/call.service';
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from './context/context.service';
 import { DataService } from './data/data.service';
+import { DebtApiService } from '@app/core/api/debt.api';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { FrameService } from '@app/core/frame/frame.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
+import { IncomingCallApiService } from '@app/core/api/incoming-call.api';
 import { LayoutService } from '@app/core/layout/layout.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
@@ -116,12 +119,15 @@ import 'rxjs/add/operator/withLatestFrom';
     DatePipe,
     DataService,
     DecimalPipe,
+    DebtApiService,
     EntityAttributesService,
     EntityTranslationsService,
+    FrameService,
     LookupService,
     GridFiltersService,
     GuiObjectsService,
     HelpService,
+    IncomingCallApiService,
     LayoutService,
     MetadataService,
     NotificationsService,

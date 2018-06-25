@@ -13,15 +13,19 @@ import {
   ITaskEvent,
   TaskEventType,
   TaskStatus,
+  ILetterPayload,
 } from '@app/core/task/task.interface';
 import { IWSConnection } from '@app/core/ws/ws.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { WSService } from '@app/core/ws/ws.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class TaskService {
+
+  readonly letterGeneration$ = new BehaviorSubject<ILetterPayload>(null);
 
   constructor(
     private notificationsService: NotificationsService,
@@ -35,7 +39,17 @@ export class TaskService {
       .pipe(
         mergeMap((connection: IWSConnection<ITaskEvent>) => connection.listen()),
         filter(Boolean),
-        withLatestFrom(this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)),
+        withLatestFrom(
+          this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
+            // TODO(i.kibisov): remove mock
+            .map(terms => terms.concat([{
+              code: 38,
+              isClosed: 0,
+              name: 'Массовая генерация писем',
+              parentCode: null,
+              parentDictTerm: null,
+            }]))
+        ),
       )
       .subscribe(([ task, terms ]) => {
         const term = terms.find(t => t.code === task.taskTypeCode);
@@ -109,7 +123,9 @@ export class TaskService {
   }
 
   private onLetterGeneration(task: ILetterGenerationEvent, message: string): void {
-    // TODO(d.maltsev, i.kibisov): display letter generation output
+    if (task.statusCode === TaskStatus.FINISH_SUCCESS) {
+      this.letterGeneration$.next(task.payload.letter);
+    }
     this.notificationsService
       .info('system.notifications.tasks.finish.success')
       .params({
