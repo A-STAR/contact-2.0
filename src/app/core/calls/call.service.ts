@@ -162,19 +162,25 @@ export class CallService {
     return this.store.select(state => state.calls.activeCall);
   }
 
-  get activePredictiveCall$(): Observable<boolean> {
+  get predictiveCall$(): Observable<boolean> {
     return combineLatest(
       this.pbxState$.filter(state => state && !!state.payload),
       this.route.queryParams,
     )
     .pipe(
-      map(([ state, params ]) => {
-        const postCall = state.lineStatus === PBXStateEnum.PBX_NOCALL && !!state.payload.afterCallPeriod;
-        const predictiveCall = state.lineStatus === PBXStateEnum.PBX_CALL
-          && Number(params.activePhoneId) === state.payload.phoneId;
-        return predictiveCall || postCall;
-      })
+      map(([ state, params ]) => state.lineStatus === PBXStateEnum.PBX_CALL
+        && Number(params.activePhoneId) === state.payload.phoneId
+      )
     );
+  }
+
+  get postCall$(): Observable<boolean> {
+    return this.pbxState$.filter(state => state && !!state.payload)
+      .pipe(
+        map(state =>
+          state.lineStatus === PBXStateEnum.PBX_NOCALL && !!state.payload.afterCallPeriod
+        )
+      );
   }
 
   get canMakeCall$(): Observable<boolean> {

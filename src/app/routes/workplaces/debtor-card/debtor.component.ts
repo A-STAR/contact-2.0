@@ -136,18 +136,22 @@ export class DebtorComponent implements OnInit, OnDestroy {
   }
 
   onTabClose(debtorId: number): void {
-    this.callService.activePredictiveCall$
-      .pipe(
-        first()
-      )
-      .subscribe(activePredictiveCall => {
-        if (activePredictiveCall) {
-          this.closePhoneId$.next(debtorId);
-        } else {
-          this.debtorService.removeTab(debtorId);
-        }
-        this.cdRef.markForCheck();
-      });
+    combineLatest(
+      this.callService.predictiveCall$,
+      this.callService.postCall$
+    )
+    .pipe(
+      first(),
+      map(([ predictiveCall, postCall ]) => predictiveCall || postCall)
+    )
+    .subscribe(activePredictiveCall => {
+      if (activePredictiveCall) {
+        this.closePhoneId$.next(debtorId);
+      } else {
+        this.debtorService.removeTab(debtorId);
+      }
+      this.cdRef.markForCheck();
+    });
   }
 
   onConfirmTabClose(): void {
