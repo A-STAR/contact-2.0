@@ -59,7 +59,7 @@ export class DebtApiService {
             break;
           case 1:
           default:
-            this.onAction(() => this.openByDebtId(debtId, debtorId, activePhoneId), onClose);
+            this.onAction(() => this.openByDebtId(debtId, id, activePhoneId), onClose);
             break;
         }
       });
