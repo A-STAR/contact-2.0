@@ -2022,7 +2022,8 @@
         "changeResponsible": "Перераспределение на оператора",
         "contactInvisible": "Не отображать в списке контактов",
         "fileAttachMode": "Прикрепление файлов",
-        "changeContactPerson": "Изменение контактного лица"
+        "changeContactPerson": "Изменение контактного лица",
+        "pbxResult": "Код результата автодайлера"
       }
     },
     "document": {

@@ -2022,7 +2022,8 @@
         "changeResponsible": "Changing Operator",
         "contactInvisible": "Don't Display in Contacts",
         "fileAttachMode": "Files Attachment",
-        "changeContactPerson": "Change Contact Person"
+        "changeContactPerson": "Change Contact Person",
+        "pbxResult": "Call result"
       }
     },
     "document": {

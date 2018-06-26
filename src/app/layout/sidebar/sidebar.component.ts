@@ -18,7 +18,7 @@ import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.serv
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
-  private lastDebtCardIds$ = this.coreLayoutService.lastDebtCardIds$;
+  private lastDebtors$ = this.coreLayoutService.lastDebtors$;
 
   readonly menuItems$ = combineLatest(
     this.menuService.menuItems,
@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit {
       filter(event => event instanceof NavigationEnd),
       startWith(null),
     ),
-    this.lastDebtCardIds$,
+    this.lastDebtors$,
     (items: IMenuItem[]) => items
   )
   .pipe(
@@ -77,11 +77,15 @@ export class SidebarComponent implements OnInit {
   }
 
   private getLastDebtCard(item: IMenuItem): void {
-    const lastDebtorCardIds = this.lastDebtCardIds$.value;
+    const lastDebtors = this.lastDebtors$.value;
+    const lastDebtorsLength = lastDebtors.length;
+    const hasLastDebtors = lastDebtorsLength !== 0;
 
-    if (Boolean(lastDebtorCardIds)) {
+    if (hasLastDebtors) {
+      const lastDebtorIndex = lastDebtorsLength - 1;
+      const lastDebtor = lastDebtors[lastDebtorIndex];
       const path = '/app/workplaces/debtor/';
-      const { debtorId, debtId } = lastDebtorCardIds;
+      const [ debtorId, debtId ] = lastDebtor;
       const lastDebtorCardLink = `${path}${debtorId}/debt/${debtId}`;
 
       const lastDebtorCardIndex = item.children.findIndex(e => e.link.includes(path) );

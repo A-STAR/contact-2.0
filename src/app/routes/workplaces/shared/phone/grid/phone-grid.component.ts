@@ -11,7 +11,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -32,6 +31,8 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
@@ -85,7 +86,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private person: Person;
 
-  private subs = new Subscription();
+  private subs = new SubscriptionBag();
 
   private _columns: ISimpleGridColumn<IPhone>[] = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE, minWidth: 120 },

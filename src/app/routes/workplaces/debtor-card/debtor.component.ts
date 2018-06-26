@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, switchMap, tap, filter, first } from 'rxjs/operators';
+import { map, switchMap, filter, first } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -41,7 +41,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
       (tabs: Array<Observable<ITab>>): Observable<ITab[]> =>
         tabs.length ? combineLatest(tabs) : of([])
     ),
-    tap(() => this.cdRef.markForCheck()),
   );
 
   // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
@@ -149,6 +148,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
         this.closePhoneId$.next(debtorId);
       } else {
         this.debtorService.removeTab(debtorId);
+        this.navigateToPreviousPage(debtorId);
       }
       this.cdRef.markForCheck();
     });
@@ -165,6 +165,26 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   onCloseDialog(): void {
     this.closePhoneId$.next(null);
+  }
+
+  private navigateToPreviousPage(debtorId: number): void {
+    const lastDebtors = this.debtorService.lastDebtors;
+    const lastDebtorsLength = this.debtorService.lastDebtors.length;
+    const hasLastDebtors = lastDebtorsLength !== 0;
+
+    if (hasLastDebtors) {
+      const lastDebtorIndex = lastDebtorsLength - 1;
+      const lastDebtor = lastDebtors[lastDebtorIndex];
+      const [ lastDebtorId, debtId ] = lastDebtor;
+      const hasDebtor = debtorId === lastDebtorId;
+
+      if (!hasDebtor) {
+        this.router.navigate(['/app/workplaces/debtor', lastDebtorId, 'debt', debtId]);
+      }
+
+    } else {
+      this.router.navigate(['/app/workplaces/debt-processing']);
+    }
   }
 
   private onDebtorIdOrDebtIdChange(debtorId: number, debtId: number): void {

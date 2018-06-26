@@ -164,21 +164,21 @@ export class CallService {
 
   get predictiveCall$(): Observable<boolean> {
     return combineLatest(
-      this.pbxState$.filter(state => state && !!state.payload),
+      this.pbxState$,
       this.route.queryParams,
     )
     .pipe(
-      map(([ state, params ]) => state.lineStatus === PBXStateEnum.PBX_CALL
-        && Number(params.activePhoneId) === state.payload.phoneId
+      map(([ state, params ]) =>  state && !!state.payload
+        && state.lineStatus === PBXStateEnum.PBX_CALL && Number(params.activePhoneId) === state.payload.phoneId
       )
     );
   }
 
   get postCall$(): Observable<boolean> {
-    return this.pbxState$.filter(state => state && !!state.payload)
+    return this.pbxState$
       .pipe(
-        map(state =>
-          state.lineStatus === PBXStateEnum.PBX_NOCALL && !!state.payload.afterCallPeriod
+        map(state => state && !!state.payload
+          && state.lineStatus === PBXStateEnum.PBX_NOCALL && !!state.payload.afterCallPeriod
         )
       );
   }

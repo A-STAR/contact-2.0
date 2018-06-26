@@ -70,8 +70,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -90,8 +90,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -110,8 +110,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -130,8 +130,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -150,8 +150,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -172,8 +172,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -193,8 +193,8 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ],
@@ -214,7 +214,7 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                     value: [
                       {
                         operator: ContextOperator.ENTITY_IS_USED,
-                        value: 363 + i,
+                        value: 363 + i - 1,
                       },
                       {
                         operator: ContextOperator.CONSTANT_CONTAINS,
@@ -222,11 +222,11 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                           {
                             operator: ContextOperator.PERSON_ATTRIBUTES,
                             value: {
-                              operator: ContextOperator.EVAL,
-                              value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                              operator: ContextOperator.UI_STATE,
+                              value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                             }
                           },
-                          363 + i,
+                          363 + i - 1,
                         ],
                       },
                     ],
@@ -308,11 +308,17 @@ export const createPledgorLayout: IDynamicLayoutConfig = {
                       value: [
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.pledgeValue',
+                          value: {
+                            operator: ContextOperator.UI_STATE,
+                            value: 'workplaces/debtor-card/pledge/card.propertyValue.value.pledgeValue'
+                          }
                         },
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.marketValue',
+                          value: {
+                            operator: ContextOperator.UI_STATE,
+                            value: 'workplaces/debtor-card/pledge/card.propertyValue.value.marketValue'
+                          }
                         },
                       ],
                     },

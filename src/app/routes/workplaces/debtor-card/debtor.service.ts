@@ -29,8 +29,9 @@ export class DebtorService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
-  debtors$ = new BehaviorSubject<Array<[number, number]>>([]);
+  private _lastDebtors = new Map<number, number>();
   private _debtors = new Map<number, number>();
+  debtors$ = new BehaviorSubject<Array<[number, number]>>([]);
 
   constructor(
     private dataService: DataService,
@@ -154,12 +155,16 @@ export class DebtorService {
       this.addTab(debtorId, debtId);
     }
 
-    this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
+    this.addLastDebtor(debtorId, debtId);
+
   }
 
   removeTab(debtorId: number): void {
     this._debtors.delete(debtorId);
     this.debtors$.next(this.debtors);
+
+    this._lastDebtors.delete(debtorId);
+    this.layoutService.lastDebtors$.next(this.lastDebtors);
   }
 
   closeCard(debtId: number): Observable<void> {
@@ -172,6 +177,23 @@ export class DebtorService {
   private addTab(debtorId: number, debtId: number): void {
     this._debtors.set(debtorId, debtId);
     this.debtors$.next(this.debtors);
+  }
+
+  private addLastDebtor(debtorId: number, debtId: number): void {
+
+    const hasDebtor = this._lastDebtors.has(debtorId);
+
+    if (hasDebtor) {
+      this._lastDebtors.delete(debtorId);
+    }
+
+    this._lastDebtors.set(debtorId, debtId);
+
+    this.layoutService.lastDebtors$.next(this.lastDebtors);
+  }
+
+  get lastDebtors(): Array<[number, number]> {
+    return Array.from(this._lastDebtors as Map<number, number>);
   }
 
   private get debtors(): Array<[number, number]> {

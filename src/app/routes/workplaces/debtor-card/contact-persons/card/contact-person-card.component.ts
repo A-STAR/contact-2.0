@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
@@ -34,6 +33,8 @@ import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.servic
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 import { invert } from '@app/core/utils';
+
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 import { createContactPersonLayout, editContactPersonLayout } from './layout';
 
@@ -124,7 +125,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
 
-  private subscription = new Subscription();
+  private subscription = new SubscriptionBag();
 
   readonly phoneContactType = 1;
 
