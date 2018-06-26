@@ -29,7 +29,9 @@ export class DebtorService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
+  private _lastDebtors = new Map<number, number>();
   private _debtors = new Map<number, number>();
+  debtors$ = new BehaviorSubject<Array<[number, number]>>([]);
 
   constructor(
     private dataService: DataService,
@@ -39,10 +41,6 @@ export class DebtorService {
     private workplacesService: WorkplacesService,
     private layoutService: LayoutService
   ) {}
-
-  get debtors(): IterableIterator<[number, number]> {
-    return this._debtors.entries();
-  }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
   readonly debtorId$ = new BehaviorSubject<number>(null);
@@ -149,10 +147,50 @@ export class DebtorService {
       );
   }
 
-  addTab(debtorId: number, debtId: number): void {
-    this._debtors.set(debtorId, debtId);
+  openTab(debtorId: number, debtId: number): void {
 
-    this.layoutService.lastDebtCardIds$.next({ debtorId, debtId });
+    const isDebt = this._debtors.get(debtorId) === debtId;
+
+    if (!isDebt) {
+      this.addTab(debtorId, debtId);
+    }
+
+    this.addLastDebtor(debtorId, debtId);
+
+  }
+
+  removeTab(debtorId: number): void {
+    this._debtors.delete(debtorId);
+    this.debtors$.next(this.debtors);
+
+    this._lastDebtors.delete(debtorId);
+    this.layoutService.lastDebtors$.next(this.lastDebtors);
+  }
+
+  private addTab(debtorId: number, debtId: number): void {
+    this._debtors.set(debtorId, debtId);
+    this.debtors$.next(this.debtors);
+  }
+
+  private addLastDebtor(debtorId: number, debtId: number): void {
+
+    const hasDebtor = this._lastDebtors.has(debtorId);
+
+    if (hasDebtor) {
+      this._lastDebtors.delete(debtorId);
+    }
+
+    this._lastDebtors.set(debtorId, debtId);
+
+    this.layoutService.lastDebtors$.next(this.lastDebtors);
+  }
+
+  get lastDebtors(): Array<[number, number]> {
+    return Array.from(this._lastDebtors as Map<number, number>);
+  }
+
+  private get debtors(): Array<[number, number]> {
+    return Array.from(this._debtors as Map<number, number>);
   }
 
 }
