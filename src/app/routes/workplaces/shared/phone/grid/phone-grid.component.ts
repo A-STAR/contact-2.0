@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -189,14 +189,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
     combineLatest(
       this.route.queryParams,
-      this.callService.pbxState$.filter(state => state && !!state.payload),
+      this.callService.predictiveCall$.filter(Boolean),
       this.phones$.filter(phones => !!phones.length),
       this.person$.filter(Boolean),
       this._debtId$.filter(Boolean)
     )
     .pipe(
       first(),
-      filter(([ params, state ]) => !!params.activePhoneId && +params.activePhoneId === state.payload.phoneId),
       map(([ params ]) => params)
     )
     .subscribe(params => {

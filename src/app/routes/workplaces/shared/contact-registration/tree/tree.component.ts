@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
@@ -37,7 +36,6 @@ export class TreeComponent implements OnInit, OnDestroy {
     private contactRegistrationService: ContactRegistrationService,
     private cdRef: ChangeDetectorRef,
     private domSanitizer: DomSanitizer,
-    private route: ActivatedRoute,
     private workplacesService: WorkplacesService,
   ) {}
 
@@ -70,16 +68,14 @@ export class TreeComponent implements OnInit, OnDestroy {
       });
 
     this.treeIntermediateSub = combineLatest(
-      this.callService.pbxState$.filter(state => state && !!state.payload),
-      this.route.queryParams,
-      this.selectedNode$.filter(Boolean)
+      this.callService.pbxState$,
+      this.selectedNode$.filter(Boolean),
+      combineLatest(this.callService.predictiveCall$, this.callService.postCall$)
+        .pipe(
+          filter(([ predictiveCall, postCall ]) => predictiveCall || postCall)
+        )
     )
-    .pipe(
-      filter(([ state, params, _ ]) =>
-        params.activePhoneId && (Number(params.activePhoneId) === state.payload.phoneId || !!state.payload.afterCallPeriod)
-      )
-    )
-    .subscribe(([ state, _, node ]) => this.callService.sendContactTreeIntermediate(
+    .subscribe(([ state, node ]) => this.callService.sendContactTreeIntermediate(
       state.payload.pbxCallId,
       node.data.code,
       state.payload.phoneId,

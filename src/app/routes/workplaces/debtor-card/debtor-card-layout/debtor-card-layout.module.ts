@@ -15,8 +15,6 @@ import { RegisterContactModule } from '../register-contact/register-contact.modu
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '../../shared/shared.module';
 
-import { DebtorCardLayoutService } from '@app/routes/workplaces/debtor-card/debtor-card-layout/debtor-card-layout.service';
-
 import { DebtorCardLayoutComponent } from './debtor-card-layout.component';
 
 const routes: Routes = [
@@ -52,8 +50,5 @@ const routes: Routes = [
   exports: [
     RouterModule,
   ],
-  providers: [
-    DebtorCardLayoutService
-  ]
 })
 export class DebtorCardLayoutModule {}

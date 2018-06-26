@@ -7,18 +7,21 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { map, switchMap, filter, first, flatMap } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { CallService } from '@app/core/calls/call.service';
 import { DebtorService } from './debtor.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
+import { ProgressBarService } from '@app/shared/components/progressbar/progressbar.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,12 +56,15 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 
+  readonly closePhoneId$ = new BehaviorSubject<number>(null);
+
   private subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private contactRegistrationService: ContactRegistrationService,
     private debtorService: DebtorService,
     private repositoryService: RepositoryService,
@@ -130,13 +136,51 @@ export class DebtorComponent implements OnInit, OnDestroy {
   }
 
   onTabClose(debtorId: number): void {
-    this.debtorService.removeTab(debtorId);
+    combineLatest(
+      this.callService.predictiveCall$,
+      this.callService.postCall$
+    )
+    .pipe(
+      first(),
+      map(([ predictiveCall, postCall ]) => predictiveCall || postCall)
+    )
+    .subscribe(activePredictiveCall => {
+      if (activePredictiveCall) {
+        this.closePhoneId$.next(debtorId);
+      } else {
+        this.closeTab(debtorId);
+      }
+      this.cdRef.markForCheck();
+    });
+  }
 
+  onConfirmTabClose(): void {
+    const debtorId = this.closePhoneId$.value;
+    this.debtorService.closeCard(debtorId)
+      .pipe(
+        flatMap(() => this.callService.postCall$),
+        first(),
+      )
+      .subscribe(postCall => {
+        this.closeTab(debtorId);
+        this.closePhoneId$.next(null);
+
+        if (postCall) {
+          this.debtorService.dispatchAction<void>(ProgressBarService.MESSAGE_PROGRESS_STOP);
+        }
+      });
+  }
+
+  onCloseDialog(): void {
+    this.closePhoneId$.next(null);
+  }
+
+  private closeTab(debtorId: number): void {
+    this.debtorService.removeTab(debtorId);
     this.navigateToPreviousPage(debtorId);
   }
 
   private navigateToPreviousPage(debtorId: number): void {
-
     const lastDebtors = this.debtorService.lastDebtors;
     const lastDebtorsLength = this.debtorService.lastDebtors.length;
     const hasLastDebtors = lastDebtorsLength !== 0;

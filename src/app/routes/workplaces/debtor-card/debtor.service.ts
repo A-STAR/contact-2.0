@@ -1,6 +1,8 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, switchMap, map, distinctUntilChanged, catchError } from 'rxjs/operators';
@@ -8,8 +10,10 @@ import { filter, switchMap, map, distinctUntilChanged, catchError } from 'rxjs/o
 import { equals } from 'ramda';
 
 import { Debt, Person } from '@app/entities';
+import { IAppState } from '@app/core/state/state.interface';
 import { IDebtNextCall, IAddressOrPhone } from './debtor.interface';
 
+import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
@@ -18,7 +22,7 @@ import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 import { LayoutService } from '@app/core/layout/layout.service';
 
 @Injectable()
-export class DebtorService {
+export class DebtorService extends AbstractActionService {
 
   static CONTACT_TYPE_INCOMING_CALL = 1;
   static CONTACT_TYPE_OUTGOING_CALL = 2;
@@ -34,13 +38,17 @@ export class DebtorService {
   debtors$ = new BehaviorSubject<Array<[number, number]>>([]);
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private repo: RepositoryService,
     private userPermissionsService: UserPermissionsService,
     private workplacesService: WorkplacesService,
-    private layoutService: LayoutService
-  ) {}
+    private layoutService: LayoutService,
+    protected store: Store<IAppState>
+  ) {
+    super();
+  }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
   readonly debtorId$ = new BehaviorSubject<number>(null);
@@ -165,6 +173,13 @@ export class DebtorService {
 
     this._lastDebtors.delete(debtorId);
     this.layoutService.lastDebtors$.next(this.lastDebtors);
+  }
+
+  closeCard(debtId: number): Observable<void> {
+    return this.dataService.create('/pbx/debt/{debtId}/closeCard', { debtId }, {})
+      .pipe(
+        catchError(this.notificationsService.error('debt.close.error').dispatchCallback()),
+      );
   }
 
   private addTab(debtorId: number, debtId: number): void {

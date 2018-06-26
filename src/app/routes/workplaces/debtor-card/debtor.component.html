@@ -15,3 +15,13 @@
     </split>
   </div>
 </div>
+
+<app-dialog-action
+  *ngIf="closePhoneId$ | async"
+  titleTranslationKey="debtor.close.dialog.title"
+  actionTranslationKey="debtor.close.dialog.message"
+  actionMessage="default.buttons.close"
+  actionMode="warning"
+  (action)="onConfirmTabClose()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>

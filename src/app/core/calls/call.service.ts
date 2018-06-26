@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -59,6 +60,7 @@ export class CallService {
 
   constructor(
     private authService: AuthService,
+    private route: ActivatedRoute,
     private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
     private persistenceService: PersistenceService,
@@ -158,6 +160,27 @@ export class CallService {
 
   get activeCall$(): Observable<ICall> {
     return this.store.select(state => state.calls.activeCall);
+  }
+
+  get predictiveCall$(): Observable<boolean> {
+    return combineLatest(
+      this.pbxState$,
+      this.route.queryParams,
+    )
+    .pipe(
+      map(([ state, params ]) =>  state && !!state.payload
+        && state.lineStatus === PBXStateEnum.PBX_CALL && Number(params.activePhoneId) === state.payload.phoneId
+      )
+    );
+  }
+
+  get postCall$(): Observable<boolean> {
+    return this.pbxState$
+      .pipe(
+        map(state => state && !!state.payload
+          && state.lineStatus === PBXStateEnum.PBX_NOCALL && !!state.payload.afterCallPeriod
+        )
+      );
   }
 
   get canMakeCall$(): Observable<boolean> {
