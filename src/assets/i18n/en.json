@@ -2277,6 +2277,7 @@
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",
+        "phone": "Phone number",
         "stopAutoSms": "Stop automatic SMS",
         "stopAutoInfo": "Stop automatic voicemail",
         "comment": "Comment"
