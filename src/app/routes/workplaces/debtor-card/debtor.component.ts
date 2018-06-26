@@ -132,6 +132,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   onTabClose(debtorId: number): void {
     this.debtorService.removeTab(debtorId);
+    this.router.navigate(['/app/workplaces/debt-processing']);
     this.cdRef.markForCheck();
   }
 
