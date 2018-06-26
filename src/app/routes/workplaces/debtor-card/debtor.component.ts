@@ -132,8 +132,29 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   onTabClose(debtorId: number): void {
     this.debtorService.removeTab(debtorId);
-    this.router.navigate(['/app/workplaces/debt-processing']);
-    this.cdRef.markForCheck();
+
+    this.navigateToPreviousPage(debtorId);
+  }
+
+  private navigateToPreviousPage(debtorId: number): void {
+
+    const lastDebtors = this.debtorService.lastDebtors;
+    const lastDebtorsLength = this.debtorService.lastDebtors.length;
+    const hasLastDebtors = lastDebtorsLength !== 0;
+
+    if (hasLastDebtors) {
+      const lastDebtorIndex = lastDebtorsLength - 1;
+      const lastDebtor = lastDebtors[lastDebtorIndex];
+      const [ lastDebtorId, debtId ] = lastDebtor;
+      const hasDebtor = debtorId === lastDebtorId;
+
+      if (!hasDebtor) {
+        this.router.navigate(['/app/workplaces/debtor', lastDebtorId, 'debt', debtId]);
+      }
+
+    } else {
+      this.router.navigate(['/app/workplaces/debt-processing']);
+    }
   }
 
   private onDebtorIdOrDebtIdChange(debtorId: number, debtId: number): void {
