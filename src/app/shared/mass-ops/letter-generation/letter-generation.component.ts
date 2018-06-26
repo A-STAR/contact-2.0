@@ -154,13 +154,13 @@ export class LetterGenerationComponent implements OnInit {
           dictCode: UserDictionariesService.DICTIONARY_REGION_SORT_TYPE,
           controlType: DynamicLayoutControlType.MULTISELECT,
         },
-        // {
-        //   label: this.translateService.instant('widgets.mass.letter.dialog.reportId'),
-        //   name: 'reportId',
-        //   type: DynamicLayoutItemType.CONTROL,
-        //   lookupKey: 'letterReport',
-        //   controlType: DynamicLayoutControlType.SELECT,
-        // },
+        {
+          label: this.translateService.instant('widgets.mass.letter.dialog.reportId'),
+          name: 'reportId',
+          type: DynamicLayoutItemType.CONTROL,
+          lookupKey: 'letterReport',
+          controlType: DynamicLayoutControlType.SELECT,
+        },
       ]
     };
   }

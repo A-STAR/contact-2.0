@@ -2285,6 +2285,7 @@
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",
+        "phone": "Phone number",
         "stopAutoSms": "Stop automatic SMS",
         "stopAutoInfo": "Stop automatic voicemail",
         "comment": "Comment"
@@ -2973,6 +2974,9 @@
       },
       "users": {
         "gen": { "plural": "users lookup data" }
+      },
+      "letterReport": {
+        "gen": { "plural": "lookup letter register" }
       }
     },
     "addresses": {
