@@ -38,8 +38,8 @@ export const layout: IDynamicLayoutConfig = {
             operator: ContextOperator.EQUALS,
             value: [
               {
-                operator: ContextOperator.EVAL,
-                value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
+                operator: ContextOperator.UI_STATE,
+                value: 'workplaces/debtor-card/contact-persons/card/filter.default.value.typeCode',
               },
               1,
             ]
@@ -58,8 +58,8 @@ export const layout: IDynamicLayoutConfig = {
             operator: ContextOperator.EQUALS,
             value: [
               {
-                operator: ContextOperator.EVAL,
-                value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
+                operator: ContextOperator.UI_STATE,
+                value: 'workplaces/debtor-card/contact-persons/card/filter.default.value.typeCode',
               },
               1,
             ]
@@ -92,8 +92,8 @@ export const layout: IDynamicLayoutConfig = {
             operator: ContextOperator.EQUALS,
             value: [
               {
-                operator: ContextOperator.EVAL,
-                value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
+                operator: ContextOperator.UI_STATE,
+                value: 'workplaces/debtor-card/contact-persons/card/filter.default.value.typeCode',
               },
               1,
             ]
@@ -112,8 +112,8 @@ export const layout: IDynamicLayoutConfig = {
             operator: ContextOperator.EQUALS,
             value: [
               {
-                operator: ContextOperator.EVAL,
-                value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
+                operator: ContextOperator.UI_STATE,
+                value: 'workplaces/debtor-card/contact-persons/card/filter.default.value.typeCode',
               },
               1,
             ]
@@ -133,8 +133,8 @@ export const layout: IDynamicLayoutConfig = {
             operator: ContextOperator.EQUALS,
             value: [
               {
-                operator: ContextOperator.EVAL,
-                value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
+                operator: ContextOperator.UI_STATE,
+                value: 'workplaces/debtor-card/contact-persons/card/filter.default.value.typeCode',
               },
               1,
             ],
@@ -162,8 +162,8 @@ export const layout: IDynamicLayoutConfig = {
                   {
                     operator: ContextOperator.PERSON_ATTRIBUTES,
                     value: {
-                      operator: ContextOperator.EVAL,
-                      value: 'layout.workplaces/debtor-card/contact-persons/card/filter.forms.default.value.typeCode',
+                      operator: ContextOperator.UI_STATE,
+                      value: 'workplaces/debtor-card/contact-persons/card/filter.default.value.typeCode',
                     }
                   },
                   363 + i - 1,

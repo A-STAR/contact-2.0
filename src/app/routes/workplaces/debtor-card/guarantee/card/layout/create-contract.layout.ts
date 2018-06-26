@@ -162,8 +162,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -191,8 +191,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -220,8 +220,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -249,8 +249,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -278,8 +278,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -309,8 +309,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ]
@@ -339,8 +339,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                     operator: ContextOperator.EQUALS,
                     value: [
                       {
-                        operator: ContextOperator.EVAL,
-                        value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                        operator: ContextOperator.UI_STATE,
+                        value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                       },
                       1,
                     ],
@@ -377,8 +377,8 @@ export const createContractLayout: IDynamicLayoutConfig = {
                           {
                             operator: ContextOperator.PERSON_ATTRIBUTES,
                             value: {
-                              operator: ContextOperator.EVAL,
-                              value: 'layout.workplaces/debtor-card/guarantee/card.forms.default.value.typeCode',
+                              operator: ContextOperator.UI_STATE,
+                              value: 'workplaces/debtor-card/guarantee/card.default.value.typeCode',
                             }
                           },
                           363 + i - 1,

@@ -78,11 +78,17 @@ export const createPropertyLayout: IDynamicLayoutConfig = {
                       value: [
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.pledgeValue',
+                          value: {
+                            operator: ContextOperator.UI_STATE,
+                            value: 'workplaces/debtor-card/pledge/card.propertyValue.value.pledgeValue'
+                          }
                         },
                         {
                           operator: ContextOperator.NOT_NULL,
-                          value: 'layout.workplaces/debtor-card/pledge/card.forms.propertyValue.value.marketValue',
+                          value: {
+                            operator: ContextOperator.UI_STATE,
+                            value: 'workplaces/debtor-card/pledge/card.propertyValue.value.marketValue'
+                          }
                         },
                       ],
                     },
