@@ -191,7 +191,7 @@ export class ControlService implements OnDestroy {
           distinctUntilChanged(equals),
           debounceTime(100),
         )
-        .subscribe(value => this.dispatchChangeValueAction(name, group.dirty, value));
+        .subscribe(() => this.dispatchChangeValueAction(name, group.dirty, group.getRawValue()));
       const statusSubscription = group.statusChanges
         .pipe(
           distinctUntilChanged(),
