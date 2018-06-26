@@ -176,9 +176,13 @@ export class ControlService implements OnDestroy {
       .filter(control => this.getControlForm(control.item) === name)
       .reduce((acc, control) => {
         const asyncValidators = this.getAsyncValidators(control);
+        const formControl = this.formBuilder.control(null, null, asyncValidators);
+        if (control.item.markAsDirty) {
+          formControl.markAsDirty();
+        }
         return {
           ...acc,
-          [control.item.name]: this.formBuilder.control(null, null, asyncValidators),
+          [control.item.name]: formControl,
         };
       }, {});
 
