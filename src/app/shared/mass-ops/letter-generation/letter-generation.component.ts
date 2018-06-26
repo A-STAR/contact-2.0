@@ -120,7 +120,8 @@ export class LetterGenerationComponent implements OnInit {
           label: this.translateService.instant('widgets.mass.letter.dialog.regLetter'),
           name: 'regLetter',
           type: DynamicLayoutItemType.CONTROL,
-          controlType: DynamicLayoutControlType.CHECKBOX
+          controlType: DynamicLayoutControlType.CHECKBOX,
+          markAsDirty: true
         },
         {
           label: this.translateService.instant('widgets.mass.letter.dialog.addressTypes'),
@@ -136,13 +137,15 @@ export class LetterGenerationComponent implements OnInit {
           label: this.translateService.instant('widgets.mass.letter.dialog.avoidDuplication'),
           name: 'avoidDuplication',
           type: DynamicLayoutItemType.CONTROL,
-          controlType: DynamicLayoutControlType.CHECKBOX
+          controlType: DynamicLayoutControlType.CHECKBOX,
+          markAsDirty: true
         },
         {
           label: this.translateService.instant('widgets.mass.letter.dialog.ignoreWrongAddress'),
           name: 'ignoreWrongAddress',
           type: DynamicLayoutItemType.CONTROL,
-          controlType: DynamicLayoutControlType.CHECKBOX
+          controlType: DynamicLayoutControlType.CHECKBOX,
+          markAsDirty: true
         },
         {
           label: this.translateService.instant('widgets.mass.letter.dialog.sortRule'),

@@ -23,6 +23,7 @@ export interface IDynamicLayoutGenericControl extends IDynamicLayoutGenericItem 
   name: string;
   // Optional:
   form?: string;
+  markAsDirty?: boolean;
 }
 
 export interface IDynamicLayoutSelectControl extends IDynamicLayoutGenericControl {
