@@ -11,7 +11,7 @@ export abstract class AbstractActionService {
 
   dispatchAction<T>(type: string, payload: T = null): void {
     const action: SafeAction<T> = { type, payload };
-    return this.store.dispatch(action);
+    return this.store.dispatch<SafeAction<T>>(action);
   }
 
   getAction(action: string): Actions<any> {

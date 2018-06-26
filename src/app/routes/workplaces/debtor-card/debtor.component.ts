@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, switchMap, filter, first } from 'rxjs/operators';
+import { map, switchMap, filter, first, flatMap } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -21,6 +21,7 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 import { CallService } from '@app/core/calls/call.service';
 import { DebtorService } from './debtor.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
+import { ProgressBarService } from '@app/shared/components/progressbar/progressbar.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -147,8 +148,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       if (activePredictiveCall) {
         this.closePhoneId$.next(debtorId);
       } else {
-        this.debtorService.removeTab(debtorId);
-        this.navigateToPreviousPage(debtorId);
+        this.closeTab(debtorId);
       }
       this.cdRef.markForCheck();
     });
@@ -157,14 +157,27 @@ export class DebtorComponent implements OnInit, OnDestroy {
   onConfirmTabClose(): void {
     const debtorId = this.closePhoneId$.value;
     this.debtorService.closeCard(debtorId)
-      .subscribe(() => {
-        this.debtorService.removeTab(debtorId);
+      .pipe(
+        flatMap(() => this.callService.postCall$),
+        first(),
+      )
+      .subscribe(postCall => {
+        this.closeTab(debtorId);
         this.closePhoneId$.next(null);
+
+        if (postCall) {
+          this.debtorService.dispatchAction<void>(ProgressBarService.MESSAGE_PROGRESS_STOP);
+        }
       });
   }
 
   onCloseDialog(): void {
     this.closePhoneId$.next(null);
+  }
+
+  private closeTab(debtorId: number): void {
+    this.debtorService.removeTab(debtorId);
+    this.navigateToPreviousPage(debtorId);
   }
 
   private navigateToPreviousPage(debtorId: number): void {

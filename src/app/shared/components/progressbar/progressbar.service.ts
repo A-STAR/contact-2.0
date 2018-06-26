@@ -8,7 +8,8 @@ import { AbstractActionService } from '@app/core/state/action.service';
 
 @Injectable()
 export class ProgressBarService extends AbstractActionService {
-  static MESSAGE_PROGRESS = 'MESSAGE_PROGRESS';
+  static MESSAGE_PROGRESS_START = 'MESSAGE_PROGRESS_START';
+  static MESSAGE_PROGRESS_STOP = 'MESSAGE_PROGRESS_STOP';
 
   constructor(
     protected actions: Actions,

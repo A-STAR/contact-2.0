@@ -16,6 +16,7 @@ export class ProgressbarComponent implements OnInit, OnDestroy {
 
   private interval = null;
   private intervalSub: Subscription;
+  private stopSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -23,7 +24,7 @@ export class ProgressbarComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.intervalSub = this.progressBarService.getPayload<number>(ProgressBarService.MESSAGE_PROGRESS)
+    this.intervalSub = this.progressBarService.getPayload<number>(ProgressBarService.MESSAGE_PROGRESS_START)
       .pipe(
         filter(value => value && !this.interval)
       )
@@ -31,10 +32,17 @@ export class ProgressbarComponent implements OnInit, OnDestroy {
         this.runProgress(0, 100 / value);
         this.cdRef.markForCheck();
       });
+
+    this.stopSub = this.progressBarService.getAction(ProgressBarService.MESSAGE_PROGRESS_STOP)
+      .subscribe(() => {
+        this.stopProgress();
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
     this.intervalSub.unsubscribe();
+    this.stopSub.unsubscribe();
   }
 
   get cssClass(): string {
@@ -53,10 +61,16 @@ export class ProgressbarComponent implements OnInit, OnDestroy {
       if (this.value >= 0 && this.value <= 100) {
         this.value += increase;
       } else {
-        clearInterval(this.interval);
-        this.interval = null;
-        this.value = null;
+        this.stopProgress();
       }
     }, 1000);
+  }
+
+  private stopProgress(): void {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+      this.value = null;
+    }
   }
 }

@@ -350,7 +350,9 @@ export class CallEffects {
     )
     .map(state => state.payload.afterCallPeriod)
     .distinctUntilChanged()
-    .map(afterCallPeriod => this.progressBarService.dispatchAction(ProgressBarService.MESSAGE_PROGRESS, afterCallPeriod));
+    .map(afterCallPeriod =>
+      this.progressBarService.dispatchAction<number>(ProgressBarService.MESSAGE_PROGRESS_START, afterCallPeriod)
+    );
 
   @Effect({ dispatch: false })
   pbxIncomingCallAction$ = this.actions
