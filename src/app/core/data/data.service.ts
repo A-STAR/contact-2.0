@@ -179,11 +179,17 @@ export class DataService {
     const route = this.createRoute(url, routeParams);
     const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
-    return this.http.request(method, `${rootUrl}${api}`, {
-      ...options,
-      params: this.prepareHttpParams(options.params),
-      headers: options.headers || new HttpHeaders(),
-    }).pipe(
+    return this.authService.currentUser$.pipe(
+      first(),
+      mergeMap(user => {
+        return user || !prefix
+          ? this.http.request(method, `${rootUrl}${api}`, {
+              ...options,
+              params: this.prepareHttpParams(options.params),
+              headers: options.headers || new HttpHeaders(),
+            })
+          : empty();
+      }),
       catchError(resp => {
         if (401 === resp.status) {
           this.authService.dispatchInvalidTokenAction();
@@ -194,7 +200,7 @@ export class DataService {
       }),
       finalize(() => {
         this.nRequests$.next(this.nRequests$.value - 1);
-      })
+      }),
     );
   }
 
