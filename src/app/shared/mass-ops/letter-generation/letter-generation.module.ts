@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynamic-layout.module';
+import { LetterGenerationResultModule } from '@app/shared/mass-ops/letter-generation/result/result-dialog.module';
 
 import { LetterGenerationService } from './letter-generation.service';
 
@@ -17,6 +18,7 @@ import { LetterGenerationComponent } from './letter-generation.component';
     DialogModule,
     DynamicLayoutModule,
     TranslateModule,
+    LetterGenerationResultModule
   ],
   exports: [
     LetterGenerationComponent,

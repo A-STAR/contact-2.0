@@ -42,10 +42,12 @@
       cursor: default;
     }
   }
-  &[hidden] {
-    display: none !important;
+  &.invisible {
+    visibility: hidden;
   }
   &[menu] {
+    position: absolute;
+    right: 0;
     flex-grow: 3;
     text-align: right;
   }

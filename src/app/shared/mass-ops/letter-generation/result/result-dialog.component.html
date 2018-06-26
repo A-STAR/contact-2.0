@@ -1,0 +1,26 @@
+<app-downloader
+  #downloader1
+  entityTranslationKey="entities.reports.gen.plural"
+></app-downloader>
+
+<app-downloader
+  #downloader2
+  entityTranslationKey="entities.reports.gen.plural"
+></app-downloader>
+
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.mass.letter.dialog.title' | translate }}</h3>
+  </div>
+
+  <app-dynamic-layout
+    style="height: 100px"
+    [layout]="config"
+    [data]="{ default: {} }"
+  ></app-dynamic-layout>
+
+  <div dialog-footer>
+    <app-button color="primary" type="download" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button type="close" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>

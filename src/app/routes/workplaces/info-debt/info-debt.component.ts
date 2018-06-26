@@ -115,8 +115,7 @@ export class InfoDebtComponent {
       isInitialised: false,
       actions: [
         {
-          action: 'letterExport',
-          label: 'modules.infoDebt.letter.grid',
+          action: 'letterExport'
         }
       ],
       columns: this.letterGridColumns,
