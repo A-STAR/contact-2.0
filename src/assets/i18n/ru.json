@@ -2966,6 +2966,9 @@
       },
       "users": {
         "gen": { "plural": "lookup данных пользователей" }
+      },
+      "letterReport": {
+        "gen": { "plural": "lookup реестра писем" }
       }
     },
     "addresses": {

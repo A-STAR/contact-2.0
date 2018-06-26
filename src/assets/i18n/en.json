@@ -2965,6 +2965,9 @@
       },
       "users": {
         "gen": { "plural": "users lookup data" }
+      },
+      "letterReport": {
+        "gen": { "plural": "lookup letter register" }
       }
     },
     "addresses": {
