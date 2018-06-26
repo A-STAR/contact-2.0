@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { debounceTime, distinctUntilChanged, first, map } from 'rxjs/operators';
 import { getIn } from 'immutable';
@@ -19,6 +18,8 @@ import {
 import { EventService } from '../event/event.service';
 import { UIService } from '@app/core/ui/ui.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
+
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
@@ -47,7 +48,7 @@ export class ControlService implements OnDestroy {
   private groups = new Map<string, FormGroup>();
   private key: string;
 
-  private formSubscription = new Subscription();
+  private formSubscription = new SubscriptionBag();
 
   constructor(
     private eventService: EventService,

@@ -19,7 +19,6 @@ import { never } from 'rxjs/observable/never';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
 import { IContext } from '@app/core/context/context.interface';
 import {
@@ -71,6 +70,7 @@ import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.comp
 import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -150,7 +150,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
   private preventSelect$ = new Subject<void>();
-  private subs = new Subscription();
+  private subs = new SubscriptionBag();
 
   dialog: string;
   dialogData: IGridAction;

@@ -12,7 +12,6 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
@@ -37,6 +36,8 @@ import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.servic
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 import { invert } from '@app/core/utils';
+
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 import { editLayout, createContractLayout, createGuarantorLayout } from './layout';
 
@@ -133,7 +134,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
   readonly layoutConfig = this.getLayout();
 
-  private subscription = new Subscription();
+  private subscription = new SubscriptionBag();
 
   templates: Record<string, TemplateRef<any>>;
 
@@ -247,7 +248,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     const debtId = this.route.snapshot.paramMap.get('debtId');
     const debtorId = this.route.snapshot.paramMap.get('debtorId');
     if (debtId && debtorId) {
-      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}` ]);
+      this.router.navigate([ `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit` ], { relativeTo: this.route });
     }
   }
 

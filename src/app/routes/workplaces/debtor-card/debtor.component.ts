@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, switchMap, tap, filter } from 'rxjs/operators';
+import { map, switchMap, filter } from 'rxjs/operators';
 
 import { Person } from '@app/entities';
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
@@ -39,7 +39,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
       (tabs: Array<Observable<ITab>>): Observable<ITab[]> =>
         tabs.length ? combineLatest(tabs) : of([])
     ),
-    tap(() => this.cdRef.markForCheck()),
   );
 
   // tabs$: Observable<ITab[]> = this.debtorService.debtors$.pipe(
