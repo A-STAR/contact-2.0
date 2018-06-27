@@ -90,7 +90,9 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
         });
     }
     // Otherwise iframe gets reloaded on every cd cycle, e.g. when `canSubmit` changes
-    this.cdRef.detach();
+    if (this.thirdPartyUrl) {
+      this.cdRef.detach();
+    }
   }
 
   ngOnDestroy(): void {
