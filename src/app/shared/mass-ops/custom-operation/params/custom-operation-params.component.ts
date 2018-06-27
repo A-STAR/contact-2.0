@@ -12,6 +12,7 @@ import {
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
+import { TranslateService } from '@ngx-translate/core';
 
 import { FrameMessageType } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.interface';
 import { ICustomOperationParams } from '../custom-operation.interface';
@@ -53,6 +54,7 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
     private domSanitizer: DomSanitizer,
     private frameService: FrameService,
     private lookupService: LookupService,
+    private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
@@ -70,6 +72,7 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   ngOnInit(): void {
     if (this.thirdPartyUrl) {
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.INIT, () => of(this.params));
+      this.frameService.handleRequest(this.target, this.id, FrameMessageType.LANG, () => of(this.translateService.currentLang));
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.DICTIONARY, this.getDictionaryHandler());
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.LOOKUP, this.getLookupHandler());
       this.frameService.getRequest(this.id, FrameMessageType.VALIDATION).subscribe(message => {
