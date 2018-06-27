@@ -2023,7 +2023,7 @@
         "contactInvisible": "Don't Display in Contacts",
         "fileAttachMode": "Files Attachment",
         "changeContactPerson": "Change Contact Person",
-        "pbxResult": "Call result"
+        "pbxCallResult": "Call result"
       }
     },
     "document": {
