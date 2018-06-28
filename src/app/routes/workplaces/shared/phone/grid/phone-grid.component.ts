@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -189,15 +189,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    combineLatest(
+    const contactRegisterSub = combineLatest(
       this.route.queryParams,
-      this.callService.predictiveCall$.filter(Boolean),
+      this.callService.predictiveCall$,
       this.phones$.filter(phones => !!phones.length),
       this.person$.filter(Boolean),
       this._debtId$.filter(Boolean)
     )
     .pipe(
-      first(),
+      filter(([ _, predictiveCall ]) => predictiveCall),
       map(([ params ]) => params)
     )
     .subscribe(params => {
@@ -213,6 +213,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.subs.add(callSubscription);
       this.subs.add(activeCallSubscription);
       this.subs.add(contactDetailsChangeSub);
+      this.subs.add(contactRegisterSub);
   }
 
   ngOnDestroy(): void {

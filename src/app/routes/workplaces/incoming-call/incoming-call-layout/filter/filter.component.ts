@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -59,11 +59,12 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.incommingSearchSub = combineLatest(
       this.route.queryParams,
-      this.callService.pbxState$.filter(state => state && !!state.payload),
+      this.callService.pbxState$,
     )
     .pipe(
-      first(),
-      filter(([ params, state ]) => !!params.phoneNumber && params.phoneNumber === state.payload.phoneNumber),
+      filter(([ params, state ]) =>
+        state && state.payload && params.phoneNumber && params.phoneNumber === state.payload.phoneNumber
+      ),
       map(([ _, state ]) => state)
     )
     .subscribe(state => {
