@@ -1,9 +1,9 @@
 <app-action-grid
+  rowIdKey="paymentId"
+  selectionType="single"
   [metadataKey]="'payments'"
   [persistenceKey]="'payments'"
-  rowIdKey="paymentId"
   [fullHeight]="true"
-  [ngClass]="'payments-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
   (request)="onRequest()"
