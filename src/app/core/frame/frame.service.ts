@@ -51,7 +51,12 @@ export class FrameService {
           );
         }),
       )
-      .subscribe(response => target().postMessage(response, '*'));
+      .subscribe(response => {
+        const t = target();
+        if (t) {
+          t.postMessage(response, '*');
+        }
+      });
   }
 
   sendMessage(target: Window, operationId: number, type: any, params: RequestMessageParams = {}): Observable<any> {
