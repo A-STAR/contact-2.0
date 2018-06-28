@@ -10,16 +10,10 @@ import { LayersService, LayerGroup, Layer } from '@app/core/map-providers/layers
 
 import { MAP_SERVICE } from '@app/core/map-providers/map-providers.module';
 
-type FilterFn = (layer: ILayer<any>, params?: any) => FilterResult;
+type FilterFn = (layer: ILayer<any>, params?: any) => boolean;
 
 interface IFilterFnConfig {
   [MapFilters: number]: FilterFn;
-}
-
-enum FilterResult {
-  HIDE,
-  SHOW,
-  SKIP
 }
 
 @Injectable()
@@ -33,24 +27,24 @@ export class MapFilterService<T> {
   filters: IFilterFnConfig = {
 
     [MapFilters.ADDRESS_STATUS]: (layer: ILayer<any>, params: number[]) =>
-      Number(params.includes(layer.data.statusCode)),
+      params.includes(layer.data.statusCode),
 
     [MapFilters.ADDRESS_TYPE]: (layer: ILayer<any>, params: number[]) =>
-      Number(params.includes(layer.data.addressTypeCode || layer.data.typeCode)),
+      params.includes(layer.data.addressTypeCode || layer.data.typeCode),
 
     [MapFilters.VISIT_STATUS]: (layer: ILayer<any>, params: number[]) =>
-      Number(params.includes(layer.data.visitStatus)),
+      params.includes(layer.data.visitStatus),
 
     [MapFilters.CONTACT_TYPE]: (layer: ILayer<any>, params: number[]) =>
-      Number(params.includes(layer.data.contactType)),
+      params.includes(layer.data.contactType),
 
     [MapFilters.TOGGLE_INACTIVE]: (layer: ILayer<any>, params: boolean) =>
-      !!layer.data.isInactive ? Number(params) : FilterResult.SKIP
+      Boolean(layer.data.isInactive) ? params : true
   };
 
   visibilityFilters: IFilterFnConfig = {
-    [MapFilters.TOGGLE_ADDRESSES]: (_, params: boolean) => Number(params),
-    [MapFilters.TOGGLE_ACCURACY]: (_, params: boolean) => Number(params),
+    [MapFilters.TOGGLE_ADDRESSES]: (_, params: boolean) => params,
+    [MapFilters.TOGGLE_ACCURACY]: (_, params: boolean) => params,
   };
 
   private _filters: IMapFilterMultiSelectOptions;
@@ -62,16 +56,6 @@ export class MapFilterService<T> {
 
   applyFilter(item: IMapToolbarFilterItem, params: any): void {
     switch (item.filter) {
-      case MapFilters.TOGGLE_ALL:
-        if (params) {
-          // NOTE: visibility filters are not affected
-          this._setActiveFilters(this._filters);
-          this.onFilterChange();
-        } else {
-          this.activeFilters.clear();
-          this.layersService.hide();
-        }
-        break;
       case MapFilters.RESET:
         this.restoreFilters();
         this.onFilterChange();
@@ -124,16 +108,13 @@ export class MapFilterService<T> {
     }
   }
 
-  setActiveFilters( filters: IMapFilterMultiSelectOptions, showAll: boolean = true): void {
+  setActiveFilters( filters: IMapFilterMultiSelectOptions): void {
     this._filters = filters;
-    if (showAll) {
-      this._setActiveFilters(filters);
-    } else {
-      this.activeFilters.clear();
-    }
+    this._setActiveFilters(filters);
     this._setActiveVisibilityFilters(filters);
     this.originalFilters = new Map(this.activeFilters);
     this.originalVisibilityFilters = new Map(this.activeVisibilityFilters);
+    this.onFilterChange();
   }
 
   private restoreFilters(): void {
@@ -167,27 +148,24 @@ export class MapFilterService<T> {
       .forEach(l => {
         const layer = l.isGroup ? (l as LayerGroup<T>).getLayersByType(LayerType.MARKER)[0] : l as Layer<T>;
         if (layer) {
-          const filterResult = this.applyFilters(layer);
-          if (filterResult === FilterResult.SHOW) {
+          const show = this.applyFilters(layer);
+          if (show) {
             l.show();
             if (l.isGroup) {
               this.applyVisibilityFilters(l as LayerGroup<T>);
             }
-          } else if (filterResult === FilterResult.HIDE) {
+          } else {
             l.hide();
           }
         }
       });
   }
 
-  private applyFilters(layer: ILayer<any>): FilterResult {
-    let result = FilterResult.HIDE;
+  private applyFilters(layer: ILayer<any>): boolean {
+    let result = true;
     this.activeFilters.forEach((value, id) => {
       if (typeof this.filters[id] === 'function') {
-        const _res = this.filters[id](layer, value);
-        if (_res !== FilterResult.SKIP) {
-          result = result || _res;
-        }
+        result = result && this.filters[id](layer, value);
       }
     });
     return result;

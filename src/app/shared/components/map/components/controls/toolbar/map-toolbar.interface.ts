@@ -35,7 +35,6 @@ export interface IMapToolbarFilterItem extends IMapToolbarItem {
   filter?: MapFilters;
   dictCode?: number;
   lookupKey?: string;
-  checked?: boolean;
   preserveOnClick?: boolean;
   multi?: boolean;
   value?: any;

@@ -159,16 +159,6 @@ export class ContactComponent implements OnInit {
             enabled: of(true),
             children: [
               {
-                type: MapToolbarItemType.CHECKBOX,
-                filter: MapFilters.TOGGLE_ALL,
-                label: 'massOperations.addressesByContacts.filter.showAllAdresses',
-                enabled: of(true),
-                checked: true
-              },
-              {
-                type: MapToolbarItemType.SEPARATOR,
-              },
-              {
                 type: MapToolbarItemType.DICTIONARY,
                 filter: MapFilters.ADDRESS_TYPE,
                 label: 'massOperations.addressesByContacts.filter.filterByAddressType',
@@ -191,13 +181,11 @@ export class ContactComponent implements OnInit {
                 type: MapToolbarItemType.CHECKBOX,
                 filter: MapFilters.TOGGLE_ADDRESSES,
                 label: 'massOperations.addressesByContacts.filter.hideAddresses',
-                checked: false
               },
               {
                 type: MapToolbarItemType.CHECKBOX,
                 filter: MapFilters.TOGGLE_ACCURACY,
                 label: 'massOperations.addressesByContacts.filter.hideAccuracy',
-                checked: false
               },
               {
                 type: MapToolbarItemType.SEPARATOR,

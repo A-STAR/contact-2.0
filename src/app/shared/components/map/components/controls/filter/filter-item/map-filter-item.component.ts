@@ -53,7 +53,7 @@ export class MapFilterItemComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     if (this.tickCmp && this.filterId != null) {
-      this.ready$.next({ [this.filterId] : this.config.checked });
+      this.ready$.next({ [this.filterId] : true });
     }
   }
 
@@ -63,7 +63,6 @@ export class MapFilterItemComponent implements AfterViewInit, OnInit {
     }
     if (this.tickCmp) {
       this.tickCmp.writeValue(value);
-      this.config.checked = value;
     }
 
     this.cdRef.markForCheck();
