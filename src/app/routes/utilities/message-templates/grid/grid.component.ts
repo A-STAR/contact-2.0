@@ -15,7 +15,7 @@ import { TickRendererComponent } from '@app/shared/components/grids/renderers/ti
 import { DialogFunctions } from '@app/core/dialog';
 import { HtmlRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { addGridLabel, combineLatestAnd } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,8 +87,11 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     this.fetch();
   }
 
-  onSelect(template: IMessageTemplate): void {
-    this.selectedTemplateId$.next(template.id);
+  onSelect(templates: IMessageTemplate[]): void {
+    const templateId = isEmpty(templates)
+      ? null
+      : templates[0].id;
+    this.selectedTemplateId$.next(templateId);
   }
 
   onDblClick(template: IMessageTemplate): void {
