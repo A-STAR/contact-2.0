@@ -3,8 +3,7 @@ import {
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
 
 export enum MapFilters {
-  TOGGLE_ALL = 1,
-  RESET,
+  RESET = 1,
   TOGGLE_INACTIVE,
   ADDRESS_TYPE,
   VISIT_STATUS,

@@ -49,7 +49,7 @@
     [label]="config.label"
     class="dropdown-item-control"
     [disabled]="isDisabled(config) | async"
-    [ngModel]="config.checked"
+    [ngModel]="true"
     (ngModelChange)="onAction($event)"
   >
   </app-tick>

@@ -64,16 +64,6 @@ export class AddressComponent implements OnInit {
           enabled: of(true),
           children: [
             {
-              type: MapToolbarItemType.CHECKBOX,
-              filter: MapFilters.TOGGLE_ALL,
-              label: 'massOperations.addressesByContacts.filter.showAllAdresses',
-              enabled: of(true),
-              checked: true
-            },
-            {
-              type: MapToolbarItemType.SEPARATOR,
-            },
-            {
               type: MapToolbarItemType.DICTIONARY,
               filter: MapFilters.ADDRESS_TYPE,
               label: 'massOperations.addressesByContacts.filter.filterByAddressType',
@@ -97,7 +87,6 @@ export class AddressComponent implements OnInit {
               filter: MapFilters.TOGGLE_INACTIVE,
               label: 'massOperations.addressesByContacts.filter.showInactives',
               enabled: this.userPermissionsService.has('MAP_INACTIVE_ADDRESS_VIEW'),
-              checked: true,
             },
             {
               type: MapToolbarItemType.SEPARATOR,
