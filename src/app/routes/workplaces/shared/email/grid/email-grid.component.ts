@@ -60,7 +60,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   ];
   */
 
-  private debtId = Number(this.route.snapshot.paramMap.get('debtId'));
+  readonly debtId = Number(this.route.snapshot.paramMap.get('debtId'));
 
   private _emails: Array<any> = [];
   private canViewSubscription: Subscription;

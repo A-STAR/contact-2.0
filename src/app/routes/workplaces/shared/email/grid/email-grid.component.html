@@ -20,7 +20,7 @@
 
 <app-email-grid-schedule
   *ngIf="isDialog('schedule')"
-  [debtId]="debtId$ | async"
+  [debtId]="debtId"
   [personId]="entityId"
   [personRole]="personRole"
   [emailId]="selectedEmailId$ | async"
