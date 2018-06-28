@@ -11,6 +11,9 @@ import { ConfigService } from '@app/core/config/config.service';
 
 @Injectable()
 export class WSService {
+  static EVENT_TYPE_HEARTBEAT_INTERVAL = 30000;
+  static EVENT_TYPE_HEARTBEAT = 'heartbeat';
+
   constructor(
     private authService: AuthService,
     private configService: ConfigService,
@@ -42,10 +45,19 @@ export class WSService {
   }
 
   private createWSConnection<T>(socket: WebSocket, listener: BehaviorSubject<T>): IWSConnection<T> {
+    const interval = setInterval(
+      () => {
+        if (socket.readyState === socket.OPEN) {
+          socket.send(JSON.stringify({ eventType: WSService.EVENT_TYPE_HEARTBEAT }));
+        }
+      },
+      WSService.EVENT_TYPE_HEARTBEAT_INTERVAL
+    );
     return {
       listen: () => listener.asObservable(),
       send: msg => socket.send(msg),
       close: () => {
+        clearInterval(interval);
         listener.unsubscribe();
         socket.close();
       }
