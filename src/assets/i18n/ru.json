@@ -2023,7 +2023,7 @@
         "contactInvisible": "Не отображать в списке контактов",
         "fileAttachMode": "Прикрепление файлов",
         "changeContactPerson": "Изменение контактного лица",
-        "pbxResult": "Код результата автодайлера"
+        "pbxCallResult": "Код результата автодайлера"
       }
     },
     "document": {

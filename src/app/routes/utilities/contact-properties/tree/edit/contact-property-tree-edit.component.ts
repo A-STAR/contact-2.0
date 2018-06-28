@@ -244,7 +244,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
               { controlName: 'promiseMode', ...promiseOptions },
               { controlName: 'paymentMode', ...promiseOptions },
               { controlName: 'callReasonMode', ...modeOptions },
-              { controlName: 'pbxResult', type: 'number' }
+              { controlName: 'pbxCallResult', type: 'number' }
             ]
           },
           {
