@@ -59,7 +59,7 @@
                 ]
               },
               "id": 10,
-              "label": "Start",
+              "label": "routes.utilities.campaigns.genesys.operations.start",
               "params": {
                 "campaignId": {
                   "operator": "uiState",
@@ -81,7 +81,7 @@
                 ]
               },
               "id": 11,
-              "label": "Stop",
+              "label": "routes.utilities.campaigns.genesys.operations.stop",
               "params": {
                 "campaignId": {
                   "operator": "uiState",
@@ -118,7 +118,7 @@
                 ]
               },
               "id": 9,
-              "label": "Load",
+              "label": "routes.utilities.campaigns.genesys.operations.load",
               "params": {
                 "campaignId": {
                   "operator": "uiState",
@@ -155,7 +155,7 @@
                 ]
               },
               "id": 12,
-              "label": "Unload",
+              "label": "routes.utilities.campaigns.genesys.operations.unload",
               "params": {
                 "campaignId": {
                   "operator": "uiState",
@@ -195,7 +195,7 @@
                 ]
               },
               "id": 14,
-              "label": "Set Mode",
+              "label": "routes.utilities.campaigns.genesys.operations.setMode",
               "params": {
                 "campaignId": {
                   "operator": "uiState",
