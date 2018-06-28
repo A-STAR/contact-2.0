@@ -11,6 +11,7 @@ import {
   IContactRegistrationParams,
   IContactRegistrationStatus,
   IOutcome,
+  CompleteStatus,
 } from './contact-registration.interface';
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
@@ -33,12 +34,9 @@ export class ContactRegistrationService {
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
   private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
   private _attachmentChange: Function;
+  private _completeStatus = CompleteStatus.None;
 
-  readonly contactPersonChange$ = new BehaviorSubject<boolean>(false);
-  readonly paymentChange$ = new BehaviorSubject<boolean>(false);
-  readonly promiseChange$ = new BehaviorSubject<boolean>(false);
-  readonly completeRegistration$ = new BehaviorSubject<boolean>(false);
-  readonly attachmentChange$ = new BehaviorSubject<boolean>(false);
+  readonly completeRegistration$ = new BehaviorSubject<CompleteStatus>(CompleteStatus.None);
 
   constructor(
     private dataService: DataService,
@@ -54,8 +52,9 @@ export class ContactRegistrationService {
       )
       .subscribe(limit => this._limit$.next(limit));
 
-    this.attachmentChange$
-      .pipe(filter(Boolean))
+    this.completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .pipe(filter(status => Boolean(status & CompleteStatus.Attachment)))
       .subscribe(_ => {
         if (this._attachmentChange) {
           this._attachmentChange();
@@ -222,6 +221,27 @@ export class ContactRegistrationService {
         catchError(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback()),
       );
   }
+
+  // tslint:disable:no-bitwise
+  get completeStatus(): CompleteStatus {
+    // attachment should always emit
+    this._completeStatus |= CompleteStatus.Attachment;
+    const params = this.initData;
+
+    if (params && params.phoneId) {
+      this._completeStatus |= CompleteStatus.Phone;
+    } else {
+      this._completeStatus &= ~CompleteStatus.Phone;
+    }
+    if (params && params.addressId) {
+      this._completeStatus |= CompleteStatus.Address;
+    } else {
+      this._completeStatus &= ~CompleteStatus.Address;
+    }
+
+    return this._completeStatus;
+  }
+  // tslint:enable:no-bitwise
 
   private initRegistration(): void {
     this.guid = null;

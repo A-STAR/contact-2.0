@@ -19,6 +19,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DateTimeRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -140,8 +141,9 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.fetch());
 
     this.paymentChangeSub = this.contactRegistrationService
-      .paymentChange$
-      .filter(Boolean)
+      .completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .filter(status => Boolean(status & CompleteStatus.Payment))
       .subscribe(_ => this.fetch());
   }
 

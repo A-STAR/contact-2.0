@@ -37,6 +37,7 @@ import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 import { Debt, Person } from '@app/entities';
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -176,8 +177,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       });
 
     const contactDetailsChangeSub = this.contactRegistrationService
-      .contactPersonChange$
-      .filter(Boolean)
+      .completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .filter(status => Boolean(status & CompleteStatus.Phone))
       .subscribe(_ => this.refresh());
 
     this.person$

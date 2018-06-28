@@ -12,6 +12,7 @@ import { ContactRegistrationPhoneComponent } from './phone/phone.component';
 import { ContactSelectComponent } from './contact-select/contact-select.component';
 
 import { DialogFunctions } from '@app/core/dialog';
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,6 @@ export class EditComponent extends DialogFunctions {
 
   private isPaymentChanged = false;
   private isPromiseChanged = false;
-  private isContactChanged = false;
 
   dialog: 'confirm' | 'info';
 
@@ -199,11 +199,9 @@ export class EditComponent extends DialogFunctions {
     }
     if (this.isContactForPersonHasChosen()) {
       result.contactPerson = this.contactForPerson && this.contactForPerson.person;
-      this.isContactChanged = !!result.contactPerson;
     }
     if (result.phone && this.isContactForPhoneHasChosen()) {
       result.phone.person = this.contactForPhone && this.contactForPhone.person;
-      this.isContactChanged = !!result.phone.person;
     }
     if (result.payment) {
       delete result.payment.percentage;
@@ -247,12 +245,27 @@ export class EditComponent extends DialogFunctions {
   // }
 
   private onCompleteRegistration(): void {
-    this.contactRegistrationService.contactPersonChange$.next(this.isContactChanged);
-    this.contactRegistrationService.paymentChange$.next(this.isPaymentChanged);
-    this.contactRegistrationService.promiseChange$.next(this.isPromiseChanged);
-    this.contactRegistrationService.completeRegistration$.next(true);
-    this.contactRegistrationService.attachmentChange$.next(true);
+    this.contactRegistrationService.completeRegistration$.next(this.completeStatus);
   }
+
+  // tslint:disable:no-bitwise
+  private get completeStatus(): CompleteStatus {
+    let status = this.contactRegistrationService.completeStatus;
+
+    if (this.isPaymentChanged) {
+      status |= CompleteStatus.Payment;
+    } else {
+      status &= ~CompleteStatus.Payment;
+    }
+
+    if (this.isPromiseChanged) {
+      status |= CompleteStatus.Promise;
+    } else {
+      status &= ~CompleteStatus.Promise;
+    }
+    return status;
+  }
+  // tslint:enable:no-bitwise
 
   private getFormGroupValueRecursively(group: FormGroup): any {
     return Object.keys(group.controls).reduce((acc, key) => {
