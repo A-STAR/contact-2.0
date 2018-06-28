@@ -95,7 +95,7 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
           },
           {
             label: label('stageCode'), controlName: 'stageCode', type: 'select',
-            required: true, options: stageOptions
+            options: stageOptions
           },
           {
             label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
