@@ -48,10 +48,7 @@ import { MapFilterItemComponent } from './filter-item/map-filter-item.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapFilterComponent<T> implements AfterViewInit {
-  @Input() set config(data: IMapToolbarItem) {
-    this._config = data;
-    this._originalConfig = {...data, children: data.children.map(c => ({ ...c })) };
-  }
+  @Input() config: IMapToolbarItem;
 
   @Output() action = new EventEmitter<IMapToolbarActionData>();
 
@@ -60,20 +57,6 @@ export class MapFilterComponent<T> implements AfterViewInit {
 
   container: HTMLElement;
   private map: any;
-  private _originalConfig: IMapToolbarItem;
-  private _config: IMapToolbarItem;
-  private nonTogglableFilters = [
-    MapFilters.TOGGLE_ALL,
-    MapFilters.TOGGLE_ACCURACY,
-    MapFilters.TOGGLE_ADDRESSES,
-  ];
-  private togglableFilters = [
-    MapFilters.TOGGLE_INACTIVE,
-    MapFilters.ADDRESS_STATUS,
-    MapFilters.ADDRESS_TYPE,
-    MapFilters.CONTACT_TYPE,
-    MapFilters.VISIT_STATUS,
-  ];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService<T>,
@@ -81,9 +64,6 @@ export class MapFilterComponent<T> implements AfterViewInit {
     private mapFilterService: MapFilterService<T>,
   ) { }
 
-  get config(): IMapToolbarItem {
-    return this._config;
-  }
 
   ngAfterViewInit(): void {
     this.container = this.mapService.container;
@@ -100,6 +80,7 @@ export class MapFilterComponent<T> implements AfterViewInit {
       .subscribe((filters: IMapFilterMultiSelectOptions[] ) => {
         const normalizedFilters = filters.reduce((acc, f) => ({ ...acc, ...f }) , {});
         this.setInitialFilters(normalizedFilters);
+        this.onReset();
       });
   }
 
@@ -108,10 +89,11 @@ export class MapFilterComponent<T> implements AfterViewInit {
       this.dropdown.close();
     }
 
-    this.handleAction(action);
-
     if (action.item.filter) {
       this.mapFilterService.applyFilter(action.item, action.value);
+      if (action.item.filter === MapFilters.RESET) {
+        this.onReset();
+      }
     }
 
     if (action.item.action) {
@@ -130,66 +112,16 @@ export class MapFilterComponent<T> implements AfterViewInit {
     ].includes(item.type));
   }
 
-  private handleAction(action: IMapFilterItemAction): void {
-
-    if (action.item.filter === MapFilters.TOGGLE_ALL) {
-
-      this.items
-        .filter(item => Boolean(!this.nonTogglableFilters.includes(item.config.filter) && (item.menuSelectCmp || item.tickCmp)))
-        .forEach(item => item.changeValue(action.value));
-
-    } else if (action.item.filter === MapFilters.RESET) {
-
-      this.onReset(MapFilters.TOGGLE_ALL, true);
-      this.onReset(MapFilters.TOGGLE_ADDRESSES);
-      this.onReset(MapFilters.TOGGLE_ACCURACY);
-
-    } else if (this.togglableFilters.includes(action.item.filter)) {
-
-      const cmps = this.items.filter(item => this.togglableFilters.includes(item.config.filter) &&
-        Boolean(item.tickCmp || item.menuSelectCmp));
-
-      const allSelected = cmps.every(i => (i.menuSelectCmp && i.menuSelectCmp.allSelected) || (i.tickCmp && i.tickCmp.value));
-
-      this.changeFilterValue(MapFilters.TOGGLE_ALL, allSelected);
-    }
-
+  private onReset(): void {
+    this.items
+      .filter(item => Boolean(item.menuSelectCmp || item.tickCmp))
+      .forEach(item => item.changeValue(true));
     this.cdRef.markForCheck();
-  }
-
-  private onReset(filterType: MapFilters, doAction: boolean = false): void {
-    const config = this.getFilterConfig(filterType, this._originalConfig);
-    if (config) {
-      if (doAction) {
-        this.handleAction({ item: config, value: config.checked });
-      }
-      this.changeFilterValue(filterType, config.checked);
-    }
-  }
-
-  private changeFilterValue(filterType: MapFilters, value: any): void {
-    const cmp = this.getFilterCmp(filterType);
-    if (cmp) {
-      cmp.changeValue(value);
-    }
   }
 
   private setInitialFilters(filters: IMapFilterMultiSelectOptions): void {
-    const config = this.getFilterConfig(MapFilters.TOGGLE_ALL, this._config);
-    const checked =  (config && config.checked) || null;
-    if (config) {
-      this.handleAction({ item: config, value: config.checked });
-    }
-    this.mapFilterService.setActiveFilters(filters, checked);
+    this.mapFilterService.setActiveFilters(filters);
     this.cdRef.markForCheck();
-  }
-
-  private getFilterConfig(filterType: MapFilters, config: IMapToolbarItem): IMapToolbarFilterItem {
-    return config.children.find((c: IMapToolbarFilterItem) => c.filter === filterType);
-  }
-
-  private getFilterCmp(filterType: MapFilters): MapFilterItemComponent {
-    return this.items.find(c => c.config.filter === filterType);
   }
 
 }
