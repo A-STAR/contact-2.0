@@ -3,6 +3,14 @@
 li .menu-item {
   padding: 0;
 
+  &.menu-info:first-child {
+    cursor: default;
+    &.active,
+    &:hover {
+      color: $brand-white;
+    }
+  }
+
   i, span {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;

@@ -7,7 +7,7 @@
 
 <ul class="flex">
   <li class="flex-item" *ngIf="hasActiveCall$ | async">
-    <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)" (click)="onHoldCall()">
+    <span class="menu-item menu-info" [class.disabled]="!(canHoldCall$ | async)">
       <span>{{ activeCallNumber }} - <b>{{ activeCallPersonName }}</b></span>
     </span>
   </li>
