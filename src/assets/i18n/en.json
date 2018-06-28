@@ -312,6 +312,13 @@
               "processing": "Processing",
               "total_chains": "Total"
             }
+          },
+          "operations": {
+            "start": "Start",
+            "stop": "Stop",
+            "load": "Load",
+            "unload": "Unload",
+            "setMode": "Apply"
           }
         }
       },
