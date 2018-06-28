@@ -128,8 +128,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       .pipe(
         map((persons: Person[]): ITab => {
           const [ person ] = persons;
-          const title = `${person.lastName} ${person.firstName} ${person.middleName}`;
-
+          const title = [ person.lastName, person.firstName, person.middleName ].filter(Boolean).join(' ');
           return <ITab>{ id, title, link, closable: true };
         }),
       );
