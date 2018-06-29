@@ -28,6 +28,8 @@ import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/co
 import { addGridLabel, combineLatestAnd, combineLatestOr, isEmpty } from '@app/core/utils';
 import { Debt } from '@app/entities';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -204,6 +206,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
   private debtSubscription: Subscription;
+  private contactRegistrationSub: Subscription;
 
   private debt: Debt;
 
@@ -223,6 +226,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
@@ -260,12 +264,19 @@ export class AddressGridComponent implements OnInit, OnDestroy {
           this.clear();
         }
       });
+
+    this.contactRegistrationSub = this.contactRegistrationService
+      .completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .filter(status => Boolean(status & CompleteStatus.Address))
+      .subscribe(_ => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
+    this.contactRegistrationSub.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {

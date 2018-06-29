@@ -24,6 +24,7 @@ import {
 } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -153,8 +154,9 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       .getAction(PromiseService.MESSAGE_PROMISE_SAVED)
       .subscribe(() => this.fetch());
     this.promiseChangeSub = this.contactRegistrationService
-      .promiseChange$
-      .filter(Boolean)
+      .completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .filter(status => Boolean(status & CompleteStatus.Promise))
       .subscribe(_ => this.fetch());
   }
 
