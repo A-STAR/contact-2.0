@@ -8,6 +8,17 @@ export class RoutingService {
     private router: Router,
   ) {}
 
+  static getUrlFromRoot(route: ActivatedRoute): string {
+    return route.snapshot.pathFromRoot
+      .map(o => o.url[0])
+      .filter(Boolean)
+      .join('/');
+  }
+
+  isActiveRoute(route: ActivatedRoute): boolean {
+    return this.router.isActive(RoutingService.getUrlFromRoot(route), true);
+  }
+
   navigate(segments: string[], route: ActivatedRoute = this.route, queryParams?: Params): Promise<boolean> {
     return this.router.navigate(segments, { relativeTo: route, queryParams });
   }
