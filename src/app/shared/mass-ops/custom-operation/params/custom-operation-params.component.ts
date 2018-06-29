@@ -15,6 +15,7 @@ import { of } from 'rxjs/observable/of';
 import { TranslateService } from '@ngx-translate/core';
 
 import { FrameMessageType } from '@app/shared/mass-ops/custom-operation/params/custom-operation-params.interface';
+import { IAddOption } from '@app/shared/mass-ops/mass-operation.interface';
 import { ICustomOperationParams } from '../custom-operation.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 
@@ -34,6 +35,7 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 })
 export class CustomOperationParamsComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @Input() addOptions: IAddOption[];
   @Input() id: number;
   @Input() key: string;
   @Input() params: ICustomOperationParams[];
@@ -72,6 +74,7 @@ export class CustomOperationParamsComponent implements OnInit, AfterViewInit, On
   ngOnInit(): void {
     if (this.thirdPartyUrl) {
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.INIT, () => of(this.params));
+      this.frameService.handleRequest(this.target, this.id, FrameMessageType.OPTIONS, () => of(this.addOptions));
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.LANG, () => of(this.translateService.currentLang));
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.DICTIONARY, this.getDictionaryHandler());
       this.frameService.handleRequest(this.target, this.id, FrameMessageType.LOOKUP, this.getLookupHandler());
