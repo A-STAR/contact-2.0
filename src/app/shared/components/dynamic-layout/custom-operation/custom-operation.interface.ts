@@ -8,4 +8,7 @@ export interface IDynamicLayoutCustomOperation extends IDynamicLayoutGenericItem
   params?: {
     [key: string]: any;
   };
+  value?: {
+    [key: string]: any;
+  };
 }

@@ -23,6 +23,8 @@ export interface ICustomOperationParams {
   dictNameCode: number;
   entityTypeIds: number;
   lookupKey: number;
+  minValue: number;
+  maxValue: number;
 }
 
 export enum CustomOperation {
