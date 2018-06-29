@@ -11,6 +11,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 import { GridOptions } from 'ag-grid';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -52,16 +53,16 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
+import { ActionGridService } from './action-grid.service';
 import { ContextService } from '@app/core/context/context.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UIService } from '@app/core/ui/ui.service';
-
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
-import { ActionGridService } from './action-grid.service';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
@@ -190,6 +191,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     private contextService: ContextService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private uiService: UIService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -234,9 +238,23 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         this.gridDetails$.next(false);
       });
 
+    const permissionsSub = combineLatest(
+      this.userPermissionsService.bag(),
+      this.router.events
+        .pipe(
+          filter(event => event instanceof NavigationEnd),
+          filter(() => this.routingService.isActiveRoute(this.route))
+        )
+    )
+    .pipe(
+      filter(() => this.initialized),
+      tap(() => this.rows = [])
+    )
+    .subscribe(() => this.onRequest());
+
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
-
+    this.subs.add(permissionsSub);
   }
 
   ngOnDestroy(): void {
