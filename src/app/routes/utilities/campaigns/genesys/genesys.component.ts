@@ -80,6 +80,8 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
     this.genesysService
       .fetch(filters, params)
       .subscribe((response: IAGridResponse<IGenesysCampaign>) => {
+        // Mock for easier setMode debugging
+        // this.rows = response.data.map(item => ({ ...item, typeCode: 2, optBy: 1, optGoal: 50 }));
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();

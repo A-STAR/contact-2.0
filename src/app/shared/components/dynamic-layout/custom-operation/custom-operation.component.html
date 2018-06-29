@@ -2,6 +2,7 @@
   <div class="flex-item grow">
     <app-dynamic-layout
       *ngIf="config"
+      [data]="data$ | async"
       [layout]="config"
     ></app-dynamic-layout>
   </div>

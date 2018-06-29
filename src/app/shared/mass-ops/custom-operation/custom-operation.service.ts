@@ -125,7 +125,9 @@ export class CustomOperationService {
         };
       case OperationControlTypeEnum.NUMBER:
         return {
-          controlType: DynamicLayoutControlType.NUMBER
+          controlType: DynamicLayoutControlType.NUMBER,
+          min: param.minValue,
+          max: param.maxValue,
         };
       case OperationControlTypeEnum.TEXT:
         return {
