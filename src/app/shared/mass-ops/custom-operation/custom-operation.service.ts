@@ -88,13 +88,18 @@ export class CustomOperationService {
   }
 
   showResultMessage(result: ICustomOperationResult): void {
-    this.notificationsService
-      .info('default.dialog.result.message')
-      .params({
-        total: `${result.total}`,
-        processed: `${result.processed}`
-      })
-      .dispatch();
+    const { total, processed } = result;
+    if (total != null && processed != null) {
+      if (total && processed) {
+        this.notificationsService
+          .info('default.dialog.result.message')
+          .params({
+            total: `${total}`,
+            processed: `${processed}`,
+          })
+          .dispatch();
+      }
+    }
   }
 
   getActionInputParamsConfig(key: string, params: ICustomOperationParams[]): IDynamicLayoutConfig {
