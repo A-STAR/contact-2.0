@@ -6,16 +6,18 @@ import { catchError } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
 import {
-  IPledgeContract,
-  IPledgeContractInformation,
   IContractInformation,
   IContractPledgor,
+  IContractProperty,
+  IPledgeContract,
+  IPledgeContractInformation,
 } from './pledge.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { IProperty } from '@app/routes/workplaces/core/property/property.interface';
 
 @Injectable()
 export class PledgeService extends AbstractActionService {
@@ -58,15 +60,65 @@ export class PledgeService extends AbstractActionService {
       );
   }
 
-  addPledgor(debtId: number, contractId: number, pledgor: IContractPledgor): Observable<any> {
+  addPledgor(
+    debtId: number,
+    contractId: number,
+    pledgorId: number,
+    propertyId: number,
+    propertyValue: IContractProperty,
+  ): Observable<any> {
+    const data: IContractPledgor = {
+      personId: pledgorId,
+      properties: [
+        {
+          ...propertyValue,
+          propertyId,
+        },
+      ],
+    };
     return this.dataService
-      .create(`${this.baseUrl}/{contractId}/pledgor`, { debtId, contractId }, pledgor)
+      .create(`${this.baseUrl}/{contractId}/pledgor`, { debtId, contractId }, data)
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
-  create(debtId: number, contract: IPledgeContractInformation): Observable<any> {
+  create(
+    debtId: number,
+    pledgorId: number,
+    propertyId: number,
+    contract: IContractInformation,
+    propertyValue: IContractProperty,
+  ): Observable<any> {
+    const data: IPledgeContractInformation = {
+      ...contract,
+      pledgors: [
+        {
+          personId: pledgorId,
+          properties: [
+            {
+              ...propertyValue,
+              propertyId,
+            },
+          ],
+        },
+      ],
+    };
     return this.dataService
-      .create(this.baseUrl, { debtId }, contract)
+      .create(this.baseUrl, { debtId }, data)
+      .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
+  }
+
+  updateProperty(
+    debtId: number,
+    contractId: number,
+    pledgorId: number,
+    propertyId: number,
+    property: IProperty,
+    propertyValue: IContractProperty,
+  ): Observable<void> {
+    const params = { debtId, contractId, pledgorId, propertyId };
+    const data = { ...property, ...propertyValue };
+    return this.dataService
+      .create(`${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`, params, data)
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
