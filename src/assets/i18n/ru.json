@@ -55,20 +55,57 @@
           "card": {
             "forms": {
               "contract": {
-                "title": "Договор"
+                "title": "Договор",
+                "form": {
+                  "contractNumber": "Номер договора",
+                  "contractStartDate": "Начало",
+                  "contractEndDate": "Окончание",
+                  "comment": "Комментарий"
+                }
               },
               "pledgor": {
-                "title": "Залогодатель"
+                "title": "Залогодатель",
+                "form": {
+                  "typeCode": "Тип",
+                  "lastName": "Фамилия/Название",
+                  "firstName": "Имя",
+                  "middleName": "Отчество",
+                  "birthDate": "Дата рождения",
+                  "birthPlace": "Место рождения",
+                  "genderCode": "Пол",
+                  "familyStatusCode": "Семейное положение",
+                  "educationCode": "Образование",
+                  "stringValue1": "Строковый атрибут 1",
+                  "stringValue2": "Строковый атрибут 2",
+                  "stringValue3": "Строковый атрибут 3",
+                  "stringValue4": "Строковый атрибут 4",
+                  "stringValue5": "Строковый атрибут 5",
+                  "stringValue6": "Строковый атрибут 6",
+                  "stringValue7": "Строковый атрибут 7",
+                  "stringValue8": "Строковый атрибут 8",
+                  "stringValue9": "Строковый атрибут 9",
+                  "stringValue10": "Строковый атрибут 10",
+                  "comment": "Комментарий"
+                }
               },
               "property": {
-                "title": "Имущество"
+                "title": "Имущество",
+                "form": {
+                  "propertyName": "Название",
+                  "propertyType": "Тип",
+                  "pledgeValue": "Залоговая стоимость",
+                  "marketValue": "Рыночная стоимость",
+                  "currencyId": "Валюта"
+                }
+              },
+              "tabs": {
+                "addresses": "Адреса",
+                "documents": "Документы",
+                "emails": "Email-адреса",
+                "employment": "Трудоустройство",
+                "identification": "Удостоверения личности",
+                "phones": "Телефоны"
               }
-            },
-            "titles": {
-              "add": "Добавить договор",
-              "addPledgor": "Добавить залогодателя",
-              "addProperty": "Добавить имущество",
-              "edit": "Редактирование договора"
             }
           }
         }
@@ -296,6 +333,38 @@
                 "63": "Добавить к договору залога"
               }
             }
+          }
+        },
+        "personSearch": {
+          "title": "Выбор персоны",
+          "filter": {
+            "id": "ID",
+            "lastName": "Фамилия/Название",
+            "firstName": "Имя",
+            "middleName": "Отчество",
+            "typeCode": "Тип",
+            "birthDate": "Дата рождения",
+            "genderCode": "Пол",
+            "passportNumber": "Серия и номер паспорта",
+            "stringValue1": "Строковый атрибут 1",
+            "stringValue2": "Строковый атрибут 2",
+            "stringValue3": "Строковый атрибут 3",
+            "stringValue4": "Строковый атрибут 4",
+            "stringValue5": "Строковый атрибут 5",
+            "stringValue6": "Строковый атрибут 6",
+            "stringValue7": "Строковый атрибут 7",
+            "stringValue8": "Строковый атрибут 8",
+            "stringValue9": "Строковый атрибут 9",
+            "stringValue10": "Строковый атрибут 10"
+          }
+        },
+        "propertySearch": {
+          "title": "Выбор имущества",
+          "grid": {
+            "name": "Название",
+            "typeCode": "Тип",
+            "isConfirmed": "Подтверждено",
+            "comment": "Комментарий"
           }
         }
       }
