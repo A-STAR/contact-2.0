@@ -23,7 +23,6 @@ export class IconMenuComponent {
     private callService: CallService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private translateService: TranslateService,
   ) {}
 
   get isSearchVisible(): boolean {
@@ -64,11 +63,5 @@ export class IconMenuComponent {
   closeNavSearch(): void {
     this._isSearchVisible = false;
     this.cdRef.markForCheck();
-  }
-
-  toggleLanguage(): void {
-    // STUB: to test the language switching options, remove for production
-    const lang = this.translateService.currentLang === 'ru' ? 'en' : 'ru';
-    this.translateService.use(lang).pipe(first()).subscribe();
   }
 }
