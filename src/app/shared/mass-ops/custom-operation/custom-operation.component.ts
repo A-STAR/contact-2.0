@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 import { ICustomActionData, ICustomOperationParams } from './custom-operation.interface';
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
 @Component({
   selector: 'app-mass-custom-operation',
@@ -12,9 +22,12 @@ import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/cu
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomOperationComponent implements OnInit {
+
   @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
+
+  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
 
   result: ICustomActionData;
 
@@ -70,7 +83,12 @@ export class CustomOperationComponent implements OnInit {
     if (this.actionData.outputConfig) {
       this.result = result.data;
     } else {
-      this.customOperationService.showResultMessage(result.data[0]);
+      const data = result.data[0];
+      if (data.excelFileGuid) {
+        this.downloader.url = `/tempFiles/${data.excelFileGuid}`;
+        this.downloader.download();
+      }
+      this.customOperationService.showResultMessage(data);
       this.close.emit();
     }
   }
