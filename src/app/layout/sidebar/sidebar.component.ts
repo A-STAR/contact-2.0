@@ -92,9 +92,9 @@ export class SidebarComponent implements OnInit {
 
       if (lastDebtorCardIndex === -1) {
         const lastDebtCard: IMenuItem = {
+          icon: 'co-m-debtor-card',
           text: 'sidebar.nav.menu.DEBTOR_CARD',
           link: lastDebtorCardLink,
-          icon: 'co-m-debtor-card',
           docs: 'debt_card',
           children: null,
           permission: of(true),
