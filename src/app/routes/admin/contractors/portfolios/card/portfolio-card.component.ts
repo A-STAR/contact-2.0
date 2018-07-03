@@ -11,6 +11,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import {
   IActionType,
   IPortfolio
@@ -80,8 +81,8 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_PORTFOLIO_TYPE),
       getPortfolio$,
-      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 15),
-      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', 15),
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', EntityType.PORTFOLIO),
+      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', EntityType.PORTFOLIO),
     )
     .subscribe(([
       directionOptions,

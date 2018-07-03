@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IActionType, IContractor } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -55,10 +56,10 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
       getContractor$,
-      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 13),
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', EntityType.CONTRACTOR),
       this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW'),
       this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW'),
-      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', 13),
+      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', EntityType.CONTRACTOR),
     )
     .pipe(first())
     .subscribe(([
