@@ -4,10 +4,10 @@ import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IDocument } from '@app/routes/workplaces/core/document/document.interface';
+import { IDocument } from '@app/core/document/document.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
+import { DocumentService } from '@app/core/document/document.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -35,8 +35,8 @@ export class DocumentCardComponent implements OnInit {
   private parentUrl = this.routeData.parentUrl;
 
   private documentId = Number(this.routeParamMap.get('documentId'));
-  private entityId = Number(this.routeParamMap.get(this.entityIdKey));
   private entityTypeCode = Number(this.queryParamMap.get('entityType')) || EntityType.PERSON;
+  private entityId = Number(this.routeParamMap.get(this.entityIdKey));
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
