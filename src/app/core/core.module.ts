@@ -2,6 +2,7 @@ import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
+import { DocumentModule } from './document/document.module';
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { MapLayersModule } from '@app/core/map-providers/layers/map-layers.module';
 import { MapProvidersModule } from '@app/core/map-providers/map-providers.module';
@@ -62,6 +63,7 @@ import 'rxjs/add/operator/withLatestFrom';
 
 @NgModule({
   imports: [
+    DocumentModule,
     DynamicLoaderModule.forRoot(),
     MapLayersModule,
     MapProvidersModule,

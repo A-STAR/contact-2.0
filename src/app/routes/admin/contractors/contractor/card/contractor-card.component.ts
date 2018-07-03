@@ -32,6 +32,7 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
   canViewAttributes: boolean;
   canViewManagers: boolean;
   canViewObjects: boolean;
+  canViewDocuments: boolean;
   private editedContractorSub: Subscription;
   private contractorId: number;
 
@@ -56,13 +57,23 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
       getContractor$,
       this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 13),
       this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW'),
-      this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW')
+      this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW'),
+      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', 13),
     )
     .pipe(first())
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects, canViewManagers ]) => {
+    .subscribe(([
+      contractorTypeOptions,
+      userOptions,
+      contractor,
+      canViewAttributes,
+      canViewObjects,
+      canViewManagers,
+      canViewDocuments,
+    ]) => {
       this.canViewAttributes = canViewAttributes && contractor;
       this.canViewObjects = canViewObjects && contractor;
       this.canViewManagers = canViewManagers && contractor;
+      this.canViewDocuments = canViewDocuments && contractor;
 
       this.contractorId = contractor && contractor.id;
 
@@ -118,5 +129,9 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
 
   onObjectsClick(): void {
     this.routingService.navigate(['objects'], this.route);
+  }
+
+  onDocumentsClick(): void {
+    this.routingService.navigate(['documents'], this.route);
   }
 }
