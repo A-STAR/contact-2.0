@@ -55,20 +55,57 @@
           "card": {
             "forms": {
               "contract": {
-                "title": "Contract"
+                "title": "Contract",
+                "form": {
+                  "contractNumber": "Contract #",
+                  "contractStartDate": "Start Date",
+                  "contractEndDate": "End Date",
+                  "comment": "Comments"
+                }
               },
               "pledgor": {
-                "title": "Pledgor"
+                "title": "Pledgor",
+                "form": {
+                  "typeCode": "Type",
+                  "lastName": "Last Name/Name",
+                  "firstName": "First Name",
+                  "middleName": "Middle Name",
+                  "birthDate": "Date of Birth",
+                  "birthPlace": "Place of Birth",
+                  "genderCode": "Gender",
+                  "familyStatusCode": "Marital Status",
+                  "educationCode": "Education",
+                  "stringValue1": "String Value 1",
+                  "stringValue2": "String Value 2",
+                  "stringValue3": "String Value 3",
+                  "stringValue4": "String Value 4",
+                  "stringValue5": "String Value 5",
+                  "stringValue6": "String Value 6",
+                  "stringValue7": "String Value 7",
+                  "stringValue8": "String Value 8",
+                  "stringValue9": "String Value 9",
+                  "stringValue10": "String Value 10",
+                  "comment": "Comments"
+                }
               },
               "property": {
-                "title": "Property"
+                "title": "Property",
+                "form": {
+                  "propertyName": "Name",
+                  "propertyType": "Type",
+                  "pledgeValue": "Pledge Value",
+                  "marketValue": "Market Value",
+                  "currencyId": "Currency"
+                }
+              },
+              "tabs": {
+                "addresses": "Addresses",
+                "documents": "Documents",
+                "emails": "Emails",
+                "employment": "Employment",
+                "identification": "Identification Documents",
+                "phones": "Phones"
               }
-            },
-            "titles": {
-              "add": "Add Contract",
-              "addPledgor": "Add Pledgor",
-              "addProperty": "Add Property",
-              "edit": "Edit Contract"
             }
           }
         }
@@ -297,6 +334,38 @@
               }
             }
           }
+        }
+      },
+      "personSearch": {
+        "title": "Select Person",
+        "filter": {
+          "id": "ID",
+          "lastName": "Last Name/Name",
+          "firstName": "First Name",
+          "middleName": "Middle Name",
+          "typeCode": "Type",
+          "birthDate": "Date of Birth",
+          "genderCode": "Gender",
+          "passportNumber": "Passport Number",
+          "stringValue1": "String Value 1",
+          "stringValue2": "String Value 2",
+          "stringValue3": "String Value 3",
+          "stringValue4": "String Value 4",
+          "stringValue5": "String Value 5",
+          "stringValue6": "String Value 6",
+          "stringValue7": "String Value 7",
+          "stringValue8": "String Value 8",
+          "stringValue9": "String Value 9",
+          "stringValue10": "String Value 10"
+        }
+      },
+      "propertySearch": {
+        "title": "Select Property",
+        "grid": {
+          "name": "Name",
+          "typeCode": "Type",
+          "isConfirmed": "Is Confirmed",
+          "comment": "Comments"
         }
       }
     },

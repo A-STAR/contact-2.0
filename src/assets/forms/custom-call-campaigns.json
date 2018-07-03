@@ -202,6 +202,16 @@
                   "value": "pbxCampaigns.firstSelectedRow.id"
                 }
               },
+              "value": {
+                "optBy": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.optBy"
+                },
+                "optGoal": {
+                  "operator": "uiState",
+                  "value": "pbxCampaigns.firstSelectedRow.optGoal"
+                }
+              },
               "size": 100
             }
           ]

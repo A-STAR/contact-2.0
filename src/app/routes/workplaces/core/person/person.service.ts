@@ -29,7 +29,6 @@ export class PersonService {
 
   update(id: number, person: Partial<IPerson>): Observable<number> {
     return this.dataService.update('/persons/{id}', { id }, person).pipe(
-      map(response => response[0] && response[0].id),
       catchError(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback()),
     );
   }

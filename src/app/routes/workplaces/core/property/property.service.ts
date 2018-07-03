@@ -2,6 +2,7 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { catchError, map } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IProperty } from './property.interface';
@@ -46,8 +47,12 @@ export class PropertyService extends AbstractActionService {
   }
 
   create(personId: number, property: IProperty): Observable<IProperty> {
-    return this.dataService.create(this.baseUrl, { personId }, property)
-      .catch(this.notificationsService.createError().entity(this.entitySingular).dispatchCallback());
+    return this.dataService
+      .create(this.baseUrl, { personId }, property)
+      .pipe(
+        map(response => response.data[0] && response.data[0].id),
+        catchError(this.notificationsService.createError().entity(this.entitySingular).dispatchCallback()),
+      );
   }
 
   update(personId: number, propertyId: number, property: IProperty): Observable<any> {

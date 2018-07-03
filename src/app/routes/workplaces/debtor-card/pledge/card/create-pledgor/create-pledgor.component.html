@@ -1,0 +1,51 @@
+<app-dialog *ngIf="isDialog('person-search')" (close)="onCloseDialog()">
+  <h3>{{ 'routes.workplaces.shared.personSearch.title' | translate }}</h3>
+  <div style="height: 50vh;">
+    <app-person-search></app-person-search>
+  </div>
+  <div dialog-footer>
+    <app-button color="primary" type="ok" (click)="onPersonSearchSubmit()"></app-button>
+    <app-button icon="close" type="cancel" (click)="onCloseDialog()"></app-button>
+  </div>
+</app-dialog>
+
+<app-dialog *ngIf="isDialog('property-search')" (close)="onCloseDialog()">
+  <h3>{{ 'routes.workplaces.shared.propertySearch.title' | translate }}</h3>
+  <div style="height: 50vh;">
+    <app-property-search [personId]="pledgorId$ | async"></app-property-search>
+  </div>
+  <div dialog-footer>
+    <app-button color="primary" type="ok" (click)="onPropertySearchSubmit()"></app-button>
+    <app-button icon="close" type="cancel" (click)="onCloseDialog()"></app-button>
+  </div>
+</app-dialog>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
+  </div>
+  <div class="flex-item grow" style="overflow-y: auto;">
+    <app-dynamic-layout
+      [layout]="layoutConfig"
+      [data]="formData$ | async"
+      [templates]="templates"
+    ></app-dynamic-layout>
+  </div>
+</div>
+
+<ng-template #pledgorTitlebar>
+  <app-titlebar [titlebar]="pledgorTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #propertyTitlebar>
+  <app-titlebar [titlebar]="propertyTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #pledgorClearButton>
+  <app-button type="clear" (click)="onPledgorFormClear()"></app-button>
+</ng-template>
+
+<ng-template #propertyClearButton>
+  <app-button type="clear" (click)="onPropertyFormClear()"></app-button>
+</ng-template>

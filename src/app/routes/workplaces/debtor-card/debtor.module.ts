@@ -285,19 +285,19 @@ const routes: Routes = [
       // Pledge
       {
         path: 'edit/pledge/create',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card/create-contract/create-contract.module#PledgeCardCreateContractModule',
       },
       {
         path: 'edit/pledge/:contractId/pledgor/create',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card/create-pledgor/create-pledgor.module#PledgeCardCreatePledgorModule',
       },
       {
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/create',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card/create-property/create-property.module#PledgeCardCreatePropertyModule',
       },
       {
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card/edit-contract/edit-contract.module#PledgeCardEditContractModule',
       },
       {
         path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/phone/create',

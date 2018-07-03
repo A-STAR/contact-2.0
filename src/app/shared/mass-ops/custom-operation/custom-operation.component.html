@@ -1,7 +1,6 @@
 <app-custom-operation-input
   *ngIf="inputParamsExists && !result"
-  [id]="actionData.id"
-  [key]="'operations/' + actionData.id + '/input'"
+  [actionData]="actionData"
   [inputParams]="inputParams"
   (submit)="onSubmit($event)"
   (close)="onClose()"

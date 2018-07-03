@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map } from 'rxjs/operators';
+import { first, map, mergeMap } from 'rxjs/operators';
 
 import { ICustomOperationParams } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
 import { IDynamicLayoutConfig } from '../dynamic-layout.interface';
@@ -10,7 +11,6 @@ import { ContextService } from '@app/core/context/context.service';
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 
 import { DynamicLayoutComponent } from '../dynamic-layout.component';
-import { mergeMap } from 'rxjs/operators/mergeMap';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +22,8 @@ export class CustomOperationComponent implements OnInit {
   @Input() operation: IDynamicLayoutCustomOperation;
 
   @ViewChild(DynamicLayoutComponent) layout: DynamicLayoutComponent;
+
+  readonly data$ = new BehaviorSubject<any>({});
 
   config: IDynamicLayoutConfig;
 
@@ -57,13 +59,21 @@ export class CustomOperationComponent implements OnInit {
         this.config = config;
         this.cdRef.markForCheck();
       });
+
+    combineLatest(this.valueKeys.map(key => this.contextService.calculate(this.operation.value[key])))
+      .pipe(
+        first(),
+        map(value => this.valueKeys.reduce((acc, key, i) => ({ ...acc, [key]: value[i] }), {})),
+      )
+      .subscribe(data => this.data$.next({ default: data }));
   }
 
   onStart(): void {
     const formData = this.layout.getData();
-    const streams = this.paramKeys.map(key => this.contextService.calculate(this.operation.params[key]));
-    combineLatest(...streams)
+    const paramStreams = this.paramKeys.map(key => this.contextService.calculate(this.operation.params[key]));
+    combineLatest(...paramStreams)
       .pipe(
+        first(),
         mergeMap(params => {
           const p = this.paramKeys.reduce((acc, key, i) => ({ ...acc, [key]: params[i] }), {});
           const data = {
@@ -81,6 +91,10 @@ export class CustomOperationComponent implements OnInit {
   }
 
   private get paramKeys(): string[] {
-    return Object.keys(this.operation.params);
+    return Object.keys(this.operation.params || {});
+  }
+
+  private get valueKeys(): string[] {
+    return Object.keys(this.operation.value || {});
   }
 }

@@ -4,5 +4,6 @@ export enum FrameMessageType {
   INIT       = 'init',
   LANG       = 'lang',
   LOOKUP     = 'lookup',
+  OPTIONS    = 'options',
   VALIDATION = 'validation',
 }
