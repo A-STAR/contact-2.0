@@ -12,7 +12,7 @@ import { TYPE_CODES, getRawValue } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-grid-tick-renderer',
+  selector: 'app-grid-value-renderer',
   templateUrl: './value.component.html',
 })
 export class ValueRendererComponent implements ICellRendererAngularComp {
