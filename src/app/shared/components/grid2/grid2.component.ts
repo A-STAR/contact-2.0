@@ -107,7 +107,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!isEmpty(selection)) {
       this.selectionIds = selection.map(item => item && item[this.rowIdKey]).filter(item => item !== undefined);
       if (this.gridOptions && this.gridOptions.api && this.selectionIds) {
-        //
+        this.selectNodes(this.selectionIds);
+        this.onSelectionChanged();
         this.selectionIds = null;
       }
       this.cdRef.markForCheck();
@@ -946,7 +947,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.setSortModel();
     this.initCallbacks.forEach((cb: Function) => cb());
     if (this.selectionIds) {
-      //
+      this.selectNodes(this.selectionIds);
       this.selectionIds = null;
     }
     this.initCallbacks = [];
@@ -963,5 +964,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // shortcut: 'Alt+R'
       },
     ];
+  }
+
+  private selectNodes(ids: any[]): void {
+    this.gridOptions.api
+      .getSelectedNodes()
+      .filter(node => ids.includes(node[this.rowIdKey]))
+      .forEach(n =>  n.setSelected(true));
   }
 }
