@@ -16,7 +16,7 @@ import {
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
 import { DataService } from '@app/core/data/data.service';
-import { DocumentService } from '@app/routes/workplaces/core/document/document.service';
+import { DocumentService } from '@app/core/document/document.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
 import { RepositoryService } from '@app/core/repository/repository.service';

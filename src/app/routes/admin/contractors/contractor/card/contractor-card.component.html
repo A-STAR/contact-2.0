@@ -4,9 +4,26 @@
     <app-button color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit()"></app-button>
   </div>
   <div class="col-md-6 text-right">
-    <app-button icon="icon-people" [label]="'contractors.buttons.managers' | translate" (click)="onManagersClick()" [disabled]="!canViewManagers"></app-button>
-    <app-button icon="icon-list" [label]="'contractors.buttons.attributes' | translate" (click)="onAttributesClick()" [disabled]="!canViewAttributes"></app-button>
-    <app-button icon="fa fa-th" [label]="'contractors.buttons.objects' | translate" (click)="onObjectsClick()" [disabled]="!canViewObjects"></app-button>
+    <app-button
+      [disabled]="!canViewManagers"
+      [label]="'contractors.buttons.managers' | translate"
+      (click)="onManagersClick()"
+    ></app-button>
+    <app-button
+      [disabled]="!canViewAttributes"
+      [label]="'contractors.buttons.attributes' | translate"
+      (click)="onAttributesClick()"
+    ></app-button>
+    <app-button
+      [disabled]="!canViewObjects"
+      [label]="'contractors.buttons.objects' | translate"
+      (click)="onObjectsClick()"
+    ></app-button>
+    <app-button
+      [disabled]="!canViewDocuments"
+      [label]="'contractors.buttons.documents' | translate"
+      (click)="onDocumentsClick()"
+    ></app-button>
   </div>
 </div>
 

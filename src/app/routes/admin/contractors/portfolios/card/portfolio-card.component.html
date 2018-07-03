@@ -9,9 +9,16 @@
   </div>
 
   <div class="col-md-6 text-right">
-    <button class="btn btn-default" (click)="onAttributesClick()" [disabled]="!canViewAttributes">
-      <i class="icon-people"></i> {{ 'contractors.buttons.attributes' | translate }}
-    </button>
+    <app-button
+      [disabled]="!canViewAttributes"
+      [label]="'contractors.buttons.attributes' | translate"
+      (click)="onAttributesClick()"
+    ></app-button>
+    <app-button
+      [disabled]="!canViewDocuments"
+      [label]="'contractors.buttons.documents' | translate"
+      (click)="onDocumentsClick()"
+    ></app-button>
   </div>
 </div>
 

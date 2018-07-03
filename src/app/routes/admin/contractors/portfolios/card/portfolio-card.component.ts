@@ -34,6 +34,7 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
   controls: Array<IDynamicFormControl> = null;
   formData: IPortfolio = null;
   canViewAttributes: boolean;
+  canViewDocuments: boolean;
 
   private contractorId: number;
   private portfolioId: number;
@@ -68,46 +69,55 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       getPortfolio$,
-      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 15)
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 15),
+      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', 15),
     )
-      .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes ]) => {
+    .subscribe(([
+      directionOptions,
+      stageOptions,
+      statusOptions,
+      action,
+      canViewAttributes,
+      canViewDocuments,
+    ]) => {
 
-        const editedPortfolio = (action as any).portfolio;
-        this.canViewAttributes = canViewAttributes && editedPortfolio;
-        this.contractorId = action.contractorId;
-        this.portfolioId = editedPortfolio && editedPortfolio.id;
+      const editedPortfolio = (action as any).portfolio;
+      this.canViewAttributes = canViewAttributes && editedPortfolio;
+      this.canViewDocuments = canViewDocuments && editedPortfolio;
+      this.contractorId = action.contractorId;
+      this.portfolioId = editedPortfolio && editedPortfolio.id;
 
-        this.formData = editedPortfolio
-          ? {
-            ...editedPortfolio,
-            signDate: this.valueConverterService.fromISO(editedPortfolio.signDate as string),
-            startWorkDate: this.valueConverterService.fromISO(editedPortfolio.startWorkDate as string),
-            endWorkDate: this.valueConverterService.fromISO(editedPortfolio.endWorkDate as string),
-          }
-          : null;
+      this.formData = editedPortfolio
+        ? {
+          ...editedPortfolio,
+          signDate: this.valueConverterService.fromISO(editedPortfolio.signDate as string),
+          startWorkDate: this.valueConverterService.fromISO(editedPortfolio.startWorkDate as string),
+          endWorkDate: this.valueConverterService.fromISO(editedPortfolio.endWorkDate as string),
+        }
+        : null;
 
-        this.controls = [
-          { label: label('name'), controlName: 'name', type: 'text', required: true },
-          {
-            label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
-            disabled: !!editedPortfolio, options: directionOptions,
-            onChange: directionCode => this.onDirectionCodeChange(directionCode)
-          },
-          {
-            label: label('stageCode'), controlName: 'stageCode', type: 'select',
-            options: stageOptions
-          },
-          {
-            label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
-            disabled: editedPortfolio && editedPortfolio.directionCode === 2, options: statusOptions
-          },
-          { label: label('signDate'), controlName: 'signDate', type: 'datepicker' },
-          { label: label('startWorkDate'), controlName: 'startWorkDate', type: 'datepicker' },
-          { label: label('endWorkDate'), controlName: 'endWorkDate', type: 'datepicker' },
-          { label: label('comment'), controlName: 'comment', type: 'textarea' },
-        ];
-        this.cdRef.markForCheck();
-      });
+      this.controls = [
+        { label: label('name'), controlName: 'name', type: 'text', required: true },
+        {
+          label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
+          disabled: !!editedPortfolio, options: directionOptions,
+          onChange: directionCode => this.onDirectionCodeChange(directionCode)
+        },
+        {
+          label: label('stageCode'), controlName: 'stageCode', type: 'select',
+          options: stageOptions
+        },
+        {
+          label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
+          disabled: editedPortfolio && editedPortfolio.directionCode === 2, options: statusOptions
+        },
+        { label: label('signDate'), controlName: 'signDate', type: 'datepicker' },
+        { label: label('startWorkDate'), controlName: 'startWorkDate', type: 'datepicker' },
+        { label: label('endWorkDate'), controlName: 'endWorkDate', type: 'datepicker' },
+        { label: label('comment'), controlName: 'comment', type: 'textarea' },
+      ];
+      this.cdRef.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -148,6 +158,10 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
 
   onAttributesClick(): void {
     this.routingService.navigate([ 'attributes' ], this.route);
+  }
+
+  onDocumentsClick(): void {
+    this.routingService.navigate(['documents'], this.route);
   }
 
   onDirectionCodeChange(code: number): any {
