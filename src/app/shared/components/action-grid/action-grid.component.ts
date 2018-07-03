@@ -158,6 +158,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   displayExcelFilter = false;
   selectionActionData: IGridAction;
   selectionActionName: string;
+  selectedRows: T[];
 
   titlebar$: Observable<ITitlebar>;
   layoutConfig: IDynamicLayoutConfig = {
@@ -250,7 +251,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       filter(() => this.initialized),
       tap(() => this.rows = [])
     )
-    .subscribe(() => this.onRequest());
+    .subscribe(() => {
+      if (this.selection.length) {
+        this.selectedRows = this.selection;
+      }
+      this.onRequest();
+     });
 
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
@@ -315,8 +321,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   get selection(): T[] {
-    return this.isSimple ?
-      (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
+    if (this.grid) {
+      return this.isSimple ?
+        (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
+    }
+    return [];
   }
 
   isGridDetails(name: string): boolean {
@@ -501,6 +510,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this._columns = data.columns ? [...data.columns] : null;
     this.initialized = true;
     this.templates = { gridTpl: this.gridTpl, details: this.details };
+    if (this.selection && this.selection.length) {
+      this.selectedRows = this.selection;
+    }
     this.cdRef.markForCheck();
   }
 
