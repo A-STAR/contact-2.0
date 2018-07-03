@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { CallService } from '@app/core/calls/call.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
