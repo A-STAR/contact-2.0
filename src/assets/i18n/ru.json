@@ -1725,6 +1725,7 @@
       "directionCode": "Направление",
       "stageCode": "Стадия",
       "statusCode": "Статус",
+      "typeCode": "Тип",
       "signDate": "Дата подписания",
       "startWorkDate": "Дата начала работ",
       "endWorkDate": "Дата окончания работ",
