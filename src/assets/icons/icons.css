@@ -1,308 +1,29 @@
 @font-face {
   font-family: 'contact';
   src:
-    url('fonts/contact.ttf?ls203p') format('truetype'),
-    url('fonts/contact.woff?ls203p') format('woff'),
-    url('fonts/contact.svg?ls203p#contact') format('svg');
+    url('fonts/contact.ttf?8jmo0p') format('truetype'),
+    url('fonts/contact.woff?8jmo0p') format('woff'),
+    url('fonts/contact.svg?8jmo0p#contact') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="co-"], [class*=" co-"] {
+  display: inline-block;
+
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'contact' !important;
   speak: none;
-  line-height: 1;
-
-  display: inline-block;
-
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
   text-transform: none !important;
+  line-height: 1;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-/*
-@font-face {
-  font-family: "contact";
-  src:url("fonts/contact.eot");
-  src:url("fonts/contact.eot?#iefix") format("embedded-opentype"),
-    url("fonts/contact.woff") format("woff"),
-    url("fonts/contact.ttf") format("truetype"),
-    url("fonts/contact.svg#contact") format("svg");
-  font-weight: normal;
-  font-style: normal;
-
-}
-
-[data-icon]:before {
-  font-family: "contact" !important;
-  content: attr(data-icon);
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-[class^="co-"]:before,
-[class*=" co-"]:before {
-  font-family: "contact" !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.co-action-log:before {
-  content: "\e000";
-}
-.co-add:before {
-  content: "\e001";
-}
-.co-attributes:before {
-  content: "\e002";
-}
-.co-attributes-sm:before {
-  content: "\e003";
-}
-.co-back:before {
-  content: "\e004";
-}
-.co-calendar:before {
-  content: "\e005";
-}
-.co-call-campaigns:before {
-  content: "\e006";
-}
-.co-call-cancel:before {
-  content: "\e007";
-}
-.co-call-center:before {
-  content: "\e008";
-}
-.co-call-incoming:before {
-  content: "\e009";
-}
-.co-call-transfer:before {
-  content: "\e00a";
-}
-.co-call-unpause:before {
-  content: "\e00b";
-}
-.co-change-status:before {
-  content: "\e00c";
-}
-.co-checkbox-mark:before {
-  content: "\e00d";
-}
-.co-clear:before {
-  content: "\e00e";
-}
-.co-close:before {
-  content: "\e00f";
-}
-.co-communication-out:before {
-  content: "\e010";
-}
-.co-confirm:before {
-  content: "\e011";
-}
-.co-constants:before {
-  content: "\e012";
-}
-.co-contact-log:before {
-  content: "\e013";
-}
-.co-contact-registration:before {
-  content: "\e014";
-}
-.co-contact-tree:before {
-  content: "\e015";
-}
-.co-copy:before {
-  content: "\e016";
-}
-.co-court:before {
-  content: "\e017";
-}
-.co-currencies:before {
-  content: "\e018";
-}
-.co-data-upload:before {
-  content: "\e019";
-}
-.co-debt-list:before {
-  content: "\e01a";
-}
-.co-debt-processing:before {
-  content: "\e01b";
-}
-.co-delete:before {
-  content: "\e01c";
-}
-.co-dialog-exclamation:before {
-  content: "\e01d";
-}
-.co-dialog-info:before {
-  content: "\e01e";
-}
-.co-dialog-question:before {
-  content: "\e01f";
-}
-.co-dictionaries:before {
-  content: "\e020";
-}
-.co-download:before {
-  content: "\e021";
-}
-.co-download-excel:before {
-  content: "\e022";
-}
-.co-edit:before {
-  content: "\e023";
-}
-.co-email:before {
-  content: "\e024";
-}
-.co-exclamation-o:before {
-  content: "\e025";
-}
-.co-filter:before {
-  content: "\e026";
-}
-.co-filter-params:before {
-  content: "\e027";
-}
-.co-formulae:before {
-  content: "\e028";
-}
-.co-groups:before {
-  content: "\e029";
-}
-.co-help:before {
-  content: "\e02a";
-}
-.co-history:before {
-  content: "\e02b";
-}
-.co-home:before {
-  content: "\e02c";
-}
-.co-info-o:before {
-  content: "\e02d";
-}
-.co-legal:before {
-  content: "\e02e";
-}
-.co-load-templates:before {
-  content: "\e02f";
-}
-.co-lock:before {
-  content: "\e030";
-}
-.co-mail:before {
-  content: "\e031";
-}
-.co-managers:before {
-  content: "\e032";
-}
-.co-menu-v:before {
-  content: "\e033";
-}
-.co-message-scenarios:before {
-  content: "\e034";
-}
-.co-move:before {
-  content: "\e035";
-}
-.co-org-structure:before {
-  content: "\e036";
-}
-.co-pause:before {
-  content: "\e037";
-}
-.co-payments:before {
-  content: "\e038";
-}
-.co-picture:before {
-  content: "\e039";
-}
-.co-portfolios:before {
-  content: "\e03a";
-}
-.co-refresh:before {
-  content: "\e03b";
-}
-.co-reports:before {
-  content: "\e03c";
-}
-.co-roles:before {
-  content: "\e03d";
-}
-.co-save:before {
-  content: "\e03e";
-}
-.co-schedule:before {
-  content: "\e03f";
-}
-.co-search:before {
-  content: "\e040";
-}
-.co-search-groups:before {
-  content: "\e041";
-}
-.co-settings:before {
-  content: "\e042";
-}
-.co-sms:before {
-  content: "\e043";
-}
-.co-start:before {
-  content: "\e044";
-}
-.co-stop:before {
-  content: "\e045";
-}
-.co-tasks:before {
-  content: "\e046";
-}
-.co-template:before {
-  content: "\e047";
-}
-.co-time:before {
-  content: "\e048";
-}
-.co-undo:before {
-  content: "\e049";
-}
-.co-unlock:before {
-  content: "\e04a";
-}
-.co-upload:before {
-  content: "\e04b";
-}
-.co-users:before {
-  content: "\e04c";
-}
-.co-version-history:before {
-  content: "\e04d";
-}
-.co-visit:before {
-  content: "\e04e";
-}
- */
 
 .co-add:before {
   content: "\e900";
@@ -385,34 +106,34 @@
 .co-filter-params:before {
   content: "\e91a";
 }
-.co-m-help:before {
+.co-history:before {
   content: "\e91b";
 }
-.co-history:before {
+.co-image:before {
   content: "\e91c";
 }
-.co-image:before {
+.co-lock:before {
   content: "\e91d";
 }
-.co-lock:before {
+.co-m-action-log:before {
   content: "\e91e";
 }
-.co-m-action-log:before {
+.co-mail:before {
   content: "\e91f";
 }
-.co-mail:before {
+.co-managers:before {
   content: "\e920";
 }
-.co-managers:before {
+.co-m-attributes:before {
   content: "\e921";
 }
-.co-m-attributes:before {
+.co-m-call-campaigns:before {
   content: "\e922";
 }
-.co-m-call-campaigns:before {
+.co-m-call-center:before {
   content: "\e923";
 }
-.co-m-call-center:before {
+.co-m-call-incoming:before {
   content: "\e924";
 }
 .co-m-communication-out:before {
@@ -439,117 +160,120 @@
 .co-m-data-upload:before {
   content: "\e92c";
 }
-.co-m-debt-processing:before {
+.co-m-debtor-card:before {
   content: "\e92d";
 }
-.co-m-debts:before {
+.co-m-debt-processing:before {
   content: "\e92e";
 }
-.co-m-dictionaries:before {
+.co-m-debts:before {
   content: "\e92f";
 }
-.co-m-formulae:before {
+.co-m-dictionaries:before {
   content: "\e930";
 }
-.co-m-groups:before {
+.co-m-formulae:before {
   content: "\e931";
 }
-.co-m-home:before {
+.co-m-groups:before {
   content: "\e932";
 }
-.co-m-call-incoming:before {
+.co-m-help:before {
   content: "\e933";
 }
-.co-m-mail:before {
+.co-m-home:before {
   content: "\e934";
 }
-.co-m-message-scenarios:before {
+.co-m-mail:before {
   content: "\e935";
 }
-.co-more:before {
+.co-m-message-scenarios:before {
   content: "\e936";
 }
-.co-m-org-structure:before {
+.co-more:before {
   content: "\e937";
 }
-.co-move:before {
+.co-m-org-structure:before {
   content: "\e938";
 }
-.co-m-payments:before {
+.co-move:before {
   content: "\e939";
 }
-.co-m-portfolios:before {
+.co-m-payments:before {
   content: "\e93a";
 }
-.co-m-roles:before {
+.co-m-portfolios:before {
   content: "\e93b";
 }
-.co-m-schedule:before {
+.co-m-roles:before {
   content: "\e93c";
 }
-.co-m-search-groups:before {
+.co-m-schedule:before {
   content: "\e93d";
 }
-.co-m-tasks:before {
+.co-m-search-groups:before {
   content: "\e93e";
 }
-.co-m-upload-templates:before {
+.co-m-tasks:before {
   content: "\e93f";
 }
-.co-m-users:before {
+.co-m-upload-templates:before {
   content: "\e940";
 }
-.co-notice:before {
+.co-m-users:before {
   content: "\e941";
 }
-.co-pause:before {
+.co-notice:before {
   content: "\e942";
 }
-.co-person-params:before {
+.co-pause:before {
   content: "\e943";
 }
-.co-refresh:before {
+.co-person-params:before {
   content: "\e944";
 }
-.co-reports:before {
+.co-refresh:before {
   content: "\e945";
 }
-.co-save:before {
+.co-reports:before {
   content: "\e946";
 }
-.co-search:before {
+.co-save:before {
   content: "\e947";
 }
-.co-settings:before {
+.co-search:before {
   content: "\e948";
 }
-.co-sms:before {
+.co-settings:before {
   content: "\e949";
 }
-.co-start:before {
+.co-sms:before {
   content: "\e94a";
 }
-.co-stop:before {
+.co-start:before {
   content: "\e94b";
 }
-.co-templates:before {
+.co-stop:before {
   content: "\e94c";
 }
-.co-time:before {
+.co-templates:before {
   content: "\e94d";
 }
-.co-unlock:before {
+.co-time:before {
   content: "\e94e";
 }
 .co-undo:before {
   content: "\e94f";
 }
-.co-upload:before {
+.co-unlock:before {
   content: "\e950";
 }
-.co-version-history:before {
+.co-upload:before {
   content: "\e951";
 }
-.co-visit:before {
+.co-version-history:before {
   content: "\e952";
+}
+.co-visit:before {
+  content: "\e953";
 }
