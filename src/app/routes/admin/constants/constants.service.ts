@@ -63,8 +63,8 @@ export class ConstantsService {
     const field: string = fieldMap[typeCode];
     const body = { [field]: value };
 
-    if ([1, 4, 5, 6].includes(typeCode)) {
-      // convert to a number, including bollean value
+    if ([4, 6].includes(typeCode)) {
+      // convert to a number, including boolean value
       body[field] = Number(value);
     }
 

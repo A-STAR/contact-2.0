@@ -1725,6 +1725,7 @@
       "directionCode": "Направление",
       "stageCode": "Стадия",
       "statusCode": "Статус",
+      "typeCode": "Тип",
       "signDate": "Дата подписания",
       "startWorkDate": "Дата начала работ",
       "endWorkDate": "Дата окончания работ",
@@ -3700,24 +3701,11 @@
         "full": [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ],
         "short": [ "Янв", "Фев", "Мар", "апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек" ]
       },
-      "format": {
-        "dateTime": "DD.MM.YYYY HH:mm:ss",
-        "date": "DD.MM.YYYY",
-        "dateISO": "YYYY-MM-DD",
-        "time": "HH:mm:ss"
-      },
       "placeholders": {
         "datepicker": "Введите дату",
         "timepicker": "Введите время "
       },
       "lastMonthDay": "Последний"
-    },
-    "decimal": {
-      "format": {
-        "minIntegerDigits": 1,
-        "minFractionDigits": 0,
-        "maxFractionDigits": 2
-      }
     },
     "colors": {
       "transparent": "Прозрачный",

@@ -41,7 +41,7 @@ export class ViewFormComponent {
   getValue(item: IViewFormControl, value: any): Observable<string> {
     switch (item.type) {
       case 'date':
-        return of(this.valueConverterService.ISOToLocalDate(value));
+        return of(this.valueConverterService.toLocalDate(value));
       case 'dict':
         return item.dictCode
           ? this.userDictionariesService.getDictionary(item.dictCode).pipe(
