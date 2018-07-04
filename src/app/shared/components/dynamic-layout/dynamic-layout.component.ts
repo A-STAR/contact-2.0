@@ -63,6 +63,10 @@ export class DynamicLayoutComponent implements OnInit {
     }
   }
 
+  isValid(form?: string): Observable<boolean> {
+    return this.controlService.isValid(form);
+  }
+
   canSubmit(form?: string): Observable<boolean> {
     return this.controlService.canSubmit(form);
   }
@@ -73,6 +77,10 @@ export class DynamicLayoutComponent implements OnInit {
 
   resetForm(form?: string): void {
     this.formService.reset(form);
+  }
+
+  resetAndEnableAll(): void {
+    this.formService.resetAndEnableAll();
   }
 
   getData(form?: string): any {

@@ -134,10 +134,7 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
     };
 
     const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-      this.layout.resetForm();
-      this.layout.resetForm('contract');
-      this.layout.resetForm('property');
-      this.layout.resetForm('propertyValue');
+      this.layout.resetAndEnableAll();
     });
     this.subscriptionBag.add(routerSubscription);
   }
@@ -159,7 +156,7 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
       this.layout.canSubmit('contract'),
       this.layout.canSubmit('default'),
       this.layout.canSubmit('property'),
-      this.layout.canSubmit('propertyValue'),
+      this.layout.isValid('propertyValue'),
     )
     .subscribe(([ pledgor, property, contractValid, pledgorValid, propertyValid, propertyValueValid ]) => {
       const canSubmitPledgor = pledgor
