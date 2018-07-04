@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { map } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
@@ -20,7 +19,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dynamic-layout.component';
 
 import { Debt } from '@app/entities';
-import { invert } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,15 +35,16 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   data = new BehaviorSubject<{ default?: Debt }>({});
   templates: Record<string, TemplateRef<any>>;
 
-  isDisabled$ = of(true);
+  readonly isDisabled$ = new BehaviorSubject<boolean>(true);
   readonly isEditMode = !this.router.url.includes('edit/debt/create');
 
   readonly debtId$ = this.debtorService.debtId$;
   readonly displayDebtData = this.debtId$.pipe(map(Boolean));
   readonly canViewComponentLog$ = this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_LOG_VIEW');
   readonly canViewPortfolioLog$ = this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
-  private debtSub: Subscription;
 
+  private debtSub: Subscription;
+  private canSubmitSub: Subscription;
 
   constructor(
     private debtorService: DebtorService,
@@ -55,10 +54,8 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-
     if (this.isEditMode) {
-      this.debtSub = this.debtorService.debt$
-        .subscribe(debt => this.data.next({ default: debt }));
+      this.debtSub = this.debtorService.debt$.subscribe(debt => this.data.next({ default: debt }));
     } else {
       this.data.next({});
     }
@@ -71,9 +68,12 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.isDisabled$ = this.layout.canSubmit().pipe(
-      map(invert),
-    );
+    this.canSubmitSub = this.layout.ready$
+      .pipe(
+        filter(Boolean),
+        mergeMap(() => this.layout.canSubmit())
+      )
+      .subscribe(canSubmit => this.isDisabled$.next(!canSubmit));
   }
 
   onSubmit(): void {
@@ -105,6 +105,9 @@ export class DebtComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.debtSub) {
       this.debtSub.unsubscribe();
+    }
+    if (this.canSubmitSub) {
+      this.canSubmitSub.unsubscribe();
     }
   }
 
