@@ -117,7 +117,7 @@ export class GridService {
           // Data types
           switch (column.dataType) {
             case TYPE_CODES.DATE:
-              column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDate(value);
+              column.$$valueGetter = (value: any) => this.converterService.toLocalDate(value);
               break;
             case TYPE_CODES.DICT:
               const dictionary = dictionaries[column.dictCode];
@@ -131,7 +131,7 @@ export class GridService {
               }
               break;
             case TYPE_CODES.DATETIME:
-              column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDateTime(value);
+              column.$$valueGetter = (value: any) => this.converterService.toLocalDateTime(value);
               break;
             case TYPE_CODES.NUMBER:
             case TYPE_CODES.STRING:

@@ -158,7 +158,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // selected rows
-  get selected(): any[] {
+  get selection(): any[] {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
@@ -343,9 +343,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelectionChanged(): void {
-    const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
-    this.onSelect.emit(selected);
+    this.onSelect.emit(this.selection);
   }
 
   onCellValueChanged(event: CellValueChangedEvent): void {
@@ -542,7 +541,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private refreshRowCount(): void {
     const countText = this.translate.instant(
       'default.grid.selectedCounts',
-      { length: this.rowCount, selected: this.selected.length }
+      { length: this.rowCount, selected: this.selection.length }
     );
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
       if (i === 0) {
@@ -806,7 +805,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
         {
           actions: this.actions,
-          selected: this.selected,
+          selected: this.selection,
           selection,
           cb: (action) => this.action.emit(action)
         },

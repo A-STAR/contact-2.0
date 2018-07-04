@@ -97,7 +97,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
   @Input() titlebar: IMetadataTitlebar;
-
   @Input() fullHeight = false;
   /**
    * Shows whether to use simple grid
@@ -112,7 +111,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() metadataKey: string;
   @Input() persistenceKey: string;
   /**
-   * Will be deprecated
    * @deprecated
    */
   @Input() permissionKey: string;
@@ -218,7 +216,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
     this.titlebar$ = this.getGridTitlebar();
 
-   const selectActionSub = this.selectRow.pipe(
+    const selectActionSub = this.selectRow.pipe(
       filter(selection => selection && selection.length && !!this.currentSelectionAction),
       switchMap((selection) =>
         of(selection)
@@ -250,7 +248,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       filter(() => this.initialized),
       tap(() => this.rows = [])
     )
-    .subscribe(() => this.onRequest());
+    .subscribe(() => {
+      if (this.selection.length) {
+        this.onSelectionAction(this.selection);
+      }
+      this.onRequest();
+     });
 
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
@@ -315,8 +318,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   get selection(): T[] {
-    return this.isSimple ?
-      (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
+    return this.grid ? this.grid.selection : [];
   }
 
   isGridDetails(name: string): boolean {
@@ -417,7 +419,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     }
   }
 
-  onSelect(selected: number[] | T[]): void {
+  onSelect(selected: T[]): void {
     if (this.persistenceKey) {
       /**
        * Because context service may require access to selected rows in any grid.
@@ -469,10 +471,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     return this._columns || [];
   }
 
-  private getFirstSelectedRow(selected: any): T[] {
-    return this.grid instanceof Grid2Component
-    ? this.selection.find(r => r[this.rowIdKey] === selected[0])
-    : selected[0];
+  private getFirstSelectedRow(selected: any[]): T[] {
+    return selected && selected.length && selected[0];
   }
 
   private createCloseAction(actionData: ICloseAction | IActionGridAction): () => any {

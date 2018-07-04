@@ -246,7 +246,9 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
   }
 
   deselectAll(): void {
-    this.gridApi.deselectAll();
+    if (this.gridApi) {
+      this.gridApi.deselectAll();
+    }
   }
 
   ngOnDestroy(): void {
