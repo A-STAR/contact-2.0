@@ -36,7 +36,7 @@ export class ContactSelectGridComponent implements OnInit, OnDestroy {
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE, name: 'linkTypeCode' },
   ].map(addLabelForEntity('contactPerson')), {});
 
-  person: { personId: number };
+  person: ILinkedContactPerson;
 
   rows: ILinkedContactPerson[] = [];
   rowCount = 0;
@@ -56,7 +56,7 @@ export class ContactSelectGridComponent implements OnInit, OnDestroy {
   }
 
   get isValid(): boolean {
-    return this.person && !!this.person.personId;
+    return !!this.person;
   }
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class ContactSelectGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(persons: ILinkedContactPerson[]): void {
-    this.person = { personId: persons[0].personId };
+    this.person = persons[0];
   }
 
   private fetch(): Subscription {
