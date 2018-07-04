@@ -67,8 +67,8 @@ export class ContactSelectGridComponent implements OnInit, OnDestroy {
     this.contactRegistrationChangesSub.unsubscribe();
   }
 
-  onSelect(persons: number[]): void {
-    this.person = { personId: persons[0] };
+  onSelect(persons: ILinkedContactPerson[]): void {
+    this.person = { personId: persons[0].personId };
   }
 
   private fetch(): Subscription {

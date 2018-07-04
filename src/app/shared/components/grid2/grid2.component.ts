@@ -57,7 +57,6 @@ import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { ValueBag } from '@app/core/value-bag/value-bag';
 import { differenceWith } from 'ramda';
-import { isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,19 +101,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() translateColumnLabels = false;
   @Input() toolbar: IToolbarItem[];
 
-  @Input()
-  set selection(selection: any[]) {
-    if (!isEmpty(selection)) {
-      this.selectionIds = selection.map(item => item && item[this.rowIdKey]).filter(item => item !== undefined);
-      if (this.gridOptions && this.gridOptions.api && this.selectionIds) {
-        this.selectNodes(this.selectionIds);
-        this.onSelectionChanged();
-        this.selectionIds = null;
-      }
-      this.cdRef.markForCheck();
-    }
-  }
-
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
   @Output() onColumnGroup = new EventEmitter<IAGridGroups>();
@@ -136,7 +122,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   initCallbacks: Function[] = [];
 
   private originalColSettings: IAgridColSetting[] = [];
-  private selectionIds: any[];
   private gridSettings: IAGridSettings;
   private initialized = false;
   private persistenceClearSub: Subscription;
@@ -173,7 +158,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // selected rows
-  get selected(): any[] {
+  get selection(): any[] {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
@@ -358,9 +343,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelectionChanged(): void {
-    const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
-    this.onSelect.emit(selected);
+    this.onSelect.emit(this.selection);
   }
 
   onCellValueChanged(event: CellValueChangedEvent): void {
@@ -557,7 +541,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private refreshRowCount(): void {
     const countText = this.translate.instant(
       'default.grid.selectedCounts',
-      { length: this.rowCount, selected: this.selected.length }
+      { length: this.rowCount, selected: this.selection.length }
     );
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
       if (i === 0) {
@@ -821,7 +805,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
         {
           actions: this.actions,
-          selected: this.selected,
+          selected: this.selection,
           selection,
           cb: (action) => this.action.emit(action)
         },
@@ -946,10 +930,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private onGridReady(): void {
     this.setSortModel();
     this.initCallbacks.forEach((cb: Function) => cb());
-    if (this.selectionIds) {
-      this.selectNodes(this.selectionIds);
-      this.selectionIds = null;
-    }
     this.initCallbacks = [];
   }
 
@@ -964,12 +944,5 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // shortcut: 'Alt+R'
       },
     ];
-  }
-
-  private selectNodes(ids: any[]): void {
-    this.gridOptions.api
-      .getSelectedNodes()
-      .filter(node => ids.includes(node[this.rowIdKey]))
-      .forEach(n =>  n.setSelected(true));
   }
 }
