@@ -144,10 +144,6 @@ export class SchedulePeriodCardComponent implements OnInit {
     }
   }
 
-  private get dailyFormSerializedUpdates(): any {
-    return this._periodForm.serializedUpdates;
-  }
-
   private get periodSerializedUpdates(): any {
     return [
       this._periodForm.serializedUpdates,

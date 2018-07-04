@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { CallService } from '@app/core/calls/call.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -23,7 +22,6 @@ export class IconMenuComponent {
     private callService: CallService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private translateService: TranslateService,
   ) {}
 
   get isSearchVisible(): boolean {
@@ -64,11 +62,5 @@ export class IconMenuComponent {
   closeNavSearch(): void {
     this._isSearchVisible = false;
     this.cdRef.markForCheck();
-  }
-
-  toggleLanguage(): void {
-    // STUB: to test the language switching options, remove for production
-    const lang = this.translateService.currentLang === 'ru' ? 'en' : 'ru';
-    this.translateService.use(lang).pipe(first()).subscribe();
   }
 }
