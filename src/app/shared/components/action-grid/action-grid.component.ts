@@ -236,6 +236,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         this.gridDetails$.next(false);
       });
 
+      const activateRouteSub = this.router.events
+        .pipe(
+          filter(event => event instanceof NavigationEnd),
+          filter(() => this.routingService.isActiveRoute(this.route))
+        )
+        .subscribe(() => {
+          if (this.selection && this.selection.length && !!this.currentSelectionAction) {
+            this.onSelectionAction(this.selection);
+          }
+        });
+
     const permissionsSub = combineLatest(
       this.userPermissionsService.bag(),
       this.router.events
@@ -246,18 +257,21 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     )
     .pipe(
       filter(() => this.initialized),
-      tap(() => this.rows = [])
+      // NOTE: change detection doesn't work properly (in WEB20-1010 )
+     //  (see portfolios details grid)
+      // tap(() => {
+      //   this.rows = [];
+      //   this.cdRef.markForCheck();
+      // })
     )
     .subscribe(() => {
-      if (this.selection.length) {
-        this.onSelectionAction(this.selection);
-      }
       this.onRequest();
-     });
+    });
 
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
     this.subs.add(permissionsSub);
+    this.subs.add(activateRouteSub);
   }
 
   ngOnDestroy(): void {
