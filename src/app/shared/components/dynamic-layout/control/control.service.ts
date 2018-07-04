@@ -88,6 +88,15 @@ export class ControlService implements OnDestroy {
     });
   }
 
+  isValid(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
+    return this.uiService.getState(this.key).pipe(
+      map(state => {
+        const f = getIn(state, [ form ], {});
+        return f.status === 'VALID';
+      }),
+    );
+  }
+
   canSubmit(form: string = ControlService.DEFAULT_GROUP_NAME): Observable<boolean> {
     return this.uiService.getState(this.key).pipe(
       map(state => {
@@ -123,6 +132,13 @@ export class ControlService implements OnDestroy {
     if (group) {
       group.reset();
     }
+  }
+
+  resetAndEnableAll(): void {
+    this.groups.forEach(group => {
+      group.reset();
+      group.enable();
+    });
   }
 
   getData(form: string = ControlService.DEFAULT_GROUP_NAME): any {
