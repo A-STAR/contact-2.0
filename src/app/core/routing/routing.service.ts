@@ -8,15 +8,8 @@ export class RoutingService {
     private router: Router,
   ) {}
 
-  static getUrlFromRoot(route: ActivatedRoute): string {
-    return route.snapshot.pathFromRoot
-      .map(o => o.url[0])
-      .filter(Boolean)
-      .join('/');
-  }
-
   isActiveRoute(route: ActivatedRoute): boolean {
-    return this.router.isActive(RoutingService.getUrlFromRoot(route), true);
+    return this.router.isActive(this.router.createUrlTree(route.snapshot.url), true);
   }
 
   navigate(segments: string[], route: ActivatedRoute = this.route, queryParams?: Params): Promise<boolean> {
