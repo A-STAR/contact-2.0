@@ -30,7 +30,7 @@ import { toOption } from '@app/core/utils';
 export class ScheduleEventService extends AbstractActionService {
   static MESSAGE_SCHEDULE_EVENT_SAVED = 'MESSAGE_SCHEDULE_EVENT_SAVED';
 
-  static TYPE_CUSTOM_OPERATION = 2;
+  static TYPE_CUSTOM_OPERATION = 3;
 
   private baseUrl = '/scheduleEvent';
 
