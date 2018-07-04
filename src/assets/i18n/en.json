@@ -1725,6 +1725,7 @@
       "directionCode": "Direction",
       "stageCode": "Stage",
       "statusCode": "Status",
+      "typeCode": "Type",
       "signDate": "Signed on",
       "startWorkDate": "Processing start date",
       "endWorkDate": "Processing end date",
