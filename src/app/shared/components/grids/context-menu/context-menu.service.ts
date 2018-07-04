@@ -10,8 +10,25 @@ import { TranslateService } from '@ngx-translate/core';
 export class ContextMenuService {
 
   constructor(
-    private translateService: TranslateService,
+    private translate: TranslateService,
   ) { }
+
+  translateNameAndShortcut(key: string, defaultValue: string): void {
+    const translationPath = 'default.grid.localeText';
+    const translationKey = `${translationPath}.${key}`;
+
+    const translation = this.translate.instant(translationKey);
+
+    const hasTranslation = translation !== translationKey;
+
+    /**
+     * default value for shortcuts or name if no translations
+     *
+     * for example 'Ctrl+C', 'separator'
+     */
+
+    return hasTranslation ? translation : defaultValue;
+  }
 
   onCtxMenuClick(options?: IContextMenuOptions, simpleOptions?: IContextMenuSimpleOptions): (string | MenuItemDef)[] {
     return options.selection.node ? [
@@ -55,7 +72,7 @@ export class ContextMenuService {
   private getSimpleMenuItems(items: IContextMenuSimpleOptions): Array<MenuItemDef | string> {
     return items.map(action => typeof action === 'string' ? action : ({
         ...action,
-        name: this.translateService.instant(action.name),
+        name: this.translate.instant(action.name),
       })
     );
   }
@@ -105,7 +122,7 @@ export class ContextMenuService {
 
   private getActionForSelectedSubmenu(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.actionForSelection`),
+      name: this.translate.instant(`default.grid.actions.actionForSelection`),
       disabled: action.enabled ?
         !action.enabled.call(null, this.setPermParams(action, MetadataActionType.SELECTED, options)) : false,
       action: () => options.cb({
@@ -120,7 +137,7 @@ export class ContextMenuService {
 
   private getActionForAllSubmenu(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.actionForAll`),
+      name: this.translate.instant(`default.grid.actions.actionForAll`),
       disabled: action.enabled ? !action.enabled.call(
         null,
         this.setPermParams(action, MetadataActionType.ALL, options)
@@ -137,7 +154,7 @@ export class ContextMenuService {
 
   private translateAction(action: IMetadataAction): string {
     const translationKey = `${action.label || 'default.grid.actions'}.${action.action}`;
-    const translation = this.translateService.instant(translationKey);
+    const translation = this.translate.instant(translationKey);
     return translation !== translationKey ? translation : action.action;
   }
 

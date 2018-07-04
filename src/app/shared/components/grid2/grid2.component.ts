@@ -11,10 +11,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Router, ActivationEnd, ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
-import { TranslateService } from '@ngx-translate/core';
 import {
   CellValueChangedEvent,
   ColDef,
@@ -116,7 +116,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() rowDataChange = new EventEmitter<any>();
 
   columnDefs: ColDef[];
-  gridOptions: GridOptions = {};
+  gridOptions: GridOptions = {
+    localeTextFunc: this.contextMenuService.translateNameAndShortcut.bind(this.contextMenuService),
+  };
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
@@ -138,10 +140,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private router: Router,
     private route: ActivatedRoute,
+    private translate: TranslateService,
     private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
     private settingsService: SettingsService,
-    private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
@@ -945,4 +947,5 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       },
     ];
   }
+
 }
