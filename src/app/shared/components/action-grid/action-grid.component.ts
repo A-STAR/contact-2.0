@@ -250,12 +250,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     const permissionsSub = combineLatest(
       this.userPermissionsService.bag(),
       this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          filter((event: NavigationEnd) => this.routingService.isRouteMatchesUrl(this.route, event.urlAfterRedirects))
-        )
       )
       .pipe(
+        filter(([ _, e ]) => e instanceof NavigationEnd),
+        filter(([ _, e ]) => this.routingService.isRouteMatchesUrl(this.route, (e as NavigationEnd).urlAfterRedirects)),
         filter(() => this.initialized),
         // NOTE: what if grid doesn't have onRequest output binded?
         tap(() => this.rows = [])
