@@ -9,11 +9,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { first, map, mapTo, mergeMap } from 'rxjs/operators';
+import { filter, first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
 import { EntityType } from '@app/core/entity/entity.interface';
@@ -40,7 +41,6 @@ import { invert } from '@app/core/utils';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 import { editLayout, createContractLayout, createGuarantorLayout } from './layout';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -176,11 +176,16 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscription.add(subscription);
 
     // One of many reasons route reuse is inconvenient
+    const { url } = this.router;
     if (!this.editing) {
-      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-        this.layout.resetAndEnableAll();
-        this.isSubmitDisabled$.next(false);
-      });
+      const routerSubscription = this.layoutService.navigationEnd$
+        .pipe(
+          filter((event: NavigationEnd) => event.urlAfterRedirects === url)
+        )
+        .subscribe(() => {
+          this.layout.resetAndEnableAll();
+          this.isSubmitDisabled$.next(true);
+        });
       this.subscription.add(routerSubscription);
     }
   }
