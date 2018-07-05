@@ -237,14 +237,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       });
 
     const permissionsSub = combineLatest(
-      this.userPermissionsService.bag(),
-      this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          filter(() => this.routingService.isActiveRoute(this.route))
-        )
+      this.router.events,
+      this.userPermissionsService.bag()
     )
     .pipe(
+      filter(([ event ]) => event instanceof NavigationEnd),
+      filter(() => this.routingService.isActiveRoute(this.route)),
       filter(() => this.initialized),
       tap(() => this.rows = [])
     )
