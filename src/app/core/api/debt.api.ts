@@ -119,7 +119,7 @@ export class DebtApiService {
 
   openContactPersonCard(debtorId: number, debtId: number, personId: number, activePhoneId?: number): Promise<boolean> {
     return this.routingService.navigate([
-        `/app/workplaces/debtor/${debtorId}/debt/${debtId}/contact/${personId}`
+        `/app/workplaces/debtor/${debtorId}/debt/${debtId}/edit/contact/${personId}`
     ], this.route, { activePhoneId });
   }
 
