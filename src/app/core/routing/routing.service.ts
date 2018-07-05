@@ -8,15 +8,8 @@ export class RoutingService {
     private router: Router,
   ) {}
 
-  static getUrlFromRoot(route: ActivatedRoute): string {
-    return route.snapshot.pathFromRoot
-      .map(o => o.url[0])
-      .filter(Boolean)
-      .join('/');
-  }
-
-  isActiveRoute(route: ActivatedRoute): boolean {
-    return this.router.isActive(RoutingService.getUrlFromRoot(route), true);
+  isRouteMatchesUrl(route: ActivatedRoute, url: string): boolean {
+    return this.getRouteFullUrl(route) === url;
   }
 
   navigate(segments: string[], route: ActivatedRoute = this.route, queryParams?: Params): Promise<boolean> {
@@ -60,6 +53,27 @@ export class RoutingService {
    */
   getRouteParam(route: ActivatedRoute, key: string): any {
     return this.getRouteParamRecursively(route.root, key);
+  }
+
+  getRouteQueryParamsString(route: ActivatedRoute): string {
+    return Object.keys(route.snapshot.queryParams)
+      .reduce((acc, key) => [ ...acc, `${key}=${route.snapshot.queryParams[key]}` ], [])
+      .join('&');
+  }
+
+  getRouteUrl(route: ActivatedRoute): string {
+    return `/${[
+        ...route.snapshot.pathFromRoot.reduce((acc, r) => [ ...acc, ...r.url ], []),
+        ...route.snapshot.url
+      ].join('/')}`;
+  }
+
+  getRouteFullUrl(route: ActivatedRoute): string {
+    let queryString = this.getRouteQueryParamsString(route);
+    if (queryString.length) {
+      queryString = '?' + queryString;
+    }
+    return `${this.getRouteUrl(route)}${queryString}`;
   }
 
   private getRouteParamRecursively(route: ActivatedRoute, key: string): any {

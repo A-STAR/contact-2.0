@@ -236,26 +236,36 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         this.gridDetails$.next(false);
       });
 
+      const activateRouteSub = this.router.events
+        .pipe(
+          filter(event => event instanceof NavigationEnd),
+          filter((event: NavigationEnd) => this.routingService.isRouteMatchesUrl(this.route, event.urlAfterRedirects))
+        )
+        .subscribe(() => {
+          if (this.selection && this.selection.length && !!this.currentSelectionAction) {
+            this.onSelectionAction(this.selection);
+          }
+        });
+
     const permissionsSub = combineLatest(
-      this.router.events,
-      this.userPermissionsService.bag()
-    )
-    .pipe(
-      filter(([ event ]) => event instanceof NavigationEnd),
-      filter(() => this.routingService.isActiveRoute(this.route)),
-      filter(() => this.initialized),
-      tap(() => this.rows = [])
-    )
-    .subscribe(() => {
-      if (this.selection.length) {
-        this.onSelectionAction(this.selection);
-      }
-      this.onRequest();
-     });
+      this.userPermissionsService.bag(),
+      this.router.events
+      )
+      .pipe(
+        filter(([ _, e ]) => e instanceof NavigationEnd),
+        filter(([ _, e ]) => this.routingService.isRouteMatchesUrl(this.route, (e as NavigationEnd).urlAfterRedirects)),
+        filter(() => this.initialized),
+        // NOTE: what if grid doesn't have onRequest output binded?
+        tap(() => this.rows = [])
+      )
+      .subscribe(() => {
+        this.onRequest();
+      });
 
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
     this.subs.add(permissionsSub);
+    this.subs.add(activateRouteSub);
   }
 
   ngOnDestroy(): void {
