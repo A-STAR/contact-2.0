@@ -9,6 +9,13 @@ export interface ICallSettings {
   usePreview?: number;
   useRetrieveCall?: number;
   useTransferCall?: number;
+  callResultUseIntermediateCodeMode?: UseIntermediateStatusEnum;
+}
+
+export enum UseIntermediateStatusEnum {
+  FINAL_RESULT_ONLY = 0,
+  LAST_NODE_ONLY = 1,
+  ALL_NODE = 2
 }
 
 export interface ICall {
