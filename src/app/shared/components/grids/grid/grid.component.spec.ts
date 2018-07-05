@@ -50,6 +50,10 @@ class SettingsServiceMock {
 }
 
 class ContextMenuServiceMock {
+  translateNameAndShortcut(key: string, defaultValue: string): string {
+    return defaultValue;
+  }
+
   onCtxMenuClick(options: IContextMenuOptions, simpleOptions: IContextMenuSimpleOptions): Array<string | MenuItemDef> {
     return [];
   }

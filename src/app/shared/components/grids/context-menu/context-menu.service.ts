@@ -13,7 +13,7 @@ export class ContextMenuService {
     private translate: TranslateService,
   ) { }
 
-  translateNameAndShortcut(key: string, defaultValue: string): void {
+  translateNameAndShortcut(key: string, defaultValue: string): string {
     const translationPath = 'default.grid.localeText';
     const translationKey = `${translationPath}.${key}`;
 
