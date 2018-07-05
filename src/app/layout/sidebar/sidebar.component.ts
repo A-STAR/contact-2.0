@@ -81,16 +81,17 @@ export class SidebarComponent implements OnInit {
     const lastDebtorsLength = lastDebtors.length;
     const hasLastDebtors = lastDebtorsLength !== 0;
 
+    const path = '/app/workplaces/debtor/';
+    const lastDebtorCardIndex = item.children.findIndex(e => e.link.includes(path) );
+    const hasLastDebtor = lastDebtorCardIndex !== -1;
+
     if (hasLastDebtors) {
       const lastDebtorIndex = lastDebtorsLength - 1;
       const lastDebtor = lastDebtors[lastDebtorIndex];
-      const path = '/app/workplaces/debtor/';
       const [ debtorId, debtId ] = lastDebtor;
       const lastDebtorCardLink = `${path}${debtorId}/debt/${debtId}`;
 
-      const lastDebtorCardIndex = item.children.findIndex(e => e.link.includes(path) );
-
-      if (lastDebtorCardIndex === -1) {
+      if (!hasLastDebtor) {
         const lastDebtCard: IMenuItem = {
           icon: 'co-m-debtor-card',
           text: 'sidebar.nav.menu.DEBTOR_CARD',
@@ -105,7 +106,17 @@ export class SidebarComponent implements OnInit {
         item.children[lastDebtorCardIndex].link = lastDebtorCardLink;
       }
 
+    } else {
+
+      if (!hasLastDebtor) {
+        return;
+      }
+
+      const itemsWithoutLastDebtCard: IMenuItem[] = item.children.filter((_, i) => i !== lastDebtorCardIndex);
+
+      (item.children as IMenuItem[]) = itemsWithoutLastDebtCard;
     }
+
   }
 
 }
