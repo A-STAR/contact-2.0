@@ -132,6 +132,7 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
 
     const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
       this.layout.resetAndEnableAll();
+      this.isSubmitDisabled$.next(false);
     });
     this.subscriptionBag.add(routerSubscription);
   }
