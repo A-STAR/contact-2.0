@@ -437,6 +437,7 @@
         "card": {
           "name": "Название",
           "file": "Файл",
+          "letterTypeCode": "Тип шаблона",
           "recipientTypeCode": "Получатель",
           "serviceTypeCode": "Тип сервиса",
           "comment": "Комментарий"
