@@ -12,9 +12,9 @@ import {
   OnInit,
   forwardRef,
 } from '@angular/core';
-import { filter } from 'rxjs/operators';
 import { Router, ActivatedRoute, ActivationEnd } from '@angular/router';
 import { Validator, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS } from '@angular/forms';
+import { filter } from 'rxjs/operators';
 
 import {
   ColDef,
@@ -158,6 +158,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     toolPanelSuppressPivots: true,
     toolPanelSuppressRowGroups: true,
     toolPanelSuppressValues: true,
+    localeTextFunc: this.contextMenuService.translateNameAndShortcut.bind(this.contextMenuService),
   };
 
   columnApi: ColumnApi;
@@ -176,7 +177,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     private router: Router,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
-  ) {}
+  ) { }
 
   get rowClassCallback(): any {
     return this.rowClass
@@ -292,6 +293,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     return [
       'copy',
       'copyWithHeaders',
+      'separator',
       {
         name: 'default.grid.localeText.resetColumns',
         action: () => this.resetGridSettings(),
