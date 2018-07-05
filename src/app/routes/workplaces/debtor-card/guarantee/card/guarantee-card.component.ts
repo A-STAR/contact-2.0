@@ -177,7 +177,10 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // One of many reasons route reuse is inconvenient
     if (!this.editing) {
-      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => this.layout.resetAndEnableAll());
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
+        this.layout.resetAndEnableAll();
+        this.isSubmitDisabled$.next(false);
+      });
       this.subscription.add(routerSubscription);
     }
   }
