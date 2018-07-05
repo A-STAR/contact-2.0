@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
+import { first, map, mergeMap } from 'rxjs/operators';
 
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IDocument } from '@app/core/document/document.interface';
@@ -24,7 +24,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
-import { addGridLabel, combineLatestOr, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { addGridLabel, combineLatestOr, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -140,13 +140,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this.selectedDocumentId$.map(id => this.documents.find(document => document.id === id));
   }
 
-  canEditOrDelete$(entityTypeCode: number): Observable<boolean> {
-    return this.userPermissionsService.bag().map(bag => bag.contains('FILE_ATTACHMENT_ADD_LIST', entityTypeCode));
-  }
-
-  private get selectedDocumentEntityTypeCode(): number {
-    const selectedDocument = this.documents.find(document => document.id === this.selectedDocumentId$.value);
-    return selectedDocument ? selectedDocument.entityTypeCode : null;
+  canAdd$(entityTypeCode: number): Observable<boolean> {
+    return this.userPermissionsService.contains('FILE_ATTACHMENT_ADD_LIST', entityTypeCode);
   }
 
   private onAdd(entityType: number): void {
@@ -186,10 +181,10 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       this.buildToolbarAddButton(),
       {
         type: ToolbarItemTypeEnum.BUTTON_EDIT,
-        enabled: combineLatestAnd([
-          this.canEditOrDelete$(this.selectedDocumentEntityTypeCode),
-          this.selectedDocument$.map(Boolean),
-        ]),
+        enabled: this.selectedDocument$.pipe(
+          map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
+          mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_EDIT_LIST', entityTypeCode)),
+        ),
         action: () => this.onEdit(this.selectedDocumentId$.value)
       },
       {
@@ -199,10 +194,10 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       },
       {
         type: ToolbarItemTypeEnum.BUTTON_DELETE,
-        enabled: combineLatestAnd([
-          this.canEditOrDelete$(this.selectedDocumentEntityTypeCode),
-          this.selectedDocument$.map(Boolean),
-        ]),
+        enabled: this.selectedDocument$.pipe(
+          map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
+          mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_DELETE_LIST', entityTypeCode)),
+        ),
         action: () => this.setDialog('delete'),
       },
       {
@@ -221,16 +216,16 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       case 1:
         return {
           type: ToolbarItemTypeEnum.BUTTON_ADD,
-          enabled: this.canEditOrDelete$(this.addForEntity[0]),
+          enabled: this.canAdd$(this.addForEntity[0]),
           action: () => this.onAdd(this.addForEntity[0]),
         };
       default:
         return {
           type: ToolbarItemTypeEnum.BUTTON_ADD,
-          enabled: combineLatestOr(this.addForEntity.map(entity => this.canEditOrDelete$(entity))),
+          enabled: combineLatestOr(this.addForEntity.map(entity => this.canAdd$(entity))),
           children: this.addForEntity.map(entityType => ({
             label: `routes.workplaces.shared.documents.grid.toolbar.add.${entityType}`,
-            enabled: this.canEditOrDelete$(entityType),
+            enabled: this.canAdd$(entityType),
             action: () => this.onAdd(entityType)
           })),
         };
