@@ -40,6 +40,7 @@ import { invert } from '@app/core/utils';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 import { editLayout, createContractLayout, createGuarantorLayout } from './layout';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -176,10 +177,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // One of many reasons route reuse is inconvenient
     if (!this.editing) {
-      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-        this.layout.resetForm();
-        this.layout.resetForm('contract');
-      });
+      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => this.layout.resetAndEnableAll());
       this.subscription.add(routerSubscription);
     }
   }
@@ -199,10 +197,18 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
         });
     }
 
-    const subscription = this.showContractForm
+    const subscription = this.editing || !this.showContractForm
       ? this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit))
-      : this.guarantor$.pipe(map(Boolean)).subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
-    this.subscription.add(subscription);
+      : combineLatest(
+          this.guarantor$,
+          this.layout.canSubmit(),
+          this.layout.canSubmit('contract'),
+        )
+        .subscribe(([ guarantor, canSubmitGuarantor, canSubmitContract ]) => {
+          const canSubmit = (guarantor || canSubmitGuarantor) && canSubmitContract;
+          this.isSubmitDisabled$.next(!canSubmit);
+        });
+      this.subscription.add(subscription);
   }
 
   ngOnDestroy(): void {
