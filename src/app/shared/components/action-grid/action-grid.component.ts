@@ -254,19 +254,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
           filter(event => event instanceof NavigationEnd),
           filter((event: NavigationEnd) => this.routingService.isRouteMatchesUrl(this.route, event.urlAfterRedirects))
         )
-    )
-    .pipe(
-      filter(() => this.initialized),
-      // NOTE: change detection doesn't work properly (in WEB20-1010 )
-     //  (see admin/contractors/ portfolios grid)
-      // tap(() => {
-      //   this.rows = [];
-      //   this.cdRef.markForCheck();
-      // })
-    )
-    .subscribe(() => {
-      this.onRequest();
-    });
+      )
+      .pipe(
+        filter(() => this.initialized),
+        // NOTE: what if grid doesn't have onRequest output binded?
+        tap(() => this.rows = [])
+      )
+      .subscribe(() => {
+        this.onRequest();
+      });
 
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);

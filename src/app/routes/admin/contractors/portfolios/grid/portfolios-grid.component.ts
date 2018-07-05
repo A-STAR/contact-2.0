@@ -163,6 +163,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
   private contractorSubscription: Subscription;
   private portfoliosUpdateSub: Subscription;
   private userPermsSub: Subscription;
+  private portfolioBackSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -194,10 +195,19 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
         }
       });
 
-    this.portfoliosUpdateSub =
-        this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_SAVE)
-        .switchMap(() => this.fetchAll())
-        .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+    this.portfoliosUpdateSub = this.contractorsAndPortfoliosService
+      .getAction(IActionType.PORTFOLIO_SAVE)
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+
+    this.portfolioBackSub = this.contractorsAndPortfoliosService
+      .getAction(IActionType.PORTFOLIO_BACK)
+      .subscribe(() => {
+        // NOTE: this AWESOME code is because of WEB20-1010
+        this.portfolios = this.portfolios.slice();
+        this.deselectPortfolio();
+        this.cdRef.markForCheck();
+      });
 
     this.userPermsSub = this.userPermissionsService.bag()
       .subscribe(bag => {
@@ -214,6 +224,9 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
     }
     if (this.userPermsSub) {
       this.userPermsSub.unsubscribe();
+    }
+    if (this.portfolioBackSub) {
+      this.portfolioBackSub.unsubscribe();
     }
   }
 
@@ -363,19 +376,20 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
   }
 
   private clearPortfolios(): void {
-    if (this.grid) {
-      this.grid.deselectAll();
-    }
+    this.deselectPortfolio();
     this.portfolios = [];
-    this.contractorsAndPortfoliosService.selectPortfolio(null);
     this.cdRef.markForCheck();
   }
 
-  private onPortfoliosFetch(portfolios: IPortfolio[]): void {
+  private deselectPortfolio(): void {
     if (this.grid) {
       this.grid.deselectAll();
     }
     this.contractorsAndPortfoliosService.selectPortfolio(null);
+  }
+
+  private onPortfoliosFetch(portfolios: IPortfolio[]): void {
+    this.deselectPortfolio();
     this.portfolios = portfolios;
     this.cdRef.markForCheck();
   }

@@ -112,12 +112,18 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
 
     action.subscribe(() => {
       this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_SAVE);
-      this.onBack();
+      this.onBackAfterSave();
     });
   }
 
-  onBack(): void {
+  onBackAfterSave(): void {
     this.routingService.navigate([ '/app/admin/contractors' ]);
+  }
+
+  onBack(): void {
+    this.onBackAfterSave();
+    this.contractorsAndPortfoliosService
+      .dispatch(IActionType.PORTFOLIO_BACK);
   }
 
   onManagersClick(): void {

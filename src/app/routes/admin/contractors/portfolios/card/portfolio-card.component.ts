@@ -165,12 +165,18 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
         if (result) {
           this.contractorsAndPortfoliosService
             .dispatch(IActionType.PORTFOLIO_SAVE);
-          this.onBack();
+          this.onBackAfterSave();
         }
       });
   }
 
   onBack(): void {
+    this.onBackAfterSave();
+    this.contractorsAndPortfoliosService
+      .dispatch(IActionType.PORTFOLIO_BACK);
+  }
+
+  onBackAfterSave(): void {
     this.routingService.navigate([ '/app/admin/contractors' ]);
   }
 
