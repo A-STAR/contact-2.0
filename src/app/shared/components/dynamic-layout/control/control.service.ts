@@ -135,9 +135,11 @@ export class ControlService implements OnDestroy {
   }
 
   resetAndEnableAll(): void {
-    this.groups.forEach(group => {
+    this.groups.forEach((group, name) => {
       group.reset();
       group.enable();
+      this.dispatchChangeStatusAction(name, group.status);
+      this.dispatchChangeValueAction(name, group.dirty, group.value);
     });
   }
 

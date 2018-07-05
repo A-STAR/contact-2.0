@@ -14,6 +14,7 @@ import { ContactRegistrationService } from '../contact-registration.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { isEmpty } from '@app/core/utils';
+import { UseIntermediateStatusEnum } from '@app/core/calls/call.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,10 +71,17 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.treeIntermediateSub = combineLatest(
       this.callService.pbxState$,
       this.selectedNode$.filter(Boolean),
+      this.callService.settings$,
       combineLatest(this.callService.predictiveCall$, this.callService.postCall$)
         .pipe(
           filter(([ predictiveCall, postCall ]) => predictiveCall || postCall)
         )
+    )
+    .pipe(
+      filter(([ _, node, settings ]) =>
+        settings.callResultUseIntermediateCodeMode === UseIntermediateStatusEnum.ALL_NODE ||
+          settings.callResultUseIntermediateCodeMode === UseIntermediateStatusEnum.LAST_NODE_ONLY && !node.children
+      )
     )
     .subscribe(([ state, node ]) => this.callService.sendContactTreeIntermediate(
       state.payload.pbxCallId,

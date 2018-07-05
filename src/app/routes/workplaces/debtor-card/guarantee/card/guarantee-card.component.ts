@@ -9,11 +9,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { first, map, mapTo, mergeMap } from 'rxjs/operators';
+import { filter, first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
 import { EntityType } from '@app/core/entity/entity.interface';
@@ -175,11 +176,16 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscription.add(subscription);
 
     // One of many reasons route reuse is inconvenient
+    const { url } = this.router;
     if (!this.editing) {
-      const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-        this.layout.resetForm();
-        this.layout.resetForm('contract');
-      });
+      const routerSubscription = this.layoutService.navigationEnd$
+        .pipe(
+          filter((event: NavigationEnd) => event.urlAfterRedirects === url)
+        )
+        .subscribe(() => {
+          this.layout.resetAndEnableAll();
+          this.isSubmitDisabled$.next(true);
+        });
       this.subscription.add(routerSubscription);
     }
   }
@@ -199,10 +205,18 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
         });
     }
 
-    const subscription = this.showContractForm
+    const subscription = this.editing || !this.showContractForm
       ? this.layout.canSubmitAll().subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit))
-      : this.guarantor$.pipe(map(Boolean)).subscribe(canSubmit => this.isSubmitDisabled$.next(!canSubmit));
-    this.subscription.add(subscription);
+      : combineLatest(
+          this.guarantor$,
+          this.layout.canSubmit(),
+          this.layout.canSubmit('contract'),
+        )
+        .subscribe(([ guarantor, canSubmitGuarantor, canSubmitContract ]) => {
+          const canSubmit = (guarantor || canSubmitGuarantor) && canSubmitContract;
+          this.isSubmitDisabled$.next(!canSubmit);
+        });
+      this.subscription.add(subscription);
   }
 
   ngOnDestroy(): void {

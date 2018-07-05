@@ -7,10 +7,10 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
@@ -94,6 +94,7 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
     private pledgeCardCreatePropertyService: PledgeCardCreatePropertyService,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
+    private router: Router,
     private routingService: RoutingService,
   ) {
     super();
@@ -105,9 +106,15 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
       propertyTitlebar: this.propertyTitlebarTemplate,
     };
 
-    const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-      this.layout.resetAndEnableAll();
-    });
+    const { url } = this.router;
+    const routerSubscription = this.layoutService.navigationEnd$
+      .pipe(
+        filter((event: NavigationEnd) => event.urlAfterRedirects === url)
+      )
+      .subscribe(() => {
+        this.layout.resetAndEnableAll();
+        this.isSubmitDisabled$.next(true);
+      });
     this.subscriptionBag.add(routerSubscription);
   }
 

@@ -138,7 +138,7 @@ export class ValueConverterService {
   }
 
   toDateOnly(date: Date): string {
-    return moment(date).utcOffset(0, true).format('YYYY-MM-DD');
+    return date ? moment(date).utcOffset(0, true).format('YYYY-MM-DD') : null;
   }
 
   fromISO(value: string): Date {
