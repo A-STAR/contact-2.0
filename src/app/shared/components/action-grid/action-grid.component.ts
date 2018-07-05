@@ -239,7 +239,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       const activateRouteSub = this.router.events
         .pipe(
           filter(event => event instanceof NavigationEnd),
-          filter(() => this.routingService.isActiveRoute(this.route))
+          filter((event: NavigationEnd) => this.routingService.isRouteMatchesUrl(this.route, event.urlAfterRedirects))
         )
         .subscribe(() => {
           if (this.selection && this.selection.length && !!this.currentSelectionAction) {
@@ -252,13 +252,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       this.router.events
         .pipe(
           filter(event => event instanceof NavigationEnd),
-          filter(() => this.routingService.isActiveRoute(this.route))
+          filter((event: NavigationEnd) => this.routingService.isRouteMatchesUrl(this.route, event.urlAfterRedirects))
         )
     )
     .pipe(
       filter(() => this.initialized),
       // NOTE: change detection doesn't work properly (in WEB20-1010 )
-     //  (see portfolios details grid)
+     //  (see admin/contractors/ portfolios grid)
       // tap(() => {
       //   this.rows = [];
       //   this.cdRef.markForCheck();
