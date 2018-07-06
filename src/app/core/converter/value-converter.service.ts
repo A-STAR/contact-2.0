@@ -146,7 +146,7 @@ export class ValueConverterService {
   }
 
   fromLocalDateTime(value: string): Date | false {
-    return this.fromLocal(value, 'L LTS' as moment.LongDateFormatKey);
+    return this.fromLocal(value, 'L HH:mm:ss' as moment.LongDateFormatKey);
   }
 
   fromLocalDate(value: string): Date | false {
@@ -154,7 +154,7 @@ export class ValueConverterService {
   }
 
   fromLocalTime(value: string): Date | false {
-    return this.fromLocal(value, 'LTS' as moment.LongDateFormatKey);
+    return this.fromLocal(value, 'HH:mm:ss' as moment.LongDateFormatKey);
   }
 
   dateStringToISO(date: string): string {
