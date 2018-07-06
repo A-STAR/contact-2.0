@@ -430,6 +430,7 @@
           "id": "ID",
           "name": "Название",
           "fileName": "Имя файла",
+          "letterTypeCode": "Тип шаблона",
           "recipientTypeCode": "Получатель",
           "serviceTypeCode": "Тип сервиса",
           "comment": "Комментарий"
