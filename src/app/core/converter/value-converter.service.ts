@@ -112,7 +112,7 @@ export class ValueConverterService {
   }
 
   toLocalDateTime(date: Date | string): string {
-    return this.formatDate(date, 'L LTS');
+    return this.formatDate(date, 'L HH:mm:ss');
   }
 
   toLocalTime(date: Date | string): string {
