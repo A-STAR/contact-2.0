@@ -593,7 +593,7 @@ buttonType: ButtonType.FILTER,
     };
   }
 
-  private isTbItemEnabled$(itemType: ToolbarItemType, permissions?: string[]): Observable<boolean> {
+  private isTbItemEnabled$(itemType: ButtonType, permissions?: string[]): Observable<boolean> {
     const conditions = [ permissions ? this.userPermissionsService.hasAll(permissions) : of(true) ];
     switch (itemType) {
       case ButtonType.SEARCH:
