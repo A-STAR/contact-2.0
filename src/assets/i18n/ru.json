@@ -3706,10 +3706,7 @@
         "datepicker": "Введите дату",
         "timepicker": "Введите время "
       },
-      "lastMonthDay": "Последний",
-      "format": {
-        "LTS": "HH:mm:ss"
-      }
+      "lastMonthDay": "Последний"
     },
     "colors": {
       "transparent": "Прозрачный",

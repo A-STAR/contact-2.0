@@ -3706,10 +3706,7 @@
         "datepicker": "Enter a date",
         "timepicker": "Enter time"
       },
-      "lastMonthDay": "Last",
-      "format": {
-        "LTS": "HH:mm:ss"
-      }
+      "lastMonthDay": "Last"
     },
     "colors": {
       "transparent": "Transparent",

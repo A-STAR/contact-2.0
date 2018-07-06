@@ -112,15 +112,15 @@ export class ValueConverterService {
   }
 
   toLocalDateTime(date: Date | string): string {
-    return this.momentFormat(date, 'L LTS');
+    return this.formatDate(date, 'L LTS');
   }
 
   toLocalTime(date: Date | string): string {
-    return this.momentFormat(date, 'LTS');
+    return date ? moment(date).format('HH:mm:ss') : null;
   }
 
   toLocalDate(date: Date | string): string {
-    return this.momentFormat(date, 'L');
+    return this.formatDate(date, 'L');
   }
 
   formatNumber(num: number | string): string {
@@ -161,6 +161,10 @@ export class ValueConverterService {
     return moment(date, 'YYYY-MM-DD').toISOString();
   }
 
+  formatDate(date: Date | string, format: string): string {
+    return date ? moment(date).locale(this.locale).format(format) : null;
+  }
+
   makeRangeFromLocalDate(value: string): Array<string> {
     const from = moment(value);
     const to = from.clone().add(1, 'day').subtract(1, 'second');
@@ -173,10 +177,5 @@ export class ValueConverterService {
       return null;
     }
     return date.isValid() ? date.toDate() : false;
-  }
-
-  private momentFormat(date: Date | string, format: string): string {
-    const customFormat = this.translateService.instant(`default.date.format.${format}`);
-    return date ? moment(date).locale(this.locale).format(customFormat || format) : null;
   }
 }
