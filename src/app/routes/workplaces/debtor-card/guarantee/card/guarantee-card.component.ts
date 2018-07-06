@@ -24,7 +24,7 @@ import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interfac
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
@@ -124,8 +124,8 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.SEARCH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.SEARCH,
         action: () => this.openPersonSearch(),
         enabled: this.edit$.pipe(map(invert)),
       },

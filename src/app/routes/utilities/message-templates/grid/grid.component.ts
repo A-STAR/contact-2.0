@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IMessageTemplate } from '../message-templates.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { MessageTemplatesService } from '../message-templates.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -30,14 +30,14 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.userPermissionsService.has('TEMPLATE_ADD'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_EDIT'),
@@ -45,8 +45,8 @@ buttonType: ButtonType.EDIT,
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.onDelete(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_DELETE'),
@@ -54,8 +54,8 @@ buttonType: ButtonType.DELETE,
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
     }
   ];

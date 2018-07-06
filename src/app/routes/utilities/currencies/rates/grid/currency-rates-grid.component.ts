@@ -7,7 +7,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ICurrencyRate } from '../currency-rates.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -127,8 +127,8 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   private createToolbar(): IToolbarItem[] {
     return [
       {
-        type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         enabled: combineLatestAnd([
           this.currencyRatesService.canAdd$,
           this.currencyId$.map(Boolean)
@@ -136,8 +136,8 @@ buttonType: ButtonType.ADD,
         action: () => this.onAdd()
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedCurrencyRate$.value),
         enabled: combineLatestAnd([
           this.currencyRatesService.canEdit$,
@@ -145,8 +145,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: combineLatestAnd([
           this.currencyRatesService.canView$,

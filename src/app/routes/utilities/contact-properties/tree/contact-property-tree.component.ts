@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
@@ -37,26 +37,26 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.setDialog('add'),
       enabled: this.canAdd$,
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
       enabled: this.canEdit$,
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
       enabled: this.canDelete$,
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
     },
   ];

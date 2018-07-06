@@ -11,7 +11,7 @@ import {
 import { defaultTo } from 'ramda';
 import { of } from 'rxjs/observable/of';
 
-import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
+import { ITitlebar, ITitlebarItem, ToolbarItemType, ITitlebarButton } from './titlebar.interface';
 
 import { doOnceIf } from '@app/core/utils';
 import { IconType } from '@app/shared/components/icons/icons.interface';
@@ -76,15 +76,15 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   getButtonType(item: ITitlebarItem): IconType {
-    return TitlebarItemTypeEnum[item.type];
+    return ToolbarItemType[item.type];
   }
 
   isButton(item: ITitlebarItem): boolean {
-    return !!TitlebarItemTypeEnum[item.type];
+    return !!ToolbarItemType[item.type];
   }
 
   isCheckbox(item: ITitlebarItem): boolean {
-    return item.type === TitlebarItemTypeEnum.CHECKBOX;
+    return item.type === ToolbarItemType.CHECKBOX;
   }
 
   onClick(item: ITitlebarItem): void {

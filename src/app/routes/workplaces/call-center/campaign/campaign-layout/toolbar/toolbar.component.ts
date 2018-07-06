@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
 import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -28,27 +28,27 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
     title: 'Сальников Андрей Юрьевич',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DEBT_CARD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DEBT_CARD,
         // iconCls: 'co co-debt-list',
         title: 'Открытие карточки должника',
         action: () => this.openDebtorCard(),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REGISTER_CONTACT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REGISTER_CONTACT,
         title: 'Регистрация контакта с типом "Специальное"',
         action: () => this.registerSpecial(),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.CHANGE_STATUS,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.CHANGE_STATUS,
         title: 'Перевод в проблемные',
         action: () => this.setDialog('change-status'),
         enabled: this.canChangeStatusToProblematic$,
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
+        type: ToolbarItemType.BUTTON,
         iconCls: 'co co-history',
         title: 'Информация о предыдущих долгах',
         action: () => this.setDialog('processed-debts'),

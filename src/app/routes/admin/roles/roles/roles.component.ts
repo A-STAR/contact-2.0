@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { map, first } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
@@ -40,14 +40,14 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
     title: 'roles.roles.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.setDialog('add'),
         enabled: this.userPermissionsService.has('ROLE_ADD')
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.COPY,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.COPY,
         action: () => this.setDialog('copy'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ROLE_COPY'),
@@ -55,8 +55,8 @@ buttonType: ButtonType.COPY,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ROLE_EDIT'),
@@ -64,8 +64,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ROLE_DELETE'),
@@ -73,8 +73,8 @@ buttonType: ButtonType.DELETE,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.permissionsService.fetchRoles(),
         enabled: this.userPermissionsService.has('ROLE_VIEW')
       },

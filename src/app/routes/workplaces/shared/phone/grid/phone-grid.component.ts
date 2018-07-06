@@ -19,7 +19,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -366,56 +366,56 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   gridToolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onEdit(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.BLOCK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.BLOCK,
       enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(phone => phone && !phone.isInactive)]),
       action: () => this.setDialog('block')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.UNBLOCK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.UNBLOCK,
       enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(phone => phone && !!phone.isInactive)]),
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.SMS,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.SMS,
       enabled: this.canSchedule$,
       action: () => this.setDialog('schedule')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REGISTER_CONTACT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REGISTER_CONTACT,
       enabled: this.canRegisterContact$,
       action: () => this.registerContact()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('delete')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.refresh()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.CALL,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.CALL,
       align: 'right',
       enabled: this.canMakeCall$,
       action: () => this.onMakeCall()

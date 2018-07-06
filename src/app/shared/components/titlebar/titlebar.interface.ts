@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
-export enum TitlebarItemTypeEnum {
+export enum ToolbarItemType {
   BUTTON                  = 'button',
   BUTTON_ADD              = 'add',
   BUTTON_ADD_USER         = 'addUser',
@@ -47,13 +47,13 @@ export interface ITitlebarElement {
 }
 
 export interface ITitlebarButton extends ITitlebarElement {
-  type: TitlebarItemTypeEnum;
+  type: ToolbarItemType;
   children?: ITitlebarElement[];
   iconCls?: string;
 }
 
 export interface ITitlebarCheckbox extends ITitlebarElement {
-  type: TitlebarItemTypeEnum.CHECKBOX;
+  type: ToolbarItemType.CHECKBOX;
   state: Observable<boolean>;
 }
 

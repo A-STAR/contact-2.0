@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute } from '../attribute.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -170,8 +170,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   private getToolbarItems(): IToolbarItem[] {
     return [
       {
-        type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.entityTypeId$.flatMap(
@@ -181,8 +181,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.VERSION,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.VERSION,
         action: () => this.onVersionClick(),
         enabled: combineLatestAnd([
           this.entityTypeId$.flatMap(
@@ -192,8 +192,8 @@ buttonType: ButtonType.VERSION,
         ])
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
       },
     ];

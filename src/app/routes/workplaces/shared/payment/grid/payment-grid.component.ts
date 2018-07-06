@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IPayment } from '../payment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -44,14 +44,14 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([ this.canAdd$, this.debtId$.map(Boolean) ]),
       action: () => this.onAdd(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([
         this.canEdit$,
         this.selectedPayment$.map(payment => payment && !payment.isCanceled),
@@ -59,8 +59,8 @@ buttonType: ButtonType.EDIT,
       action: () => this.onEdit()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.OK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.OK,
       label: 'debtor.paymentsTab.confirm.buttonLabel',
       enabled: combineLatestAnd([
         this.canСonfirm$,
@@ -69,8 +69,8 @@ buttonType: ButtonType.OK,
       action: () => this.setDialog('confirm')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.UNDO,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.UNDO,
       label: 'debtor.paymentsTab.cancel.buttonLabel',
       action: () => this.setDialog('cancel'),
       enabled: combineLatestAnd([
@@ -79,13 +79,13 @@ buttonType: ButtonType.UNDO,
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canRefresh$
     },
     {
-      type: ToolbarItemTypeEnum.CHECKBOX,
+      type: ToolbarItemType.CHECKBOX,
       action: () => this.toggleFilter(),
       label: 'widgets.payment.toolbar.showCanceled',
       state: this.displayCanceled

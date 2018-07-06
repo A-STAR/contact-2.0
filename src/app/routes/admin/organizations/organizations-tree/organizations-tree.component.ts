@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { merge } from 'rxjs/observable/merge';
 
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 import { ITreeNode, ITreeNodeInfo } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
@@ -37,14 +37,14 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
     title: 'organizations.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.setDialog('create'),
         enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -52,8 +52,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_DELETE'),
@@ -61,8 +61,8 @@ buttonType: ButtonType.DELETE,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchOrganizations(),
         enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
       },

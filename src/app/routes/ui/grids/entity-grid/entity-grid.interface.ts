@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IGridSelectionType } from '@app/shared/components/grids/grids.interface';
-import { TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 export interface IMetadataEntityGridConfig {
   apiKey: string;
@@ -22,7 +22,7 @@ export interface IEntityActionMetadata {
 export interface IEntityGridAction {
   type: string;
   title?: string;
-  buttonType?: TitlebarItemTypeEnum;
+  buttonType?: ToolbarItemType;
   enabled: (permissions: string[]) => Observable<boolean>;
   action: () => void;
 }

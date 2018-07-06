@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaign, IParticipant } from '../campaigns.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { CampaignsService } from '../campaigns.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -53,8 +53,8 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     title: 'utilities.campaigns.tabs.participants',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.setDialog('PARTICIPANT_ADD'),
         enabled: combineLatest(
           this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -64,8 +64,8 @@ buttonType: ButtonType.ADD,
         }),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('PARTICIPANT_REMOVE'),
         enabled: combineLatest(
           this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -76,8 +76,8 @@ buttonType: ButtonType.DELETE,
         }),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchParticipants().subscribe(participants => this.onParticipantsFetch(participants)),
         enabled: this.userPermissionsService.has('CAMPAIGN_VIEW'),
       },

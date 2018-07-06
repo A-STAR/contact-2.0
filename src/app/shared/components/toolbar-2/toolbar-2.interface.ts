@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-export enum ToolbarItemTypeEnum {
+export enum ToolbarItemType {
   BUTTON,
   BUTTON_ADD,
   BUTTON_ADD_USER,
@@ -52,13 +52,13 @@ export interface IToolbarElement {
 }
 
 export interface IToolbarButton extends IToolbarElement {
-  type: ToolbarItemTypeEnum;
+  type: ToolbarItemType;
   icon?: string;
   children?: Array<IToolbarElement>;
 }
 
 export interface IToolbarCheckbox extends IToolbarElement {
-  type: ToolbarItemTypeEnum.CHECKBOX;
+  type: ToolbarItemType.CHECKBOX;
   state: Observable<boolean>;
 }
 

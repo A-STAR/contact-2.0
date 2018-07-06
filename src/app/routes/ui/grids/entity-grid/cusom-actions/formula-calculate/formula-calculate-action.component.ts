@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IGridEntity, IEntityGridAction, IMetadataEntityGridConfig } from '../../entity-grid.interface';
-import { TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 

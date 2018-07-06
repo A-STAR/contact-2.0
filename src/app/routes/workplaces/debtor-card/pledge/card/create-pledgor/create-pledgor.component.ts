@@ -12,7 +12,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map } from 'rxjs/operators';
 
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { LayoutService } from '@app/core/layout/layout.service';
 import { PledgeCardCreatePledgorService } from './create-pledgor.service';
@@ -76,8 +76,8 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
     title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.SEARCH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.SEARCH,
         action: () => this.openPledgorSearch(),
       },
     ]
@@ -87,8 +87,8 @@ buttonType: ButtonType.SEARCH,
     title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.SEARCH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.SEARCH,
         action: () => this.openPropertySearch(),
         enabled: this.pledgorId$.pipe(
           map(Boolean),

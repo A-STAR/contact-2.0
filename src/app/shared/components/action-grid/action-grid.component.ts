@@ -49,7 +49,7 @@ import {
   MetadataActionType,
   IMetadataTitlebar,
 } from '@app/core/metadata/metadata.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
@@ -553,25 +553,25 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     // TODO(i.lobanov): move to action grid service and refactor
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON,
+        type: ToolbarItemType.BUTTON,
 buttonType: ButtonType.REFRESH,
         action: () => this.onRequest(),
         enabled: this.isTbItemEnabled$(ButtonType.REFRESH, permissions),
       }),
       search: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON,
+        type: ToolbarItemType.BUTTON,
 buttonType: ButtonType.SEARCH,
         action: () => this.onRequest(),
         enabled: this.isTbItemEnabled$(ButtonType.SEARCH, permissions),
       }),
       exportExcel: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON,
+        type: ToolbarItemType.BUTTON,
 buttonType: ButtonType.DOWNLOAD_EXCEL,
         action: () => this.exportExcel(),
         enabled: this.isTbItemEnabled$(ButtonType.DOWNLOAD_EXCEL, permissions),
       }),
       filter: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON,
+        type: ToolbarItemType.BUTTON,
 buttonType: ButtonType.FILTER,
         action: () => this.openFilter(),
         enabled: this.isTbItemEnabled$(ButtonType.FILTER, permissions),
@@ -591,7 +591,7 @@ buttonType: ButtonType.FILTER,
     };
   }
 
-  private isTbItemEnabled$(itemType: TitlebarItemTypeEnum, permissions?: string[]): Observable<boolean> {
+  private isTbItemEnabled$(itemType: ToolbarItemType, permissions?: string[]): Observable<boolean> {
     const conditions = [ permissions ? this.userPermissionsService.hasAll(permissions) : of(true) ];
     switch (itemType) {
       case ButtonType.SEARCH:

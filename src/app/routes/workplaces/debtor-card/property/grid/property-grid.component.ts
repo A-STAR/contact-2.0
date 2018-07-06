@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IProperty } from '@app/routes/workplaces/core/property/property.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -38,14 +38,14 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.propertyService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedProperty$.value),
       enabled: combineLatestAnd([
         this.propertyService.canEdit$,
@@ -53,8 +53,8 @@ buttonType: ButtonType.EDIT,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeProperty'),
       enabled: combineLatestAnd([
         this.propertyService.canDelete$,

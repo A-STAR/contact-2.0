@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmploymentService } from '@app/routes/workplaces/core/employment/employment.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -45,14 +45,14 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedEmployment$.value),
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -60,8 +60,8 @@ buttonType: ButtonType.EDIT,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeEmployment'),
       enabled: combineLatestAnd([
         this.canDelete$,
@@ -69,8 +69,8 @@ buttonType: ButtonType.DELETE,
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
     },

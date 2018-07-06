@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IReportParam } from '../params.interface';
 
@@ -44,8 +44,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
         this.paramsService.canEdit$
@@ -53,8 +53,8 @@ buttonType: ButtonType.ADD,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedParam$.value),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
@@ -62,8 +62,8 @@ buttonType: ButtonType.EDIT,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
@@ -71,8 +71,8 @@ buttonType: ButtonType.DELETE,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),

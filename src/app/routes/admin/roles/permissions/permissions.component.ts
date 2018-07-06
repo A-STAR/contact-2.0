@@ -5,7 +5,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { DataService } from '@app/core/data/data.service';
@@ -47,8 +47,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.onBeforeAdd(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_ADD'),
@@ -56,8 +56,8 @@ buttonType: ButtonType.ADD,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_EDIT'),
@@ -65,8 +65,8 @@ buttonType: ButtonType.EDIT,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_DELETE'),
@@ -74,8 +74,8 @@ buttonType: ButtonType.DELETE,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_VIEW'),

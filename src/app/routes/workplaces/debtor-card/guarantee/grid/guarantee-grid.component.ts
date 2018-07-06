@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IGuaranteeContract } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -29,14 +29,14 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -44,8 +44,8 @@ buttonType: ButtonType.EDIT,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD_USER,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD_USER,
       action: () => this.onAddGuarantor(),
       label: 'widgets.guaranteeContract.toolbar.add',
       enabled: combineLatestAnd([
@@ -54,8 +54,8 @@ buttonType: ButtonType.ADD_USER,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeGuarantee'),
       enabled: combineLatestAnd([
         this.canDelete$,
@@ -63,8 +63,8 @@ buttonType: ButtonType.DELETE,
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canView$
     },

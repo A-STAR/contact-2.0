@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map, distinctUntilChanged, first } from 'rxjs/operators';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -54,20 +54,20 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([ this.canEdit$, this.selectedDebt$.map(debt => debt && !!debt.id) ]),
       action: () => this.onEdit()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.CHANGE_STATUS,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.CHANGE_STATUS,
       label: 'widgets.debt.toolbar.changeStatus',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
@@ -79,8 +79,8 @@ buttonType: ButtonType.CHANGE_STATUS,
       action: () => this.onChangeStatus()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.CALL,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.CALL,
       label: 'widgets.debt.toolbar.call',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
@@ -89,8 +89,8 @@ buttonType: ButtonType.CALL,
       action: () => this.onNextCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.CLEAR,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.CLEAR,
       label: 'widgets.debt.toolbar.terminate',
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
@@ -121,8 +121,8 @@ buttonType: ButtonType.CLEAR,
       ]
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch()
     },
   ];

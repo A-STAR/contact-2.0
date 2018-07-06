@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { IdentityService } from '@app/routes/workplaces/core/identity/identity.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -63,26 +63,26 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([this.canEdit$, this.selectedRows$.map(s => !!s.length)]),
       action: () => this.onEdit(this.identityDoc)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([this.canDelete$, this.selectedRows$.map(s => !!s.length)]),
       action: () => this.setDialog('removeIdentity')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },

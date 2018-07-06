@@ -15,7 +15,7 @@ import {
 import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -54,8 +54,8 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
     title: 'portfolios.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.onAdd(),
         enabled: combineLatestAnd([
           this.canAdd$,
@@ -63,8 +63,8 @@ buttonType: ButtonType.ADD,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit(),
         enabled: combineLatestAnd([
           this.canEdit$,
@@ -73,8 +73,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.MOVE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.MOVE,
         action: () => this.onMove(),
         enabled: combineLatestAnd([
           this.canMove$,
@@ -83,8 +83,8 @@ buttonType: ButtonType.MOVE,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('delete'),
         enabled: combineLatestAnd([
           this.canDelete$,
@@ -93,8 +93,8 @@ buttonType: ButtonType.DELETE,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios)),
         enabled: this.canView$
       }

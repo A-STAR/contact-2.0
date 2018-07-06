@@ -10,7 +10,7 @@ import { of } from 'rxjs/observable/of';
 
 import { IEmail, IEmailSchedule } from '@app/routes/workplaces/core/email/email.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmailService } from '@app/routes/workplaces/core/email/email.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -251,44 +251,44 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([ this.canEdit$, this.selectedEmail$.pipe( map(Boolean) ) ]),
       action: () => this.onEdit(this.selectedEmailId)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.BLOCK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.BLOCK,
       enabled: combineLatestAnd([ this.canBlock$, this.isEmailActive$ ]),
       action: () => this.setDialog('block')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.UNBLOCK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.UNBLOCK,
       enabled: combineLatestAnd([ this.canBlock$, this.isEmailInactive$ ]),
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EMAIL,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EMAIL,
       enabled: this.canSchedule$,
       action: () => this.setDialog('schedule')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([ this.canDelete$, this.selectedEmail$.pipe(map(Boolean)) ]),
       action: () => this.setDialog('delete')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: this.canView$,
       action: () => this.fetch()
     },

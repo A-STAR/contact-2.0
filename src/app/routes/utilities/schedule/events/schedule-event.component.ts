@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IScheduleEvent } from './schedule-event.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ScheduleEventService } from './schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -62,14 +62,14 @@ export class ScheduleEventComponent extends DialogFunctions implements OnInit, O
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.scheduleEventService.canAdd$,
       action: () => this.onAdd(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([
         this.scheduleEventService.canEdit$,
         this.hasSingleSelection$,
@@ -77,8 +77,8 @@ buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([
         this.scheduleEventService.canDelete$,
         this.hasSingleSelection$,
@@ -86,8 +86,8 @@ buttonType: ButtonType.DELETE,
       action: () => this.onDelete(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.START,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.START,
       enabled: combineLatestAnd([
         this.scheduleEventService.canStart$,
         this.selectedEvents$.map(Boolean),
@@ -106,14 +106,14 @@ buttonType: ButtonType.START,
       ],
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: this.scheduleEventService.canView$,
       action: () => this.fetch(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.INFO,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.INFO,
       label: 'utilities.schedule.log.buttons.history',
       enabled: this.canViewLog$,
       action: () => this.setDialog('scheduleLogView'),

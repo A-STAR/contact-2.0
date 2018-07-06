@@ -11,7 +11,7 @@ import {
   IEmployeeCreateRequest,
 } from '../organizations.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -40,8 +40,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     title: 'organizations.employees.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.setDialog('create'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -49,8 +49,8 @@ buttonType: ButtonType.ADD,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -58,8 +58,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_DELETE'),
@@ -67,8 +67,8 @@ buttonType: ButtonType.DELETE,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchEmployees(),
         enabled: combineLatest(
           this.userPermissionsService.has('ORGANIZATION_VIEW'),

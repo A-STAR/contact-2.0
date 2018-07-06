@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
 
@@ -51,14 +51,14 @@ export class UserGridComponent implements OnInit, OnDestroy {
     title: 'users.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.onAdd(),
         enabled: this.userPermissionsService.hasOne([ 'USER_ADD' ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit({ id: this.selectedUserId } as any),
         enabled: combineLatestAnd([
           this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT', 'USER_LDAP_LOGIN_EDIT' ]),
@@ -66,14 +66,14 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.userPermissionsService.has('USER_VIEW')
       },
       // TODO(a.tymchuk): implement a dropdown settings button with options
       // {
-      //   type: ToolbarItemTypeEnum.CHECKBOX,
+      //   type: ToolbarItemType.CHECKBOX,
       //   action: () => this.toggleInactiveFilter(),
       //   label: 'users.toolbar.action.show_inactive_users',
       //   state: this.usersService.state.map(state => state.displayInactive)

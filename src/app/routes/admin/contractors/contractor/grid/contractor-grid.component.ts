@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -41,14 +41,14 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
     title: 'contractors.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.onAdd(),
         enabled: this.canAdd$
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit(),
         enabled: combineLatestAnd([
           this.canEdit$,
@@ -56,8 +56,8 @@ buttonType: ButtonType.EDIT,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('delete'),
         enabled: combineLatestAnd([
           this.canDelete$,
@@ -65,8 +65,8 @@ buttonType: ButtonType.DELETE,
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchContractors(),
         enabled: this.canView$
       }

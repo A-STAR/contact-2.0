@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IObject } from '../objects.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ObjectsService } from '../objects.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
@@ -30,14 +30,14 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.objectsService.canAdd$,
       action: () => this.setDialog('add'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([
         this.objectsService.canDelete$,
         this.selectedObjects$.map(objects => objects && !!objects.length)
@@ -45,8 +45,8 @@ buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
-buttonType: ButtonType.REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: this.objectsService.canView$,
       action: () => this.fetch(),
     },
