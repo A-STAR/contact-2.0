@@ -3,7 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
 import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
-import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { CampaignService } from '../../campaign.service';

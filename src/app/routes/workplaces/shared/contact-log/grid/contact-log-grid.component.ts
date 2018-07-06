@@ -6,7 +6,8 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IContactLog } from '../contact-log.interface';
-import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContactLogService } from '../contact-log.service';

@@ -4,7 +4,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { map, first, filter, switchMap } from 'rxjs/operators';
 
 import { IDictionary, ITerm } from '../dictionaries.interface';
-import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DictionariesService } from '../dictionaries.service';

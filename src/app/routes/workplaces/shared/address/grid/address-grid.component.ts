@@ -16,7 +16,8 @@ import { of } from 'rxjs/observable/of';
 
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { AddressService } from '@app/routes/workplaces/core/address/address.service';

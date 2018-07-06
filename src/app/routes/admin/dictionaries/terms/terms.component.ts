@@ -5,7 +5,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITerm } from '../dictionaries.interface';
-import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DictionariesService } from '../dictionaries.service';
