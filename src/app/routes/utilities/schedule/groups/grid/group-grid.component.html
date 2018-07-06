@@ -8,12 +8,14 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-simple-grid
+<app-action-grid
   persistenceKey="[grid] utilities/schedule/groups"
-  [columns]="columns"
+  [isSimple]="true"
+  [fullHeight]="true"
+  [actions]="actions"
   [rows]="groups"
-  [selection]="selection"
-  [toolbar]="toolbarItems"
+  [columns]="columns"
+  [toolbarItems]="toolbarItems"
   (selectRow)="onSelectRow($event)"
   (dblClick)="onEdit($event)"
-></app-simple-grid>
+></app-action-grid>

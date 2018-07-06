@@ -12,7 +12,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 
+import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IGroup } from '../groups.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -84,6 +86,47 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.toggleForCurrentUser(),
       label: 'widgets.groups.toolbar.action.forCurrentUser',
       state: this.forCurrentUser
+    }
+  ];
+
+  actions: IMetadataAction[] = [
+    {
+      action: 'callList',
+      enabled: () => this.selectedGroup$.value && this.selectedGroup$.value.entityTypeCode === 19,
+      children: [
+        {
+          id: 19,
+          action: 'callListCreate',
+          asyncMode: false,
+          params: [ 'id' ],
+          addOptions: [
+            {
+              name: 'taskTypeCode',
+              value: [ 1 ]
+            }
+          ],
+          applyTo: {
+            selected: true,
+            all: true
+          }
+        },
+        {
+          id: 19,
+          action: 'callListUpdate',
+          asyncMode: false,
+          params: [ 'id' ],
+          addOptions: [
+            {
+              name: 'taskTypeCode',
+              value: [ 2 ]
+            }
+          ],
+          applyTo: {
+            selected: true,
+            all: true
+          }
+        }
+      ]
     }
   ];
 
