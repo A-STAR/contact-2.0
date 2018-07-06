@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 @Injectable()
 export class RoutingService {
@@ -8,8 +8,12 @@ export class RoutingService {
     private router: Router,
   ) {}
 
-  navigate(segments: string[], route: ActivatedRoute = this.route): Promise<boolean> {
-    return this.router.navigate(segments, { relativeTo: route });
+  isRouteMatchesUrl(route: ActivatedRoute, url: string): boolean {
+    return this.getRouteFullUrl(route) === url;
+  }
+
+  navigate(segments: string[], route: ActivatedRoute = this.route, queryParams?: Params): Promise<boolean> {
+    return this.router.navigate(segments, { relativeTo: route, queryParams });
   }
 
   /**
@@ -49,6 +53,27 @@ export class RoutingService {
    */
   getRouteParam(route: ActivatedRoute, key: string): any {
     return this.getRouteParamRecursively(route.root, key);
+  }
+
+  getRouteQueryParamsString(route: ActivatedRoute): string {
+    return Object.keys(route.snapshot.queryParams)
+      .reduce((acc, key) => [ ...acc, `${key}=${route.snapshot.queryParams[key]}` ], [])
+      .join('&');
+  }
+
+  getRouteUrl(route: ActivatedRoute): string {
+    return `/${[
+        ...route.snapshot.pathFromRoot.reduce((acc, r) => [ ...acc, ...r.url ], []),
+        ...route.snapshot.url
+      ].join('/')}`;
+  }
+
+  getRouteFullUrl(route: ActivatedRoute): string {
+    let queryString = this.getRouteQueryParamsString(route);
+    if (queryString.length) {
+      queryString = '?' + queryString;
+    }
+    return `${this.getRouteUrl(route)}${queryString}`;
   }
 
   private getRouteParamRecursively(route: ActivatedRoute, key: string): any {

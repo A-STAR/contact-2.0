@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, tap } from 'rxjs/operators';
+
+import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
 
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 import { SettingsService } from '@app/core/settings/settings.service';
 import { LayoutService } from '@app/layout/layout.service';
+import { LayoutService as CoreLayoutService } from '@app/core/layout/layout.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,21 +18,30 @@ import { LayoutService } from '@app/layout/layout.service';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
+  private lastDebtors$ = this.coreLayoutService.lastDebtors$;
+
   readonly menuItems$ = combineLatest(
     this.menuService.menuItems,
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       startWith(null),
     ),
-    items => items
+    this.lastDebtors$,
+    (items: IMenuItem[]) => items
   )
   .pipe(
-    map(items => {
+    map((items: IMenuItem[]) => {
       const url = '/app/' + this.router.url.split('/').filter(Boolean)[1];
       const item = items.find(i => i.link === url);
+
+      if (url === '/app/workplaces') {
+        this.getLastDebtCard(item);
+      }
+
       return item && item.children || [ item ];
     }),
-    map(items => items.filter(item => item && item.text)),
+    map((items: IMenuItem[]) => items.filter(item => item && item.text && item.icon)),
+    tap(() => this.cdRef.markForCheck()),
   );
 
   showTitle = false;
@@ -38,7 +51,8 @@ export class SidebarComponent implements OnInit {
     private menuService: GuiObjectsService,
     private router: Router,
     private settingsService: SettingsService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private coreLayoutService: CoreLayoutService,
   ) {}
 
   ngOnInit(): void {
@@ -61,4 +75,48 @@ export class SidebarComponent implements OnInit {
       this.showTitle = true;
     }
   }
+
+  private getLastDebtCard(item: IMenuItem): void {
+    const lastDebtors = this.lastDebtors$.value;
+    const lastDebtorsLength = lastDebtors.length;
+    const hasLastDebtors = lastDebtorsLength !== 0;
+
+    const path = '/app/workplaces/debtor/';
+    const lastDebtorCardIndex = item.children.findIndex(e => e.link.includes(path) );
+    const hasLastDebtor = lastDebtorCardIndex !== -1;
+
+    if (hasLastDebtors) {
+      const lastDebtorIndex = lastDebtorsLength - 1;
+      const lastDebtor = lastDebtors[lastDebtorIndex];
+      const [ debtorId, debtId ] = lastDebtor;
+      const lastDebtorCardLink = `${path}${debtorId}/debt/${debtId}`;
+
+      if (!hasLastDebtor) {
+        const lastDebtCard: IMenuItem = {
+          icon: 'co-m-debtor-card',
+          text: 'sidebar.nav.menu.DEBTOR_CARD',
+          link: lastDebtorCardLink,
+          docs: 'debt_card',
+          children: null,
+          permission: of(true),
+        };
+
+        (item.children as IMenuItem[]) = [...item.children, lastDebtCard];
+      } else {
+        item.children[lastDebtorCardIndex].link = lastDebtorCardLink;
+      }
+
+    } else {
+
+      if (!hasLastDebtor) {
+        return;
+      }
+
+      const itemsWithoutLastDebtCard: IMenuItem[] = item.children.filter((_, i) => i !== lastDebtorCardIndex);
+
+      (item.children as IMenuItem[]) = itemsWithoutLastDebtCard;
+    }
+
+  }
+
 }

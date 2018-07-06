@@ -17,4 +17,4 @@ import { CustomOperationParamsComponent } from './custom-operation-params.compon
     CustomOperationParamsComponent
   ],
 })
-export class CustomOperationParamsModule { }
+export class CustomOperationParamsModule {}

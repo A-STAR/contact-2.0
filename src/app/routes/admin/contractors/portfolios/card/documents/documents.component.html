@@ -1,0 +1,12 @@
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+  </div>
+  <div class="flex-item grow">
+    <app-document-grid
+      [addForEntity]="[entityType]"
+      [entityType]="entityType"
+      [entityId]="portfolioId$ | async"
+    ></app-document-grid>
+  </div>
+</div>

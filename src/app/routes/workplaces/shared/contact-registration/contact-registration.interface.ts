@@ -58,3 +58,14 @@ export interface IOutcome {
 export interface IContactRegistrationData {
   code: number;
 }
+
+// tslint:disable:no-bitwise
+export enum CompleteStatus {
+  None       = 0,
+  Payment    = 1 << 0,
+  Promise    = 1 << 1,
+  Address    = 1 << 2,
+  Phone      = 1 << 3,
+  Attachment = 1 << 4,
+}
+// tslint:enable:no-bitwise

@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IObject } from '../objects.interface';
-import { IOption } from '@app/core/converter/value-converter.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -99,8 +98,8 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
     this.viewPermissionSubscription.unsubscribe();
   }
 
-  onSelectType(options: IOption[]): void {
-    this.selectedTypeCode = Number(options[0].value);
+  onSelectType(typeCode: number): void {
+    this.selectedTypeCode = typeCode;
     this.fetch();
   }
 

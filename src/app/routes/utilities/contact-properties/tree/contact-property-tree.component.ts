@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -19,13 +18,14 @@ import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd, doOnceIf } from '@app/core/utils/helpers';
 import { isEmpty } from '@app/core/utils';
 import { toTreeNodes } from '@app/core/utils/tree';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-contact-property-tree',
   templateUrl: './contact-property-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactPropertyTreeComponent extends DialogFunctions implements OnInit {
+export class ContactPropertyTreeComponent extends DialogFunctions implements OnInit, OnDestroy {
   contactType: number = null;
   contactTypeOptions = [];
 
@@ -60,6 +60,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   dialog: 'add' | 'edit' | 'delete';
 
   private _nodes: ITreeNode[];
+  private treeParamsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -72,7 +73,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   ngOnInit(): void {
-    combineLatest(
+    this.treeParamsSub = combineLatest(
       this.userConstantsService.get('ContactTree.ContactType.List'),
       this.userDictionariesService
         .getDictionariesAsOptions([
@@ -80,13 +81,16 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
           UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE,
         ])
     )
-    .pipe(first())
     .subscribe(([ contactType, dictionaries ]) => {
       this.initContactTypeSelect(dictionaries, contactType);
       this.initTreeTypeSelect(dictionaries);
       this.cdRef.markForCheck();
       this.fetch();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.treeParamsSub.unsubscribe();
   }
 
   get nodes(): ITreeNode[] {
@@ -164,7 +168,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }, types: IUserConstant): void {
     this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TYPE]
-      .filter(option => types.valueS.split(',').includes(String(option.value)));
+      .filter(option => types.valueS === 'ALL' || types.valueS.split(',').includes(String(option.value)));
     this.contactType = this.contactTypeOptions.length ? this.contactTypeOptions[0].value : null;
   }
 
@@ -174,12 +178,14 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   private fetch(): void {
-    this.contactPropertyService.fetchAll(this.contactType, this.treeType)
-      .map(toTreeNodes(false, true))
-      .subscribe(nodes => {
-        this._nodes = nodes;
-        this.cdRef.markForCheck();
-      });
+    if (this.contactType && this.treeType) {
+      this.contactPropertyService.fetchAll(this.contactType, this.treeType)
+        .map(toTreeNodes(false, true))
+        .subscribe(nodes => {
+          this._nodes = nodes;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   private get canAdd$(): Observable<boolean> {

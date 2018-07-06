@@ -1,27 +1,28 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
-import { switchMap } from 'rxjs/operators/switchMap';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter, switchMap, map, distinctUntilChanged, catchError } from 'rxjs/operators';
 
+import { equals } from 'ramda';
+
+import { Debt, Person } from '@app/entities';
+import { IAppState } from '@app/core/state/state.interface';
 import { IDebtNextCall, IAddressOrPhone } from './debtor.interface';
 
+import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RepositoryService } from '@app/core/repository/repository.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
-
-import { Debt, Person } from '@app/entities';
-import { catchError } from 'rxjs/operators/catchError';
-import { equals } from 'ramda';
+import { LayoutService } from '@app/core/layout/layout.service';
 
 @Injectable()
-export class DebtorService {
+export class DebtorService extends AbstractActionService {
 
   static CONTACT_TYPE_INCOMING_CALL = 1;
   static CONTACT_TYPE_OUTGOING_CALL = 2;
@@ -32,13 +33,22 @@ export class DebtorService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
+  private _lastDebtors = new Map<number, number>();
+  private _debtors = new Map<number, number>();
+  debtors$ = new BehaviorSubject<Array<[number, number]>>([]);
+
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private repo: RepositoryService,
     private userPermissionsService: UserPermissionsService,
     private workplacesService: WorkplacesService,
-  ) {}
+    private layoutService: LayoutService,
+    protected store: Store<IAppState>
+  ) {
+    super();
+  }
 
   readonly debtId$ = new BehaviorSubject<number>(null);
   readonly debtorId$ = new BehaviorSubject<number>(null);
@@ -143,6 +153,59 @@ export class DebtorService {
       .pipe(
         catchError(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback())
       );
+  }
+
+  openTab(debtorId: number, debtId: number): void {
+
+    const isDebt = this._debtors.get(debtorId) === debtId;
+
+    if (!isDebt) {
+      this.addTab(debtorId, debtId);
+    }
+
+    this.addLastDebtor(debtorId, debtId);
+
+  }
+
+  removeTab(debtorId: number): void {
+    this._debtors.delete(debtorId);
+    this.debtors$.next(this.debtors);
+
+    this._lastDebtors.delete(debtorId);
+    this.layoutService.lastDebtors$.next(this.lastDebtors);
+  }
+
+  closeCard(debtId: number): Observable<void> {
+    return this.dataService.create('/pbx/debt/{debtId}/closeCard', { debtId }, {})
+      .pipe(
+        catchError(this.notificationsService.error('debt.close.error').dispatchCallback()),
+      );
+  }
+
+  private addTab(debtorId: number, debtId: number): void {
+    this._debtors.set(debtorId, debtId);
+    this.debtors$.next(this.debtors);
+  }
+
+  private addLastDebtor(debtorId: number, debtId: number): void {
+
+    const hasDebtor = this._lastDebtors.has(debtorId);
+
+    if (hasDebtor) {
+      this._lastDebtors.delete(debtorId);
+    }
+
+    this._lastDebtors.set(debtorId, debtId);
+
+    this.layoutService.lastDebtors$.next(this.lastDebtors);
+  }
+
+  get lastDebtors(): Array<[number, number]> {
+    return Array.from(this._lastDebtors as Map<number, number>);
+  }
+
+  private get debtors(): Array<[number, number]> {
+    return Array.from(this._debtors as Map<number, number>);
   }
 
 }

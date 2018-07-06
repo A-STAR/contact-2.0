@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
@@ -35,6 +34,8 @@ import { DynamicLayoutComponent } from '@app/shared/components/dynamic-layout/dy
 
 import { invert } from '@app/core/utils';
 
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
+
 import { createContactPersonLayout, editContactPersonLayout } from './layout';
 
 @Component({
@@ -50,6 +51,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('employment',     { read: TemplateRef }) employmentTemplate:     TemplateRef<any>;
   @ViewChild('addresses',      { read: TemplateRef }) addressesTemplate:      TemplateRef<any>;
   @ViewChild('phones',         { read: TemplateRef }) phonesTemplate:         TemplateRef<any>;
+  @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
   @ViewChild('personTitlebar',    { read: TemplateRef }) personTitlebarTemplate:    TemplateRef<any>;
@@ -123,7 +125,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
 
-  private subscription = new Subscription();
+  private subscription = new SubscriptionBag();
 
   readonly phoneContactType = 1;
 
@@ -148,6 +150,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
       employment: this.employmentTemplate,
       addresses: this.addressesTemplate,
       phones: this.phonesTemplate,
+      emails: this.emailsTemplate,
       documents: this.documentsTemplate,
       personTitlebar: this.personTitlebarTemplate,
       personClearButton: this.personClearButtonTemplate,
@@ -165,8 +168,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     // One of many reasons route reuse is inconvenient
     if (!this.editing) {
       const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-        this.layout.resetForm();
-        this.layout.resetForm('link');
+        this.layout.resetAndEnableAll();
+        this.isSubmitDisabled$.next(false);
       });
       this.subscription.add(routerSubscription);
     }
@@ -207,7 +210,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
         first(),
         mergeMap(selectedPerson => {
           if (selectedPerson) {
-            return of(selectedPerson.id);
+            return of(selectedPerson.id).pipe(first());
           }
           const person = this.layout.getData();
           return this.editing

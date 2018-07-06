@@ -4,15 +4,18 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { fromEvent } from 'rxjs/observable/fromEvent';
 import { Subscription } from 'rxjs/Subscription';
-import { filter, throttleTime, tap } from 'rxjs/operators';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { map, filter, throttleTime, tap } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { CallService } from '@app/core/calls/call.service';
 import { IncomingCallService } from '../../incoming-call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -27,7 +30,7 @@ import { addFormLabel } from '@app/core/utils';
   styleUrls: [ 'filter.component.scss' ],
   templateUrl: 'filter.component.html',
 })
-export class FilterComponent implements AfterViewInit, OnDestroy {
+export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private static PERSON_ROLE_INITIAL = 1;
@@ -48,9 +51,29 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
   ) {}
+
+  ngOnInit(): void {
+    const subscription = combineLatest(
+      this.route.queryParams,
+      this.callService.pbxState$,
+    )
+      .pipe(
+        filter(([ params, state ]) =>
+          state && state.payload && params.phoneNumber && params.phoneNumber === state.payload.phoneNumber
+        ),
+        map(([ _, state ]) => state)
+      )
+      .subscribe(state => {
+        this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
+        this.cdRef.markForCheck();
+      });
+
+    this.subscription.add(subscription);
+  }
 
   ngAfterViewInit(): void {
     const debtId = Number(this.route.snapshot.paramMap.get('debtId'));

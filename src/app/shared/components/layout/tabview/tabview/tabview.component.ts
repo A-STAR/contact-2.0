@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
@@ -14,10 +13,14 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
+  DoCheck,
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { delay } from 'rxjs/operators';
 
-import { ILayoutDimension } from '@app/layout/layout.interface';
 import { LayoutService } from '@app/layout/layout.service';
 
 import { TabViewTabComponent } from '../tab/tab.component';
@@ -30,72 +33,116 @@ import { TabViewTabComponent } from '../tab/tab.component';
   templateUrl: 'tabview.component.html',
 })
 
-export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {
+export class TabViewComponent implements OnInit, OnDestroy, AfterViewInit, DoCheck {
   private static MENU_BTN_SPACE = 50;
 
-  @ViewChildren('tabHeader') tabHeaders: QueryList<ElementRef>;
+  private originalOrderedTabs: TabViewTabComponent[];
 
-  @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
+  private tabHeaders$ = new BehaviorSubject<QueryList<ElementRef>>(null);
+  @ViewChildren('tabHeader') set tabHeader(value: QueryList<ElementRef>) {
+    this.tabHeaders$.next(value);
+    this.setTabsOrder();
+  }
+
+  private tabs$ = new BehaviorSubject<TabViewTabComponent[]>(null);
+  @ContentChildren(TabViewTabComponent) set tabComponents(value: QueryList<TabViewTabComponent>) {
+    this.originalOrderedTabs = [ ...value.toArray() ];
+    this.tabs$.next(value.toArray());
+  }
 
   @Input() fullHeight = false;
   @Input() noMargin = false;
 
   @Output() selectTab = new EventEmitter<number>();
 
-  private tabHeaderDimensions: Partial<ILayoutDimension>[] = [];
-
   private layoutSubscription: Subscription;
+  private routerSubscription: Subscription;
+  private tabsSubscriptions: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private el: ElementRef,
     private renderer: Renderer2,
-    private layoutService: LayoutService
+    private router: Router,
+    private layoutService: LayoutService,
   ) { }
 
   ngOnInit(): void {
     this.layoutSubscription = this.layoutService.contentDimension$
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
-  }
 
-  ngAfterContentInit(): void {
-    const activeTabs = this.tabs.filter(tab => tab.active);
-
-    // if no active tab is set, activate the first
-    if (!activeTabs.length) {
-      this.onSelectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
-    }
+    this.routerSubscription = this.router.events
+      .filter(event => event instanceof NavigationEnd)
+      .subscribe(() => this.cdRef.markForCheck());
   }
 
   ngAfterViewInit(): void {
-    this.tabHeaderDimensions = this.tabHeaders.map(tabHeader => ({
-      left: tabHeader.nativeElement.offsetLeft,
-      width: tabHeader.nativeElement.clientWidth,
-    }));
+    this.tabsSubscriptions = combineLatest(
+      this.tabs.map(tab => tab.visible$),
+      this.tabHeaders$
+    )
+    .pipe(
+      delay(0)
+    )
+    .subscribe(() => {
+      this.setInitialTab();
+      this.cdRef.markForCheck();
+    });
+  }
+
+  ngDoCheck(): void {
     this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
+    this.routerSubscription.unsubscribe();
     this.layoutSubscription.unsubscribe();
+    this.tabsSubscriptions.unsubscribe();
+  }
+
+  get tabs(): TabViewTabComponent[] {
+    return this.tabs$.value;
+  }
+
+  get tabHeaders(): QueryList<ElementRef> {
+    return this.tabHeaders$.value;
   }
 
   get visibleTabs(): TabViewTabComponent[] {
-    return this.tabs.filter((_, index) => this.isHeaderTabVisible(index));
+    return this.tabs.filter(tab => tab.visible);
   }
 
-  get hiddenTabs(): TabViewTabComponent[] {
-    return this.tabs.filter((_, index) => !this.isHeaderTabVisible(index));
+  get menuTabs(): TabViewTabComponent[] {
+    return this.tabs.filter(tab => tab.visible && !this.feetsInView(tab));
   }
 
-  isHeaderTabVisible(tabIndex: number): boolean {
-    const activeIndex = this.tabs.toArray().findIndex(el => el.active);
-    const activeTabHeader = this.tabHeaderDimensions[activeIndex];
-    const tabHeader = this.tabHeaderDimensions[tabIndex] || {};
+  feetsInView(tab: TabViewTabComponent): boolean {
+    const visibleTabs = this.visibleTabs;
+    const tabIndex = visibleTabs.indexOf(tab);
+    const activeIndex = visibleTabs.findIndex(el => el.active);
+    const visibleHeaders = this.tabHeaders && this.tabHeaders.toArray();
+
+    if (activeIndex < 0 || !visibleHeaders || visibleHeaders.length !== visibleTabs.length) {
+      return false;
+    }
+
+    const headerWidth = this.tabHeaderWidth - TabViewComponent.MENU_BTN_SPACE;
+
+    const activeTabHeader = {
+      left: visibleHeaders[activeIndex].nativeElement.offsetLeft,
+      width: visibleHeaders[activeIndex].nativeElement.clientWidth
+    };
+    const tabHeader = {
+      left: visibleHeaders[tabIndex].nativeElement.offsetLeft,
+      width: visibleHeaders[tabIndex].nativeElement.clientWidth
+    };
+
     const feetsInView = activeIndex > tabIndex
-      ? tabHeader.left + tabHeader.width < this.tabHeaderWidth - activeTabHeader.width
-      : tabHeader.left + tabHeader.width < this.tabHeaderWidth;
-    return !tabHeader.width || activeIndex === tabIndex || feetsInView;
+      ? tabHeader.left + tabHeader.width < headerWidth - activeTabHeader.width
+      : tabHeader.left + tabHeader.width < headerWidth;
+
+    return !this.tabHeaderWidth || activeIndex === tabIndex || feetsInView;
   }
 
   onSelectTab(event: MouseEvent, tab: TabViewTabComponent): void {
@@ -103,11 +150,11 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
       return;
     }
 
-    const tabIndex = this.getTabIndex(tab);
-    const activeIndex = this.tabs.toArray().findIndex(el => el.active);
+    const tabIndex = this.originalOrderedTabs.findIndex(el => el === tab);
+    const activeIndex = this.originalOrderedTabs.findIndex(el => el.active);
 
     // deactivate all tabs
-    this.tabs.toArray().forEach(el => el.active = false);
+    this.tabs.forEach(el => el.active = false);
 
     // activate the tab the user has clicked on only if the selection is different
     tab.active = true;
@@ -119,11 +166,11 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
       return;
     }
 
-    this.showRipple(event, tabIndex);
+    this.showRipple(event, this.tabs.indexOf(tab));
   }
 
   private get tabHeaderWidth(): any {
-    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
+    return this.el.nativeElement.querySelector('ul').clientWidth;
   }
 
   private showRipple(event: MouseEvent, tabIndex: number): void {
@@ -159,7 +206,21 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
       .addClass('rippleEffect');
   }
 
-  private getTabIndex(tab: TabViewTabComponent): number {
-    return this.tabs.toArray().findIndex(el => el === tab);
+  private setInitialTab(): void {
+    const tabs = this.tabs.filter(tab => !tab.disabled && tab.visible);
+    const activeTabs = tabs.filter(tab => tab.active);
+
+    // if no active tab is set, activate the first
+    if (!activeTabs.length && tabs.length) {
+      this.onSelectTab(null, tabs[0]);
+    }
+  }
+
+  private setTabsOrder(): void {
+    this.tabs$.next([
+      ...this.originalOrderedTabs.filter(tab => tab.visible && this.feetsInView(tab)),
+      ...this.originalOrderedTabs.filter(tab => tab.visible && !this.feetsInView(tab)),
+      ...this.originalOrderedTabs.filter(tab => !tab.visible)
+    ]);
   }
 }

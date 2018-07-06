@@ -7,6 +7,7 @@ import { IActionGridAction } from '@app/shared/components/action-grid/action-gri
 import { IGridDef, IInfoDebtEntry, IGridColumn } from './info-debt.interface';
 
 import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { GridComponent } from './grid/grid.component';
@@ -23,11 +24,10 @@ const label = makeKey('modules.infoDebt');
 })
 export class InfoDebtComponent {
   private selectedRows$ = new BehaviorSubject<IInfoDebtEntry[]>(null);
+  private selectedTabIndex$ = new BehaviorSubject<number>(0);
 
   @ViewChildren(GridComponent) gridComponents: QueryList<GridComponent>;
   @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
-
-  selectedTabIndex = 0;
 
   smsGridColumns: IGridColumn[] = [
     { dataType: 1, name: 'smsId' },
@@ -66,19 +66,22 @@ export class InfoDebtComponent {
       rowIdKey: 'debtId',
       gridKey$: of('infoDebtDebtors'),
       title: label('debtors.title'),
-      isInitialised: true
+      isInitialised: true,
+      permission: this.userPermissionsService.has('INFO_DEBT_DEBTOR_TAB')
     },
     {
       rowIdKey: 'id',
       gridKey$: of('infoDebtGuarantors'),
       title: label('guarantors.title'),
-      isInitialised: false
+      isInitialised: false,
+      permission: this.userPermissionsService.has('INFO_DEBT_GUARANTOR_TAB')
     },
     {
       rowIdKey: 'id',
       gridKey$: of('infoDebtPledgors'),
       title: label('pledgors.title'),
-      isInitialised: false
+      isInitialised: false,
+      permission: this.userPermissionsService.has('INFO_DEBT_PLEDGOR_TAB')
     },
   ];
 
@@ -90,7 +93,8 @@ export class InfoDebtComponent {
         .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/sms`),
       title: label('sms.title'),
       isInitialised: true,
-      columns: this.smsGridColumns
+      columns: this.smsGridColumns,
+      permission: this.selectedTabIndex$.flatMap(index => this.grids[index].permission)
     },
     {
       rowIdKey: 'emailId',
@@ -99,7 +103,8 @@ export class InfoDebtComponent {
         .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/email`),
       title: label('email.title'),
       isInitialised: false,
-      columns: this.emailGridColumns
+      columns: this.emailGridColumns,
+      permission: this.selectedTabIndex$.flatMap(index => this.grids[index].permission)
     },
     {
       rowIdKey: 'letterId',
@@ -110,19 +115,22 @@ export class InfoDebtComponent {
       isInitialised: false,
       actions: [
         {
-          action: 'letterExport',
-          label: 'modules.infoDebt.letter.grid',
+          action: 'letterExport'
         }
       ],
-      columns: this.letterGridColumns
+      columns: this.letterGridColumns,
+      permission: this.selectedTabIndex$.flatMap(index => this.grids[index].permission)
     }
   ];
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private userPermissionsService: UserPermissionsService
+  ) { }
 
   get currentGrid(): GridComponent {
     const components = this.gridComponents && this.gridComponents.toArray();
-    return components && components[this.selectedTabIndex];
+    return components && components[this.selectedTabIndex$.value];
   }
 
   get selection(): IInfoDebtEntry[] {
@@ -131,7 +139,7 @@ export class InfoDebtComponent {
 
   onTabSelect(tabIndex: number): void {
     this.grids[tabIndex].isInitialised = true;
-    this.selectedTabIndex = tabIndex;
+    this.selectedTabIndex$.next(tabIndex);
     this.selectedRows$.next(this.selection);
     this.cdRef.markForCheck();
   }
@@ -153,7 +161,7 @@ export class InfoDebtComponent {
       )
       .subscribe(rows => {
         const detailRow = action.selection.node;
-        this.downloader.name = detailRow.data.templateName;
+        this.downloader.fallbackName = detailRow.data.templateName;
         this.downloader.url = `/debts/${rows[0].debtId}/letter/${detailRow.data.letterId}/file`;
         this.downloader.download();
       });

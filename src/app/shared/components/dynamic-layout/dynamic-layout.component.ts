@@ -55,6 +55,18 @@ export class DynamicLayoutComponent implements OnInit {
     this.controlService.disableFormGroup(groupName);
   }
 
+  toggleFormGroup(groupName?: string, enabled: boolean = true): void {
+    if (enabled) {
+      this.controlService.enableFormGroup(groupName);
+    } else {
+      this.controlService.disableFormGroup(groupName);
+    }
+  }
+
+  isValid(form?: string): Observable<boolean> {
+    return this.controlService.isValid(form);
+  }
+
   canSubmit(form?: string): Observable<boolean> {
     return this.controlService.canSubmit(form);
   }
@@ -65,6 +77,10 @@ export class DynamicLayoutComponent implements OnInit {
 
   resetForm(form?: string): void {
     this.formService.reset(form);
+  }
+
+  resetAndEnableAll(): void {
+    this.formService.resetAndEnableAll();
   }
 
   getData(form?: string): any {

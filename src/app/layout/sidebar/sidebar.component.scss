@@ -32,7 +32,7 @@ nav {
         overflow: hidden;
 
         .icon-container {
-          height: 38px;
+          width: 30px;
           margin-right: 10px;
 
           i {
@@ -44,7 +44,7 @@ nav {
           // flex: 1 1 0px;
           display: none;
           overflow-x: hidden;
-          &.showTitle {
+          &.show-title {
             display: block;
             animation: showTitle 0.1s;
           }

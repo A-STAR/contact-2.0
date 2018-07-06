@@ -55,20 +55,57 @@
           "card": {
             "forms": {
               "contract": {
-                "title": "Договор"
+                "title": "Договор",
+                "form": {
+                  "contractNumber": "Номер договора",
+                  "contractStartDate": "Начало",
+                  "contractEndDate": "Окончание",
+                  "comment": "Комментарий"
+                }
               },
               "pledgor": {
-                "title": "Залогодатель"
+                "title": "Залогодатель",
+                "form": {
+                  "typeCode": "Тип",
+                  "lastName": "Фамилия/Название",
+                  "firstName": "Имя",
+                  "middleName": "Отчество",
+                  "birthDate": "Дата рождения",
+                  "birthPlace": "Место рождения",
+                  "genderCode": "Пол",
+                  "familyStatusCode": "Семейное положение",
+                  "educationCode": "Образование",
+                  "stringValue1": "Строковый атрибут 1",
+                  "stringValue2": "Строковый атрибут 2",
+                  "stringValue3": "Строковый атрибут 3",
+                  "stringValue4": "Строковый атрибут 4",
+                  "stringValue5": "Строковый атрибут 5",
+                  "stringValue6": "Строковый атрибут 6",
+                  "stringValue7": "Строковый атрибут 7",
+                  "stringValue8": "Строковый атрибут 8",
+                  "stringValue9": "Строковый атрибут 9",
+                  "stringValue10": "Строковый атрибут 10",
+                  "comment": "Комментарий"
+                }
               },
               "property": {
-                "title": "Имущество"
+                "title": "Имущество",
+                "form": {
+                  "propertyName": "Название",
+                  "propertyType": "Тип",
+                  "pledgeValue": "Залоговая стоимость",
+                  "marketValue": "Рыночная стоимость",
+                  "currencyId": "Валюта"
+                }
+              },
+              "tabs": {
+                "addresses": "Адреса",
+                "documents": "Документы",
+                "emails": "Email-адреса",
+                "employment": "Трудоустройство",
+                "identification": "Удостоверения личности",
+                "phones": "Телефоны"
               }
-            },
-            "titles": {
-              "add": "Добавить договор",
-              "addPledgor": "Добавить залогодателя",
-              "addProperty": "Добавить имущество",
-              "edit": "Редактирование договора"
             }
           }
         }
@@ -297,6 +334,38 @@
               }
             }
           }
+        },
+        "personSearch": {
+          "title": "Выбор персоны",
+          "filter": {
+            "id": "ID",
+            "lastName": "Фамилия/Название",
+            "firstName": "Имя",
+            "middleName": "Отчество",
+            "typeCode": "Тип",
+            "birthDate": "Дата рождения",
+            "genderCode": "Пол",
+            "passportNumber": "Серия и номер паспорта",
+            "stringValue1": "Строковый атрибут 1",
+            "stringValue2": "Строковый атрибут 2",
+            "stringValue3": "Строковый атрибут 3",
+            "stringValue4": "Строковый атрибут 4",
+            "stringValue5": "Строковый атрибут 5",
+            "stringValue6": "Строковый атрибут 6",
+            "stringValue7": "Строковый атрибут 7",
+            "stringValue8": "Строковый атрибут 8",
+            "stringValue9": "Строковый атрибут 9",
+            "stringValue10": "Строковый атрибут 10"
+          }
+        },
+        "propertySearch": {
+          "title": "Выбор имущества",
+          "grid": {
+            "name": "Название",
+            "typeCode": "Тип",
+            "isConfirmed": "Подтверждено",
+            "comment": "Комментарий"
+          }
         }
       }
     },
@@ -312,6 +381,13 @@
               "processing": "Обрабатывается",
               "total_chains": "Всего"
             }
+          },
+          "operations": {
+            "start": "Запустить",
+            "stop": "Остановить",
+            "load": "Загрузить",
+            "unload": "Выгрузить",
+            "setMode": "Установить"
           }
         }
       },
@@ -354,6 +430,7 @@
           "id": "ID",
           "name": "Название",
           "fileName": "Имя файла",
+          "letterTypeCode": "Тип шаблона",
           "recipientTypeCode": "Получатель",
           "serviceTypeCode": "Тип сервиса",
           "comment": "Комментарий"
@@ -361,6 +438,7 @@
         "card": {
           "name": "Название",
           "file": "Файл",
+          "letterTypeCode": "Тип шаблона",
           "recipientTypeCode": "Получатель",
           "serviceTypeCode": "Тип сервиса",
           "comment": "Комментарий"
@@ -607,6 +685,7 @@
     "fieldRequired": "Это обязательное поле",
     "fieldMin": "Значение поля должно быть больше, чем {{ minValue }}",
     "fieldMax": "Значение поля должно быть меньше, чем  {{ maxValue }}",
+    "fieldMinDateTime": "Значение поля должно быть больше, чем {{ minValue }}",
     "fieldMinLength": "Это поле должно быть не короче {{ requiredLength }} символов",
     "fieldDigits": "Это поле должно содержать хотя бы одну цифру",
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
@@ -818,6 +897,9 @@
       },
       "prepareVisits": {
         "title": "Подготовка выездов"
+      },
+      "customStatus": {
+        "title": "Пользовательские статусы"
       },
       "closed": {
         "title": "Закрытые"
@@ -1332,6 +1414,13 @@
     "stageCode": "Стадия",
     "successUpdate": "Информация о должнике с ID {{ id }} была успешно обновлена",
     "utc": "Местное время должника",
+    "close": {
+      "error": "При закрытии карточки произошла ошибка",
+      "dialog": {
+        "title": "Закрытие карточки должника",
+        "message": "Текущий звонок будет сброшен, продолжить?"
+      }
+    },
     "identityDocs": {
       "title": "Удостоверения личности",
       "add": {
@@ -1626,7 +1715,8 @@
     "buttons": {
       "attributes": "Атрибуты",
       "managers": "Менеджеры",
-      "objects": "Шаблоны"
+      "objects": "Шаблоны",
+      "documents": "Документы"
     }
   },
   "portfolios": {
@@ -1637,6 +1727,7 @@
       "directionCode": "Направление",
       "stageCode": "Стадия",
       "statusCode": "Статус",
+      "typeCode": "Тип",
       "signDate": "Дата подписания",
       "startWorkDate": "Дата начала работ",
       "endWorkDate": "Дата окончания работ",
@@ -2011,7 +2102,8 @@
         "changeResponsible": "Перераспределение на оператора",
         "contactInvisible": "Не отображать в списке контактов",
         "fileAttachMode": "Прикрепление файлов",
-        "changeContactPerson": "Изменение контактного лица"
+        "changeContactPerson": "Изменение контактного лица",
+        "pbxCallResult": "Код результата автодайлера"
       }
     },
     "document": {
@@ -2227,6 +2319,7 @@
       "letter": {
         "title": "Массоввое формирование писем",
         "dialog": {
+          "title": "Результат формирования",
           "templateId": "Шаблон",
           "formatCode": "Формат",
           "regLetter": "Регистрировать письма",
@@ -2234,7 +2327,10 @@
           "avoidDuplication": "Исключить дублирование адресов",
           "ignoreWrongAddress": "Исключить адреса со статусом \"Неверный\"",
           "sortRule": "Сортировка",
-          "reportId": "Реестр"
+          "reportId": "Реестр",
+          "resultType": "Типы файлов",
+          "fileWithLetters": "Общий файл с письмами",
+          "register": "Реестр"
         }
       }
     },
@@ -2958,6 +3054,9 @@
       },
       "users": {
         "gen": { "plural": "lookup данных пользователей" }
+      },
+      "letterReport": {
+        "gen": { "plural": "lookup реестра писем" }
       }
     },
     "addresses": {
@@ -3377,6 +3476,7 @@
     },
     "buttons": {
       "add": "Добавить",
+      "addProperty": "Добавить имущество",
       "addUser": "Добавить пользователя",
       "back": "Назад",
       "block": "Блокировать",
@@ -3604,24 +3704,11 @@
         "full": [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ],
         "short": [ "Янв", "Фев", "Мар", "апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек" ]
       },
-      "format": {
-        "dateTime": "DD.MM.YYYY HH:mm:ss",
-        "date": "DD.MM.YYYY",
-        "dateISO": "YYYY-MM-DD",
-        "time": "HH:mm:ss"
-      },
       "placeholders": {
         "datepicker": "Введите дату",
         "timepicker": "Введите время "
       },
       "lastMonthDay": "Последний"
-    },
-    "decimal": {
-      "format": {
-        "minIntegerDigits": 1,
-        "minFractionDigits": 0,
-        "maxFractionDigits": 2
-      }
     },
     "colors": {
       "transparent": "Прозрачный",

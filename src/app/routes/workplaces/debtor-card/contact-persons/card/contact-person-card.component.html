@@ -51,6 +51,13 @@
   ></app-phone-grid>
 </ng-template>
 
+<ng-template #emails>
+  <app-email-grid
+    [entityId]="personId"
+    [personRole]="contactPersonRole"
+  ></app-email-grid>
+</ng-template>
+
 <ng-template #addresses>
   <app-address-grid
     [debtId]="debtId"

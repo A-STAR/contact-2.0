@@ -35,6 +35,40 @@ li {
     color: $navbar-default-link-disabled-color;
     cursor: default;
   }
+  &.closable {
+    padding-right: 16px + (11px + 16px) / 2;
+
+    button {
+      position: absolute;
+      top: 50%;
+      right: (16px / 2);
+      transform: translateY(-50%);
+      width: 16px;
+      padding: initial;
+      border: initial;
+      background: initial;
+      line-height: 0;
+      text-align: center;
+
+      &::before {
+        content: "\f00d";
+        // content: "\f05c";
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      &:hover::before {
+        content: "\f057";
+        font-size: 18px;
+        color: indianred;
+      }
+    }
+
+  }
   .selection {
     height: 2px;
     position: absolute;

@@ -1,4 +1,9 @@
 <app-dynamic-layout
+  *ngIf="config"
   [layout]="config"
   [data]="{ default: value }"
 ></app-dynamic-layout>
+
+<div *ngIf="thirdPartyUrl">
+  <iframe #frame [src]="thirdPartyUrl"></iframe>
+</div>

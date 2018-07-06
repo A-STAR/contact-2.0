@@ -5,11 +5,13 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { map } from 'rxjs/operators/map';
 import { Subscription } from 'rxjs/Subscription';
 
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtComponentService } from '../debt-component.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -38,6 +40,7 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
 
   private fetchSubscription: Subscription;
   private busSubscription: Subscription;
+  private contactRegistrationSub: Subscription;
 
   columns: ISimpleGridColumn<IDebtComponent>[] = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 200, dictCode: UserDictionariesService.DICTIONARY_DEBT_COMPONENTS },
@@ -85,6 +88,7 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtComponentService: DebtComponentService,
+    private contactRegistrationService: ContactRegistrationService,
     private notificationsService: NotificationsService,
     private router: Router,
     private route: ActivatedRoute,
@@ -112,11 +116,18 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
     this.busSubscription = this.debtComponentService
       .getAction(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
       .subscribe(() => this.fetch());
+
+    this.contactRegistrationSub = this.contactRegistrationService
+      .completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .filter(status => Boolean(status & (CompleteStatus.Payment | CompleteStatus.Promise)))
+      .subscribe(_ => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.fetchSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+    this.contactRegistrationSub.unsubscribe();
   }
 
   readonly selectedDebtComponent$ = this.selectedDebtComponentId$.pipe(

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { AddressModule } from './address/address.module';
 import { ContactPersonsModule } from './contact-persons/contact-persons.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
-import { DocumentModule } from './document/document.module';
+import { EmailModule } from './email/email.module';
 import { GuaranteeModule } from './guarantee/guarantee.module';
 import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
@@ -20,7 +20,7 @@ import { PropertyModule } from './property/property.module';
     AddressModule,
     ContactPersonsModule,
     DebtorEmploymentModule,
-    DocumentModule,
+    EmailModule,
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,

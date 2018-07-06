@@ -2,26 +2,22 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { map } from 'rxjs/operators';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { CustomOperation } from '@app/shared/mass-ops/custom-operation/custom-operation.interface';
-import { IAction } from '@app/shared/mass-ops/mass-operation.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
-import { IGenesysCampaign, GenesysCampaignStatus, GenesysCampaignType } from './genesys.interface';
-import {
-  DynamicLayoutGroupType,
-  DynamicLayoutItemType,
-  IDynamicLayoutConfig,
-} from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import { IGenesysCampaign } from './genesys.interface';
 import { IGenesysStatisticsRecord } from '@app/routes/utilities/campaigns/genesys/statistics/statistics.interface';
 
 import { CustomOperationService } from '@app/shared/mass-ops/custom-operation/custom-operation.service';
 import { GenesysService } from '@app/routes/utilities/campaigns/genesys/genesys.service';
+import { LayoutService } from '@app/core/layout/layout.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 
@@ -33,83 +29,15 @@ import { isEmpty } from '@app/core/utils';
   selector: 'app-genesys-campaigns',
   templateUrl: 'genesys.component.html'
 })
-export class GenesysCampaignsComponent implements OnInit {
+export class GenesysCampaignsComponent implements OnInit, OnDestroy {
 
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IGenesysCampaign>;
   @ViewChild('campaigns', { read: TemplateRef }) campaigns: TemplateRef<any>;
   @ViewChild('statistics', { read: TemplateRef }) statistics: TemplateRef<any>;
-  @ViewChild('start', { read: TemplateRef }) start: TemplateRef<any>;
-  @ViewChild('stop', { read: TemplateRef }) stop: TemplateRef<any>;
-  @ViewChild('load', { read: TemplateRef }) load: TemplateRef<any>;
-  @ViewChild('unload', { read: TemplateRef }) unload: TemplateRef<any>;
 
-  readonly layout: IDynamicLayoutConfig = {
-    key: 'utilities/campaigns/genesys',
-    items: [
-      {
-        type: DynamicLayoutItemType.GROUP,
-        groupType: DynamicLayoutGroupType.VERTICAL,
-        size: 100,
-        children: [
-          {
-            type: DynamicLayoutItemType.TEMPLATE,
-            value: 'campaigns',
-            size: 60,
-          },
-          {
-            type: DynamicLayoutItemType.TEMPLATE,
-            value: 'statistics',
-            size: 20,
-          },
-          {
-            type: DynamicLayoutItemType.GROUP,
-            groupType: DynamicLayoutGroupType.VERTICAL,
-            size: 20,
-            children: [
-              {
-                type: DynamicLayoutItemType.TEMPLATE,
-                value: 'start',
-              },
-              {
-                type: DynamicLayoutItemType.TEMPLATE,
-                value: 'stop',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-
-  private selectedCampaign$ = new BehaviorSubject<IGenesysCampaign>(null);
-
-  readonly canLoad$ = this.selectedCampaign$.pipe(
-    map(c => c && [ GenesysCampaignStatus.NOT_LOADED, GenesysCampaignStatus.UNLOADED ].includes(c.statusCode)),
-  );
-
-  readonly canUnload$ = this.selectedCampaign$.pipe(
-    map(c => c && [ GenesysCampaignStatus.LOADED, GenesysCampaignStatus.STOPPED ].includes(c.statusCode)),
-  );
-
-  readonly canStart$ = this.selectedCampaign$.pipe(
-    map(c => {
-      return c && [
-        GenesysCampaignStatus.LOADED,
-        GenesysCampaignStatus.STOPPED,
-        GenesysCampaignStatus.UNLOADING,
-      ].includes(c.statusCode);
-    }),
-  );
-
-  readonly canStop$ = this.selectedCampaign$.pipe(
-    map(c => c && c.statusCode === GenesysCampaignStatus.STARTED),
-  );
-
-  readonly canSetOptimizationLevel$ = this.selectedCampaign$.pipe(
-    map(c => c && c.statusCode !== GenesysCampaignStatus.STARTED && c.typeCode === GenesysCampaignType.AUTO_DIALER),
-  );
-
-  actionData: IAction;
+  private routerSubscription: Subscription;
+  private selectedCampaign: IGenesysCampaign;
+  private url: string;
 
   rows: IGenesysCampaign[] = [];
   rowCount = 0;
@@ -122,17 +50,27 @@ export class GenesysCampaignsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private customOperationService: CustomOperationService,
     private genesysService: GenesysService,
+    private layoutService: LayoutService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.templates = {
       campaigns: this.campaigns,
       statistics: this.statistics,
-      start: this.start,
-      stop: this.stop,
-      load: this.load,
-      unload: this.unload,
     };
+    // TODO(d.maltsev): remove saving url and subscription if we get rid of route reuse
+    this.url = this.router.url;
+    this.updateCampaignStatus();
+    this.routerSubscription = this.layoutService.navigationEnd$.subscribe((event: NavigationEnd) => {
+      if (event.urlAfterRedirects === this.url) {
+        this.updateCampaignStatus();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routerSubscription.unsubscribe();
   }
 
   onRequest(): void {
@@ -141,8 +79,17 @@ export class GenesysCampaignsComponent implements OnInit {
     this.genesysService
       .fetch(filters, params)
       .subscribe((response: IAGridResponse<IGenesysCampaign>) => {
+        // Mock for easier setMode debugging
+        // this.rows = response.data.map(item => ({ ...item, typeCode: 2, optBy: 1, optGoal: 50 }));
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
+        if (this.selectedCampaign) {
+          if (response.data.find(campaign => campaign.id === this.selectedCampaign.id)) {
+            this.fetchCampaignStatistics(this.selectedCampaign.id);
+          } else {
+            this.onSelectRow(null);
+          }
+        }
         this.cdRef.markForCheck();
       });
   }
@@ -151,7 +98,7 @@ export class GenesysCampaignsComponent implements OnInit {
     const campaign = isEmpty(campaignIds)
       ? null
       : this.rows.find(row => row.id === campaignIds[0]);
-    this.selectedCampaign$.next(campaign);
+    this.selectedCampaign = campaign;
     if (campaign) {
       this.fetchCampaignStatistics(campaign.id);
     } else {
@@ -159,32 +106,10 @@ export class GenesysCampaignsComponent implements OnInit {
     }
   }
 
-  onStart(): void {
-    this.actionData = {
-      id: 1,
-    };
-  }
-
-  onStop(): void {
-    this.actionData = {
-      id: 1,
-    };
-  }
-
-  onLoad(): void {
-    this.actionData = {
-      id: 1,
-    };
-  }
-
-  onUnload(): void {
-    this.actionData = {
-      id: 1,
-    };
-  }
-
-  onCloseAction(): void {
-    this.actionData = null;
+  private updateCampaignStatus(): void {
+    this.customOperationService
+      .execute(CustomOperation.UPDATE_CAMPAIGN_STATUS, {} as any, {})
+      .subscribe();
   }
 
   private fetchCampaignStatistics(campaignId: number): void {

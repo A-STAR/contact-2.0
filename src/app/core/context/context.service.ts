@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged, first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilChanged, finalize, first, map, shareReplay } from 'rxjs/operators';
 import { equals } from 'ramda';
 
 import { IAppState } from '@app/core/state/state.interface';
@@ -14,19 +15,23 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 @Injectable()
 export class ContextService {
+
   private appContext$ = combineLatest(
     this.store.pipe(
       // TODO(d.maltsev): remove ContextOperator.EVAL
       // For now, only changes in layout will be reflected here for performance reasons
-      distinctUntilChanged((a: any, b: any) => equals(a.layout, b.layout)),
+      distinctUntilChanged((a: any, b: any) => equals(a.ui, b.ui)),
     ),
     this.entityAttributesService.bag$,
     this.userConstantsService.bag(),
     this.userPermissionsService.bag(),
   );
 
+  private streams = new Map<string, Observable<any>>();
+
   constructor(
     private entityAttributesService: EntityAttributesService,
+    private router: Router,
     private store: Store<IAppState>,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -34,28 +39,28 @@ export class ContextService {
 
   /**
    * Returns Observable that emits the result of context evaluation.
-   *
-   * CAUTION:
-   * Absolutely make sure to dispose of it once you don't need it anymore!
-   *
-   * Don't use it in getters (it will create new stream on every getter call), i.e:
-   * ```typescript
-   * class Foo {
-   *  get foo(): Observable<boolean> {
-   *    return this.contextService.calculate(this.context)
-   *  }
-   * }
-   * ```
    */
   calculate(context: IContext): Observable<any> {
+    const serializedContext = this.serializeContext(context);
+    return this.streams.has(serializedContext)
+      ? this.streams.get(serializedContext)
+      : this.createStream(serializedContext, context);
+  }
+
+  private createStream(serializedContext: string, context: IContext): Observable<any> {
     const storeReferences = this.findStoreReferences(context);
-    return this.appContext$.pipe(
-      select(([ state, attributes, constants, permissions ]) => {
+    const stream = this.appContext$.pipe(
+      map(([ state, attributes, constants, permissions ]) => {
         const value = storeReferences.reduce((acc, key) => ({ ...acc, [key]: this.getStateSlice(state, key) }), {});
         const appContext = { state: value, attributes, constants, permissions };
         return this.calculateFromStore(appContext, context);
       }),
+      // Using `shareReplay` instead of `share` because new subscribers will always need last emitted value
+      shareReplay(1),
+      finalize(() => this.streams.delete(serializedContext)),
     );
+    this.streams.set(serializedContext, stream);
+    return stream;
   }
 
   private findStoreReferences(context: IContext): string[] {
@@ -65,11 +70,16 @@ export class ContextService {
   private findStoreReferencesRecursively(contexts: IContext[]): IContextExpression[] {
     return contexts.reduce((acc, item) => {
       if (typeof item === 'object') {
-        if (item.operator === ContextOperator.EVAL) {
-          return [ ...acc, item ];
-        } else {
-          const value = Array.isArray(item.value) ? item.value : [ item.value ];
-          return [ ...acc, ...this.findStoreReferencesRecursively(value) ];
+        switch (item.operator) {
+          case ContextOperator.EVAL:
+            return [ ...acc, item ];
+          case ContextOperator.UI_STATE:
+            return [ ...acc, { operator: ContextOperator.EVAL, value: `ui.${this.router.url}:${item.value}` } ];
+          default:
+            return [
+              ...acc,
+              ...this.findStoreReferencesRecursively(Array.isArray(item.value) ? item.value : [ item.value ]),
+            ];
         }
       } else {
         return acc;
@@ -90,6 +100,8 @@ export class ContextService {
   private calculateExpression(appContext: IAppContext, expression: IContextExpression): any {
     if (expression.operator === ContextOperator.EVAL) {
       return appContext.state[expression.value];
+    } else if (expression.operator === ContextOperator.UI_STATE) {
+      return appContext.state[`ui.${this.router.url}:${expression.value}`];
     } else {
       const v = Array.isArray(expression.value)
         ? expression.value.map(e => this.calculateFromStore(appContext, e))
@@ -146,5 +158,9 @@ export class ContextService {
       default:
         return null;
     }
+  }
+
+  private serializeContext(context: IContext): string {
+    return this.router.url + ':' + JSON.stringify(context);
   }
 }

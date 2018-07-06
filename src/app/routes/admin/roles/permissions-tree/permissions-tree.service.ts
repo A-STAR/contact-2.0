@@ -58,11 +58,12 @@ export class PermissionsTreeService {
 
     return {
       id: permission.id,
-      label: this.translateService.instant(cfg ? cfg.text : permission.name) || permission.name,
+      label: this.translateService.instant(cfg && cfg.text ? cfg.text : permission.name) || permission.name,
       expanded: hasChildren,
       children: hasChildren ? this.convertToTreeNodes(permission.children, selection) : undefined,
       data: permission,
-      icon: hasChildren ? 'fa fa-folder-o' : (cfg ? cfg.icon : ''),
+      icon: hasChildren ? 'fa fa-folder-o' : '',
+      // icon: hasChildren ? 'fa fa-folder-o' : (cfg ? cfg.icon : ''),
       expandedIcon: hasChildren ? 'fa fa-folder-open-o' : ''
     };
   }

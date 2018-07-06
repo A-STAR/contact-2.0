@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -19,6 +19,7 @@ import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
   selector: 'app-permissions-tree',
   templateUrl: './permissions-tree.component.html',
@@ -48,6 +49,7 @@ export class PermissionsTreeComponent implements OnDestroy {
   private permissionsServiceSub: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private guiObjectsService: GuiObjectsService,
     private permissionsTreeService: PermissionsTreeService,
     private permissionsService: PermissionsService,
@@ -89,6 +91,7 @@ export class PermissionsTreeComponent implements OnDestroy {
       .subscribe((data: ITreeNode[]) => {
         this.value = data;
         this.initSelectionCopy();
+        this.cdRef.markForCheck();
       });
   }
 

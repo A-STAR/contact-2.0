@@ -2,6 +2,7 @@ import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
+import { DocumentModule } from './document/document.module';
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { MapLayersModule } from '@app/core/map-providers/layers/map-layers.module';
 import { MapProvidersModule } from '@app/core/map-providers/map-providers.module';
@@ -15,19 +16,24 @@ import { CallService } from './calls/call.service';
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from './context/context.service';
 import { DataService } from './data/data.service';
+import { DebtApiService } from '@app/core/api/debt.api';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { FrameService } from '@app/core/frame/frame.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { HelpService } from './help/help.service';
+import { IncomingCallApiService } from '@app/core/api/incoming-call.api';
 import { LayoutService } from '@app/core/layout/layout.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
+import { TaskService } from '@app/core/task/task.service';
 import { ThemesService } from './themes/themes.service';
+import { UIService } from '@app/core/ui/ui.service';
 import { ValueConverterService } from './converter/value-converter.service';
 import { WSService } from './ws/ws.service';
 
@@ -54,10 +60,10 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
-import { TaskService } from '@app/core/task/task.service';
 
 @NgModule({
   imports: [
+    DocumentModule,
     DynamicLoaderModule.forRoot(),
     MapLayersModule,
     MapProvidersModule,
@@ -65,26 +71,42 @@ import { TaskService } from '@app/core/task/task.service';
     RepositoryModule.forRoot(),
     RepositoryModule.withEntity({
       entityClass: User,
-      urls: [ '/users/{id}' ],
+      urls: [
+        '/users/{id}',
+      ],
     }),
     RepositoryModule.withEntity({
       entityClass: Person,
-      urls: [ '/persons/{id}' ],
+      urls: [
+        '/persons/{id}',
+      ],
     }),
     RepositoryModule.withEntity({
       entityClass: Debt,
-      urls: [ { url: '/debts/{id}', queryParams: [ 'callCenter' ] }, '/persons/{personId}/debts' ],
+      urls: [
+        {
+          url: '/debts/{id}',
+          queryParams: [
+            'callCenter',
+          ],
+        },
+        '/persons/{personId}/debts',
+      ],
     }),
     RepositoryModule.withEntity({
       entityClass: Phone,
       urls: [
         {
           url: '/entityTypes/{entityType}/entities/{entityId}/phones',
-          queryParams: [ 'callCenter' ]
+          queryParams: [
+            'callCenter',
+          ],
         },
         {
           url: '/entityTypes/{entityType}/entities/{entityId}/phones/{phoneId}',
-          queryParams: [ 'callCenter' ]
+          queryParams: [
+            'callCenter',
+          ],
         },
       ],
     }),
@@ -99,12 +121,15 @@ import { TaskService } from '@app/core/task/task.service';
     DatePipe,
     DataService,
     DecimalPipe,
+    DebtApiService,
     EntityAttributesService,
     EntityTranslationsService,
+    FrameService,
     LookupService,
     GridFiltersService,
     GuiObjectsService,
     HelpService,
+    IncomingCallApiService,
     LayoutService,
     MetadataService,
     NotificationsService,
@@ -113,6 +138,7 @@ import { TaskService } from '@app/core/task/task.service';
     TaskService,
     ThemesService,
     TranslateService,
+    UIService,
     ValueConverterService,
     WSService,
     environment.production

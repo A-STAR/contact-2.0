@@ -31,6 +31,7 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     { prop: 'id', width: 50 },
     { prop: 'name' },
     { prop: 'fileName' },
+    { prop: 'letterTypeCode', dictCode: UserDictionariesService.DICTIONARY_LETTER_TEMPLATE_TYPE },
     { prop: 'serviceTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRINT_SYSTEM_TYPE },
     { prop: 'recipientTypeCode', dictCode: UserDictionariesService.DICTIONARY_MESSAGE_RECIPIENT_TYPE },
     { prop: 'comment' },

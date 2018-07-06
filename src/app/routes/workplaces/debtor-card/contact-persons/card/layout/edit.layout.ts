@@ -97,8 +97,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ]
@@ -126,8 +126,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ]
@@ -155,8 +155,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ]
@@ -184,8 +184,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ]
@@ -213,8 +213,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ]
@@ -244,8 +244,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ]
@@ -274,8 +274,8 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 operator: ContextOperator.EQUALS,
                 value: [
                   {
-                    operator: ContextOperator.EVAL,
-                    value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                    operator: ContextOperator.UI_STATE,
+                    value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                   },
                   1,
                 ],
@@ -304,7 +304,7 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                 value: [
                   {
                     operator: ContextOperator.ENTITY_IS_USED,
-                    value: 363 + i,
+                    value: 363 + i - 1,
                   },
                   {
                     operator: ContextOperator.CONSTANT_CONTAINS,
@@ -312,11 +312,11 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
                       {
                         operator: ContextOperator.PERSON_ATTRIBUTES,
                         value: {
-                          operator: ContextOperator.EVAL,
-                          value: 'layout.workplaces/debtor-card/contact-persons/card.forms.default.value.typeCode',
+                          operator: ContextOperator.UI_STATE,
+                          value: 'workplaces/debtor-card/contact-persons/card.default.value.typeCode',
                         }
                       },
-                      363 + i,
+                      363 + i - 1,
                     ],
                   },
                 ],
@@ -369,34 +369,7 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
           children: [
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
-                operator: ContextOperator.PERMISSION_IS_TRUE,
-                value: 'IDENTITY_DOCUMENT_VIEW',
-              },
-              label: 'Удостоверения личности',
-              value: 'identification',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
-                operator: ContextOperator.PERMISSION_IS_TRUE,
-                value: 'EMPLOYMENT_VIEW',
-              },
-              label: 'История трудоустройства',
-              value: 'employment',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
-                operator: ContextOperator.PERMISSION_IS_TRUE,
-                value: 'ADDRESS_VIEW',
-              },
-              label: 'Адреса',
-              value: 'addresses',
-            },
-            {
-              type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
+              display: {
                 operator: ContextOperator.PERMISSION_IS_TRUE,
                 value: 'PHONE_VIEW',
               },
@@ -405,21 +378,48 @@ export const editContactPersonLayout: IDynamicLayoutConfig = {
             },
             {
               type: DynamicLayoutItemType.TEMPLATE,
-              enabled: {
-                operator: ContextOperator.OR,
-                value: [
-                  {
-                    operator: ContextOperator.PERMISSION_CONTAINS,
-                    value: [ 'FILE_ATTACHMENT_VIEW_LIST', 18 ],
-                  },
-                  {
-                    operator: ContextOperator.PERMISSION_CONTAINS,
-                    value: [ 'FILE_ATTACHMENT_VIEW_LIST', 63 ],
-                  },
-                ],
+              display: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'ADDRESS_VIEW',
+              },
+              label: 'Адреса',
+              value: 'addresses',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              display: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'EMAIL_VIEW',
+              },
+              label: 'Email-адреса',
+              value: 'emails',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              display: {
+                operator: ContextOperator.PERMISSION_CONTAINS,
+                value: [ 'FILE_ATTACHMENT_VIEW_LIST', 18 ],
               },
               label: 'Документы',
               value: 'documents',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              display: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'IDENTITY_DOCUMENT_VIEW',
+              },
+              label: 'Удостоверения личности',
+              value: 'identification',
+            },
+            {
+              type: DynamicLayoutItemType.TEMPLATE,
+              display: {
+                operator: ContextOperator.PERMISSION_IS_TRUE,
+                value: 'EMPLOYMENT_VIEW',
+              },
+              label: 'История трудоустройства',
+              value: 'employment',
             },
           ],
         },

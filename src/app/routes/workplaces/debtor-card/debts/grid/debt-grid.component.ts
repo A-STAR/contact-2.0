@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { map, distinctUntilChanged, first } from 'rxjs/operators';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -15,6 +14,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DateRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
 import { DialogFunctions } from '@app/core/dialog';
 
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 import { Debt } from '@app/entities';
 
@@ -142,7 +142,7 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
   dialog: string;
 
-  private debtsSub: Subscription = new Subscription();
+  private debtsSub = new SubscriptionBag();
 
   constructor(
     private cdRef: ChangeDetectorRef,

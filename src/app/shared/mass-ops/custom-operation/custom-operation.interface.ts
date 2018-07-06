@@ -23,11 +23,14 @@ export interface ICustomOperationParams {
   dictNameCode: number;
   entityTypeIds: number;
   lookupKey: number;
+  minValue: number;
+  maxValue: number;
 }
 
 export enum CustomOperation {
-  DEBT_DISTRIBUTION       = 5,
-  PBX_CAMPAIGN_STATISTICS = 7,
+  DEBT_DISTRIBUTION       =  5,
+  PBX_CAMPAIGN_STATISTICS =  8,
+  UPDATE_CAMPAIGN_STATUS  = 13,
 }
 
 export enum OperationControlTypeEnum {

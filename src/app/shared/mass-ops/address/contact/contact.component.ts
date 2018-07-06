@@ -26,7 +26,6 @@ import {
   LayerType,
 } from '@app/core/map-providers/map-providers.interface';
 import {
-  MapToolbarFilterItemType,
   MapToolbarItemType,
   IMapToolbarItem,
 } from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
@@ -160,17 +159,7 @@ export class ContactComponent implements OnInit {
             enabled: of(true),
             children: [
               {
-                type: MapToolbarFilterItemType.CHECKBOX,
-                filter: MapFilters.TOGGLE_ALL,
-                label: 'massOperations.addressesByContacts.filter.showAllAdresses',
-                enabled: of(true),
-                checked: true
-              },
-              {
-                type: MapToolbarFilterItemType.SEPARATOR,
-              },
-              {
-                type: MapToolbarFilterItemType.DICTIONARY,
+                type: MapToolbarItemType.DICTIONARY,
                 filter: MapFilters.ADDRESS_TYPE,
                 label: 'massOperations.addressesByContacts.filter.filterByAddressType',
                 dictCode: 21,
@@ -178,7 +167,7 @@ export class ContactComponent implements OnInit {
                 preserveOnClick: true,
               },
               {
-                type: MapToolbarFilterItemType.DICTIONARY,
+                type: MapToolbarItemType.DICTIONARY,
                 filter: MapFilters.CONTACT_TYPE,
                 label: 'massOperations.addressesByContacts.filter.filterByContactType',
                 dictCode: 50,
@@ -186,25 +175,23 @@ export class ContactComponent implements OnInit {
                 preserveOnClick: true,
               },
               {
-                type: MapToolbarFilterItemType.SEPARATOR,
+                type: MapToolbarItemType.SEPARATOR,
               },
               {
-                type: MapToolbarFilterItemType.CHECKBOX,
+                type: MapToolbarItemType.CHECKBOX,
                 filter: MapFilters.TOGGLE_ADDRESSES,
                 label: 'massOperations.addressesByContacts.filter.hideAddresses',
-                checked: false
               },
               {
-                type: MapToolbarFilterItemType.CHECKBOX,
+                type: MapToolbarItemType.CHECKBOX,
                 filter: MapFilters.TOGGLE_ACCURACY,
                 label: 'massOperations.addressesByContacts.filter.hideAccuracy',
-                checked: false
               },
               {
-                type: MapToolbarFilterItemType.SEPARATOR,
+                type: MapToolbarItemType.SEPARATOR,
               },
               {
-                type: MapToolbarFilterItemType.SLIDER,
+                type: MapToolbarItemType.SLIDER,
                 filter: MapFilters.DISTANCE,
                 showInput: true,
                 value: constant,
@@ -212,10 +199,10 @@ export class ContactComponent implements OnInit {
                 enabled: of(true),
               },
               {
-                type: MapToolbarFilterItemType.SEPARATOR,
+                type: MapToolbarItemType.SEPARATOR,
               },
               {
-                type: MapToolbarFilterItemType.BUTTON,
+                type: MapToolbarItemType.BUTTON,
                 filter: MapFilters.RESET,
                 label: 'massOperations.addressesByContacts.filter.resetFilter',
                 enabled: of(true),

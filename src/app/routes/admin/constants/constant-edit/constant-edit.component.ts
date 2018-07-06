@@ -73,7 +73,7 @@ export class ConstantEditComponent implements OnInit {
         disabled: true,
         dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE
       },
-      { controlName: 'value', ...type, required: true },
+      { controlName: 'value', ...type },
       { controlName: 'dsc', type: 'textarea', disabled: true },
     ] as IDynamicFormItem[];
   }

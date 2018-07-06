@@ -11,10 +11,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Router, ActivationEnd, ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
-import { TranslateService } from '@ngx-translate/core';
 import {
   CellValueChangedEvent,
   ColDef,
@@ -93,7 +93,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() rowCount = 0;
   @Input() rowHeight = 32;
   @Input() rowIdKey = 'id';
-  @Input() rowSelection = 'multiple';
+  @Input() rowSelection;
   @Input() rows: any[] = [];
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
@@ -116,7 +116,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() rowDataChange = new EventEmitter<any>();
 
   columnDefs: ColDef[];
-  gridOptions: GridOptions = {};
+  gridOptions: GridOptions = {
+    localeTextFunc: this.contextMenuService.translateNameAndShortcut.bind(this.contextMenuService),
+  };
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
@@ -138,10 +140,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private router: Router,
     private route: ActivatedRoute,
+    private translate: TranslateService,
     private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
     private settingsService: SettingsService,
-    private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
@@ -158,7 +160,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // selected rows
-  get selected(): any[] {
+  get selection(): any[] {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
@@ -343,9 +345,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelectionChanged(): void {
-    const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
-    this.onSelect.emit(selected);
+    this.onSelect.emit(this.selection);
   }
 
   onCellValueChanged(event: CellValueChangedEvent): void {
@@ -542,7 +543,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private refreshRowCount(): void {
     const countText = this.translate.instant(
       'default.grid.selectedCounts',
-      { length: this.rowCount, selected: this.selected.length }
+      { length: this.rowCount, selected: this.selection.length }
     );
     this.paginationPanel = this.paginationPanel.map((btn, i) => {
       if (i === 0) {
@@ -806,7 +807,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
         {
           actions: this.actions,
-          selected: this.selected,
+          selected: this.selection,
           selection,
           cb: (action) => this.action.emit(action)
         },
@@ -829,7 +830,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
-      rowSelection: this.rowSelection,
+      // Ideally, when this.rowSelection is falsy we should add `suppressRowClickSelection: true` but now it would break the grid
+      // See https://www.ag-grid.com/javascript-grid-selection
+      rowSelection: this.rowSelection ? this.rowSelection : 'multiple',
       showToolPanel: false,
       suppressMenuHide: false,
       suppressPaginationPanel: true,
@@ -944,4 +947,5 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       },
     ];
   }
+
 }

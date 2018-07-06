@@ -10,6 +10,7 @@ import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { CompanyComponent } from '@app/routes/workplaces/debtor-card/information/company/company.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
@@ -28,16 +29,29 @@ export class DebtorInformationComponent {
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
   tabs = [
-    { title: 'debtor.information.phone.title', isInitialised: false },
-    { title: 'debtor.information.address.title', isInitialised: true },
-    { title: 'debtor.information.email.title', isInitialised: false },
+    {
+      title: 'debtor.information.phone.title',
+      isInitialised: false,
+      permission: this.userPermissionsService.has('PHONE_VIEW')
+    },
+    {
+      title: 'debtor.information.address.title',
+      isInitialised: false,
+      permission: this.userPermissionsService.has('ADDRESS_VIEW')
+    },
+    {
+      title: 'debtor.information.email.title',
+      isInitialised: false,
+      permission: this.userPermissionsService.has('EMAIL_VIEW')
+    },
   ];
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private debtorService: DebtorService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   readonly debt$: Observable<Debt> = this.debtorService.debt$;

@@ -18,6 +18,7 @@ import { IOrganizationsState } from '../../routes/admin/organizations/organizati
 import { IPermissionsState } from '../../routes/admin/roles/permissions.interface';
 import { IPersistenceState } from '../persistence/persistence.interface';
 import { IRepositoryState } from '../repository/repository.interface';
+import { IUIState } from '@app/core/ui/ui.interface';
 import { IUserAttributeTypesState } from '../user/attribute-types/user-attribute-types.interface';
 import { IUserConstantsState } from '../user/constants/user-constants.interface';
 import { IUserDictionariesState } from '../user/dictionaries/user-dictionaries.interface';
@@ -41,6 +42,7 @@ export interface IAppState {
   readonly permissions: IPermissionsState;
   readonly persistence: IPersistenceState;
   readonly repository: IRepositoryState;
+  readonly ui: IUIState;
   readonly userAttributeTypes: IUserAttributeTypesState;
   readonly userConstants: IUserConstantsState;
   readonly userDictionaries: IUserDictionariesState;

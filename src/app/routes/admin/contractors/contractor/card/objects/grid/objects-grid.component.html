@@ -29,7 +29,7 @@
       [ngModel]="selectedTypeCode"
       [required]="true"
       [options]="typeCodeOptions"
-      (onSelect)="onSelectType($event)"
+      (select)="onSelectType($event)"
     ></app-select>
   </div>
 </div>
@@ -45,7 +45,7 @@
       selectionType="multiple"
       [columns]="columns"
       [rows]="rows"
-      (onSelect)="onSelect($event)"
+      (selectRow)="onSelect($event)"
     ></app-simple-grid>
   </div>
 </div>

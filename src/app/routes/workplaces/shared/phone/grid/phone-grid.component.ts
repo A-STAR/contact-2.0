@@ -8,13 +8,13 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators/map';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IPhone, ISMSSchedule } from '@app/routes/workplaces/core/phone/phone.interface';
@@ -32,8 +32,12 @@ import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
+
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+
 import { Debt, Person } from '@app/entities';
+import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,7 +79,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   dialog = null;
 
-  phones: IPhone[] = [];
+  phones$ = new BehaviorSubject<IPhone[]>([]);
 
   debt: Debt;
 
@@ -83,7 +87,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private person: Person;
 
-  private subs = new Subscription();
+  private subs = new SubscriptionBag();
 
   private _columns: ISimpleGridColumn<IPhone>[] = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE, minWidth: 120 },
@@ -98,19 +102,22 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
+    private route: ActivatedRoute,
     private contactRegistrationService: ContactRegistrationService,
     private workplacesService: WorkplacesService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-
-    const phonesSub = this.phoneService.fetchAll(this.entityType, this._personId$.value, this.callCenter)
+    const phonesSub = this._personId$
+      .pipe(
+        switchMap(personId => this.phoneService.fetchAll(this.entityType, personId, this.callCenter))
+      )
       .subscribe(phones => {
-        this.phones = phones;
+        this.phones$.next(phones);
         this.selectedPhoneId$.next(null);
         this.cdRef.markForCheck();
       });
@@ -165,23 +172,39 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const activeCallSubscription = this.callService.activeCall$
       .subscribe(call => {
         this.activeCallPhoneId = call && call.phoneId;
-        this.phones = [ ...this.phones ];
+        this.phones$.next([ ...this.phones ]);
         this.cdRef.markForCheck();
       });
 
     const contactDetailsChangeSub = this.contactRegistrationService
-      .contactPersonChange$
-      .filter(Boolean)
+      .completeRegistration$
+      // tslint:disable-next-line:no-bitwise
+      .filter(status => Boolean(status & CompleteStatus.Phone))
       .subscribe(_ => this.refresh());
 
-    this.personId$
-      .filter(Boolean)
-      .flatMap(personId => this.workplacesService.fetchDebtor(personId))
+    this.person$
       .pipe(first())
       .subscribe(person => {
         this.person = person;
         this.cdRef.markForCheck();
       });
+
+    const contactRegisterSub = combineLatest(
+      this.route.queryParams,
+      this.callService.predictiveCall$,
+      this.phones$.filter(phones => !!phones.length),
+      this.person$.filter(Boolean),
+      this._debtId$.filter(Boolean)
+    )
+    .pipe(
+      filter(([ _, predictiveCall ]) => predictiveCall),
+      map(([ params ]) => params)
+    )
+    .subscribe(params => {
+      this.selectedPhoneId$.next(+params.activePhoneId);
+      this.registerContact();
+      this.cdRef.markForCheck();
+    });
 
       this.subs.add(phonesSub);
       this.subs.add(debtSubscription);
@@ -190,6 +213,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.subs.add(callSubscription);
       this.subs.add(activeCallSubscription);
       this.subs.add(contactDetailsChangeSub);
+      this.subs.add(contactRegisterSub);
   }
 
   ngOnDestroy(): void {
@@ -210,6 +234,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get blockDialogDictionaryId(): number {
     return UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING;
+  }
+
+  get phones(): IPhone[] {
+    return this.phones$.value;
   }
 
   getRowClass(): any {
@@ -280,6 +308,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(phone => this.register.emit(phone));
   }
+
+  readonly person$ = this.personId$
+    .filter(Boolean)
+    .flatMap(personId => this.workplacesService.fetchDebtor(personId));
 
   readonly selectedPhone$: Observable<IPhone>  = this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
 
@@ -420,7 +452,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private clear(): void {
-    this.phones = [];
+    this.phones$.next([]);
     this.cdRef.markForCheck();
   }
 

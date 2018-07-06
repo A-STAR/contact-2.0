@@ -26,6 +26,8 @@ export class LayoutService {
     filter(event => event instanceof NavigationEnd),
   );
 
+  lastDebtors$ = new BehaviorSubject<Array<[number, number]>>([]);
+
   constructor(
     private router: Router,
   ) {

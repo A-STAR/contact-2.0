@@ -63,8 +63,8 @@ export class ContactSelectSearchComponent {
     };
   }
 
-  onSelect(persons: number[]): void {
-    this.selectedPersonId = persons[0];
+  onSelect(persons: IContactPerson[]): void {
+    this.selectedPersonId = persons[0].id;
   }
 
   onRequest(): void {

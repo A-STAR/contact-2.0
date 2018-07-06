@@ -94,7 +94,7 @@ export class MapYandexService<T> extends MapProvider<T> implements IMapService<T
     if (popupRef) {
       this.addComponent(popupRef);
     }
-    return { layer: marker, data: data.data, type: data.type };
+    return { nativeLayer: marker, data: data.data, type: data.type };
   }
 
   createPolyline(_: ILayerDef<T>): ILayer<T> {
@@ -122,14 +122,14 @@ export class MapYandexService<T> extends MapProvider<T> implements IMapService<T
   }
 
   addToMap(layer: ILayer<T>): void {
-    if (layer && layer.layer && !this._map.hasLayer((layer.layer as LeafletGeoLayer))) {
-      (layer.layer as LeafletGeoLayer).addTo(this._map);
+    if (layer && layer.nativeLayer && !this._map.hasLayer((layer.nativeLayer as LeafletGeoLayer))) {
+      (layer.nativeLayer as LeafletGeoLayer).addTo(this._map);
     }
   }
 
   removeFromMap(layer: ILayer<T>): void {
-    if (layer && layer.layer && this._map.hasLayer((layer.layer as LeafletGeoLayer))) {
-      (layer.layer as LeafletGeoLayer).removeFrom(this._map);
+    if (layer && layer.nativeLayer && this._map.hasLayer((layer.nativeLayer as LeafletGeoLayer))) {
+      (layer.nativeLayer as LeafletGeoLayer).removeFrom(this._map);
     }
   }
 

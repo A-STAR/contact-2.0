@@ -1,0 +1,87 @@
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="save" [disabled]="isSubmitDisabled$ | async" (click)="onSave()"></app-button>
+  </div>
+  <div class="flex-item grow" style="overflow-y: auto;">
+    <app-dynamic-layout
+      [layout]="layoutConfig"
+      [data]="{}"
+      [templates]="templates"
+    ></app-dynamic-layout>
+  </div>
+</div>
+
+<ng-template #contractTitlebar>
+  <app-titlebar [titlebar]="contractTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #pledgorTitlebar>
+  <app-titlebar [titlebar]="pledgorTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #propertyTitlebar>
+  <app-titlebar [titlebar]="propertyTitlebarConfig"></app-titlebar>
+</ng-template>
+
+<ng-template #identification>
+  <app-identity-grid
+    [personId]="pledgorId"
+    (add)="onIdentityAdd()"
+    (dblClick)="onIdentityEdit($event)"
+    (edit)="onIdentityEdit($event)"
+  ></app-identity-grid>
+</ng-template>
+
+<ng-template #employment>
+  <app-employment-grid
+    [personId]="pledgorId"
+    (add)="onEmploymentAdd()"
+    (dblClick)="onEmploymentEdit($event)"
+    (edit)="onEmploymentEdit($event)"
+  ></app-employment-grid>
+</ng-template>
+
+<ng-template #phones>
+  <app-phone-grid
+    [contactType]="phoneContactType"
+    [debtId]="debtId"
+    [personId]="pledgorId"
+    [personRole]="pledgorRole"
+    (add)="onPhoneAdd()"
+    (dblClick)="onPhoneRegister($event)"
+    (edit)="onPhoneEdit($event)"
+    (register)="onPhoneRegister($event)"
+  ></app-phone-grid>
+</ng-template>
+
+<ng-template #addresses>
+  <app-address-grid
+    [debtId]="debtId"
+    [debtorId]="debtorId"
+    [personId]="pledgorId"
+    [personRole]="pledgorRole"
+    (add)="onAddressAdd()"
+    (dblClick)="onAddressRegister($event)"
+    (edit)="onAddressEdit($event)"
+    (register)="onAddressRegister($event)"
+  ></app-address-grid>
+</ng-template>
+
+<ng-template #emails>
+  <app-email-grid
+    [entityId]="pledgorId"
+    [personRole]="pledgorRole"
+  ></app-email-grid>
+</ng-template>
+
+<ng-template #documents>
+  <app-document-grid
+    [addForEntity]="[18, 63]"
+    [contractId]="contractId"
+    [debtId]="debtId"
+    [entityType]="entityType"
+    [entityId]="pledgorId"
+    [personId]="pledgorId"
+  ></app-document-grid>
+</ng-template>

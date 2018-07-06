@@ -55,20 +55,57 @@
           "card": {
             "forms": {
               "contract": {
-                "title": "Contract"
+                "title": "Contract",
+                "form": {
+                  "contractNumber": "Contract #",
+                  "contractStartDate": "Start Date",
+                  "contractEndDate": "End Date",
+                  "comment": "Comments"
+                }
               },
               "pledgor": {
-                "title": "Pledgor"
+                "title": "Pledgor",
+                "form": {
+                  "typeCode": "Type",
+                  "lastName": "Last Name/Name",
+                  "firstName": "First Name",
+                  "middleName": "Middle Name",
+                  "birthDate": "Date of Birth",
+                  "birthPlace": "Place of Birth",
+                  "genderCode": "Gender",
+                  "familyStatusCode": "Marital Status",
+                  "educationCode": "Education",
+                  "stringValue1": "String Value 1",
+                  "stringValue2": "String Value 2",
+                  "stringValue3": "String Value 3",
+                  "stringValue4": "String Value 4",
+                  "stringValue5": "String Value 5",
+                  "stringValue6": "String Value 6",
+                  "stringValue7": "String Value 7",
+                  "stringValue8": "String Value 8",
+                  "stringValue9": "String Value 9",
+                  "stringValue10": "String Value 10",
+                  "comment": "Comments"
+                }
               },
               "property": {
-                "title": "Property"
+                "title": "Property",
+                "form": {
+                  "propertyName": "Name",
+                  "propertyType": "Type",
+                  "pledgeValue": "Pledge Value",
+                  "marketValue": "Market Value",
+                  "currencyId": "Currency"
+                }
+              },
+              "tabs": {
+                "addresses": "Addresses",
+                "documents": "Documents",
+                "emails": "Emails",
+                "employment": "Employment",
+                "identification": "Identification Documents",
+                "phones": "Phones"
               }
-            },
-            "titles": {
-              "add": "Add Contract",
-              "addPledgor": "Add Pledgor",
-              "addProperty": "Add Property",
-              "edit": "Edit Contract"
             }
           }
         }
@@ -298,6 +335,38 @@
             }
           }
         }
+      },
+      "personSearch": {
+        "title": "Select Person",
+        "filter": {
+          "id": "ID",
+          "lastName": "Last Name/Name",
+          "firstName": "First Name",
+          "middleName": "Middle Name",
+          "typeCode": "Type",
+          "birthDate": "Date of Birth",
+          "genderCode": "Gender",
+          "passportNumber": "Passport Number",
+          "stringValue1": "String Value 1",
+          "stringValue2": "String Value 2",
+          "stringValue3": "String Value 3",
+          "stringValue4": "String Value 4",
+          "stringValue5": "String Value 5",
+          "stringValue6": "String Value 6",
+          "stringValue7": "String Value 7",
+          "stringValue8": "String Value 8",
+          "stringValue9": "String Value 9",
+          "stringValue10": "String Value 10"
+        }
+      },
+      "propertySearch": {
+        "title": "Select Property",
+        "grid": {
+          "name": "Name",
+          "typeCode": "Type",
+          "isConfirmed": "Is Confirmed",
+          "comment": "Comments"
+        }
       }
     },
     "utilities": {
@@ -312,6 +381,13 @@
               "processing": "Processing",
               "total_chains": "Total"
             }
+          },
+          "operations": {
+            "start": "Start",
+            "stop": "Stop",
+            "load": "Load",
+            "unload": "Unload",
+            "setMode": "Apply"
           }
         }
       },
@@ -353,6 +429,7 @@
         "grid": {
           "id": "ID",
           "name": "Name",
+          "letterTypeCode": "Template type",
           "fileName": "File name",
           "recipientTypeCode": "Recipient",
           "serviceTypeCode": "Service type",
@@ -361,6 +438,7 @@
         "card": {
           "name": "Name",
           "file": "File",
+          "letterTypeCode": "Template type",
           "recipientTypeCode": "Recipient",
           "serviceTypeCode": "Service type",
           "comment": "Comment"
@@ -607,6 +685,7 @@
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
     "fieldMax": "The value must be less than {{ maxValue }}",
+    "fieldMinDateTime": "The value must be greater than {{ minValue }}",
     "fieldMinLength": "This field must be at least {{ requiredLength }} characters long",
     "fieldDigits": "This field must contain at least one digit",
     "fieldLowerCase": "This field must contain at least one lower case character",
@@ -818,6 +897,9 @@
       },
       "prepareVisits": {
         "title": "Prepare Visits"
+      },
+      "customStatus": {
+        "title": "Custom Status"
       },
       "closed": {
         "title": "Closed"
@@ -1332,6 +1414,13 @@
     "stageCode": "Stage",
     "successUpdate": "Successfully updated debtor with ID {{ id }}",
     "utc": "Debtor's local time",
+    "close": {
+      "error": "Error while closing card",
+      "dialog": {
+        "title": "Debt card close",
+        "message": "Current call will be stopped, continue?"
+      }
+    },
     "identityDocs": {
       "title": "Identity documents",
       "add": {
@@ -1626,7 +1715,8 @@
     "buttons": {
       "attributes": "Attributes",
       "managers": "Managers",
-      "objects": "Templates"
+      "objects": "Templates",
+      "documents": "Documents"
     }
   },
   "portfolios": {
@@ -1637,6 +1727,7 @@
       "directionCode": "Direction",
       "stageCode": "Stage",
       "statusCode": "Status",
+      "typeCode": "Type",
       "signDate": "Signed on",
       "startWorkDate": "Processing start date",
       "endWorkDate": "Processing end date",
@@ -2011,7 +2102,8 @@
         "changeResponsible": "Changing Operator",
         "contactInvisible": "Don't Display in Contacts",
         "fileAttachMode": "Files Attachment",
-        "changeContactPerson": "Change Contact Person"
+        "changeContactPerson": "Change Contact Person",
+        "pbxCallResult": "Call result"
       }
     },
     "document": {
@@ -2227,6 +2319,7 @@
       "letter": {
         "title": "Letter generation",
         "dialog": {
+          "title": "Generation result",
           "templateId": "Template",
           "formatCode": "Format",
           "regLetter": "Register letter",
@@ -2234,8 +2327,11 @@
           "avoidDuplication": "Avoid duplication",
           "ignoreWrongAddress": "Ignore wrong address",
           "sortRule": "Sorting",
-          "reportId": "Register"
-      }
+          "reportId": "Register",
+          "resultType": "File types",
+          "fileWithLetters": "File with letters",
+          "register": "Register"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2269,6 +2365,7 @@
       "card": {
         "typeCode": "Type",
         "phoneNumber": "Phone number",
+        "phone": "Phone number",
         "stopAutoSms": "Stop automatic SMS",
         "stopAutoInfo": "Stop automatic voicemail",
         "comment": "Comment"
@@ -2957,6 +3054,9 @@
       },
       "users": {
         "gen": { "plural": "users lookup data" }
+      },
+      "letterReport": {
+        "gen": { "plural": "lookup letter register" }
       }
     },
     "addresses": {
@@ -3376,6 +3476,7 @@
     },
     "buttons": {
       "add": "Add",
+      "addProperty": "Add property",
       "addUser": "Add user",
       "back": "Back",
       "block": "Block",
@@ -3603,24 +3704,11 @@
         "full": [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
         "short": [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
       },
-      "format": {
-        "dateTime": "MM/DD/YYYY HH:mm:ss",
-        "date": "MM/DD/YYYY",
-        "dateISO": "YYYY-MM-DD",
-        "time": "HH:mm:ss"
-      },
       "placeholders": {
         "datepicker": "Enter a date",
         "timepicker": "Enter time"
       },
       "lastMonthDay": "Last"
-    },
-    "decimal": {
-      "format": {
-        "minIntegerDigits": 1,
-        "minFractionDigits": 0,
-        "maxFractionDigits": 2
-      }
     },
     "colors": {
       "transparent": "Transparent",

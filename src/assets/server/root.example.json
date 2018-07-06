@@ -9,14 +9,19 @@
     "useProvider": "google",
     "providers": {
       "google": {
-        "apiKey": "google api key"
+        "apiKey": "<google api key>"
       },
       "yandex": {
-        "apiKey": "yandex api key"
+        "apiKey": "<yandex api key>"
       }
     }
   },
   "help": {
-    "url": "help base url"
+    "url": "<help base url>"
+  },
+  "customOperations": {
+    "<id>": {
+      "url": "<custom operation front-end url>"
+    }
   }
 }

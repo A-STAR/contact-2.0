@@ -1,13 +1,21 @@
 export interface ICallSettings {
-  useIntPhone?: number;
-  usePreview?: number;
   previewShowRegContact?: number;
-  useMakeCall?: number;
+  useAgentStatus?: number;
   useDropCall?: number;
   useHoldCall?: number;
+  useIntPhone?: number;
+  useMakeCall?: number;
+  usePredictive?: number;
+  usePreview?: number;
   useRetrieveCall?: number;
   useTransferCall?: number;
-  useAgentStatus?: number;
+  callResultUseIntermediateCodeMode?: UseIntermediateStatusEnum;
+}
+
+export enum UseIntermediateStatusEnum {
+  FINAL_RESULT_ONLY = 0,
+  LAST_NODE_ONLY = 1,
+  ALL_NODE = 2
 }
 
 export interface ICall {
@@ -41,7 +49,27 @@ export enum PBXStateEnum {
   PBX_DIAL = 'dial'
 }
 
+export interface IPBXStatePayload {
+  pbxCallId?: number;
+  phoneId?: number;
+  debtId?: number;
+  personRole?: number;
+  personId?: number;
+  contractId?: number;
+  callTypeCode?: number;
+  afterCallPeriod?: number;
+  phoneNumber?: string;
+}
+
 export interface IPBXState {
   lineStatus: PBXStateEnum;
-  userStatus: number;
+  userStatus?: number;
+  date: string;
+  username?: string;
+  payload?: IPBXStatePayload;
+}
+
+export enum CallTypeEnum {
+  INCOMING = 0,
+  OUTGOING = 1
 }

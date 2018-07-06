@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
+import { EntityType } from '@app/core/entity/entity.interface';
 import { IActionType, IContractor } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -32,6 +33,7 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
   canViewAttributes: boolean;
   canViewManagers: boolean;
   canViewObjects: boolean;
+  canViewDocuments: boolean;
   private editedContractorSub: Subscription;
   private contractorId: number;
 
@@ -54,15 +56,25 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
       getContractor$,
-      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 13),
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', EntityType.CONTRACTOR),
       this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW'),
-      this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW')
+      this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW'),
+      this.userPermissionsService.contains('FILE_ATTACHMENT_VIEW_LIST', EntityType.CONTRACTOR),
     )
     .pipe(first())
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects, canViewManagers ]) => {
+    .subscribe(([
+      contractorTypeOptions,
+      userOptions,
+      contractor,
+      canViewAttributes,
+      canViewObjects,
+      canViewManagers,
+      canViewDocuments,
+    ]) => {
       this.canViewAttributes = canViewAttributes && contractor;
       this.canViewObjects = canViewObjects && contractor;
       this.canViewManagers = canViewManagers && contractor;
+      this.canViewDocuments = canViewDocuments && contractor;
 
       this.contractorId = contractor && contractor.id;
 
@@ -100,12 +112,18 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
 
     action.subscribe(() => {
       this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_SAVE);
-      this.onBack();
+      this.onBackAfterSave();
     });
   }
 
-  onBack(): void {
+  onBackAfterSave(): void {
     this.routingService.navigate([ '/app/admin/contractors' ]);
+  }
+
+  onBack(): void {
+    this.onBackAfterSave();
+    this.contractorsAndPortfoliosService
+      .dispatch(IActionType.PORTFOLIO_BACK);
   }
 
   onManagersClick(): void {
@@ -118,5 +136,9 @@ export class ContractorCardComponent implements OnInit, OnDestroy {
 
   onObjectsClick(): void {
     this.routingService.navigate(['objects'], this.route);
+  }
+
+  onDocumentsClick(): void {
+    this.routingService.navigate(['documents'], this.route);
   }
 }

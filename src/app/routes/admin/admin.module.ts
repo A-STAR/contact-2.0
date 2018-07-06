@@ -69,6 +69,26 @@ const routes: Routes = [
         loadChildren: './contractors/versions/versions.module#VersionsModule',
       },
       {
+        path: 'contractors/:contractorId/documents',
+        loadChildren: './contractors/contractor/card/documents/documents.module#ContractorDocumentsModule',
+      },
+      {
+        // TODO(d.maltsev): ugly url.
+        // Documents grid should have `add` and `edit` outputs, and navigation should be handled in containers instead
+        path: 'contractors/:contractorId/documents/document/create',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          parentUrl: '/app/admin/contractors/{contractorId}/documents',
+        },
+      },
+      {
+        path: 'contractors/:contractorId/documents/document/:documentId',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          parentUrl: '/app/admin/contractors/{contractorId}/documents',
+        },
+      },
+      {
         path: 'contractors/:contractorId/managers',
         loadChildren: './contractors/contractor/card/managers/managers.module#ManagersModule',
       },
@@ -99,6 +119,26 @@ const routes: Routes = [
       {
         path: 'contractors/:contractorId/portfolios/:portfolioId/attributes/:attributeId/versions',
         loadChildren: './contractors/versions/versions.module#VersionsModule',
+      },
+      {
+        path: 'contractors/:contractorId/portfolios/:portfolioId/documents',
+        loadChildren: './contractors/portfolios/card/documents/documents.module#PortfolioDocumentsModule',
+      },
+      {
+        // TODO(d.maltsev): ugly url.
+        // Documents grid should have `add` and `edit` outputs, and navigation should be handled in containers instead
+        path: 'contractors/:contractorId/portfolios/:portfolioId/documents/document/create',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          parentUrl: '/app/admin/contractors/{contractorId}/portfolios/{portfolioId}/documents',
+        },
+      },
+      {
+        path: 'contractors/:contractorId/portfolios/:portfolioId/documents/document/:documentId',
+        loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
+        data: {
+          parentUrl: '/app/admin/contractors/{contractorId}/portfolios/{portfolioId}/documents',
+        },
       },
       {
         path: '**',

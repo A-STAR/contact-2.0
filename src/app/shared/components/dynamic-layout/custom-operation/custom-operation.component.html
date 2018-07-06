@@ -1,0 +1,12 @@
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <app-dynamic-layout
+      *ngIf="config"
+      [data]="data$ | async"
+      [layout]="config"
+    ></app-dynamic-layout>
+  </div>
+  <div class="flex-item">
+    <app-button [label]="label" (click)="onStart()"></app-button>
+  </div>
+</div>

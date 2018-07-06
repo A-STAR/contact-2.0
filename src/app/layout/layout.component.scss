@@ -13,3 +13,8 @@
     box-shadow: 0px 2px 3px 0 rgba(10, 9, 14, .25);
   }
 }
+
+::ng-deep app-progressbar .progress {
+  height: 8px;
+  margin-bottom: 0;
+}

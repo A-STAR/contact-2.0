@@ -8,6 +8,7 @@ export type IButtonStyle =
 
 export type IButtonType =
   'add' |
+  'addProperty' |
   'addUser' |
   'back' |
   'block' |

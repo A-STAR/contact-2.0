@@ -85,6 +85,7 @@ export class UserDictionariesService {
   static DICTIONARY_EMAIL_FORMAT                  = 63;
   static DICTIONARY_EMAIL_SENDER                  = 64;
   static DICTIONARY_EMAIL_STATUS                  = 65;
+  static DICTIONARY_PORTFOLIO_TYPE                = 66;
   static DICTIONARY_SCHEDULE_EVENT_TYPE           = 67;
   static DICTIONARY_PERIOD_TYPE                   = 68;
   static DICTIONARY_ACCEPT_OPERATOR_MODE_CODE     = 69;
@@ -100,6 +101,7 @@ export class UserDictionariesService {
   static DICTIONARY_TASK_TYPE                     = 80;
   static DICTIONARY_FORMULA_ATTRIBUTE_TYPE        = 83;
   static DICTIONARY_REGION_SORT_TYPE              = 84;
+  static DICTIONARY_LETTER_TEMPLATE_TYPE          = 86;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

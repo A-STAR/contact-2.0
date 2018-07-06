@@ -6,8 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CustomOperationInputModule } from './input/custom-operation-input.module';
 import { CustomOperationOutputModule } from './output/custom-operation-output.module';
 import { CustomOperationParamsModule } from './params/custom-operation-params.module';
-import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynamic-layout.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
+import { DownloaderModule } from '@app/shared/components/downloader/downloader.module';
+import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynamic-layout.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { CustomOperationService } from './custom-operation.service';
@@ -21,8 +22,9 @@ import { CustomOperationComponent } from './custom-operation.component';
     CustomOperationInputModule,
     CustomOperationOutputModule,
     CustomOperationParamsModule,
-    DynamicLayoutModule,
     DialogModule,
+    DownloaderModule,
+    DynamicLayoutModule,
     GridsModule,
     TranslateModule,
   ],

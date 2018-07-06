@@ -93,6 +93,14 @@ export class LetterTemplateCardComponent implements OnInit {
         required: true,
         markAsDirty: !this.templateId
       },
+      {
+        controlName: 'letterTypeCode',
+        type: 'select',
+        dictCode: UserDictionariesService.DICTIONARY_LETTER_TEMPLATE_TYPE,
+        disabled: !canEdit,
+        required: true,
+        markAsDirty: !this.templateId
+      },
       { controlName: 'comment', type: 'textarea', disabled: !canEdit },
       {
         controlName: 'file',

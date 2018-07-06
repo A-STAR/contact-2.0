@@ -374,7 +374,14 @@ export class ActionGridService {
   }
 
   getSelectionCount(actionData: IGridActionPayload): number | null {
-    return actionData.type === MetadataActionType.SELECTED ? (actionData.data as IGridActionSelection).length : null;
+    switch (actionData.type) {
+      case MetadataActionType.SINGLE:
+        return actionData.data && 1;
+      case MetadataActionType.SELECTED:
+        return (actionData.data as IGridActionSelection).length;
+      default:
+        return null;
+    }
   }
 
   hasParamKey(paramKey: string, action: IGridAction | IMetadataAction): boolean {

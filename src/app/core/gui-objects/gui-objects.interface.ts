@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 export interface IGuiObject {
   id: number;
   name: string;
@@ -5,12 +7,13 @@ export interface IGuiObject {
 }
 
 export interface IMenuItem {
+  icon: string;
   text: string;
   link: string;
-  icon: string;
   docs: string;
-  children: Array<IMenuItem>;
   isActive?: boolean;
+  children: Array<IMenuItem>;
+  permission?: Observable<boolean>;
 }
 
 export interface IGuiObjectsState {

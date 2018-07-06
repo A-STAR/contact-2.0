@@ -1,6 +1,9 @@
+import {
+  IMapToolbarFilterItem,
+} from '@app/shared/components/map/components/controls/toolbar/map-toolbar.interface';
+
 export enum MapFilters {
-  TOGGLE_ALL = 1,
-  RESET,
+  RESET = 1,
   TOGGLE_INACTIVE,
   ADDRESS_TYPE,
   VISIT_STATUS,
@@ -9,4 +12,13 @@ export enum MapFilters {
   TOGGLE_ADDRESSES,
   TOGGLE_ACCURACY,
   DISTANCE,
+}
+
+export interface IMapFilterItemAction {
+  value: any;
+  item: IMapToolbarFilterItem;
+}
+
+export interface IMapFilterMultiSelectOptions {
+  [key: number]: number[] | boolean;
 }

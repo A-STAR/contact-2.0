@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import { first } from 'rxjs/operators/first';
 import * as moment from 'moment';
 
 import {
   IDecimalFormats,
-  IDateFormats,
   ILabeledValue,
   INamedValue,
   IOption,
@@ -16,21 +14,16 @@ import {
 
 @Injectable()
 export class ValueConverterService {
-  private formats: IDateFormats;
-  private decimalFormat: IDecimalFormats;
+  private decimalFormat: IDecimalFormats = {
+    minIntegerDigits: 1,
+    minFractionDigits: 0,
+    maxFractionDigits: 2
+  };
 
   constructor(
     private decimalPipe: DecimalPipe,
     private translateService: TranslateService
-  ) {
-    this.translateService.get('default.date.format')
-      .pipe(first())
-      .subscribe(dateFormats => this.formats = dateFormats);
-
-    this.translateService.get('default.decimal.format')
-      .pipe(first())
-      .subscribe(decimalFormat => this.decimalFormat = decimalFormat);
-  }
+  ) {}
 
   serialize(valueEntity: IValueEntity): IValueEntity {
     const result: IValueEntity = Object.assign({}, valueEntity);
@@ -56,7 +49,7 @@ export class ValueConverterService {
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
-        valueEntity.value = this.ISOToLocalDate(valueEntity.valueD);
+        valueEntity.value = this.toLocalDate(valueEntity.valueD);
         break;
       case 3:
         valueEntity.value = valueEntity.valueS || '';
@@ -68,7 +61,7 @@ export class ValueConverterService {
         valueEntity.value = Number(valueEntity.valueN).toFixed(2);
         break;
       case 7:
-        valueEntity.value = this.ISOToLocalDateTime(valueEntity.valueD);
+        valueEntity.value = this.toLocalDateTime(valueEntity.valueD);
         break;
       default:
         valueEntity.value = '';
@@ -118,18 +111,16 @@ export class ValueConverterService {
     return date ? date.toISOString() : null;
   }
 
-  toLocalDateTime(date: Date): string {
-    return this.toLocal(date, this.formats.dateTime);
+  toLocalDateTime(date: Date | string): string {
+    return this.formatDate(date, 'L HH:mm:ss');
   }
 
-  toLocalTime(date: Date): string {
-    return moment(date).isValid()
-      ? moment(date, this.formats.dateISO).format(this.formats.time)
-      : null;
+  toLocalTime(date: Date | string): string {
+    return date ? moment(date).format('HH:mm:ss') : null;
   }
 
-  toLocalDate(date: Date): string {
-    return this.toLocal(date, this.formats.date);
+  toLocalDate(date: Date | string): string {
+    return this.formatDate(date, 'L');
   }
 
   formatNumber(num: number | string): string {
@@ -141,8 +132,13 @@ export class ValueConverterService {
     }
   }
 
+  get locale(): string {
+    const { currentLang, defaultLang } = this.translateService;
+    return currentLang || defaultLang;
+  }
+
   toDateOnly(date: Date): string {
-    return moment(date).utcOffset(0, true).format(this.formats.dateISO);
+    return date ? moment(date).utcOffset(0, true).format('YYYY-MM-DD') : null;
   }
 
   fromISO(value: string): Date {
@@ -150,19 +146,23 @@ export class ValueConverterService {
   }
 
   fromLocalDateTime(value: string): Date | false {
-    return this.fromLocal(value, this.formats.dateTime);
+    return this.fromLocal(value, 'L HH:mm:ss' as moment.LongDateFormatKey);
   }
 
   fromLocalDate(value: string): Date | false {
-    return this.fromLocal(value, this.formats.date);
+    return this.fromLocal(value, 'L' as moment.LongDateFormatKey);
   }
 
   fromLocalTime(value: string): Date | false {
-    return this.fromLocal(value, this.formats.time);
+    return this.fromLocal(value, 'HH:mm:ss' as moment.LongDateFormatKey);
   }
 
   dateStringToISO(date: string): string {
-    return moment(date, this.formats.dateISO).toISOString();
+    return moment(date, 'YYYY-MM-DD').toISOString();
+  }
+
+  formatDate(date: Date | string, format: string): string {
+    return date ? moment(date).locale(this.locale).format(format) : null;
   }
 
   makeRangeFromLocalDate(value: string): Array<string> {
@@ -171,26 +171,8 @@ export class ValueConverterService {
     return from.isValid() ? [from.toISOString(), to.toISOString()] : [];
   }
 
-  /**
-   * @deprecated
-   */
-  ISOToLocalDateTime(value: string): string {
-    return this.toLocalDateTime(this.fromISO(value));
-  }
-
-  /**
-   * @deprecated
-   */
-  ISOToLocalDate(value: string): string {
-    return this.toLocalDate(this.fromISO(value));
-  }
-
-  private toLocal(date: Date, format: string): string {
-    return date ? moment(date).format(format) : null;
-  }
-
-  private fromLocal(value: string, format: string): Date | false {
-    const date = value && moment(value, format, true);
+  private fromLocal(value: string, key: moment.LongDateFormatKey): Date | false {
+    const date = value && moment(value, key, true);
     if (!date) {
       return null;
     }

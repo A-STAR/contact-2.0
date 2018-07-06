@@ -1,6 +1,6 @@
 <app-custom-operation-input
   *ngIf="inputParamsExists && !result"
-  [key]="'operations/' + actionData.id + '/input'"
+  [actionData]="actionData"
   [inputParams]="inputParams"
   (submit)="onSubmit($event)"
   (close)="onClose()"
@@ -12,3 +12,5 @@
   [result]="result"
   (close)="onClose()"
 ></app-custom-operation-output>
+
+<app-downloader></app-downloader>

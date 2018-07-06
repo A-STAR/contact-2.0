@@ -1,0 +1,56 @@
+<ng-container
+  [ngSwitch]="config.type"
+>
+  <!-- Lookup -->
+  <app-menu-select
+    *ngSwitchCase="'lookup'"
+    class="dropdown-item-control"
+    [label]="config.label"
+    [lookupKey]="config.lookupKey"
+    [disabled]="isDisabled(config) | async"
+    (action)="onAction($event)"
+    (ready)="onMenuSelectReady($event)"
+  ></app-menu-select>
+  <!-- Dict -->
+  <app-menu-select
+    *ngSwitchCase="'dict'"
+    class="dropdown-item-control"
+    [label]="config.label"
+    [dictCode]="config.dictCode"
+    [disabled]="isDisabled(config) | async"
+    (action)="onAction($event)"
+    (ready)="onMenuSelectReady($event)"
+  ></app-menu-select>
+  <!-- Button -->
+  <button
+    *ngSwitchCase="'button'"
+    class="btn btn-link dropdown-control-btn dropdown-item-control"
+    [disabled]="isDisabled(config) | async"
+    (click)="onAction(true)"
+  >
+    {{ config.label | translate }}
+  </button>
+  <!-- Slider -->
+  <app-range
+    *ngSwitchCase="'slider'"
+    class="dropdown-control-slider"
+    [label]="config.label"
+    [ngModel]="config.value"
+    [showInput]="config.showInput"
+    [isDisabled]="isDisabled(config) | async"
+    [logarithmic]="true"
+    [debounce]="200"
+    (ngModelChange)="onAction($event)"
+  >
+  </app-range>
+  <!-- Checkbox -->
+  <app-tick
+    *ngSwitchCase="'checkbox'"
+    [label]="config.label"
+    class="dropdown-item-control"
+    [disabled]="isDisabled(config) | async"
+    [ngModel]="true"
+    (ngModelChange)="onAction($event)"
+  >
+  </app-tick>
+</ng-container>

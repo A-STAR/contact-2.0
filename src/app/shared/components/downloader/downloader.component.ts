@@ -11,7 +11,12 @@ import { empty } from 'rxjs/observable/empty';
 })
 export class DownloaderComponent {
   @Input() entityTranslationKey: string;
-  @Input() name: string;
+
+  /**
+   * Now that the server sends file name in headers, `name` input is no longer necessary.
+   * It has been replaced with `fallbackName` for compatibility reasons.
+   */
+  @Input() fallbackName: string;
   @Input() url: string;
 
   constructor(
@@ -26,14 +31,15 @@ export class DownloaderComponent {
       : this.dataService.readBlob(this.url, {});
 
     request
-      .map(blob => {
+      .map(response => {
         const { navigator } = window;
+        const fileName = response.name || this.fallbackName;
         if (navigator && navigator.msSaveOrOpenBlob) {
           // IE doesn't want to save blobs via <a> tag
-          navigator.msSaveOrOpenBlob(blob, this.name);
+          navigator.msSaveOrOpenBlob(response.blob, fileName);
         } else {
-          const href = URL.createObjectURL(blob);
-          this.createLink(href, this.name).dispatchEvent(new MouseEvent('click'));
+          const href = URL.createObjectURL(response.blob);
+          this.createLink(href, fileName).dispatchEvent(new MouseEvent('click'));
           URL.revokeObjectURL(href);
         }
       })
@@ -44,7 +50,7 @@ export class DownloaderComponent {
       .subscribe();
   }
 
-  private createLink(href: string, name: string = ''): HTMLAnchorElement {
+  private createLink(href: string, name: string): HTMLAnchorElement {
     const link: HTMLAnchorElement = this.renderer.createElement('a');
     this.renderer.setAttribute(link, 'href', href);
     this.renderer.setAttribute(link, 'download', name);

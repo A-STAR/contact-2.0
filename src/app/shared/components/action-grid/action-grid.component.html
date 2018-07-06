@@ -4,11 +4,10 @@
   (close)="onCloseAction($event)"
 ></app-mass-operation>
 
-<!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader
   entityTranslationKey="entities.actionsLog.gen.plural"
-  [name]="metadataKey + '.xlsx'"
+  [fallbackName]="metadataKey + '.xlsx'"
   [url]="'/list/excel?name=' + metadataKey"
 ></app-downloader>
 
@@ -55,6 +54,7 @@
       [rowCount]="rowCount"
       [rowIdKey]="rowIdKey"
       [rows]="rows"
+      [rowSelection]="selectionType"
       (action)="onAction($event)"
       (onDblClick)="onDblClick($event)"
       (onFilter)="onRequest()"
@@ -71,6 +71,7 @@
       [actions]="gridActions$ | async"
       [persistenceKey]="persistenceKey"
       [selectionType]="selectionType"
+      [selection]="selectedRows"
       [columns]="columns"
       [rows]="rows"
       [toolbar]="toolbarItems"

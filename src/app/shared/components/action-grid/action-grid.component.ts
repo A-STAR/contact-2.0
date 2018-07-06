@@ -11,6 +11,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 import { GridOptions } from 'ag-grid';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -19,7 +20,6 @@ import { never } from 'rxjs/observable/never';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 
 import { IContext } from '@app/core/context/context.interface';
 import {
@@ -53,15 +53,16 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
+import { ActionGridService } from './action-grid.service';
 import { ContextService } from '@app/core/context/context.service';
 import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-
+import { UIService } from '@app/core/ui/ui.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
-import { ActionGridService } from './action-grid.service';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
@@ -70,6 +71,7 @@ import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.comp
 import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
+import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,7 +97,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
   @Input() titlebar: IMetadataTitlebar;
-
   @Input() fullHeight = false;
   /**
    * Shows whether to use simple grid
@@ -110,13 +111,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() metadataKey: string;
   @Input() persistenceKey: string;
   /**
-   * Will be deprecated
    * @deprecated
    */
   @Input() permissionKey: string;
   @Input() rowCount: number;
   @Input() rowIdKey: string;
-  @Input() rows: T[] = [];
+
+  @Input()
+  set rows(rows: T[]) {
+    this._rows = rows;
+    this.updateFirstSelectedRow(this.selection);
+  }
+
   @Input() columnTranslationKey: string;
   @Input() styles: CSSStyleDeclaration;
   @Input() filterData: any;
@@ -140,6 +146,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   templates: Record<string, TemplateRef<any>>;
 
   private _columns: IAGridColumn[];
+  private _rows: T[];
 
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
@@ -149,7 +156,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private excelFilter$ = new BehaviorSubject<FilterObject>(null);
   private gridDetails$ = new BehaviorSubject<boolean>(false);
   private preventSelect$ = new Subject<void>();
-  private subs = new Subscription();
+  private subs = new SubscriptionBag();
 
   dialog: string;
   dialogData: IGridAction;
@@ -189,9 +196,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     private contextService: ContextService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
+    private uiService: UIService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  get rows(): T[] {
+    return this._rows;
   }
 
   ngOnInit(): void {
@@ -212,7 +227,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
     this.titlebar$ = this.getGridTitlebar();
 
-   const selectActionSub = this.selectRow.pipe(
+    const selectActionSub = this.selectRow.pipe(
       filter(selection => selection && selection.length && !!this.currentSelectionAction),
       switchMap((selection) =>
         of(selection)
@@ -232,9 +247,36 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         this.gridDetails$.next(false);
       });
 
+      const activateRouteSub = this.router.events
+        .pipe(
+          filter(event => event instanceof NavigationEnd),
+          filter((event: NavigationEnd) => this.routingService.isRouteMatchesUrl(this.route, event.urlAfterRedirects))
+        )
+        .subscribe(() => {
+          if (this.selection && this.selection.length && !!this.currentSelectionAction) {
+            this.onSelectionAction(this.selection);
+          }
+        });
+
+    const permissionsSub = combineLatest(
+      this.userPermissionsService.bag(),
+      this.router.events
+      )
+      .pipe(
+        filter(([ _, e ]) => e instanceof NavigationEnd),
+        filter(([ _, e ]) => this.routingService.isRouteMatchesUrl(this.route, (e as NavigationEnd).urlAfterRedirects)),
+        filter(() => this.initialized),
+        // NOTE: what if grid doesn't have onRequest output binded?
+        tap(() => this.rows = [])
+      )
+      .subscribe(() => {
+        this.onRequest();
+      });
+
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
-
+    this.subs.add(permissionsSub);
+    this.subs.add(activateRouteSub);
   }
 
   ngOnDestroy(): void {
@@ -295,8 +337,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   get selection(): T[] {
-    return this.isSimple ?
-      (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
+    return this.grid ? this.grid.selection : [];
   }
 
   isGridDetails(name: string): boolean {
@@ -348,10 +389,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.cdRef.markForCheck();
   }
 
-  onSelectionAction(selected: Array<number | T>): void {
-    const selection = this.grid instanceof Grid2Component
-      ? this.selection.find(r => r[this.rowIdKey] === selected[0])
-      : selected[0];
+  onSelectionAction(selected: number[] | T[]): void {
+    const selection = this.getFirstSelectedRow(selected);
     this.selectionActionData = this.setDialogData({ metadataAction: this.currentSelectionAction, selection });
     this.gridDetails$.next(this.isGridDetails(this.selectionActionName));
     this.cdRef.markForCheck();
@@ -399,7 +438,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     }
   }
 
-  onSelect(selected: number[]): void {
+  onSelect(selected: T[]): void {
+    this.updateFirstSelectedRow(selected);
     this.selectRow.emit(selected);
   }
 
@@ -440,6 +480,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
+  }
+
+  private getFirstSelectedRow(selected: any[]): T[] {
+    return selected && selected.length && selected[0];
   }
 
   private createCloseAction(actionData: ICloseAction | IActionGridAction): () => any {
@@ -609,5 +653,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private attachValidator(computedValue: boolean): (params: IContextMenuParams) => boolean {
     return (params: IContextMenuParams) => params.action.type === MetadataActionType.ALL ?
       computedValue : this.validateSelection(params.action.params, params.selected) && computedValue;
+  }
+
+  private updateFirstSelectedRow(selection: T[]): void {
+    if (this.persistenceKey) {
+      this.uiService.updateState(this.persistenceKey, {
+        firstSelectedRow: this.getFirstSelectedRow(selection),
+      });
+    }
   }
 }

@@ -71,6 +71,7 @@
       [formControlName]="control.name"
       [label]="control.label"
       [lookupKey]="control.lookupKey"
+      [options]="control.options"
       [isRequired]="isRequired(control) | async"
     ></app-multi-select>
 
@@ -101,6 +102,7 @@
       [debounce]="control.debounce"
       [showInput]="control.showInput"
       [logarithmic]="control.logarithmic"
+      [precision]="control.precision"
     ></app-range>
 
     <!-- Textarea -->
