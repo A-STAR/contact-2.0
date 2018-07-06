@@ -65,7 +65,7 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
       {
         type: ToolbarItemType.BUTTON,
         buttonType: ButtonType.START,
-        title: this.translateService.instant('default.buttons.calculate'),
+        label: this.translateService.instant('default.buttons.calculate'),
         action: () => this.setDialog('calculateFormula'),
         enabled: combineLatestAnd([
           this.formulasService.canCalculate$,

@@ -10,13 +10,13 @@ export interface ITitlebarElement {
   align?: 'right' | 'left';
   classes?: Observable<string>;
   enabled?: Observable<boolean>;
-  title?: string;
+  label?: string;
   children?: ITitlebarElement[];
 }
 
 export interface ITitlebarButton extends ITitlebarElement {
-  type: ToolbarItemType;
-  buttonType: ButtonType,
+  type: ToolbarItemType.BUTTON;
+  buttonType?: ButtonType;
   children?: ITitlebarElement[];
   iconCls?: string;
 }

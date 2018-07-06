@@ -12,11 +12,10 @@ import { defaultTo } from 'ramda';
 import { of } from 'rxjs/observable/of';
 
 import { ITitlebar, ITitlebarItem, ITitlebarButton } from './titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+
+import { ButtonService } from '@app/shared/components/button/button.service';
 
 import { doOnceIf } from '@app/core/utils';
-import { IconType } from '@app/shared/components/icons/icons.interface';
 
 @Component({
   selector: 'app-titlebar',
@@ -31,32 +30,12 @@ export class TitlebarComponent implements OnChanges, OnInit {
 
   borderCls: object;
   items: ITitlebarItem[] = [];
-  props: { [key: string]: Partial<ITitlebarButton> } = {
-    [ButtonType.ADD]: { iconCls: 'co-add', title: 'Добавить' },
-    [ButtonType.COPY]: { iconCls: 'co-copy', title: 'Копировать' },
-    [ButtonType.CLOSE]: { iconCls: 'co-close', title: 'default.buttons.close' },
-    [ButtonType.CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
-    [ButtonType.DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
-    // TODO(d.maltsev): we need a better icon here
-    [ButtonType.DEBT_CARD]: { iconCls: 'co-edit', title: 'Карточка должника' },
-    [ButtonType.DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
-    [ButtonType.DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
-    [ButtonType.EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
-    [ButtonType.FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
-    //  TODO(i.lobanov): replace when icon is ready
-    [ButtonType.MAP]: { iconCls: 'co-image', title: 'default.buttons.map' },
-    [ButtonType.MOVE]: { iconCls: 'co-move', title: 'Переместить' },
-    [ButtonType.REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
-    [ButtonType.REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
-    [ButtonType.SEARCH]: { iconCls: 'co-search', title: 'Поиск' },
-    [ButtonType.START]: { iconCls: 'co-start', title: 'Запустить' },
-    [ButtonType.STOP]: { iconCls: 'co-stop', title: 'Остановить' },
-  };
   suppressCenterZone: boolean;
   title: string;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private buttonService: ButtonService,
   ) {}
 
   ngOnChanges(): void {
@@ -77,18 +56,6 @@ export class TitlebarComponent implements OnChanges, OnInit {
     this.title = (this.titlebar && this.titlebar.title) || '';
   }
 
-  getButtonType(item: ITitlebarItem): IconType {
-    return ToolbarItemType[item.type];
-  }
-
-  isButton(item: ITitlebarItem): boolean {
-    return !!ToolbarItemType[item.type];
-  }
-
-  isCheckbox(item: ITitlebarItem): boolean {
-    return item.type === ToolbarItemType.CHECKBOX;
-  }
-
   onClick(item: ITitlebarItem): void {
     doOnceIf(item.enabled, () => {
       if (typeof item.action === 'function') {
@@ -103,16 +70,14 @@ export class TitlebarComponent implements OnChanges, OnInit {
    * @param item {ITitlebarButton}
    */
   getIconCls(item: ITitlebarButton): object {
-    const prop = this.props[item.type];
-    const iconCls = item.iconCls || (prop && prop.iconCls) || 'co-dialog-exclamation';
+    const iconCls = this.buttonService.getIcon(item.buttonType) || 'co-dialog-exclamation';
     const cls = { 'align-right': item.align === 'right' };
     return iconCls
       ? { ...cls, [iconCls]: true }
       : cls;
   }
 
-  getTitle(item: ITitlebarButton): string {
-    const prop = this.props[item.type];
-    return item.title || (prop && prop.title) || null;
+  getLabel(item: ITitlebarButton): string {
+    return this.buttonService.getLabel(item.buttonType) || null;
   }
 }

@@ -12,35 +12,36 @@ export type IButtonStylesConfig = {
 
 export enum ButtonType {
   ADD               = 'add',
-  ADDPROPERTY       = 'addProperty',
-  ADDUSER           = 'addUser',
+  ADD_PROPERTY      = 'addProperty',
+  ADD_USER          = 'addUser',
   BACK              = 'back',
   BLOCK             = 'block',
   CALL              = 'call',
-  CALLPAUSE         = 'callPause',
+  CALL_PAUSE        = 'callPause',
   CANCEL            = 'cancel',
   CHANGE            = 'change',
-  CHANGESTATUS      = 'changeStatus',
+  CHANGE_STATUS     = 'changeStatus',
   CLEAR             = 'clear',
   CLOSE             = 'close',
   COPY              = 'copy',
-  DEBTCARD          = 'debtCard',
+  DEBT_CARD         = 'debtCard',
   DELETE            = 'delete',
   DOWNLOAD          = 'download',
+  DOWNLOAD_EXCEL    = 'downloadExcel',
   DROP              = 'drop',
   EMAIL             = 'email',
   EDIT              = 'edit',
-  EXPORTTOEXCEL     = 'exportToExcel',
+  EXPORT_TO_EXCEL   = 'exportToExcel',
   FILTER            = 'filter',
   INFO              = 'info',
-  LOADFROMEXCEL     = 'loadFromExcel',
+  LOAD_FROM_EXCEL   = 'loadFromExcel',
   MAP               = 'map',
   MOVE              = 'move',
   NEXT              = 'next',
   OK                = 'ok',
   PAUSE             = 'pause',
   REFRESH           = 'refresh',
-  REGISTERCONTACT   = 'registerContact',
+  REGISTER_CONTACT  = 'registerContact',
   RESUME            = 'resume',
   SAVE              = 'save',
   SEARCH            = 'search',
@@ -55,3 +56,9 @@ export enum ButtonType {
   VERSION           = 'version',
   VISIT             = 'visit',
 }
+
+export interface ButtonConfig {
+  label?: string;
+  iconCls?: string;
+}
+

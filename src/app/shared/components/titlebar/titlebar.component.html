@@ -17,7 +17,7 @@
               position="right"
               class="icon"
               [ngClass]="item.classes | async"
-              [title]="getTitle(item)"
+              [title]="getLabel(item)"
               [enabled]="!(item.enabled | async)"
             >
               <i trigger class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
@@ -29,7 +29,7 @@
               class="icon"
               [ngClass]="item.classes | async"
               [disabled]="!(item.enabled | async)"
-              [title]="getTitle(item) | translate"
+              [title]="getLabel(item) | translate"
               (click)="item.action()"
             >
               <i class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
