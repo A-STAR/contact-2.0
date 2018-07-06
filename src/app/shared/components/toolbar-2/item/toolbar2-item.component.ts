@@ -30,6 +30,7 @@ export class Toolbar2ItemComponent implements OnInit, OnDestroy {
   defaultItems: { [ToolbarItemTypeEnum: number]: IButtonType } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: 'add',
     [ToolbarItemTypeEnum.BUTTON_ADD_USER]: 'addUser',
+    [ToolbarItemTypeEnum.BUTTON_ADD_PROPERTY]: 'addProperty',
     [ToolbarItemTypeEnum.BUTTON_BLOCK]: 'block',
     [ToolbarItemTypeEnum.BUTTON_CALL]: 'call',
     [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: 'changeStatus',

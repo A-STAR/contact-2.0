@@ -6,6 +6,7 @@ import { IButtonStyle, IButtonStylesConfig, IButtonType, IButtonTypesConfig } fr
 export class ButtonService {
   private defaultIcons: IButtonTypesConfig = {
     add:              { icon: 'fa fa-plus',             label: 'default.buttons.add'              },
+    addProperty:      { icon: 'fa fa-user-plus',        label: 'default.buttons.addProperty'      },
     addUser:          { icon: 'fa fa-user-plus',        label: 'default.buttons.addUser'          },
     back:             { icon: 'fa fa-arrow-left',       label: 'default.buttons.back'             },
     block:            { icon: 'fa fa-unlock-alt',       label: 'default.buttons.block'            },

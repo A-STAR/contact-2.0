@@ -3475,6 +3475,7 @@
     },
     "buttons": {
       "add": "Add",
+      "addProperty": "Add property",
       "addUser": "Add user",
       "back": "Back",
       "block": "Block",
