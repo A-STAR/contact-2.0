@@ -11,10 +11,10 @@ import {
 import { defaultTo } from 'ramda';
 import { of } from 'rxjs/observable/of';
 
-import { IButtonType } from '../button/button.interface';
 import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
 
 import { doOnceIf } from '@app/core/utils';
+import { IconType } from '@app/shared/components/icons/icons.interface';
 
 @Component({
   selector: 'app-titlebar',
@@ -30,25 +30,25 @@ export class TitlebarComponent implements OnChanges, OnInit {
   borderCls: object;
   items: ITitlebarItem[] = [];
   props: { [key: string]: Partial<ITitlebarButton> } = {
-    [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'co-add', title: 'Добавить' },
-    [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'co-copy', title: 'Копировать' },
-    [TitlebarItemTypeEnum.BUTTON_CLOSE]: { iconCls: 'co-close', title: 'default.buttons.close' },
-    [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
-    [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
+    [ButtonType.ADD]: { iconCls: 'co-add', title: 'Добавить' },
+    [ButtonType.COPY]: { iconCls: 'co-copy', title: 'Копировать' },
+    [ButtonType.CLOSE]: { iconCls: 'co-close', title: 'default.buttons.close' },
+    [ButtonType.CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
+    [ButtonType.DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
     // TODO(d.maltsev): we need a better icon here
-    [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-edit', title: 'Карточка должника' },
-    [TitlebarItemTypeEnum.BUTTON_DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
-    [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
-    [TitlebarItemTypeEnum.BUTTON_FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
+    [ButtonType.DEBT_CARD]: { iconCls: 'co-edit', title: 'Карточка должника' },
+    [ButtonType.DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
+    [ButtonType.DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
+    [ButtonType.EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
+    [ButtonType.FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
     //  TODO(i.lobanov): replace when icon is ready
-    [TitlebarItemTypeEnum.BUTTON_MAP]: { iconCls: 'co-image', title: 'default.buttons.map' },
-    [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'co-move', title: 'Переместить' },
-    [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
-    [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
-    [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'co-search', title: 'Поиск' },
-    [TitlebarItemTypeEnum.BUTTON_START]: { iconCls: 'co-start', title: 'Запустить' },
-    [TitlebarItemTypeEnum.BUTTON_STOP]: { iconCls: 'co-stop', title: 'Остановить' },
+    [ButtonType.MAP]: { iconCls: 'co-image', title: 'default.buttons.map' },
+    [ButtonType.MOVE]: { iconCls: 'co-move', title: 'Переместить' },
+    [ButtonType.REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
+    [ButtonType.REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
+    [ButtonType.SEARCH]: { iconCls: 'co-search', title: 'Поиск' },
+    [ButtonType.START]: { iconCls: 'co-start', title: 'Запустить' },
+    [ButtonType.STOP]: { iconCls: 'co-stop', title: 'Остановить' },
   };
   suppressCenterZone: boolean;
   title: string;
@@ -75,7 +75,7 @@ export class TitlebarComponent implements OnChanges, OnInit {
     this.title = (this.titlebar && this.titlebar.title) || '';
   }
 
-  getButtonType(item: ITitlebarItem): IButtonType {
+  getButtonType(item: ITitlebarItem): IconType {
     return TitlebarItemTypeEnum[item.type];
   }
 

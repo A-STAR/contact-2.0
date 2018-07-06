@@ -11,7 +11,6 @@ import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
 import { ActionsLogService } from './actions-log/actions-log.service';
-import { ButtonService } from './button/button.service';
 import { CallService } from './calls/call.service';
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from './context/context.service';
@@ -114,7 +113,6 @@ import 'rxjs/add/operator/withLatestFrom';
   ],
   providers: [
     ActionsLogService,
-    ButtonService,
     CallService,
     ConfigService,
     ContextService,

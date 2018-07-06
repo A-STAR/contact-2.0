@@ -44,7 +44,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
         this.paramsService.canEdit$
@@ -52,7 +53,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedParam$.value),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
@@ -60,7 +62,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
@@ -68,7 +71,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),

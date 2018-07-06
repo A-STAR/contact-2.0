@@ -35,7 +35,8 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selected[0]),
       enabled: combineLatest(
         this.canView$,

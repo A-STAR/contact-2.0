@@ -40,7 +40,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     title: 'organizations.employees.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.setDialog('create'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -48,7 +49,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -56,7 +58,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_DELETE'),
@@ -64,7 +67,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetchEmployees(),
         enabled: combineLatest(
           this.userPermissionsService.has('ORGANIZATION_VIEW'),

@@ -44,12 +44,14 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([ this.canAdd$, this.debtId$.map(Boolean) ]),
       action: () => this.onAdd(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([
         this.canEdit$,
         this.selectedPayment$.map(payment => payment && !payment.isCanceled),
@@ -57,7 +59,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       action: () => this.onEdit()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_OK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.OK,
       label: 'debtor.paymentsTab.confirm.buttonLabel',
       enabled: combineLatestAnd([
         this.canСonfirm$,
@@ -66,7 +69,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('confirm')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNDO,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.UNDO,
       label: 'debtor.paymentsTab.cancel.buttonLabel',
       action: () => this.setDialog('cancel'),
       enabled: combineLatestAnd([
@@ -75,7 +79,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canRefresh$
     },

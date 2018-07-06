@@ -29,12 +29,14 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => {
         const { contactId } = this.selectedContact$.value;
         this.onEdit(contactId);
@@ -45,7 +47,8 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
       ).map(([canEdit, selectedContact]) => !!canEdit && !!selectedContact)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeContact'),
       enabled: combineLatest(
         this.canDelete$,
@@ -53,7 +56,8 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
       ).map(([canDelete, selectedContact]) => !!canDelete && !!selectedContact),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canView$
     },

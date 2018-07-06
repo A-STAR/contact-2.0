@@ -37,12 +37,14 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     title: 'modules.reports.arbitrary.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         enabled: this.reportsService.canAdd$,
         action: () => this.onAdd()
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedReport$.value),
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
@@ -50,7 +52,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
@@ -58,7 +61,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DOWNLOAD_EXCEL,
         action: () => this.setDialog('create'),
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
@@ -67,7 +71,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.reportsService.canView$
       }

@@ -136,27 +136,32 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       enabled: this.canEdit$,
       action: () => this.onEdit(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.BLOCK,
       enabled: this.canBlock$,
       action: () => this.setDialog('block')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.UNBLOCK,
       enabled: this.canUnblock$,
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_VISIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.VISIT,
       enabled: combineLatestOr([ this.canViewVisitLog$, this.canMarkVisit$ ]),
       children: [
         {
@@ -172,28 +177,33 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_MAP,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.MAP,
       enabled: this.canViewMap$,
       action: () => this.setDialog('map')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REGISTER_CONTACT,
       enabled: this.canRegisterContact$,
       action: () => this.registerContact()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: this.canDelete$,
       action: () => this.setDialog('delete')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EMAIL,
       label: 'routes.workplaces.shared.address.toolbar.letter',
       enabled: this.canGenerateLetter$,
       action: () => this.setDialog('letterGeneration')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },

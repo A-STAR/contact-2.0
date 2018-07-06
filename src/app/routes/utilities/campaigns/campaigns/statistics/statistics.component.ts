@@ -62,7 +62,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
         .pipe(first())
         .map(statistic => statistic && statistic.userStatistic)

@@ -66,12 +66,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.setDialog('CAMPAIGN_ADD'),
       enabled: this.userPermissionsService.has('CAMPAIGN_ADD')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.setDialog('CAMPAIGN_EDIT'),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -79,7 +81,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       ).map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('CAMPAIGN_REMOVE'),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
@@ -87,12 +90,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       ).pipe(hasPermissionAndNotStarted),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
       enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_START,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.START,
       action: () => this.onStart(),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -100,7 +105,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       ).pipe(hasPermissionAndNotStarted),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_STOP,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.STOP,
       action: () => this.onStop(),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),

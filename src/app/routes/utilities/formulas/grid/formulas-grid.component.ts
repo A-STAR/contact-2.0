@@ -37,12 +37,14 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
     title: 'routes.utilities.formulas.titlebar.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         enabled: this.formulasService.canEdit$,
         action: () => this.onAdd()
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedFormula$.value),
         enabled: combineLatestAnd([
           this.formulasService.canEdit$,
@@ -50,7 +52,8 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('removeFormula'),
         enabled: combineLatestAnd([
           this.formulasService.canEdit$,
@@ -58,7 +61,8 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_START,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.START,
         title: this.translateService.instant('default.buttons.calculate'),
         action: () => this.setDialog('calculateFormula'),
         enabled: combineLatestAnd([
@@ -67,7 +71,8 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.formulasService.canView$
       }

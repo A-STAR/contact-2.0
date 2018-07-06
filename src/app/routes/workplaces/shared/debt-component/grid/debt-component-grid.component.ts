@@ -56,12 +56,14 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.canEditDebtComponent$
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedDebtComponentId$.value),
       enabled: combineLatest(
         this.canEditDebtComponent$,
@@ -69,7 +71,8 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
       ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.dialog$.next('delete'),
       enabled: combineLatest(
         this.canEditDebtComponent$,
@@ -77,7 +80,8 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
       ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canViewDebtComponent$
     },

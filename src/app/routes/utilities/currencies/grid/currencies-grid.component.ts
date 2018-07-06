@@ -41,12 +41,14 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.currenciesService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedCurrency$.value),
       enabled: combineLatestAnd([
         this.currenciesService.canEdit$,
@@ -54,14 +56,16 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeCurrency'),
       enabled: this.selectedCurrency$.flatMap(
         selectedCurrency => this.currenciesService.canDelete$(selectedCurrency),
       ),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.currenciesService.canView$
     }

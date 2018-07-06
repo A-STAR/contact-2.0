@@ -59,22 +59,26 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.setDialog('add'),
       enabled: this.canAdd$,
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
       enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
     },
   ];

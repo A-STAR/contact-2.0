@@ -30,12 +30,14 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.objectsService.canAdd$,
       action: () => this.setDialog('add'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([
         this.objectsService.canDelete$,
         this.selectedObjects$.map(objects => objects && !!objects.length)
@@ -43,7 +45,8 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
       action: () => this.setDialog('delete'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       enabled: this.objectsService.canView$,
       action: () => this.fetch(),
     },

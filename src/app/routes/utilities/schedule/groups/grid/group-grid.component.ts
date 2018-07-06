@@ -52,12 +52,14 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.groupService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedGroup$.value),
       enabled: this.selectedGroup$.flatMap(
         selectedGroup => selectedGroup
@@ -66,7 +68,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       ),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeGroup'),
       enabled: this.selectedGroup$.flatMap(
         selectedGroup => selectedGroup
@@ -75,7 +78,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       ),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.groupService.canView$
     },

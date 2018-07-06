@@ -54,7 +54,8 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
     title: 'portfolios.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.onAdd(),
         enabled: combineLatestAnd([
           this.canAdd$,
@@ -62,7 +63,8 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.onEdit(),
         enabled: combineLatestAnd([
           this.canEdit$,
@@ -71,7 +73,8 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_MOVE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.MOVE,
         action: () => this.onMove(),
         enabled: combineLatestAnd([
           this.canMove$,
@@ -80,7 +83,8 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('delete'),
         enabled: combineLatestAnd([
           this.canDelete$,
@@ -89,7 +93,8 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios)),
         enabled: this.canView$
       }

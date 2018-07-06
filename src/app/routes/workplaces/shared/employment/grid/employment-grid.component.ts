@@ -45,12 +45,14 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedEmployment$.value),
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -58,7 +60,8 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeEmployment'),
       enabled: combineLatestAnd([
         this.canDelete$,
@@ -66,7 +69,8 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
     },

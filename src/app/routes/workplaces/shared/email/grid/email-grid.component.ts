@@ -251,37 +251,44 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([ this.canEdit$, this.selectedEmail$.pipe( map(Boolean) ) ]),
       action: () => this.onEdit(this.selectedEmailId)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.BLOCK,
       enabled: combineLatestAnd([ this.canBlock$, this.isEmailActive$ ]),
       action: () => this.setDialog('block')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.UNBLOCK,
       enabled: combineLatestAnd([ this.canBlock$, this.isEmailInactive$ ]),
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EMAIL,
       enabled: this.canSchedule$,
       action: () => this.setDialog('schedule')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([ this.canDelete$, this.selectedEmail$.pipe(map(Boolean)) ]),
       action: () => this.setDialog('delete')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       enabled: this.canView$,
       action: () => this.fetch()
     },

@@ -124,7 +124,8 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     title: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.SEARCH,
         action: () => this.openPersonSearch(),
         enabled: this.edit$.pipe(map(invert)),
       },

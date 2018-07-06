@@ -41,12 +41,14 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
     title: 'contractors.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.onAdd(),
         enabled: this.canAdd$
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.onEdit(),
         enabled: combineLatestAnd([
           this.canEdit$,
@@ -54,7 +56,8 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('delete'),
         enabled: combineLatestAnd([
           this.canDelete$,
@@ -62,7 +65,8 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetchContractors(),
         enabled: this.canView$
       }

@@ -25,11 +25,13 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions imp
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.setDialog('edit')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: this.selectedDocumentGuid$.map(Boolean),
       action: () => this.setDialog('delete')
     },

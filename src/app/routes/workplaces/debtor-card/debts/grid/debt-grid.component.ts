@@ -54,17 +54,20 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([ this.canEdit$, this.selectedDebt$.map(debt => debt && !!debt.id) ]),
       action: () => this.onEdit()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.CHANGE_STATUS,
       label: 'widgets.debt.toolbar.changeStatus',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
@@ -76,7 +79,8 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
       action: () => this.onChangeStatus()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.CALL,
       label: 'widgets.debt.toolbar.call',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
@@ -85,7 +89,8 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
       action: () => this.onNextCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CLEAR,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.CLEAR,
       label: 'widgets.debt.toolbar.terminate',
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
@@ -116,7 +121,8 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
       ]
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch()
     },
   ];

@@ -36,7 +36,8 @@ export class PermissionsTreeComponent implements OnDestroy {
 
   toolbarActions: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_SAVE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.SAVE,
       action: () => this.onSaveChanges(),
       enabled: combineLatest(
         this.userPermissionsService.has('GUI_TREE_EDIT'),

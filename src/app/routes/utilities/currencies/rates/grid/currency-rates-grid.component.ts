@@ -127,7 +127,8 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   private createToolbar(): IToolbarItem[] {
     return [
       {
-        type: ToolbarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         enabled: combineLatestAnd([
           this.currencyRatesService.canAdd$,
           this.currencyId$.map(Boolean)
@@ -135,7 +136,8 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
         action: () => this.onAdd()
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedCurrencyRate$.value),
         enabled: combineLatestAnd([
           this.currencyRatesService.canEdit$,
@@ -143,7 +145,8 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
         ])
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: combineLatestAnd([
           this.currencyRatesService.canView$,

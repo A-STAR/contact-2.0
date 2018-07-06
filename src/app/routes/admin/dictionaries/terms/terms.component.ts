@@ -39,7 +39,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     title: 'terms.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.create(),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('DICT_TERM_ADD'),
@@ -47,7 +48,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.edit(),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('DICT_TERM_EDIT'),
@@ -55,7 +57,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('DICT_TERM_DELETE'),
@@ -63,7 +66,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.dictionariesService.fetchTerms(),
         enabled: this.dictionariesService.hasSelectedDictionary
       }

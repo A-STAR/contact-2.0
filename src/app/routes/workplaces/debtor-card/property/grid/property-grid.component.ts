@@ -38,12 +38,14 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.propertyService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedProperty$.value),
       enabled: combineLatestAnd([
         this.propertyService.canEdit$,
@@ -51,7 +53,8 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeProperty'),
       enabled: combineLatestAnd([
         this.propertyService.canDelete$,

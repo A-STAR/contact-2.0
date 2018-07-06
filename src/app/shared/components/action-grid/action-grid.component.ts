@@ -553,24 +553,28 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     // TODO(i.lobanov): move to action grid service and refactor
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.onRequest(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_REFRESH, permissions),
+        enabled: this.isTbItemEnabled$(ButtonType.REFRESH, permissions),
       }),
       search: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.SEARCH,
         action: () => this.onRequest(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_SEARCH, permissions),
+        enabled: this.isTbItemEnabled$(ButtonType.SEARCH, permissions),
       }),
       exportExcel: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DOWNLOAD_EXCEL,
         action: () => this.exportExcel(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL, permissions),
+        enabled: this.isTbItemEnabled$(ButtonType.DOWNLOAD_EXCEL, permissions),
       }),
       filter: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON_FILTER,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.FILTER,
         action: () => this.openFilter(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_FILTER, permissions),
+        enabled: this.isTbItemEnabled$(ButtonType.FILTER, permissions),
         classes: this.excelFilter$.pipe(
           map(excelFilter => excelFilter && excelFilter.hasFilter()),
           map(active => active ? 'button-active' : null)
@@ -590,11 +594,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private isTbItemEnabled$(itemType: TitlebarItemTypeEnum, permissions?: string[]): Observable<boolean> {
     const conditions = [ permissions ? this.userPermissionsService.hasAll(permissions) : of(true) ];
     switch (itemType) {
-      case TitlebarItemTypeEnum.BUTTON_SEARCH:
+      case ButtonType.SEARCH:
         conditions.push(this.filter.isValid$);
         break;
-      case TitlebarItemTypeEnum.BUTTON_REFRESH:
-      case TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL:
+      case ButtonType.REFRESH:
+      case ButtonType.DOWNLOAD_EXCEL:
       default:
         // do nothing
         break;

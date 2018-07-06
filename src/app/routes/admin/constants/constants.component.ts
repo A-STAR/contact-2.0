@@ -40,7 +40,8 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     title: 'constants.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.setDialog('editConstant'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('CONST_VALUE_EDIT'),
@@ -48,7 +49,8 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
       ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetchAll(),
         enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
       },

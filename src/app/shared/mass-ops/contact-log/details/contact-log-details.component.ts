@@ -64,7 +64,8 @@ export class ContactLogDetailsComponent {
   titlebar: ITitlebar = {
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_CLOSE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.CLOSE,
         enabled: of(true),
         action: () => this.close.emit()
       }

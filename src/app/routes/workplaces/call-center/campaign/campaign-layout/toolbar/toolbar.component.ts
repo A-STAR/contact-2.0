@@ -28,18 +28,21 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
     title: 'Сальников Андрей Юрьевич',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_DEBT_CARD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DEBT_CARD,
         // iconCls: 'co co-debt-list',
         title: 'Открытие карточки должника',
         action: () => this.openDebtorCard(),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REGISTER_CONTACT,
         title: 'Регистрация контакта с типом "Специальное"',
         action: () => this.registerSpecial(),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.CHANGE_STATUS,
         title: 'Перевод в проблемные',
         action: () => this.setDialog('change-status'),
         enabled: this.canChangeStatusToProblematic$,

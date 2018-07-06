@@ -42,12 +42,14 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.pledgeService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([
         this.pledgeService.canEdit$,
         this.selectedContract$.map(selectedContract => !!selectedContract)
@@ -55,7 +57,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onEdit(this.selectedContract$.value)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD_USER,
       action: () => this.onAddPledgor(this.selectedContract$.value),
       label: 'widgets.pledgeContract.toolbar.add',
       enabled: combineLatestAnd([
@@ -64,7 +67,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD_PROPERTY,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD_PROPERTY,
       action: () => this.onAddProperty(this.selectedContract$.value),
       enabled: combineLatestAnd([
         this.pledgeService.canEdit$,
@@ -72,7 +76,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removePledge'),
       enabled: combineLatestAnd([
         this.pledgeService.canDelete$,

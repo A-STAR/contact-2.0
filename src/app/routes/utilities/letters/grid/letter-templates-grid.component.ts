@@ -41,12 +41,14 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     title: 'routes.utilities.letters.titlebar.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         enabled: this.lettersService.canAdd$,
         action: () => this.onAdd()
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedTemplate$.value),
         enabled: combineLatestAnd([
           this.lettersService.canEdit$,
@@ -54,7 +56,8 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('removeTemplate'),
         enabled: combineLatestAnd([
           this.lettersService.canDelete$,
@@ -62,7 +65,8 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DOWNLOAD,
         action: () => this.onExport(),
         enabled: combineLatestAnd([
           this.lettersService.canView$,
@@ -70,7 +74,8 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.lettersService.canView$
       }

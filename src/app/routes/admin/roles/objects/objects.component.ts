@@ -34,17 +34,20 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([ this.masterRoleId$.pipe(map(Boolean)), this.canEdit$ ]),
       action: () => this.setDialog('add'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([ this.selectedObject$.pipe(map(Boolean)), this.canEdit$ ]),
       action: () => this.setDialog('delete'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       enabled: this.selectedObject$.pipe(map(Boolean)),
       action: () => this.fetch(),
     },

@@ -366,47 +366,56 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   gridToolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onEdit(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.BLOCK,
       enabled: combineLatestAnd([this.canBlock$, this.selectedPhone$.map(phone => phone && !phone.isInactive)]),
       action: () => this.setDialog('block')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.UNBLOCK,
       enabled: combineLatestAnd([this.canUnblock$, this.selectedPhone$.map(phone => phone && !!phone.isInactive)]),
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.SMS,
       enabled: this.canSchedule$,
       action: () => this.setDialog('schedule')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REGISTER_CONTACT,
       enabled: this.canRegisterContact$,
       action: () => this.registerContact()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([this.canDelete$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('delete')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.refresh()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.CALL,
       align: 'right',
       enabled: this.canMakeCall$,
       action: () => this.onMakeCall()

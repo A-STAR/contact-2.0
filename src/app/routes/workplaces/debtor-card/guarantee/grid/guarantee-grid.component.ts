@@ -29,12 +29,14 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -42,7 +44,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD_USER,
       action: () => this.onAddGuarantor(),
       label: 'widgets.guaranteeContract.toolbar.add',
       enabled: combineLatestAnd([
@@ -51,7 +54,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeGuarantee'),
       enabled: combineLatestAnd([
         this.canDelete$,
@@ -59,7 +63,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canView$
     },

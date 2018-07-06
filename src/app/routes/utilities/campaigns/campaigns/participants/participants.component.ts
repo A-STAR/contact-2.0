@@ -53,7 +53,8 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     title: 'utilities.campaigns.tabs.participants',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.setDialog('PARTICIPANT_ADD'),
         enabled: combineLatest(
           this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -63,7 +64,8 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
         }),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('PARTICIPANT_REMOVE'),
         enabled: combineLatest(
           this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -74,7 +76,8 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
         }),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetchParticipants().subscribe(participants => this.onParticipantsFetch(participants)),
         enabled: this.userPermissionsService.has('CAMPAIGN_VIEW'),
       },

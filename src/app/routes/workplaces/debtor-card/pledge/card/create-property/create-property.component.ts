@@ -69,7 +69,8 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
     title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.SEARCH,
         action: () => this.openPropertySearch(),
       },
     ]

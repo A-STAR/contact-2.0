@@ -77,12 +77,14 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_OK,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.OK,
       label: 'debtor.promisesTab.approve.buttonLabel',
       enabled: combineLatestAnd([
         this.canСonfirm$,
@@ -91,7 +93,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('approve')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([
         this.canDelete$,
         this.canСonfirm$,
@@ -100,7 +103,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('remove'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canRefresh$
     },

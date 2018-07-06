@@ -36,12 +36,14 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.canAdd$
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -49,7 +51,8 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
@@ -57,7 +60,8 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetchAll(),
       enabled: this.canView$
     }

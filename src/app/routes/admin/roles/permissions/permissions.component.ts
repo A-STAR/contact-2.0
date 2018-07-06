@@ -47,7 +47,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.onBeforeAdd(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_ADD'),
@@ -55,7 +56,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_EDIT'),
@@ -63,7 +65,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_DELETE'),
@@ -71,7 +74,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_VIEW'),

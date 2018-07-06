@@ -30,12 +30,14 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.userPermissionsService.has('TEMPLATE_ADD'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_EDIT'),
@@ -43,7 +45,8 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.onDelete(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_DELETE'),
@@ -51,7 +54,8 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
     }
   ];

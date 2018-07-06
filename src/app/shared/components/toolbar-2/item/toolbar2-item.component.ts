@@ -6,12 +6,12 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IButtonType } from '@app/shared/components/button/button.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 import { doOnceIf, invert } from '@app/core/utils';
+import { IconType } from '@app/shared/components/icons/icons.interface';
 
 @Component({
   selector: 'app-toolbar-2-item',
@@ -27,7 +27,7 @@ export class Toolbar2ItemComponent implements OnInit, OnDestroy {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  defaultItems: { [ToolbarItemTypeEnum: number]: IButtonType } = {
+  defaultItems: { [ToolbarItemTypeEnum: number]: IconType } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: 'add',
     [ToolbarItemTypeEnum.BUTTON_ADD_USER]: 'addUser',
     [ToolbarItemTypeEnum.BUTTON_ADD_PROPERTY]: 'addProperty',

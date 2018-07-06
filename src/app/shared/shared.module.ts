@@ -10,8 +10,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { TranslateModule } from '@ngx-translate/core';
 
-// Angle directives
-import { ColorsService } from './colors/colors.service';
 import { NowDirective } from './directives/now/now.directive';
 
 // App modules
@@ -45,6 +43,7 @@ import { GridTree2Module } from './components/gridtree2/gridtree2.module';
 import { GridTree2WrapperModule } from './components/gridtree2-wrapper/gridtree2-wrapper.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
+import { IconsModule } from './components/icons/icons.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
@@ -122,6 +121,7 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     GridsModule,
     HDividerModule,
     HtmlTextareaModule,
+    IconsModule,
     ImageUploadModule,
     InfoDialogModule,
     InputModule,
@@ -150,7 +150,6 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     ViewFormModule,
   ],
   providers: [
-    ColorsService,
     QBuilderService
   ],
   declarations: [
@@ -205,6 +204,7 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     GridsModule,
     HDividerModule,
     HtmlTextareaModule,
+    IconsModule,
     ImageUploadModule,
     InfoDialogModule,
     InputModule,

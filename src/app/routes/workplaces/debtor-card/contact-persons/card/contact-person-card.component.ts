@@ -101,7 +101,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.SEARCH,
         action: () => this.openPersonSearch(),
         enabled: this.edit$.pipe(map(invert)),
       },

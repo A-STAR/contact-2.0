@@ -22,7 +22,7 @@ export class FormulaCalculateActionComponent extends DialogFunctions implements 
   dialog: string;
   type = 'calculate';
   title = this.translateService.instant('default.buttons.calculate');
-  buttonType = TitlebarItemTypeEnum.BUTTON_START;
+  buttonType = ButtonType.START;
 
   constructor(
     @Inject(forwardRef(() => EntityGridComponent)) private grid: EntityGridComponent<IGridEntity>,

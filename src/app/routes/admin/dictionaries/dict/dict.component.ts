@@ -34,12 +34,14 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
       action: () => this.create(),
       enabled: this.userPermissionsService.has('DICT_ADD')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
       action: () => this.edit(),
       enabled: combineLatestAnd([
         this.canEdit,
@@ -47,7 +49,8 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_DELETE'),
@@ -55,7 +58,8 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
       action: () => this.dictionariesService.fetchDictionaries()
     }
   ];

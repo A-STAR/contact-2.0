@@ -40,12 +40,14 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
     title: 'roles.roles.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.setDialog('add'),
         enabled: this.userPermissionsService.has('ROLE_ADD')
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_COPY,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.COPY,
         action: () => this.setDialog('copy'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ROLE_COPY'),
@@ -53,7 +55,8 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ROLE_EDIT'),
@@ -61,7 +64,8 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ROLE_DELETE'),
@@ -69,7 +73,8 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.permissionsService.fetchRoles(),
         enabled: this.userPermissionsService.has('ROLE_VIEW')
       },

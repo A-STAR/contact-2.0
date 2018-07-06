@@ -151,7 +151,8 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   private getToolbarItems(): IToolbarItem[] {
     return [
       {
-        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
@@ -160,7 +161,8 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
         ]),
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.entityTypeId && this.entityId && this.selectedAttribute
           && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
       },

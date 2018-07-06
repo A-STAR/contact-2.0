@@ -1,12 +1,4 @@
-export type IButtonStyle =
-  'none' |
-  'default' |
-  'primary' |
-  'secondary' |
-  'warning' |
-  'danger';
-
-export type IButtonType =
+export type IconType =
   'add' |
   'addProperty' |
   'addUser' |
@@ -50,14 +42,12 @@ export type IButtonType =
   'upload' |
   'version' |
   'visit';
+export enum NiceIconType {
+CHECKBOX_TYPE = '',
+ok = 'ok',
 
-export type IButtonStylesConfig = {
-  [K in IButtonStyle]: string;
+}
+export type IconsConfig = {
+  [k in IconType]: string;
 };
 
-export type IButtonTypesConfig = {
-  [K in IButtonType]: {
-    icon: string;
-    label: string;
-  };
-};

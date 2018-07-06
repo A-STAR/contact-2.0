@@ -37,12 +37,14 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
     title: 'organizations.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.ADD,
         action: () => this.setDialog('create'),
         enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -50,7 +52,8 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_DELETE'),
@@ -58,7 +61,8 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: TitlebarItemTypeEnum.BUTTON,
+buttonType: ButtonType.REFRESH,
         action: () => this.fetchOrganizations(),
         enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
       },
