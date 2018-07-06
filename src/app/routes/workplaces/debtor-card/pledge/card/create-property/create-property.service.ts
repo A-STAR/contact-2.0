@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { mergeMap } from 'rxjs/operators';
+import { first, mergeMap } from 'rxjs/operators';
 
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
@@ -47,6 +47,7 @@ export class PledgeCardCreatePropertyService {
           ? of(property.id)
           : this.propertyService.create(pledgorId, payload);
       }),
+      first(),
     );
   }
 }

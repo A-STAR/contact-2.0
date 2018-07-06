@@ -210,7 +210,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
         first(),
         mergeMap(selectedPerson => {
           if (selectedPerson) {
-            return of(selectedPerson.id);
+            return of(selectedPerson.id).pipe(first());
           }
           const person = this.layout.getData();
           return this.editing
