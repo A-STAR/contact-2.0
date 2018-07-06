@@ -68,7 +68,7 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
-import { combineLatestAnd, flatten, isEmpty } from '@app/core/utils';
+import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
@@ -120,11 +120,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input()
   set rows(rows: T[]) {
     this._rows = rows;
-    if (this.persistenceKey && !isEmpty(this.selection)) {
-      this.uiService.updateState(this.persistenceKey, {
-        firstSelectedRow: this.getFirstSelectedRow(this.selection),
-      });
-    }
+    this.updateFirstSelectedRow(this.selection);
   }
 
   @Input() columnTranslationKey: string;
@@ -443,15 +439,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   onSelect(selected: T[]): void {
-    if (this.persistenceKey) {
-      /**
-       * Because context service may require access to selected rows in any grid.
-       * This kind can also replace route reuse in future.
-       */
-      this.uiService.updateState(this.persistenceKey, {
-        firstSelectedRow: this.getFirstSelectedRow(selected),
-      });
-    }
+    this.updateFirstSelectedRow(selected);
     this.selectRow.emit(selected);
   }
 
@@ -665,5 +653,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private attachValidator(computedValue: boolean): (params: IContextMenuParams) => boolean {
     return (params: IContextMenuParams) => params.action.type === MetadataActionType.ALL ?
       computedValue : this.validateSelection(params.action.params, params.selected) && computedValue;
+  }
+
+  private updateFirstSelectedRow(selection: T[]): void {
+    if (this.persistenceKey) {
+      this.uiService.updateState(this.persistenceKey, {
+        firstSelectedRow: this.getFirstSelectedRow(selection),
+      });
+    }
   }
 }
