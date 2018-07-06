@@ -195,20 +195,25 @@ export class PledgeCardEditContractComponent implements OnInit, AfterViewInit {
 
   private fetchContract(): void {
     this.pledgeService
-    .fetch(this.debtId, this.contractId)
-    .subscribe(contract => this.layout.setData({ contract }));
+      .fetch(this.debtId, this.contractId)
+      .subscribe(contract => this.layout.setData({ contract }));
   }
 
   private fetchPledgor(): void {
     this.personService
-    .fetch(this.pledgorId)
-    .subscribe(pledgor => this.layout.setData({ default: pledgor }));
+      .fetch(this.pledgorId)
+      .subscribe(pledgor => this.layout.setData({ default: pledgor }));
   }
 
   private fetchProperty(): void {
     this.propertyService
-    .fetch(this.pledgorId, this.propertyId)
-    .subscribe(property => this.layout.setData({ property }));
+      .fetch(this.pledgorId, this.propertyId)
+      .subscribe(property => this.layout.setData({
+        property: {
+          propertyName: property.name,
+          propertyType: property.typeCode,
+        },
+      }));
   }
 
   private onSuccess(): void {
