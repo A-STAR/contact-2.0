@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { IFormula } from '../formulas.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { FormulasService } from '../formulas.service';
 import { RoutingService } from '@app/core/routing/routing.service';

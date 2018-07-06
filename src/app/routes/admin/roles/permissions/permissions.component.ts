@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators/first';
 
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { DataService } from '@app/core/data/data.service';

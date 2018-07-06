@@ -10,6 +10,7 @@ import { IUserConstant } from '@app/core/user/constants/user-constants.interface
 import { IGridTreeRow } from './gridtree.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { AttributeService } from '../attribute.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';

@@ -12,6 +12,7 @@ import { defaultTo } from 'ramda';
 import { of } from 'rxjs/observable/of';
 
 import { ITitlebar, ITitlebarItem, ToolbarItemType, ITitlebarButton } from './titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { doOnceIf } from '@app/core/utils';
 import { IconType } from '@app/shared/components/icons/icons.interface';

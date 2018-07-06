@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 

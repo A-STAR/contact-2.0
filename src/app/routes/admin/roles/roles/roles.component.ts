@@ -11,6 +11,7 @@ import { map, first } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';

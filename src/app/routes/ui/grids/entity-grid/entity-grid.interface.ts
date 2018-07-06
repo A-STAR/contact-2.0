@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn, IGridSelectionType } from '@app/shared/components/grids/grids.interface';
 import { ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 export interface IMetadataEntityGridConfig {
   apiKey: string;

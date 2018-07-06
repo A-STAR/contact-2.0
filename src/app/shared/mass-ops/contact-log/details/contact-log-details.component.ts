@@ -11,6 +11,7 @@ import { ActionGridService } from '@app/shared/components/action-grid/action-gri
 import { ContactLogDetailsService } from './contact-log-details.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 @Component({
   selector: 'app-contact-log-details',

@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IReport } from '../reports.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { ReportsService } from '../reports.service';

@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { EmploymentService } from '@app/routes/workplaces/core/employment/employment.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';

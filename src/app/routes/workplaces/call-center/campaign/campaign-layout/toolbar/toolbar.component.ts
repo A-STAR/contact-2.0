@@ -4,6 +4,7 @@ import { first, map } from 'rxjs/operators';
 
 import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';

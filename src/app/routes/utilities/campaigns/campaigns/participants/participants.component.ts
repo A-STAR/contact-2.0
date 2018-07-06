@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ICampaign, IParticipant } from '../campaigns.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { CampaignsService } from '../campaigns.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

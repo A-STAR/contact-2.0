@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IGuaranteeContract } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
 import { RoutingService } from '@app/core/routing/routing.service';

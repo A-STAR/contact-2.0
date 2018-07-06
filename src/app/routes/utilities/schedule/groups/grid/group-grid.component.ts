@@ -15,6 +15,7 @@ import { of } from 'rxjs/observable/of';
 import { IGroup } from '../groups.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { GroupsService } from '../groups.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';

@@ -13,6 +13,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map } from 'rxjs/operators';
 
 import { ITitlebar, ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { LayoutService } from '@app/core/layout/layout.service';
 import { PledgeCardCreatePropertyService } from './create-property.service';
