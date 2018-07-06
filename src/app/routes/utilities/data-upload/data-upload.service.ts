@@ -120,9 +120,10 @@ export class DataUploadService {
       case TYPE_CODES.DATETIME:
         return this.valueConverterService.toISO(value as Date);
       case TYPE_CODES.STRING:
+      case TYPE_CODES.NUMBER:
+      case TYPE_CODES.FLOAT:
         return value === '' ? null : value;
       case TYPE_CODES.BOOLEAN:
-      case TYPE_CODES.NUMBER:
       default:
         return value;
     }
