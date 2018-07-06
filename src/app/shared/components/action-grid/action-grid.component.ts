@@ -68,7 +68,7 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
-import { combineLatestAnd, flatten } from '@app/core/utils';
+import { combineLatestAnd, flatten, isEmpty } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
@@ -116,7 +116,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() permissionKey: string;
   @Input() rowCount: number;
   @Input() rowIdKey: string;
-  @Input() rows: T[] = [];
+
+  @Input()
+  set rows(rows: T[]) {
+    this._rows = rows;
+    if (this.persistenceKey && !isEmpty(this.selection)) {
+      this.uiService.updateState(this.persistenceKey, {
+        firstSelectedRow: this.getFirstSelectedRow(this.selection),
+      });
+    }
+  }
+
   @Input() columnTranslationKey: string;
   @Input() styles: CSSStyleDeclaration;
   @Input() filterData: any;
@@ -140,6 +150,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   templates: Record<string, TemplateRef<any>>;
 
   private _columns: IAGridColumn[];
+  private _rows: T[];
 
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
@@ -196,6 +207,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  get rows(): T[] {
+    return this._rows;
   }
 
   ngOnInit(): void {
