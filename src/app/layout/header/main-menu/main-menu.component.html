@@ -1,10 +1,23 @@
 <ul class="flex">
-  <li *ngFor="let item of menuItems$ | async"
-    class="flex-item menu-item"
-    [routerLink]="item.link"
-    routerLinkActive="active"
-    [title]="item.text | translate"
-  >
-    {{ item.text | translate }}
-  </li>
+  <ng-container *ngFor="let item of menuItems$ | async">
+    <li
+      *ngIf="isHelpItem(item); else regularItem;"
+      class="flex-item menu-item"
+      [title]="item.text | translate"
+      (click)="onHelp()"
+    >
+      {{ item.text | translate }}
+    </li>
+
+    <ng-template #regularItem>
+      <li
+        class="flex-item menu-item"
+        [routerLink]="item.link"
+        routerLinkActive="active"
+        [title]="item.text | translate"
+      >
+        {{ item.text | translate }}
+      </li>
+    </ng-template>
+  </ng-container>
 </ul>
