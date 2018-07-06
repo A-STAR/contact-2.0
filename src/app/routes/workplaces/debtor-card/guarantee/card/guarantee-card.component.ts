@@ -324,7 +324,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     const data = this.layout.getData('contract');
     if (isEmpty(data)) {
-      return of(null);
+      return of(null).pipe(first());
     }
     return this.contractId
       ? this.guaranteeService.update(this.debtId, this.contractId, data)
@@ -334,7 +334,7 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   private saveGuarantor(): Observable<number> {
     const data = this.layout.getData();
     if (isEmpty(data)) {
-      return of(null);
+      return of(null).pipe(first());
     }
     return this.guarantorId
       ? this.personService.update(this.guarantorId, data).pipe(mapTo(this.guarantorId))
