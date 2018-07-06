@@ -112,15 +112,15 @@ export class ValueConverterService {
   }
 
   toLocalDateTime(date: Date | string): string {
-    return date ? moment(date).locale(this.locale).format('L LTS') : null;
+    return this.momentFormat(date, 'L LTS');
   }
 
   toLocalTime(date: Date | string): string {
-    return date ? moment(date).locale(this.locale).format('LTS') : null;
+    return this.momentFormat(date, 'LTS');
   }
 
   toLocalDate(date: Date | string): string {
-    return date ? moment(date).locale(this.locale).format('L') : null;
+    return this.momentFormat(date, 'L');
   }
 
   formatNumber(num: number | string): string {
@@ -173,5 +173,10 @@ export class ValueConverterService {
       return null;
     }
     return date.isValid() ? date.toDate() : false;
+  }
+
+  private momentFormat(date: Date | string, format: string): string {
+    const customFormat = this.translateService.instant(`default.date.format.${format}`);
+    return date ? moment(date).locale(this.locale).format(customFormat || format) : null;
   }
 }
