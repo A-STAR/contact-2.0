@@ -116,7 +116,7 @@ export class ValueConverterService {
   }
 
   toLocalTime(date: Date | string): string {
-    return date ? moment(date).locale(this.locale).format('LTS') : null;
+    return date ? moment(date).locale(this.locale).format('HH:mm:ss') : null;
   }
 
   toLocalDate(date: Date | string): string {
