@@ -64,9 +64,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      type: ToolbarItemTypeEnum.BUTTON_ADD_PROPERTY,
       action: () => this.onAddProperty(this.selectedContract$.value),
-      label: 'widgets.pledgeContract.toolbar.add',
       enabled: combineLatestAnd([
         this.pledgeService.canEdit$,
         this.selectedContract$.map(selectedContract => !!selectedContract)
