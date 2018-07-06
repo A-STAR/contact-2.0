@@ -429,6 +429,7 @@
         "grid": {
           "id": "ID",
           "name": "Name",
+          "letterTypeCode": "Template type",
           "fileName": "File name",
           "recipientTypeCode": "Recipient",
           "serviceTypeCode": "Service type",
