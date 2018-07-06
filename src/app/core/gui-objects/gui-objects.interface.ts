@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
+import { MenuItemType } from '@app/routes/menu-config.interface';
+
 export interface IGuiObject {
   id: number;
   name: string;
@@ -11,6 +13,7 @@ export interface IMenuItem {
   text: string;
   link: string;
   docs: string;
+  type: MenuItemType;
   isActive?: boolean;
   children: Array<IMenuItem>;
   permission?: Observable<boolean>;
