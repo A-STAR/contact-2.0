@@ -171,8 +171,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     // One of many reasons route reuse is inconvenient
     if (!this.editing) {
       const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
-        this.layout.resetForm();
-        this.layout.resetForm('link');
+        this.layout.resetAndEnableAll();
+        this.isSubmitDisabled$.next(false);
       });
       this.subscription.add(routerSubscription);
     }
@@ -213,7 +213,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
         first(),
         mergeMap(selectedPerson => {
           if (selectedPerson) {
-            return of(selectedPerson.id);
+            return of(selectedPerson.id).pipe(first());
           }
           const person = this.layout.getData();
           return this.editing

@@ -4,6 +4,7 @@ import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map, startWith, tap } from 'rxjs/operators';
 
+import { MenuItemType } from '@app/routes/menu-config.interface';
 import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
 
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
@@ -93,6 +94,7 @@ export class SidebarComponent implements OnInit {
 
       if (!hasLastDebtor) {
         const lastDebtCard: IMenuItem = {
+          type: MenuItemType.ROUTE,
           icon: 'co-m-debtor-card',
           text: 'sidebar.nav.menu.DEBTOR_CARD',
           link: lastDebtorCardLink,
