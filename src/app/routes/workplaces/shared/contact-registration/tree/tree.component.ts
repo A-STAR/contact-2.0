@@ -72,12 +72,11 @@ export class TreeComponent implements OnInit, OnDestroy {
       this.callService.pbxState$,
       this.selectedNode$.filter(Boolean),
       this.callService.settings$,
-      combineLatest(this.callService.predictiveCall$, this.callService.postCall$)
-        .pipe(
-          filter(([ predictiveCall, postCall ]) => predictiveCall || postCall)
-        )
+      this.callService.predictiveCall$,
+      this.callService.postCall$
     )
     .pipe(
+      filter(([ _state, _node, _settings, predictiveCall, postCall ]) => predictiveCall || postCall),
       filter(([ _, node, settings ]) =>
         settings.callResultUseIntermediateCodeMode === UseIntermediateStatusEnum.ALL_NODE ||
           settings.callResultUseIntermediateCodeMode === UseIntermediateStatusEnum.LAST_NODE_ONLY && !node.children
