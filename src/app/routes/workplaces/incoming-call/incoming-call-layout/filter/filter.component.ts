@@ -9,8 +9,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { fromEvent } from 'rxjs/observable/fromEvent';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, map } from 'rxjs/operators';
+import { map, filter, throttleTime, tap } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -46,8 +47,7 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
     { controlName: 'isClosedDebt', type: 'checkbox' },
   ].map(addFormLabel('modules.incomingCall.filter.form'));
 
-  private openIncomingCallDataSub: Subscription;
-  private incommingSearchSub: Subscription;
+  private subscription = new Subscription();
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -57,20 +57,22 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.incommingSearchSub = combineLatest(
+    const subscription = combineLatest(
       this.route.queryParams,
       this.callService.pbxState$,
     )
-    .pipe(
-      filter(([ params, state ]) =>
-        state && state.payload && params.phoneNumber && params.phoneNumber === state.payload.phoneNumber
-      ),
-      map(([ _, state ]) => state)
-    )
-    .subscribe(state => {
-      this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
-      this.cdRef.markForCheck();
-    });
+      .pipe(
+        filter(([ params, state ]) =>
+          state && state.payload && params.phoneNumber && params.phoneNumber === state.payload.phoneNumber
+        ),
+        map(([ _, state ]) => state)
+      )
+      .subscribe(state => {
+        this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
+        this.cdRef.markForCheck();
+      });
+
+    this.subscription.add(subscription);
   }
 
   ngAfterViewInit(): void {
@@ -79,14 +81,12 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
       this.patchControl('debtId', debtId);
       this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
       this.onSearchClick();
+      this.addEnterPressListener();
     }
   }
 
   ngOnDestroy(): void {
-    this.incommingSearchSub.unsubscribe();
-    if (this.openIncomingCallDataSub) {
-      this.openIncomingCallDataSub.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   onSearchClick(): void {
@@ -106,5 +106,18 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
       control.patchValue(data);
       control.markAsDirty();
     }
+  }
+
+  private addEnterPressListener(): void {
+    const subscription = fromEvent(document, 'keyup')
+      .pipe(
+        filter((event: KeyboardEvent) => event.keyCode === 13),
+        throttleTime(300),
+        tap(this.onClearClick.bind(this)),
+        tap(this.onSearchClick.bind(this)),
+      )
+      .subscribe();
+
+    this.subscription.add(subscription);
   }
 }
