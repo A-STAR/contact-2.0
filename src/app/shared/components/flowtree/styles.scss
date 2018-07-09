@@ -231,19 +231,18 @@
     }
     .ui-treenode-connector-table {
       height: 100%;
-      width: 2px;
+      width: 1px;
       position: relative;
     }
     .ui-treenode-connector-line {
-      background: repeat-y scroll 0 0 #d9d7e0;
+      // background: url("./images/line.gif") repeat-y scroll 0 0 transparent;
+      position: absolute;
+      display: block;
       width: 2px;
-      // position: absolute;
-      // display: block;
-      // width: 2px;
-      // top: 0;
-      // bottom: 0;
-      // // background-color: #d9d7e0;
-      // left: calc(50% - 2px);
+      top: 0;
+      bottom: 0;
+      background-color: #d9d7e0;
+      left: calc(50% - 2px);
     }
     table {
       height: 0;
