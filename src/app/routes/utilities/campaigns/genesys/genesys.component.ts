@@ -36,7 +36,7 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
   @ViewChild('statistics', { read: TemplateRef }) statistics: TemplateRef<any>;
 
   private routerSubscription: Subscription;
-  private selectedCampaign: IGenesysCampaign;
+  // private selectedCampaign: IGenesysCampaign;
   private url: string;
 
   rows: IGenesysCampaign[] = [];
@@ -99,7 +99,7 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
     const campaign = isEmpty(campaignIds)
       ? null
       : this.rows.find(row => row.id === campaignIds[0]);
-    this.selectedCampaign = campaign;
+    // this.selectedCampaign = campaign;
     if (campaign) {
       this.fetchCampaignStatistics(campaign.id);
     } else {
