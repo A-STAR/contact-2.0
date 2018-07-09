@@ -83,13 +83,14 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
         // this.rows = response.data.map(item => ({ ...item, typeCode: 2, optBy: 1, optGoal: 50 }));
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
-        if (this.selectedCampaign) {
-          if (response.data.find(campaign => campaign.id === this.selectedCampaign.id)) {
-            this.fetchCampaignStatistics(this.selectedCampaign.id);
-          } else {
-            this.onSelectRow(null);
-          }
-        }
+        this.grid.deselectAll();
+        // if (this.selectedCampaign) {
+        //   if (response.data.find(campaign => campaign.id === this.selectedCampaign.id)) {
+        //     this.fetchCampaignStatistics(this.selectedCampaign.id);
+        //   } else {
+        //     this.onSelectRow(null);
+        //   }
+        // }
         this.cdRef.markForCheck();
       });
   }

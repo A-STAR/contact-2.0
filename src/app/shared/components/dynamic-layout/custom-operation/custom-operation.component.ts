@@ -60,12 +60,14 @@ export class CustomOperationComponent implements OnInit {
         this.cdRef.markForCheck();
       });
 
-    combineLatest(this.valueKeys.map(key => this.contextService.calculate(this.operation.value[key])))
-      .pipe(
-        first(),
-        map(value => this.valueKeys.reduce((acc, key, i) => ({ ...acc, [key]: value[i] }), {})),
-      )
-      .subscribe(data => this.data$.next({ default: data }));
+      if (this.valueKeys.length > 0) {
+        combineLatest(this.valueKeys.map(key => this.contextService.calculate(this.operation.value[key])))
+          .pipe(
+            first(),
+            map(value => this.valueKeys.reduce((acc, key, i) => ({ ...acc, [key]: value[i] }), {})),
+          )
+          .subscribe(data => this.data$.next({ default: data }));
+      }
   }
 
   onStart(): void {
