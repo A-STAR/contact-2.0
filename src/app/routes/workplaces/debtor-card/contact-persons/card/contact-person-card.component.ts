@@ -169,7 +169,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     if (!this.editing) {
       const routerSubscription = this.layoutService.navigationEnd$.subscribe(() => {
         this.layout.resetAndEnableAll();
-        this.isSubmitDisabled$.next(false);
+        this.isSubmitDisabled$.next(true);
       });
       this.subscription.add(routerSubscription);
     }
