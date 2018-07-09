@@ -340,7 +340,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/employment/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/employment/create',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -349,7 +349,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/employment/:employmentId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/employment/:employmentId',
         loadChildren: 'app/routes/workplaces/shared/employment/card/employment-card.module#EmploymentCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -358,7 +358,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/identity/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/identity/create',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -367,7 +367,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/identity/:identityId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/identity/:identityId',
         loadChildren: 'app/routes/workplaces/shared/identity/card/identity-card.module#IdentityCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -376,7 +376,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/document/create',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -385,7 +385,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/document/:documentId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/document/:documentId',
         loadChildren: 'app/routes/workplaces/shared/documents/card/document-card.module#DocumentCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -394,7 +394,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/email/create',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/email/create',
         loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
         data: {
           entityKey: 'pledgorId',
@@ -403,7 +403,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'edit/pledge/:contractId/pledgor/:pledgorId/email/:emailId',
+        path: 'edit/pledge/:contractId/pledgor/:pledgorId/property/:propertyId/email/:emailId',
         loadChildren: 'app/routes/workplaces/shared/email/card/email-card.module#EmailCardModule',
         data: {
           entityKey: 'pledgorId',
