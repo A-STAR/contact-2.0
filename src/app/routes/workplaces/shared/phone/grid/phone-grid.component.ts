@@ -192,7 +192,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       });
 
     const contactRegisterSub = combineLatest(
-      this.route.queryParams,
+      this.route.queryParams.filter(params => params && params.activePhoneId),
       this.callService.predictiveCall$,
       this.phones$.filter(phones => !!phones.length),
       this.person$.filter(Boolean),
