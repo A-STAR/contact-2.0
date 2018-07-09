@@ -1,13 +1,18 @@
+.selected-wrapper {
+  border-radius: 3px;
+  border: 2px solid;
+}
 .app-treenode-content {
   &.dnd-swapped-active {
-    background-color: #d8ffe1 !important;
+    background-color: #88839d !important;
   }
   &.dnd-active {
-    background-color: #99e5a9 !important;
+    background-color: #88839d !important;
   }
   &.selected {
-    outline: #0af solid 2px;
-    outline-offset: -1px;
+    border-radius: 3px;
+    border: 2px solid #fff;;
+    box-shadow: none;
   }
 }
 

@@ -3,8 +3,9 @@
  */
 
 .ui-state-default {
-  border: 1px solid #d6d6d6;
-  background: #ffffff;
+  box-shadow: 0px 2px 5px 0 rgba(18, 11, 39, 0.2);
+  border: solid 1px #dcdae2;
+  background-color: #f4f1f7;
   color: #555555;
   a {
     color: #555555;
@@ -201,8 +202,22 @@
 .ui-tree {
   &.ui-tree-horizontal {
     .ui-treenode {
-      background: url("./images/line.gif") repeat-x scroll center center transparent;
+      position: relative;
+      // background: url("./images/line.gif") repeat-x scroll center center transparent;
       padding: .25em 2.5em;
+      .ui-treenode-line {
+        position: absolute;
+        display: block;
+        top: calc(50% - 2px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #d9d7e0;
+        &.selected {
+          background-color: #88839d;
+        }
+      }
       &.ui-treenode-leaf, &.ui-treenode-collapsed {
         padding-right: 0;
       }
@@ -217,10 +232,17 @@
     .ui-treenode-connector-table {
       height: 100%;
       width: 1px;
+      position: relative;
     }
     .ui-treenode-connector-line {
-      background: url("./images/line.gif") repeat-y scroll 0 0 transparent;
-      width: 1px;
+      // background: url("./images/line.gif") repeat-y scroll 0 0 transparent;
+      position: absolute;
+      display: block;
+      width: 2px;
+      top: 0;
+      bottom: 0;
+      background-color: #d9d7e0;
+      left: calc(50% - 2px);
     }
     table {
       height: 0;
