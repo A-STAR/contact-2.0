@@ -32,8 +32,6 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
       {
         type: ToolbarItemType.BUTTON,
         buttonType: ButtonType.DEBT_CARD,
-        // iconCls: 'co co-debt-list',
-        label: 'Открытие карточки должника',
         action: () => this.openDebtorCard(),
       },
       {
@@ -51,8 +49,7 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
       },
       {
         type: ToolbarItemType.BUTTON,
-        iconCls: 'co co-history',
-        label: 'Информация о предыдущих долгах',
+        buttonType: ButtonType.HISTORY,
         action: () => this.setDialog('processed-debts'),
       },
     ]

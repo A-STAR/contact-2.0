@@ -34,6 +34,7 @@ export enum ButtonType {
   EDIT              = 'edit',
   EXPORT_TO_EXCEL   = 'exportToExcel',
   FILTER            = 'filter',
+  HISTORY           = 'history',
   INFO              = 'info',
   LOAD_FROM_EXCEL   = 'loadFromExcel',
   MAP               = 'map',

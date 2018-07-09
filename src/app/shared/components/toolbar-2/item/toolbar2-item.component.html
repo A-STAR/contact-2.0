@@ -6,6 +6,7 @@
         <div #dropdownTrigger>
           <app-button
             [disabled]="isDisabled(item) | async"
+            [ngClass]="{ 'disabled': isDisabled(item) | async }"
             [icon]="item.icon"
             [label]="false"
             [title]="item.label"

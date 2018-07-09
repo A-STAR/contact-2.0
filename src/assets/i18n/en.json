@@ -3498,6 +3498,7 @@
       "exportToExcel": "Export",
       "excel": "Export",
       "filter": "Filter",
+      "history": "Processed debts",
       "loadFromExcel": "Load from Excel",
       "map": "Map",
       "move": "Move",

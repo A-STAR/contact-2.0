@@ -25,15 +25,18 @@
             </app-dropdown>
           </ng-container>
           <ng-template #button>
-            <button
-              class="icon"
-              [ngClass]="item.classes | async"
+            <app-button
               [disabled]="!(item.enabled | async)"
-              [title]="getLabel(item) | translate"
-              (click)="item.action()"
-            >
-              <i class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
-            </button>
+              [ngClass]="{ 'disabled': !(item.enabled | async) }"
+              [icon]="item.icon"
+              [label]="false"
+              [title]="item.label"
+              [type]="item.buttonType"
+              [ngClass]="item.classes | async"
+              [btnClass]="'icon'"
+              [withBtnClass]="false"
+              (click)="item.action()">
+            </app-button>
           </ng-template>
       </ng-container><!-- item -->
     </div><!-- icon-section -->
