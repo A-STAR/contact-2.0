@@ -109,39 +109,42 @@ export class DebtorCardLayoutComponent extends DialogFunctions implements AfterV
   private debtSub: Subscription;
   private debtorSub: Subscription;
 
-  actions: IAction[] = [{
-    id: 5,
-    params: [
-      'debtId'
-    ]
-  }, {
-    id: 6,
-    params: [
-      'debtId',
-    ],
-    outputConfig: {
-      key: 'operationOutput',
-      items: [
-        {
-          type: 'template',
-          value: 'grid',
-          context: {
-            columns: [
-              { prop: 'id', label: 'ID' },
-              { prop: 'debtId', label: 'Debt' },
-              { prop: 'amount', label: 'Amount' },
-              { prop: 'paymentDateTime', label: 'Payment date' },
-              { prop: 'currencyName', label: 'Currency' },
-              { prop: 'receiveDateTime', label: 'Receive date' },
-              { prop: 'statusCode', label: 'Status code' },
-              { prop: 'purposeCode', label: 'Purpose code' },
-              { prop: 'comment', label: 'Comment' },
-            ]
-          }
-        } as IDynamicLayoutTemplate
-      ]
+  actions: IAction[] = [
+    // {
+    //   id: 5,
+    //   params: [
+    //     'debtId'
+    //   ]
+    // },
+    {
+      id: 7,
+      params: [
+        'debtId',
+      ],
+      outputConfig: {
+        key: 'operationOutput',
+        items: [
+          {
+            type: 'template',
+            value: 'grid',
+            context: {
+              columns: [
+                { prop: 'id', label: 'ID' },
+                { prop: 'debtId', label: 'Debt' },
+                { prop: 'amount', label: 'Amount' },
+                { prop: 'paymentDateTime', label: 'Payment date' },
+                { prop: 'currencyName', label: 'Currency' },
+                { prop: 'receiveDateTime', label: 'Receive date' },
+                { prop: 'statusCode', label: 'Status code' },
+                { prop: 'purposeCode', label: 'Purpose code' },
+                { prop: 'comment', label: 'Comment' },
+              ]
+            }
+          } as IDynamicLayoutTemplate
+        ]
+      }
     }
-  }];
+  ];
 
   constructor(
     private cdRef: ChangeDetectorRef,

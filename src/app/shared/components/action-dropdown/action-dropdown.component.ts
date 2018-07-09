@@ -51,7 +51,8 @@ export class ActionDropdownComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .map(operations => operations.map(o => ({ label: o.name, value: o.id })))
       .subscribe(options => {
-        this.options = options;
+        const ids = this.actions.map(action => action.id);
+        this.options = options.filter(option => ids.includes(option.value));
         this.cdRef.markForCheck();
       });
 
