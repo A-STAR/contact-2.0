@@ -154,8 +154,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       });
 
     this.groupSubscription = this.selectedGroup$
-      .filter(Boolean)
-      .subscribe(group => this.onSelect.emit(group.id));
+      .subscribe(group => this.onSelect.emit(group && group.id));
   }
 
   ngOnDestroy(): void {
@@ -204,6 +203,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
+    this.selectedGroup$.next(null);
     this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
       this.groups = groups;
       this.cdRef.markForCheck();
