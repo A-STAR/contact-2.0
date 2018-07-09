@@ -7,8 +7,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { first } from 'rxjs/operators/first';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { mergeMap, first, filter } from 'rxjs/operators';
 
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -18,7 +19,7 @@ import { PhoneService } from '@app/routes/workplaces/core/phone/phone.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,9 +40,8 @@ export class PhoneGridComponent implements OnInit {
   ].map(addGridLabel('debtor.information.phone.grid'));
 
   phones: IPhone[];
-  selectedPhone: IPhone;
 
-  private selectedPhoneId: number;
+  private selectedPhone$ = new BehaviorSubject<IPhone>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -58,23 +58,27 @@ export class PhoneGridComponent implements OnInit {
     });
   }
 
-  readonly canRegisterSelectedPhone$: Observable<boolean> = this.debtorService.canRegisterIncomingCall$(this.selectedPhone);
+  readonly canRegisterSelectedPhone$: Observable<boolean> = this.selectedPhone$.pipe(
+    mergeMap(phone => this.debtorService.canRegisterIncomingCall$(phone)),
+  );
 
   onSelect(phones: IPhone[]): void {
-    this.selectedPhoneId = isEmpty(phones)
-      ? null
-      : phones[0].id;
-    this.selectedPhone = phones && phones.length && phones[0];
+    this.selectedPhone$.next(phones[0]);
     this.cdRef.markForCheck();
   }
 
   onDoubleClick(phone: IPhone): void {
-    this.selectedPhone = phone;
-    this.selectedPhoneId = phone.id;
-    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
+    this.selectedPhone$.next(phone);
+    this.onSubmit();
   }
 
   onSubmit(): void {
-    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
+    this.canRegisterSelectedPhone$
+      .pipe(
+        first(),
+        filter(Boolean),
+        mergeMap(() => this.selectedPhone$),
+      )
+      .subscribe(phone => this.action.emit(phone.id));
   }
 }
