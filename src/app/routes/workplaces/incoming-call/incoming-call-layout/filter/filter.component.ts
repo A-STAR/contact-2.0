@@ -77,10 +77,12 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const debtId = Number(this.route.snapshot.paramMap.get('debtId'));
-    this.patchControl('debtId', debtId);
-    this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
-    this.onSearchClick();
-    this.addEnterPressListener();
+    if (debtId) {
+      this.patchControl('debtId', debtId);
+      this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
+      this.onSearchClick();
+      this.addEnterPressListener();
+    }
   }
 
   ngOnDestroy(): void {
