@@ -559,25 +559,25 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
-buttonType: ButtonType.REFRESH,
+        buttonType: ButtonType.REFRESH,
         action: () => this.onRequest(),
         enabled: this.isTbItemEnabled$(ButtonType.REFRESH, permissions),
       }),
       search: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
-buttonType: ButtonType.SEARCH,
+        buttonType: ButtonType.SEARCH,
         action: () => this.onRequest(),
         enabled: this.isTbItemEnabled$(ButtonType.SEARCH, permissions),
       }),
       exportExcel: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
-buttonType: ButtonType.DOWNLOAD_EXCEL,
+        buttonType: ButtonType.DOWNLOAD_EXCEL,
         action: () => this.exportExcel(),
         enabled: this.isTbItemEnabled$(ButtonType.DOWNLOAD_EXCEL, permissions),
       }),
       filter: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
-buttonType: ButtonType.FILTER,
+        buttonType: ButtonType.FILTER,
         action: () => this.openFilter(),
         enabled: this.isTbItemEnabled$(ButtonType.FILTER, permissions),
         classes: this.excelFilter$.pipe(

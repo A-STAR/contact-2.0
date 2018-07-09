@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IPermissionRole } from '../permissions.interface';
 import {
   IToolbarItem,

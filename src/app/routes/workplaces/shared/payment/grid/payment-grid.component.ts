@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPayment } from '../payment.interface';
@@ -90,7 +91,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemType.CHECKBOX,
       action: () => this.toggleFilter(),
       label: 'widgets.payment.toolbar.showCanceled',
-      state: this.displayCanceled
+      state: of(this.displayCanceled)
     }
   ];
 

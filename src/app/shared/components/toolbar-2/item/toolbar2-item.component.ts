@@ -60,10 +60,4 @@ export class Toolbar2ItemComponent implements OnInit, OnDestroy {
   isDisabled(item: IToolbarItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
-
-  getItemCls(item: IToolbarItem): object {
-    return {
-      'align-right': item.align === 'right',
-    };
-  }
 }

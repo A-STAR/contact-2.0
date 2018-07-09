@@ -89,7 +89,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       type: ToolbarItemType.CHECKBOX,
       action: () => this.toggleForCurrentUser(),
       label: 'widgets.groups.toolbar.action.forCurrentUser',
-      state: this.forCurrentUser
+      state: of(this.forCurrentUser)
     }
   ];
 

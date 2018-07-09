@@ -11,6 +11,7 @@ export type IButtonStylesConfig = {
 };
 
 export enum ButtonType {
+  NONE              = 'none',
   ADD               = 'add',
   ADD_PROPERTY      = 'addProperty',
   ADD_USER          = 'addUser',

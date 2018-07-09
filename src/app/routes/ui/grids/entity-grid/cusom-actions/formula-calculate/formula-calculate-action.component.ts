@@ -3,7 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IGridEntity, IEntityGridAction, IMetadataEntityGridConfig } from '../../entity-grid.interface';
-import { ToolbarItemType } from '@app/shared/components/titlebar/titlebar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

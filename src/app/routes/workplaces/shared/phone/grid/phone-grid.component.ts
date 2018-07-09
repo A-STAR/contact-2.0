@@ -419,7 +419,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemType.BUTTON,
       buttonType: ButtonType.CALL,
-      align: 'right',
       enabled: this.canMakeCall$,
       action: () => this.onMakeCall()
     },
