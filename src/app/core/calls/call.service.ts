@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged, first, tap, map } from 'rxjs/operators';
+import { distinctUntilChanged, first, tap, map, filter } from 'rxjs/operators';
 import { throttleTime } from 'rxjs/operators/throttleTime';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
@@ -76,6 +76,7 @@ export class CallService {
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
     .pipe(
+      filter(state => !state || state.lineStatus !== PBXStateEnum.PBX_CALL || (state.payload && !!state.payload.phoneNumber)),
       map(state => ({
         ...state,
         payload: state && state.payload
