@@ -6,7 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { IFormula } from '../formulas.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { FormulasService } from '../formulas.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -37,12 +39,14 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
     title: 'routes.utilities.formulas.titlebar.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         enabled: this.formulasService.canEdit$,
         action: () => this.onAdd()
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedFormula$.value),
         enabled: combineLatestAnd([
           this.formulasService.canEdit$,
@@ -50,7 +54,8 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('removeFormula'),
         enabled: combineLatestAnd([
           this.formulasService.canEdit$,
@@ -58,8 +63,9 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_START,
-        title: this.translateService.instant('default.buttons.calculate'),
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.START,
+        label: this.translateService.instant('default.buttons.calculate'),
         action: () => this.setDialog('calculateFormula'),
         enabled: combineLatestAnd([
           this.formulasService.canCalculate$,
@@ -67,7 +73,8 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.formulasService.canView$
       }

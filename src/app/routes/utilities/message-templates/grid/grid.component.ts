@@ -4,7 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IMessageTemplate } from '../message-templates.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { MessageTemplatesService } from '../message-templates.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -30,12 +32,14 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.userPermissionsService.has('TEMPLATE_ADD'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_EDIT'),
@@ -43,7 +47,8 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.onDelete(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('TEMPLATE_DELETE'),
@@ -51,7 +56,8 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
       ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
     }
   ];

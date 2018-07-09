@@ -5,7 +5,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
@@ -42,12 +44,14 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.pledgeService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: combineLatestAnd([
         this.pledgeService.canEdit$,
         this.selectedContract$.map(selectedContract => !!selectedContract)
@@ -55,7 +59,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onEdit(this.selectedContract$.value)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD_USER,
       action: () => this.onAddPledgor(this.selectedContract$.value),
       label: 'widgets.pledgeContract.toolbar.add',
       enabled: combineLatestAnd([
@@ -64,7 +69,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD_PROPERTY,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD_PROPERTY,
       action: () => this.onAddProperty(this.selectedContract$.value),
       enabled: combineLatestAnd([
         this.pledgeService.canEdit$,
@@ -72,7 +78,8 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removePledge'),
       enabled: combineLatestAnd([
         this.pledgeService.canDelete$,

@@ -7,7 +7,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContactPerson } from '@app/routes/workplaces/core/contact-persons/contact-persons.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -29,12 +31,14 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => {
         const { contactId } = this.selectedContact$.value;
         this.onEdit(contactId);
@@ -45,7 +49,8 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
       ).map(([canEdit, selectedContact]) => !!canEdit && !!selectedContact)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeContact'),
       enabled: combineLatest(
         this.canDelete$,
@@ -53,7 +58,8 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
       ).map(([canDelete, selectedContact]) => !!canDelete && !!selectedContact),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canView$
     },

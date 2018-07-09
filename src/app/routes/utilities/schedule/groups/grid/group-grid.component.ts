@@ -14,7 +14,9 @@ import { of } from 'rxjs/observable/of';
 
 import { IGroup } from '../groups.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { GroupsService } from '../groups.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -52,12 +54,14 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.groupService.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedGroup$.value),
       enabled: this.selectedGroup$.flatMap(
         selectedGroup => selectedGroup
@@ -66,7 +70,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       ),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('removeGroup'),
       enabled: this.selectedGroup$.flatMap(
         selectedGroup => selectedGroup
@@ -75,15 +80,16 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       ),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.groupService.canView$
     },
     {
-      type: ToolbarItemTypeEnum.CHECKBOX,
+      type: ToolbarItemType.CHECKBOX,
       action: () => this.toggleForCurrentUser(),
       label: 'widgets.groups.toolbar.action.forCurrentUser',
-      state: this.forCurrentUser
+      state: of(this.forCurrentUser)
     }
   ];
 

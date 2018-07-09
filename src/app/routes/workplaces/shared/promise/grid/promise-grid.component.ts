@@ -7,7 +7,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPromise } from '../promise.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -77,12 +79,14 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.canAdd$,
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_OK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.OK,
       label: 'debtor.promisesTab.approve.buttonLabel',
       enabled: combineLatestAnd([
         this.canСonfirm$,
@@ -91,7 +95,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('approve')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([
         this.canDelete$,
         this.canСonfirm$,
@@ -100,7 +105,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('remove'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canRefresh$
     },

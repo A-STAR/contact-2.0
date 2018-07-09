@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IGridEntity, IEntityGridAction, IMetadataEntityGridConfig } from '../../entity-grid.interface';
-import { TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -22,7 +22,7 @@ export class FormulaCalculateActionComponent extends DialogFunctions implements 
   dialog: string;
   type = 'calculate';
   title = this.translateService.instant('default.buttons.calculate');
-  buttonType = TitlebarItemTypeEnum.BUTTON_START;
+  buttonType = ButtonType.START;
 
   constructor(
     @Inject(forwardRef(() => EntityGridComponent)) private grid: EntityGridComponent<IGridEntity>,

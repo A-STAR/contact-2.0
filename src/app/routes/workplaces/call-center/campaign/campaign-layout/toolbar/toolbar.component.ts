@@ -3,7 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
 import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -28,26 +30,26 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
     title: 'Сальников Андрей Юрьевич',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_DEBT_CARD,
-        // iconCls: 'co co-debt-list',
-        title: 'Открытие карточки должника',
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DEBT_CARD,
         action: () => this.openDebtorCard(),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT,
-        title: 'Регистрация контакта с типом "Специальное"',
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REGISTER_CONTACT,
+        label: 'Регистрация контакта с типом "Специальное"',
         action: () => this.registerSpecial(),
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS,
-        title: 'Перевод в проблемные',
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.CHANGE_STATUS,
+        label: 'Перевод в проблемные',
         action: () => this.setDialog('change-status'),
         enabled: this.canChangeStatusToProblematic$,
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-        iconCls: 'co co-history',
-        title: 'Информация о предыдущих долгах',
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.HISTORY,
         action: () => this.setDialog('processed-debts'),
       },
     ]

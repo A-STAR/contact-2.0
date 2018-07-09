@@ -6,7 +6,9 @@ import { distinctUntilKeyChanged, map } from 'rxjs/operators';
 
 import { IObject } from './objects.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ObjectsService } from './objects.service';
 import { PermissionsService } from '@app/routes/admin/roles/permissions.service';
@@ -34,17 +36,20 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([ this.masterRoleId$.pipe(map(Boolean)), this.canEdit$ ]),
       action: () => this.setDialog('add'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([ this.selectedObject$.pipe(map(Boolean)), this.canEdit$ ]),
       action: () => this.setDialog('delete'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: this.selectedObject$.pipe(map(Boolean)),
       action: () => this.fetch(),
     },

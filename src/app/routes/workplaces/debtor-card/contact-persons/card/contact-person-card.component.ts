@@ -20,7 +20,9 @@ import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interfac
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
@@ -101,7 +103,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.SEARCH,
         action: () => this.openPersonSearch(),
         enabled: this.edit$.pipe(map(invert)),
       },

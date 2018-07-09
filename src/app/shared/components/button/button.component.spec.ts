@@ -3,7 +3,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { ButtonService } from '@app/core/button/button.service';
+import { ButtonService } from './button.service';
 
 import { ButtonComponent } from './button.component';
 

@@ -5,7 +5,9 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITerm } from '../dictionaries.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -39,7 +41,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     title: 'terms.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.create(),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('DICT_TERM_ADD'),
@@ -47,7 +50,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.edit(),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('DICT_TERM_EDIT'),
@@ -55,7 +59,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('DICT_TERM_DELETE'),
@@ -63,7 +68,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.dictionariesService.fetchTerms(),
         enabled: this.dictionariesService.hasSelectedDictionary
       }

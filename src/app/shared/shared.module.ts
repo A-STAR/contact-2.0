@@ -10,8 +10,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { TranslateModule } from '@ngx-translate/core';
 
-// Angle directives
-import { ColorsService } from './colors/colors.service';
 import { NowDirective } from './directives/now/now.directive';
 
 // App modules
@@ -150,7 +148,6 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     ViewFormModule,
   ],
   providers: [
-    ColorsService,
     QBuilderService
   ],
   declarations: [

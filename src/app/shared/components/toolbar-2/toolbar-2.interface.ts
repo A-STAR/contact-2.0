@@ -1,43 +1,11 @@
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-export enum ToolbarItemTypeEnum {
-  BUTTON,
-  BUTTON_ADD,
-  BUTTON_ADD_USER,
-  BUTTON_ADD_PROPERTY,
-  BUTTON_BLOCK,
-  BUTTON_CALL,
-  BUTTON_CHANGE_STATUS,
-  BUTTON_CLOSE,
-  BUTTON_CLEAR,
-  BUTTON_COPY,
-  BUTTON_DELETE,
-  BUTTON_DOWNLOAD,
-  BUTTON_DROP,
-  BUTTON_EDIT,
-  BUTTON_EMAIL,
-  BUTTON_EXCEL_LOAD,
-  BUTTON_INFO,
-  BUTTON_MAP,
-  BUTTON_MOVE,
-  BUTTON_NEXT,
-  BUTTON_OK,
-  BUTTON_PAUSE,
-  BUTTON_RESUME,
-  BUTTON_REFRESH,
-  BUTTON_REGISTER_CONTACT,
-  BUTTON_SAVE,
-  BUTTON_SMS,
-  BUTTON_START,
-  BUTTON_STOP,
-  BUTTON_TRANSFER,
-  BUTTON_UNBLOCK,
-  BUTTON_UNDO,
-  BUTTON_UPLOAD,
-  BUTTON_VERSION,
-  BUTTON_VISIT,
-  CHECKBOX,
+import { ButtonType } from '@app/shared/components/button/button.interface';
+
+export enum ToolbarItemType {
+  BUTTON = 'button',
+  CHECKBOX = 'checkbox',
 }
 
 export type IToolbarAction = () => void;
@@ -52,13 +20,14 @@ export interface IToolbarElement {
 }
 
 export interface IToolbarButton extends IToolbarElement {
-  type: ToolbarItemTypeEnum;
+  type: ToolbarItemType;
+  buttonType: ButtonType;
   icon?: string;
   children?: Array<IToolbarElement>;
 }
 
 export interface IToolbarCheckbox extends IToolbarElement {
-  type: ToolbarItemTypeEnum.CHECKBOX;
+  type: ToolbarItemType.CHECKBOX;
   state: Observable<boolean>;
 }
 

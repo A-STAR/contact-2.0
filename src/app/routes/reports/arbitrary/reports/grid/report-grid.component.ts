@@ -5,7 +5,9 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IReport } from '../reports.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { ReportsService } from '../reports.service';
@@ -37,12 +39,14 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     title: 'modules.reports.arbitrary.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         enabled: this.reportsService.canAdd$,
         action: () => this.onAdd()
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedReport$.value),
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
@@ -50,7 +54,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
@@ -58,7 +63,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DOWNLOAD_EXCEL,
         action: () => this.setDialog('create'),
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
@@ -67,7 +73,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.reportsService.canView$
       }

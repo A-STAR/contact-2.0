@@ -1,15 +1,16 @@
-<div class="toolbar-item" [ngClass]="getItemCls(item)">
+<div class="toolbar-item">
 
-    <ng-container [ngSwitch]="getItemType(item)">
+    <ng-container [ngSwitch]="item.type">
       <!-- Button -->
       <div *ngSwitchCase="'button'" appDropdown fitWidthToContent="true">
         <div #dropdownTrigger>
           <app-button
             [disabled]="isDisabled(item) | async"
+            [ngClass]="{ 'disabled': isDisabled(item) | async }"
             [icon]="item.icon"
             [label]="false"
             [title]="item.label"
-            [type]="getButtonType(item)"
+            [type]="item.buttonType"
             [btnClass]="'toolbar2-button'"
             [withBtnClass]="false"
             (click)="onClick(item)">
@@ -33,6 +34,7 @@
       <app-checkbox
         *ngSwitchCase="'checkbox'"
         [disabled]="item.disabled | async"
+        class="toolbar-item-checkbox"
         [label]="item.label"
         [ngModel]="item.state | async"
         (change)="onClick(item)"

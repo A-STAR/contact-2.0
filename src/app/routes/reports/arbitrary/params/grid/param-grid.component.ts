@@ -4,7 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IReportParam } from '../params.interface';
 
@@ -44,7 +46,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
         this.paramsService.canEdit$
@@ -52,7 +55,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onAdd()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedParam$.value),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
@@ -60,7 +64,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
@@ -68,7 +73,8 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),

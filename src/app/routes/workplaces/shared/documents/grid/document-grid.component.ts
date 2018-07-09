@@ -16,7 +16,9 @@ import { first, map, mergeMap } from 'rxjs/operators';
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IDocument } from '@app/core/document/document.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DocumentService } from '@app/core/document/document.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -180,7 +182,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return [
       this.buildToolbarAddButton(),
       {
-        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         enabled: this.selectedDocument$.pipe(
           map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
           mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_EDIT_LIST', entityTypeCode)),
@@ -188,12 +191,14 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
         action: () => this.onEdit(this.selectedDocumentId$.value)
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_DOWNLOAD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DOWNLOAD,
         enabled: this.selectedDocument$.map(Boolean),
         action: () => this.onDownload(),
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         enabled: this.selectedDocument$.pipe(
           map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
           mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_DELETE_LIST', entityTypeCode)),
@@ -201,7 +206,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
         action: () => this.setDialog('delete'),
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
       },
     ].filter(Boolean);
@@ -215,13 +221,15 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
         return null;
       case 1:
         return {
-          type: ToolbarItemTypeEnum.BUTTON_ADD,
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.ADD,
           enabled: this.canAdd$(this.addForEntity[0]),
           action: () => this.onAdd(this.addForEntity[0]),
         };
       default:
         return {
-          type: ToolbarItemTypeEnum.BUTTON_ADD,
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.ADD,
           enabled: combineLatestOr(this.addForEntity.map(entity => this.canAdd$(entity))),
           children: this.addForEntity.map(entityType => ({
             label: `routes.workplaces.shared.documents.grid.toolbar.add.${entityType}`,

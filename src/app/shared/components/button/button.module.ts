@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ButtonService } from './button.service';
-
 import { ButtonComponent } from './button.component';
+import { ButtonService } from '@app/shared/components/button/button.service';
 
 @NgModule({
   imports: [
@@ -14,11 +13,9 @@ import { ButtonComponent } from './button.component';
   exports: [
     ButtonComponent,
   ],
+  providers: [ ButtonService ],
   declarations: [
     ButtonComponent,
   ],
-  providers: [
-    ButtonService,
-  ]
 })
 export class ButtonModule { }

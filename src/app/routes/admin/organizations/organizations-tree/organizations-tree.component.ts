@@ -9,7 +9,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { merge } from 'rxjs/observable/merge';
 
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ITreeNode, ITreeNodeInfo } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
@@ -37,12 +39,14 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
     title: 'organizations.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.setDialog('create'),
         enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -50,7 +54,8 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_DELETE'),
@@ -58,7 +63,8 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchOrganizations(),
         enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
       },

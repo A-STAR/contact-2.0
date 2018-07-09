@@ -5,7 +5,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { ILetterTemplate } from '../letters.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { LettersService } from '@app/routes/utilities/letters/letters.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -41,12 +43,14 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     title: 'routes.utilities.letters.titlebar.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         enabled: this.lettersService.canAdd$,
         action: () => this.onAdd()
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.onEdit(this.selectedTemplate$.value),
         enabled: combineLatestAnd([
           this.lettersService.canEdit$,
@@ -54,7 +58,8 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('removeTemplate'),
         enabled: combineLatestAnd([
           this.lettersService.canDelete$,
@@ -62,7 +67,8 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DOWNLOAD,
         action: () => this.onExport(),
         enabled: combineLatestAnd([
           this.lettersService.canView$,
@@ -70,7 +76,8 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
         enabled: this.lettersService.canView$
       }

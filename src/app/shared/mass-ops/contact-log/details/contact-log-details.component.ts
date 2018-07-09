@@ -10,7 +10,9 @@ import { IUserTerm, IUserDictionaries } from '@app/core/user/dictionaries/user-d
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { ContactLogDetailsService } from './contact-log-details.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 @Component({
   selector: 'app-contact-log-details',
@@ -64,7 +66,8 @@ export class ContactLogDetailsComponent {
   titlebar: ITitlebar = {
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_CLOSE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.CLOSE,
         enabled: of(true),
         action: () => this.close.emit()
       }

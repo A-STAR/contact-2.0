@@ -11,7 +11,9 @@ import {
   IEmployeeCreateRequest,
 } from '../organizations.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -40,7 +42,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     title: 'organizations.employees.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
         action: () => this.setDialog('create'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -48,7 +51,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_EDIT'),
@@ -56,7 +60,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
         action: () => this.setDialog('remove'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('ORGANIZATION_DELETE'),
@@ -64,7 +69,8 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchEmployees(),
         enabled: combineLatest(
           this.userPermissionsService.has('ORGANIZATION_VIEW'),

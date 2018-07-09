@@ -1,5 +1,7 @@
 @import '../../../shared/styles/app/variables.scss';
 
+$titlebar-button-size: 30px;
+
 .titlebar {
   display: flex;
   flex-direction: row;
@@ -14,6 +16,10 @@
   &.no-border {
     border-bottom: 0;
   }
+}
+
+.disabled {
+  opacity: .5;
 }
 
 /*
@@ -58,12 +64,12 @@
   }
 }
 
-.icon {
+::ng-deep .icon {
   display: inline-block;
   position: relative;
   text-align: center;
-  width: 30px;
-  height: 30px;
+  width: $titlebar-button-size;
+  height: $titlebar-button-size;
   padding: 0;
   padding-top: 4px;
   margin-right: 4px;
@@ -84,6 +90,39 @@
     width: 1em;
     height: 1em;
   }
+  // display: inline-block;
+  // width: $toolbar-button-size;
+  // height: $toolbar-button-size;
+  // border: 1px solid transparent;
+  // text-align: center;
+  // font-size: 18px;
+  // padding: 0;
+  &.btn-default {
+    color: $form-toolbar-icon-color;
+    border-color: transparent;
+    &:hover {
+      color: $form-toolbar-icon-color;
+      border-color: transparent;
+    }
+    &[disabled] {
+      color: $form-toolbar-icon-disabled-color;
+    }
+  }
+  transition: 100ms all ease-in-out;
+  // i {
+  //   display: inline-block;
+  //   font-size: inherit;
+  //   height: 1em;
+  //   width: 1em;
+  // }
+  // // This prevents changing default button styles on hover
+  // &[disabled] {
+  //   color: $form-toolbar-icon-disabled-color;
+  //   &:hover {
+  //     background-color: #fff;
+  //     border-color: transparent;
+  //   }
+  // }
 }
 
 $checkbox-size: 15px;

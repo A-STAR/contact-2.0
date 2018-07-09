@@ -12,7 +12,8 @@ import { first, map, switchMap } from 'rxjs/operators';
 
 import { ICampaign, CampaignStatus } from './campaigns.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ToolbarItemTypeEnum, IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType, IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { CampaignsService } from './campaigns.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -66,12 +67,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.setDialog('CAMPAIGN_ADD'),
       enabled: this.userPermissionsService.has('CAMPAIGN_ADD')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.setDialog('CAMPAIGN_EDIT'),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -79,7 +82,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       ).map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('CAMPAIGN_REMOVE'),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
@@ -87,12 +91,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       ).pipe(hasPermissionAndNotStarted),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
       enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_START,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.START,
       action: () => this.onStart(),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
@@ -100,7 +106,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       ).pipe(hasPermissionAndNotStarted),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_STOP,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.STOP,
       action: () => this.onStop(),
       enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),

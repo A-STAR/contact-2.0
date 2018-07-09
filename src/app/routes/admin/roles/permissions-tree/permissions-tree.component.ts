@@ -6,10 +6,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilKeyChanged } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IPermissionRole } from '../permissions.interface';
 import {
   IToolbarItem,
-  ToolbarItemTypeEnum
+  ToolbarItemType
 } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
@@ -36,7 +37,8 @@ export class PermissionsTreeComponent implements OnDestroy {
 
   toolbarActions: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_SAVE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.SAVE,
       action: () => this.onSaveChanges(),
       enabled: combineLatest(
         this.userPermissionsService.has('GUI_TREE_EDIT'),

@@ -6,7 +6,9 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IContactLog } from '../contact-log.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContactLogService } from '../contact-log.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -35,7 +37,8 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selected[0]),
       enabled: combineLatest(
         this.canView$,

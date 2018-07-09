@@ -16,7 +16,9 @@ import { of } from 'rxjs/observable/of';
 
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { AddressService } from '@app/routes/workplaces/core/address/address.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -136,27 +138,32 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       enabled: this.canEdit$,
       action: () => this.onEdit(),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_BLOCK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.BLOCK,
       enabled: this.canBlock$,
       action: () => this.setDialog('block')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_UNBLOCK,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.UNBLOCK,
       enabled: this.canUnblock$,
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_VISIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.VISIT,
       enabled: combineLatestOr([ this.canViewVisitLog$, this.canMarkVisit$ ]),
       children: [
         {
@@ -172,28 +179,33 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       ]
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_MAP,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.MAP,
       enabled: this.canViewMap$,
       action: () => this.setDialog('map')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REGISTER_CONTACT,
       enabled: this.canRegisterContact$,
       action: () => this.registerContact()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: this.canDelete$,
       action: () => this.setDialog('delete')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EMAIL,
       label: 'routes.workplaces.shared.address.toolbar.letter',
       enabled: this.canGenerateLetter$,
       action: () => this.setDialog('letterGeneration')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },

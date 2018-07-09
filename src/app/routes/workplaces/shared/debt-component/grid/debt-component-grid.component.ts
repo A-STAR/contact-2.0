@@ -8,7 +8,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DebtComponentService } from '../debt-component.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -56,12 +58,14 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.canEditDebtComponent$
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(this.selectedDebtComponentId$.value),
       enabled: combineLatest(
         this.canEditDebtComponent$,
@@ -69,7 +73,8 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
       ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.dialog$.next('delete'),
       enabled: combineLatest(
         this.canEditDebtComponent$,
@@ -77,7 +82,8 @@ export class DebtComponentGridComponent implements OnDestroy, OnInit {
       ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
       enabled: this.canViewDebtComponent$
     },

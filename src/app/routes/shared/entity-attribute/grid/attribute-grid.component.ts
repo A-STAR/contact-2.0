@@ -16,7 +16,9 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute } from '../attribute.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { AttributeService } from '../attribute.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -170,7 +172,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   private getToolbarItems(): IToolbarItem[] {
     return [
       {
-        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.entityTypeId$.flatMap(
@@ -180,7 +183,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         ])
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_VERSION,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.VERSION,
         action: () => this.onVersionClick(),
         enabled: combineLatestAnd([
           this.entityTypeId$.flatMap(
@@ -190,7 +194,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         ])
       },
       {
-        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetch(),
       },
     ];

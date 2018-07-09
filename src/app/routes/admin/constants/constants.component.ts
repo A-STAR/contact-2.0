@@ -13,7 +13,9 @@ import { first } from 'rxjs/operators';
 
 import { IConstant } from './constants.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ConstantsService } from './constants.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -40,7 +42,8 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     title: 'constants.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
         action: () => this.setDialog('editConstant'),
         enabled: combineLatestAnd([
           this.userPermissionsService.has('CONST_VALUE_EDIT'),
@@ -48,7 +51,8 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
       ])
       },
       {
-        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
         action: () => this.fetchAll(),
         enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
       },

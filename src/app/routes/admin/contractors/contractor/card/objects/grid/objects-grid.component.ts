@@ -5,7 +5,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IObject } from '../objects.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ObjectsService } from '../objects.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
@@ -30,12 +32,14 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       enabled: this.objectsService.canAdd$,
       action: () => this.setDialog('add'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: combineLatestAnd([
         this.objectsService.canDelete$,
         this.selectedObjects$.map(objects => objects && !!objects.length)
@@ -43,7 +47,8 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
       action: () => this.setDialog('delete'),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       enabled: this.objectsService.canView$,
       action: () => this.fetch(),
     },

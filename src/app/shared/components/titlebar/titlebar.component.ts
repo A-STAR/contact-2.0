@@ -11,8 +11,9 @@ import {
 import { defaultTo } from 'ramda';
 import { of } from 'rxjs/observable/of';
 
-import { IButtonType } from '../button/button.interface';
-import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
+import { ITitlebar, ITitlebarItem, ITitlebarButton } from './titlebar.interface';
+
+import { ButtonService } from '@app/shared/components/button/button.service';
 
 import { doOnceIf } from '@app/core/utils';
 
@@ -29,32 +30,12 @@ export class TitlebarComponent implements OnChanges, OnInit {
 
   borderCls: object;
   items: ITitlebarItem[] = [];
-  props: { [key: string]: Partial<ITitlebarButton> } = {
-    [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'co-add', title: 'Добавить' },
-    [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'co-copy', title: 'Копировать' },
-    [TitlebarItemTypeEnum.BUTTON_CLOSE]: { iconCls: 'co-close', title: 'default.buttons.close' },
-    [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
-    [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
-    // TODO(d.maltsev): we need a better icon here
-    [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-edit', title: 'Карточка должника' },
-    [TitlebarItemTypeEnum.BUTTON_DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
-    [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
-    [TitlebarItemTypeEnum.BUTTON_FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
-    //  TODO(i.lobanov): replace when icon is ready
-    [TitlebarItemTypeEnum.BUTTON_MAP]: { iconCls: 'co-image', title: 'default.buttons.map' },
-    [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'co-move', title: 'Переместить' },
-    [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
-    [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
-    [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'co-search', title: 'Поиск' },
-    [TitlebarItemTypeEnum.BUTTON_START]: { iconCls: 'co-start', title: 'Запустить' },
-    [TitlebarItemTypeEnum.BUTTON_STOP]: { iconCls: 'co-stop', title: 'Остановить' },
-  };
   suppressCenterZone: boolean;
   title: string;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private buttonService: ButtonService,
   ) {}
 
   ngOnChanges(): void {
@@ -75,18 +56,6 @@ export class TitlebarComponent implements OnChanges, OnInit {
     this.title = (this.titlebar && this.titlebar.title) || '';
   }
 
-  getButtonType(item: ITitlebarItem): IButtonType {
-    return TitlebarItemTypeEnum[item.type];
-  }
-
-  isButton(item: ITitlebarItem): boolean {
-    return !!TitlebarItemTypeEnum[item.type];
-  }
-
-  isCheckbox(item: ITitlebarItem): boolean {
-    return item.type === TitlebarItemTypeEnum.CHECKBOX;
-  }
-
   onClick(item: ITitlebarItem): void {
     doOnceIf(item.enabled, () => {
       if (typeof item.action === 'function') {
@@ -101,16 +70,14 @@ export class TitlebarComponent implements OnChanges, OnInit {
    * @param item {ITitlebarButton}
    */
   getIconCls(item: ITitlebarButton): object {
-    const prop = this.props[item.type];
-    const iconCls = item.iconCls || (prop && prop.iconCls) || 'co-dialog-exclamation';
+    const iconCls = this.buttonService.getIcon(item.buttonType) || 'co-dialog-exclamation';
     const cls = { 'align-right': item.align === 'right' };
     return iconCls
       ? { ...cls, [iconCls]: true }
       : cls;
   }
 
-  getTitle(item: ITitlebarButton): string {
-    const prop = this.props[item.type];
-    return item.title || (prop && prop.title) || null;
+  getLabel(item: ITitlebarButton): string {
+    return this.buttonService.getLabel(item.buttonType) || null;
   }
 }

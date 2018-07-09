@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { IButtonStyle, IButtonType } from './button.interface';
+import { IButtonStyle, ButtonType } from './button.interface';
 
-import { ButtonService } from '@app/core/button/button.service';
+import { ButtonService } from './button.service';
 
 @Component({
   selector: 'app-button',
@@ -16,7 +16,7 @@ export class ButtonComponent {
   @Input() icon: string;
   @Input() label: string | false;
   @Input() title: string;
-  @Input() type: IButtonType;
+  @Input() type: ButtonType;
   // TODO(i.lobanov): remove it when btn service is refactored
   @Input() btnClass: string;
   @Input() withBtnClass = true;
@@ -25,8 +25,8 @@ export class ButtonComponent {
 
   get buttonClass(): string {
     return (this.btnClass ? this.btnClass + ' ' : '')
-    // + (this.iconClass ? 'btn-icon ' : '')
-    + this.buttonService.getClass(this.color, this.withBtnClass);
+      // + (this.iconClass ? 'btn-icon ' : '')
+      + this.buttonService.getClass(this.color, this.withBtnClass);
   }
 
   get iconClass(): string {

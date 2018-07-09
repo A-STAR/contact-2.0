@@ -5,7 +5,9 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { DataService } from '@app/core/data/data.service';
@@ -47,7 +49,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.onBeforeAdd(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_ADD'),
@@ -55,7 +58,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_EDIT'),
@@ -63,7 +67,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_DELETE'),
@@ -71,7 +76,8 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_VIEW'),

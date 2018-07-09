@@ -9,7 +9,9 @@ import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrappe
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 import { IGridTreeRow } from './gridtree.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { AttributeService } from '../attribute.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -59,22 +61,26 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.setDialog('add'),
       enabled: this.canAdd$,
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
       enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetch(),
     },
   ];

@@ -8,7 +8,9 @@ import { first } from 'rxjs/operators/first';
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -36,12 +38,14 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
 
   toolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.onAdd(),
       enabled: this.canAdd$
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.EDIT,
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -49,7 +53,8 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
@@ -57,7 +62,8 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
       ])
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.REFRESH,
       action: () => this.fetchAll(),
       enabled: this.canView$
     }

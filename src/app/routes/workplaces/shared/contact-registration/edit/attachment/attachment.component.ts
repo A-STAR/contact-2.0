@@ -3,7 +3,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttachment, IAttachmentFormData } from './attachment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { AttachmentService } from './attachment.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
@@ -25,11 +27,13 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions imp
 
   toolbarItems: IToolbarItem[] = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.ADD,
       action: () => this.setDialog('edit')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      type: ToolbarItemType.BUTTON,
+      buttonType: ButtonType.DELETE,
       enabled: this.selectedDocumentGuid$.map(Boolean),
       action: () => this.setDialog('delete')
     },
