@@ -1,25 +1,19 @@
 @import '../../../../shared/styles/app/variables.scss';
-$checkbox-size: 15px;
+
+$toolbar-button-size: 32px;
 
 .toolbar-item {
   display: inline-block;
   vertical-align: middle;
+  line-height: $toolbar-button-size;
   &:not(:last-child) {
     margin-right: 8px;
   }
 }
 
-.checkbox {
-  display: inline-block;
-  label {
-    padding-left: $checkbox-size;
-  }
-  input[type="checkbox"] {
-    margin-left: -$checkbox-size;
-  }
+.toolbar-item-checkbox {
+  margin-left: 5px;
 }
-
-$toolbar-button-size: 32px;
 
 ::ng-deep .toolbar2-button {
   display: inline-block;

@@ -33,6 +33,7 @@
       <app-checkbox
         *ngSwitchCase="'checkbox'"
         [disabled]="item.disabled | async"
+        class="toolbar-item-checkbox"
         [label]="item.label"
         [ngModel]="item.state | async"
         (change)="onClick(item)"
