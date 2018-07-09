@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { mergeMap, first, filter } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -10,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +34,8 @@ export class AddressGridComponent implements OnInit {
   ].map(addGridLabel('debtor.information.address.grid'));
 
   addresses: IAddress[];
-  selectedAddress: IAddress;
-  private selectedAddressId: number;
+
+  private selectedAddress$ = new BehaviorSubject<IAddress>(null);
 
   constructor(
     private addressService: AddressService,
@@ -48,23 +50,27 @@ export class AddressGridComponent implements OnInit {
     });
   }
 
-  readonly canRegisterSelectedAddress$: Observable<boolean> = this.debtorService.canRegisterAddressVisit$(this.selectedAddress);
+  readonly canRegisterSelectedAddress$: Observable<boolean> = this.selectedAddress$.pipe(
+    mergeMap(address => this.debtorService.canRegisterAddressVisit$(address)),
+  );
 
   onSelect(addresses: IAddress[]): void {
-    this.selectedAddressId = isEmpty(addresses)
-      ? null
-      : addresses[0].id;
-    this.selectedAddress = addresses[0];
+    this.selectedAddress$.next(addresses[0]);
     this.cdRef.markForCheck();
   }
 
   onDoubleClick(address: IAddress): void {
-    this.selectedAddressId = address.id;
-    this.selectedAddress = address;
-    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
+    this.selectedAddress$.next(address);
+    this.onSubmit();
   }
 
   onSubmit(): void {
-    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
+    this.canRegisterSelectedAddress$
+      .pipe(
+        first(),
+        filter(Boolean),
+        mergeMap(() => this.selectedAddress$),
+      )
+      .subscribe(address => this.action.emit(address.id));
   }
 }

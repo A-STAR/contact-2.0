@@ -1,3 +1,9 @@
+<app-register-contact-dialog
+  *ngIf="isDialog('registerContact')"
+  (submit)="onRegisterContactDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+</app-register-contact-dialog>
+
 <div class="flex vertical">
 
   <!-- Buttons & Form -->
