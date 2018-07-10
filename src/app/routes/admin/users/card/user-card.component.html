@@ -13,7 +13,7 @@
 
 <div>
   <app-button type="back" (click)="onClose()"></app-button>
-  <app-button color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+  <app-button type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
 </div>
 
 <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>

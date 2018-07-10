@@ -23,48 +23,48 @@
 </ng-template>
 
 <ng-template [ngIf]="node">
-    <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
-        <div
-            class="app-treenode-content"
-            (click)="delegateClick($event)"
-            (dblclick)="delegateClick($event)"
-            (contextmenu)="onContextMenu($event)"
-            [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
-            <span
-              class="app-tree-toggler fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
-              (click)="toggle($event)"
-              (dblclick)="toggleDbClick($event)">
-            </span>
-            <div class="ui-chkbox" *ngIf="tree.selectionMode == 'checkbox'">
-              <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default">
-                <span
-                  class="ui-chkbox-icon ui-c fa"
-                  [ngClass]="{'fa-check':isSelected(),'fa-minus':node.partialSelected}">
-                </span>
-              </div>
+  <li class="ui-treenode {{node.styleClass}}" *ngIf="!tree.horizontal" [ngClass]="{'ui-treenode-leaf': isLeaf()}">
+      <div
+          class="app-treenode-content"
+          (click)="delegateClick($event)"
+          (dblclick)="delegateClick($event)"
+          (contextmenu)="onContextMenu($event)"
+          [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
+          <span
+            class="app-tree-toggler fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
+            (click)="toggle($event)"
+            (dblclick)="toggleDbClick($event)">
+          </span>
+          <div class="ui-chkbox" *ngIf="tree.selectionMode == 'checkbox'">
+            <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default">
+              <span
+                class="ui-chkbox-icon ui-c fa"
+                [ngClass]="{'fa-check':isSelected(),'fa-minus':node.partialSelected}">
+              </span>
             </div>
-                <span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span>
-            <ng-container *ngTemplateOutlet="treeNodeLabelTemplate;"></ng-container>
-        </div>
-        <ul
-          *ngIf="node.children && node.expanded"
-          class="ui-treenode-children"
-          style="display: none;"
-          [style.display]="node.expanded ? 'block' : 'none'"
+          </div>
+              <span [class]="getIcon()" *ngIf="node.icon||node.expandedIcon||node.collapsedIcon"></span>
+          <ng-container *ngTemplateOutlet="treeNodeLabelTemplate;"></ng-container>
+      </div>
+      <ul
+        *ngIf="node.children && node.expanded"
+        class="ui-treenode-children"
+        style="display: none;"
+        [style.display]="node.expanded ? 'block' : 'none'"
+      >
+        <app-tree-node
+            *ngFor="let childNode of node.children; let firstChild=first; let lastChild=last; let index=index"
+            [collapseAdjacentNodes]="collapseAdjacentNodes"
+            [expandNodeOnClick]="expandNodeOnClick"
+            [node]="childNode"
+            [parentNode]="node"
+            [firstChild]="firstChild"
+            [lastChild]="lastChild"
+            [index]="index"
         >
-          <app-tree-node
-              *ngFor="let childNode of node.children; let firstChild=first; let lastChild=last; let index=index"
-              [collapseAdjacentNodes]="collapseAdjacentNodes"
-              [expandNodeOnClick]="expandNodeOnClick"
-              [node]="childNode"
-              [parentNode]="node"
-              [firstChild]="firstChild"
-              [lastChild]="lastChild"
-              [index]="index"
-          >
-          </app-tree-node>
-        </ul>
-    </li>
+        </app-tree-node>
+      </ul>
+  </li>
   <table *ngIf="tree.horizontal">
     <tbody>
       <tr>
@@ -87,12 +87,12 @@
               (dblclick)="delegateClick($event)"
               (contextmenu)="onContextMenu($event)"
             >
-              <span
+              <div
                 *ngIf="!isLeaf()"
-                class="app-tree-toggler fa fa-caret-right"
+                class="app-tree-toggler"
                 (click)="toggle($event)"
                 (dblclick)="toggleDbClick($event)">
-              </span>
+              </div>
               <span
                 [class]="getIcon()"
                 *ngIf="node.icon || node.expandedIcon || node.collapsedIcon">

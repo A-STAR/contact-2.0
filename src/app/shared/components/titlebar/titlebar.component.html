@@ -34,6 +34,7 @@
               [type]="item.buttonType"
               [ngClass]="item.classes | async"
               [btnClass]="'icon'"
+              [hasIcon]="true"
               [withBtnClass]="false"
               (click)="item.action()">
             </app-button>
