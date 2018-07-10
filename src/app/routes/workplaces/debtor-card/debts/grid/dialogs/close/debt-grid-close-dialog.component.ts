@@ -109,6 +109,6 @@ export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   private isReasonCodeRequired(reasonCodeRequired: IUserConstant, code: number): boolean {
-    return reasonCodeRequired.valueS === 'ALL' || reasonCodeRequired.valueS.split(',').map(Number).includes(code);
+    return reasonCodeRequired.valueS === 'ALL' || reasonCodeRequired.valueS.split(/,\s*/).map(Number).includes(code);
   }
 }

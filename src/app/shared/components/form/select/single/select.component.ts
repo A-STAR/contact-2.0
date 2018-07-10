@@ -263,7 +263,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     if (!permission.valueS) {
       return [];
     }
-    const values = permission.valueS.split(',');
+    const values = permission.valueS.split(/,\s*/);
     return options.filter(option => values.includes(String(option.value)));
   }
 }
