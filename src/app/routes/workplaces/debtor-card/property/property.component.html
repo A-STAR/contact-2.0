@@ -1,0 +1,12 @@
+<div class="flex vertical">
+  <split direction="vertical" gutterColor="inherit" gutterSize="20" [useTransition]="true">
+    <split-area size="50">
+      <app-property-grid
+        [personId]="personId"
+      ></app-property-grid>
+    </split-area>
+    <split-area *ngIf="displayAttributes$ | async" size="50">
+      <app-debtor-property-attributes></app-debtor-property-attributes>
+    </split-area>
+  </split>
+</div>

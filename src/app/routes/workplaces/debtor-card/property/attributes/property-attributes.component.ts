@@ -9,6 +9,7 @@ import { PropertyService } from '@app/routes/workplaces/core/property/property.s
 @Component({
   selector: 'app-debtor-property-attributes',
   templateUrl: './property-attributes.component.html',
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorPropertyAttributesComponent implements OnInit {
