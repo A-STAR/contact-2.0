@@ -32,9 +32,8 @@ export class DebtorPropertyAttributesComponent implements OnInit {
     this.entityId$ = this.propertyService
       .getPayload<IProperty>(PropertyService.MESSAGE_PROPERTY_SELECTED)
       .map(property => property ? property.id : null)
-      .do(entityId => {
+      .do(_ => {
         this.debtorService.entityTypeId$.next(this.entityTypeId);
-        this.debtorService.debtorId$.next(entityId);
         this.cdRef.markForCheck();
       }
     );

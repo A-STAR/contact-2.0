@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
@@ -8,7 +8,9 @@ import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service
 
 @Component({
   selector: 'app-debtor-pledge-attributes',
-  templateUrl: './pledge-attributes.component.html'
+  templateUrl: './pledge-attributes.component.html',
+  host: { class: 'full-size' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtorPledgeAttributesComponent implements OnInit {
   static ENTITY_TYPE_PROPERTY = 33;
@@ -21,6 +23,7 @@ export class DebtorPledgeAttributesComponent implements OnInit {
   ];
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private pledgeService: PledgeService,
     private debtorService: DebtorService
   ) {}
@@ -30,9 +33,9 @@ export class DebtorPledgeAttributesComponent implements OnInit {
     this.entityId$ = this.pledgeService
       .getPayload<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
       .map(pledge => pledge ? pledge.propertyId : null)
-      .do(entityId => {
+      .do(_ => {
           this.debtorService.entityTypeId$.next(this.entityTypeId);
-          this.debtorService.debtorId$.next(entityId);
+          this.cdRef.markForCheck();
         }
       );
   }
