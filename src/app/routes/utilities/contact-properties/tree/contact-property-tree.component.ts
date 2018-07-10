@@ -174,7 +174,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }, types: IUserConstant): void {
     this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TYPE]
-      .filter(option => types.valueS === 'ALL' || types.valueS.split(',').includes(String(option.value)));
+      .filter(option => types.valueS === 'ALL' || types.valueS.split(/,\s*/).includes(String(option.value)));
     this.contactType = this.contactTypeOptions.length ? this.contactTypeOptions[0].value : null;
   }
 

@@ -64,7 +64,7 @@ export class GroupsService extends AbstractActionService implements CanActivateC
     ).map(([ options, groupEntityTypeCodes ]) =>
       groupEntityTypeCodes === 'ALL'
         ? options
-        : options.filter(option => groupEntityTypeCodes.split(',').map(Number).includes(<number>option.value))
+        : options.filter(option => groupEntityTypeCodes.split(/,\s*/).map(Number).includes(<number>option.value))
     );
   }
 

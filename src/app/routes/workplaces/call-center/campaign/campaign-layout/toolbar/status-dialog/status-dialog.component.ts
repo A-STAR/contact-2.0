@@ -43,7 +43,7 @@ export class StatusDialogComponent implements OnInit {
       .pipe(first())
       .map(constant => constant.valueS)
       .subscribe(constant => {
-        const isReasonRequired = constant === 'ALL' || constant.split(',').map(Number).includes(9);
+        const isReasonRequired = constant === 'ALL' || constant.split(/,\s*/).map(Number).includes(9);
         this.controls = this.buildControls(isReasonRequired);
         this.cdRef.markForCheck();
       });

@@ -68,7 +68,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
   readonly debtor$: Observable<IPerson> = this.debtorService.debtor$;
 
   protected getControls(stringValues: IUserConstant, _: boolean, attributes: IEntityAttributes): IDynamicFormControl[] {
-    const displayedStringValues = stringValues.valueS.split(',').map(Number);
+    const displayedStringValues = stringValues.valueS.split(/,\s*/).map(Number);
     return this.attributeIds.map((id, i) => ({
       label: `person.stringValue${i + 1}`,
       controlName: `stringValue${i + 1}`,

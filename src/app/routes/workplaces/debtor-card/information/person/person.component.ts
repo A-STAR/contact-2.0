@@ -65,7 +65,7 @@ export class PersonComponent implements OnInit, OnDestroy {
     stringValues: IUserConstant,
     attributes: IEntityAttributes,
   ): IDynamicFormItem[] {
-    const displayedStringValues = stringValues.valueS.split(',').map(Number);
+    const displayedStringValues = stringValues.valueS.split(/,\s*/).map(Number);
     return [
       {
         label: 'person.gender',
