@@ -182,16 +182,16 @@
                 "title": "Choose contact type",
                 "address": {
                   "title": "Addresses",
-                  "button": "Register contact with type Visit"
+                  "button": "Visit"
                 },
                 "misc": {
                   "title": "Special",
-                  "buttonMisc": "Register contact with type Special",
-                  "buttonOfficeVisit": "Register contact with type Office visit"
+                  "buttonMisc": "Special",
+                  "buttonOfficeVisit": "Office visit"
                 },
                 "phone": {
                   "title": "Phones",
-                  "button": "Register contact with type Incoming call"
+                  "button": "Incoming call"
                 }
               }
             },
