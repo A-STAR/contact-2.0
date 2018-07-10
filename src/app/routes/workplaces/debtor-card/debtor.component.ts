@@ -155,6 +155,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
 
   onConfirmTabClose(): void {
     const debtorId = this.closePhoneId$.value;
+    this.closePhoneId$.next(null);
     this.debtorService.closeCard(debtorId)
       .pipe(
         flatMap(() => this.callService.postCall$),
@@ -162,7 +163,6 @@ export class DebtorComponent implements OnInit, OnDestroy {
       )
       .subscribe(postCall => {
         this.closeTab(debtorId);
-        this.closePhoneId$.next(null);
 
         if (postCall) {
           this.debtorService.dispatchAction<void>(ProgressBarService.MESSAGE_PROGRESS_STOP);
