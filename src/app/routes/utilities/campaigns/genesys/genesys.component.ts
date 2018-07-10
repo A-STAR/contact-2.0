@@ -36,7 +36,7 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
   @ViewChild('statistics', { read: TemplateRef }) statistics: TemplateRef<any>;
 
   private routerSubscription: Subscription;
-  private selectedCampaign: IGenesysCampaign;
+  // private selectedCampaign: IGenesysCampaign;
   private url: string;
 
   rows: IGenesysCampaign[] = [];
@@ -83,13 +83,14 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
         // this.rows = response.data.map(item => ({ ...item, typeCode: 2, optBy: 1, optGoal: 50 }));
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
-        if (this.selectedCampaign) {
-          if (response.data.find(campaign => campaign.id === this.selectedCampaign.id)) {
-            this.fetchCampaignStatistics(this.selectedCampaign.id);
-          } else {
-            this.onSelectRow(null);
-          }
-        }
+        this.grid.deselectAll();
+        // if (this.selectedCampaign) {
+        //   if (response.data.find(campaign => campaign.id === this.selectedCampaign.id)) {
+        //     this.fetchCampaignStatistics(this.selectedCampaign.id);
+        //   } else {
+        //     this.onSelectRow(null);
+        //   }
+        // }
         this.cdRef.markForCheck();
       });
   }
@@ -98,7 +99,7 @@ export class GenesysCampaignsComponent implements OnInit, OnDestroy {
     const campaign = isEmpty(campaignIds)
       ? null
       : this.rows.find(row => row.id === campaignIds[0]);
-    this.selectedCampaign = campaign;
+    // this.selectedCampaign = campaign;
     if (campaign) {
       this.fetchCampaignStatistics(campaign.id);
     } else {

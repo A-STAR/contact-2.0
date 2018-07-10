@@ -47,6 +47,9 @@ export interface IDynamicLayoutDateTimeControl extends IDynamicLayoutGenericCont
 
 export interface IDynamicLayoutNumberControl extends IDynamicLayoutGenericControl {
   controlType: DynamicLayoutControlType.NUMBER;
+  // Optional:
+  min?: number;
+  max?: number;
 }
 
 export interface IDynamicLayoutGridSelectControl extends IDynamicLayoutGenericControl {

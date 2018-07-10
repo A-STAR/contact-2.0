@@ -93,7 +93,7 @@ export class NotificationActionBuilder {
   }
 
   private translateMessage(message: string | IMessageOptions): string {
-    if (message instanceof String) {
+    if (typeof message === 'string') {
       return this.translateService.instant(message);
     }
 
