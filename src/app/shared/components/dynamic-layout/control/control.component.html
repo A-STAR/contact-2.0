@@ -88,6 +88,8 @@
       *ngSwitchCase="'number'"
       [formControlName]="control.name"
       [label]="control.label"
+      [min]="control.min"
+      [max]="control.max"
       [required]="isRequired(control) | async"
     ></app-number>
 
