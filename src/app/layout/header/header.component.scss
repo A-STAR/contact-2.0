@@ -20,7 +20,7 @@ nav {
     padding: 0;
 
     .menu-item {
-      color: $brand-white;
+      color: $navigation-main-color;
       cursor: pointer;
       display: block;
       font-size: $layout-top-menu-font-size;
@@ -28,9 +28,11 @@ nav {
       padding: 0 12px;
       white-space: nowrap;
 
-      &.active,
+      &.active {
+        color: $navigation-active-color;
+      }
       &:hover {
-        color: #fff;
+        color: $navigation-hover-color;
       }
     }
   }
