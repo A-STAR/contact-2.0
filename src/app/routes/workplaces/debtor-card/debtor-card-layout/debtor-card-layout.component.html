@@ -9,8 +9,8 @@
   <!-- Buttons & Form -->
   <div class="flex-item">
     <div class="pb-lg">
-      <app-button color="primary" type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
-      <app-button color="secondary" type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
+      <app-button type="save" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+      <app-button type="registerContact" [disabled]="isContactRegistrationDisabled$ | async" (click)="onRegisterContactClick()"></app-button>
       <app-action-dropdown
         class="pull-right"
         [label]="'debtor.actions'"
