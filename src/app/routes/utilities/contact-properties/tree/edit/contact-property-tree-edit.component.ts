@@ -128,7 +128,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
       this.data = {
         ...data,
         autoCommentIds: data && data.autoCommentIds
-          ? data.autoCommentIds.split(',').map(Number)
+          ? data.autoCommentIds.split(/,\s*/).map(Number)
           : null,
         nextCallDays: data && data.nextCallFormula
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }

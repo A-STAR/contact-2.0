@@ -172,7 +172,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   private initTreeTypeSelect(dictionaries: { [key: number]: IOption[] }, constant: IUserConstant): void {
-    const values = constant.valueS.split(',').map(Number);
+    const values = constant.valueS.split(/,\s*/).map(Number);
     this.treeTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_ENTITY_TYPE]
       .filter(o => values.includes(Number(o.value)));
     this.treeType = this.treeTypeOptions ? this.treeTypeOptions[0].value : null;
