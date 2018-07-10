@@ -73,13 +73,10 @@
           class="ui-treenode"
           [ngClass]="{'ui-treenode-collapsed': !node.expanded, 'ui-treenode-ending': !node.children, 'ui-treenode-root': !node.parent.parent}"
         >
-          <div class="ui-treenode-line" [ngClass]="{ 'selected': isSelected() }"></div>
           <div
             [attr.nodeid]="node.id"
             [dragula]='"tree-node"'
             [dragulaOptions]="dragulaOptions"
-            [ngClass]="{ 'selected-wrapper': isSelected() }"
-            [style.border-color]="getBgColor()"
           >
             <div
               class="app-treenode-content ui-state-default ui-corner-all"
@@ -90,12 +87,12 @@
               (dblclick)="delegateClick($event)"
               (contextmenu)="onContextMenu($event)"
             >
-              <span
+              <div
                 *ngIf="!isLeaf()"
-                class="app-tree-toggler fa fa-caret-right"
+                class="app-tree-toggler"
                 (click)="toggle($event)"
                 (dblclick)="toggleDbClick($event)">
-              </span>
+              </div>
               <span
                 [class]="getIcon()"
                 *ngIf="node.icon || node.expandedIcon || node.collapsedIcon">
