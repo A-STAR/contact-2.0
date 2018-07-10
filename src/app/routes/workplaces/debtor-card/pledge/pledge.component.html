@@ -1,10 +1,8 @@
-<div class="flex vertical">
-  <split direction="vertical" gutterColor="inherit" gutterSize="20" [useTransition]="true">
-    <split-area size="50">
-      <app-pledge-grid></app-pledge-grid>
-    </split-area>
-    <split-area *ngIf="displayAttributes$ | async" size="50">
-      <app-debtor-pledge-attributes></app-debtor-pledge-attributes>
-    </split-area>
-  </split>
-</div>
+<split direction="vertical" gutterColor="inherit" gutterSize="20" [useTransition]="true">
+  <split-area size="50">
+    <app-pledge-grid></app-pledge-grid>
+  </split-area>
+  <split-area *ngIf="displayAttributes$ | async" size="50">
+    <app-debtor-pledge-attributes></app-debtor-pledge-attributes>
+  </split-area>
+</split>
