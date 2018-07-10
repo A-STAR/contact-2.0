@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 
 import { IGroup } from '../groups.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -93,6 +94,47 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     }
   ];
 
+  actions: IMetadataAction[] = [
+    {
+      action: 'callList',
+      enabled: () => this.selectedGroup$.value && this.selectedGroup$.value.entityTypeCode === 19,
+      children: [
+        {
+          id: 19,
+          action: 'callListCreate',
+          asyncMode: false,
+          params: [ 'id' ],
+          addOptions: [
+            {
+              name: 'taskTypeCode',
+              value: [ 1 ]
+            }
+          ],
+          applyTo: {
+            selected: true,
+            all: true
+          }
+        },
+        {
+          id: 19,
+          action: 'callListUpdate',
+          asyncMode: false,
+          params: [ 'id' ],
+          addOptions: [
+            {
+              name: 'taskTypeCode',
+              value: [ 2 ]
+            }
+          ],
+          applyTo: {
+            selected: true,
+            all: true
+          }
+        }
+      ]
+    }
+  ];
+
   dialog: string;
   groups: IGroup[] = [];
 
@@ -118,8 +160,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       });
 
     this.groupSubscription = this.selectedGroup$
-      .filter(Boolean)
-      .subscribe(group => this.onSelect.emit(group.id));
+      .subscribe(group => this.onSelect.emit(group && group.id));
   }
 
   ngOnDestroy(): void {
@@ -168,6 +209,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
+    this.selectedGroup$.next(null);
     this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
       this.groups = groups;
       this.cdRef.markForCheck();

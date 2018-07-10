@@ -142,6 +142,7 @@ export class GroupEventsComponent extends DialogFunctions implements OnInit, OnD
 
   ngOnInit(): void {
     this.groupSubscription = this.groupId$
+      .do(() => this.events = [])
       .filter(Boolean)
       .subscribe(() => this.fetch());
 
