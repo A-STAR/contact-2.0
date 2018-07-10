@@ -153,12 +153,12 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
     }
   }
 
-  onAdd(data: any): void {
+  onAdd(data: IPermissionRole): void {
     this.permissionsService.createRole(data);
     this.onSuccess(PermissionsService.ROLE_ADD_SUCCESS);
   }
 
-  onEdit(data: any): void {
+  onEdit(data: IPermissionRole): void {
     this.permissionsService.updateRole(data);
     this.onSuccess(PermissionsService.ROLE_UPDATE_SUCCESS);
   }

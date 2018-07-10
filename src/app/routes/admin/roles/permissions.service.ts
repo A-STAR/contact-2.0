@@ -44,6 +44,7 @@ export class PermissionsService extends AbstractActionService {
   readonly permissions: Observable<IPermissionsState> = this.store
     .select(state => state.permissions)
     .pipe(filter(Boolean));
+
   readonly roles: Observable<IPermissionRole[]> = this.permissions.pipe(
     map(state => state.roles),
     distinctUntilChanged(),
