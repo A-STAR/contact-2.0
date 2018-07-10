@@ -20,7 +20,6 @@ const labelKey = makeKey('widgets.nextCallDateSet.dialog');
 @Component({
   selector: 'app-next-call-date-set',
   templateUrl: './next-call-date-set.component.html',
-  styleUrls: ['./next-call-date-set.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NextCallDateSetDialogComponent {
