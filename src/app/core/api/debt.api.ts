@@ -23,7 +23,7 @@ export class DebtApiService {
   ) { }
 
   openDebtCardByDebtor(actionData: any, onClose?: Function): void {
-    const { debtorId } = actionData;
+    const { personId } = actionData;
     this.getFirstDebtsByUserId(actionData)
       .pipe(first())
       .subscribe( debtId => {
@@ -31,7 +31,7 @@ export class DebtApiService {
           this.notificationsService.warning('header.noDebt.title').dispatch();
           return;
         }
-        this.onAction(() => this.openByDebtId(debtId, debtorId), onClose);
+        this.onAction(() => this.openByDebtId(debtId, personId), onClose);
       });
   }
 
