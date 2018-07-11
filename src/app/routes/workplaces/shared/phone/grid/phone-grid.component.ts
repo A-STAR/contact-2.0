@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, filter, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { first, filter, distinctUntilChanged } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { map, switchMap } from 'rxjs/operators';
 
