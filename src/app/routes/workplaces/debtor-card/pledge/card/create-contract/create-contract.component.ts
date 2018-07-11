@@ -72,11 +72,11 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
   );
 
   readonly contractTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
   };
 
   readonly pledgorTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -87,7 +87,7 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
   };
 
   readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

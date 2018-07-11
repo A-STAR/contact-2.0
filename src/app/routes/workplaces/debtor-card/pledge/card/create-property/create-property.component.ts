@@ -68,7 +68,7 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
   readonly property$ = this.pledgeCardCreatePropertyService.property$;
 
   readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

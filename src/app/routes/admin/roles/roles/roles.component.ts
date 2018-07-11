@@ -39,7 +39,7 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
   );
 
   titlebar: ITitlebar = {
-    title: 'roles.roles.title',
+    label: 'roles.roles.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

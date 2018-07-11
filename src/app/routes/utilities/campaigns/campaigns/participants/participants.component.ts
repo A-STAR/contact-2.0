@@ -52,7 +52,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   ].map(addGridLabel('utilities.campaigns.participants.grid'));
 
   readonly titlebar: ITitlebar = {
-    title: 'utilities.campaigns.tabs.participants',
+    label: 'utilities.campaigns.tabs.participants',
     items: [
       {
         type: ToolbarItemType.BUTTON,

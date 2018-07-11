@@ -53,7 +53,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
     this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
 
   titlebar: ITitlebar = {
-    title: 'portfolios.title',
+    label: 'portfolios.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

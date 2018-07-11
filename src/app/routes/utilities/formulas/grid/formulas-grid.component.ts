@@ -36,7 +36,7 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
   ].map(addGridLabel('routes.utilities.formulas.grid'));
 
   titlebar: ITitlebar = {
-    title: 'routes.utilities.formulas.titlebar.title',
+    label: 'routes.utilities.formulas.titlebar.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

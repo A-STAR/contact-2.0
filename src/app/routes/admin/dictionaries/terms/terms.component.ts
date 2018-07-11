@@ -38,7 +38,7 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   );
 
   titlebar: ITitlebar = {
-    title: 'terms.title',
+    label: 'terms.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

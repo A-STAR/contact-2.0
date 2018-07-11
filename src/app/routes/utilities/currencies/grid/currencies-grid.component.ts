@@ -38,7 +38,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   ].map(addGridLabel('widgets.currencies.grid'));
 
   titlebar: ITitlebar = {
-    title: 'widgets.currencies.titlebar.title'
+    label: 'widgets.currencies.titlebar.title'
   };
 
   toolbarItems: Array<IToolbarItem> = [

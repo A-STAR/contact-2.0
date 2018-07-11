@@ -50,7 +50,7 @@ export class UserGridComponent implements OnInit, OnDestroy {
   displayInactiveUsers: boolean;
 
   titlebar: ITitlebar = {
-    title: 'users.title',
+    label: 'users.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

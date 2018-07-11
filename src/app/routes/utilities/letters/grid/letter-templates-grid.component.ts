@@ -40,7 +40,7 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
   ].map(addGridLabel('routes.utilities.letters.grid'));
 
   titlebar: ITitlebar = {
-    title: 'routes.utilities.letters.titlebar.title',
+    label: 'routes.utilities.letters.titlebar.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

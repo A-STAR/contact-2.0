@@ -31,7 +31,7 @@ export class TitlebarComponent implements OnChanges, OnInit {
   borderCls: object;
   items: ITitlebarItem[] = [];
   suppressCenterZone: boolean;
-  title: string;
+  label: string;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -39,7 +39,7 @@ export class TitlebarComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnChanges(): void {
-    this.title = this.titlebar && this.titlebar.title;
+    this.label = this.titlebar && this.titlebar.label;
     this.cdRef.markForCheck();
   }
 
@@ -53,7 +53,7 @@ export class TitlebarComponent implements OnChanges, OnInit {
       enabled: enabledDefault(item.enabled),
     }));
     this.suppressCenterZone = (this.titlebar && this.titlebar.suppressCenterZone) || false;
-    this.title = (this.titlebar && this.titlebar.title) || '';
+    this.label = (this.titlebar && this.titlebar.label) || '';
   }
 
   onClick(item: ITitlebarItem): void {

@@ -587,7 +587,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       }),
     };
     return {
-      title: config.title,
+      label: config.title,
       items: config.items
         .concat([
           { name: 'filter', permissions: null },

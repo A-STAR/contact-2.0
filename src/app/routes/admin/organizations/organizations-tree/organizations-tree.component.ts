@@ -36,7 +36,7 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   readonly canEditOrganization: Observable<boolean> = this.userPermissionsService.has('ORGANIZATION_EDIT');
 
   titlebar: ITitlebar = {
-    title: 'organizations.title',
+    label: 'organizations.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

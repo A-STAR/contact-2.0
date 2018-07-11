@@ -75,7 +75,7 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
   );
 
   readonly pledgorTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -86,7 +86,7 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
   };
 
   readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

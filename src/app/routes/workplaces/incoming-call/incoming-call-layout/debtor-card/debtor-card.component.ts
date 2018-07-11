@@ -56,7 +56,7 @@ export class DebtorCardComponent implements AfterViewInit, OnDestroy {
     const title = this.translateService.instant('routes.workplaces.incomingCall.operator.title');
     const { userFullName } = this.data;
     return {
-      title: userFullName ? `${title}: ${userFullName}` : title,
+      label: userFullName ? `${title}: ${userFullName}` : title,
     };
   }
 }

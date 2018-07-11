@@ -77,15 +77,15 @@ export class PledgeCardEditContractComponent implements OnInit, AfterViewInit {
   readonly propertyId = Number(this.paramMap.get('propertyId'));
 
   readonly contractTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
   };
 
   readonly pledgorTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
   };
 
   readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
   };
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);

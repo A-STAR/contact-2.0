@@ -31,7 +31,7 @@ export type ITitlebarItem = ITitlebarButton | ITitlebarCheckbox;
 export interface ITitlebar {
   noBorder?: boolean;
   items?: ITitlebarItem[];
-  title?: string;
+  label?: string;
   // false by default
   suppressCenterZone?: boolean;
   suppressBorder?: boolean;

@@ -39,7 +39,7 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
   @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IConstant>;
 
   titlebar: ITitlebar = {
-    title: 'constants.title',
+    label: 'constants.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

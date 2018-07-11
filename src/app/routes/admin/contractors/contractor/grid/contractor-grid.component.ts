@@ -40,7 +40,7 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
   readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_DELETE');
 
   titlebar: ITitlebar = {
-    title: 'contractors.title',
+    label: 'contractors.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

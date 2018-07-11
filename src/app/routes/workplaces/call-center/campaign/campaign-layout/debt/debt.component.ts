@@ -23,7 +23,7 @@ export class DebtComponent implements OnInit {
 
   controls: IViewFormItem[];
   titlebar: ITitlebar = {
-    title: 'modules.callCenter.overview.info.title',
+    label: 'modules.callCenter.overview.info.title',
   };
 
   constructor(

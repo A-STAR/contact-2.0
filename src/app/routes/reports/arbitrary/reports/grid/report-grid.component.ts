@@ -36,7 +36,7 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
   ].map(addGridLabel('modules.reports.arbitrary.grid'));
 
   titlebar: ITitlebar = {
-    title: 'modules.reports.arbitrary.title',
+    label: 'modules.reports.arbitrary.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

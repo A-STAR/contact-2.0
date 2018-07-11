@@ -27,7 +27,7 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
 
   // TODO(d.maltsev): i18n
   private titlebar: ITitlebar = {
-    title: 'Сальников Андрей Юрьевич',
+    label: 'Сальников Андрей Юрьевич',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -72,7 +72,7 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
       map(campaignDebt => {
         const { personLastName, personFirstName, personMiddleName } = campaignDebt;
         const title = [ personLastName, personFirstName, personMiddleName ].filter(Boolean).join(' ');
-        this.titlebar.title = title;
+        this.titlebar.label = title;
         return { ...this.titlebar };
       }),
     );

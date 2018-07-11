@@ -100,7 +100,7 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     : createContactPersonLayout;
 
   readonly contactPersonTitlebar: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
+    label: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

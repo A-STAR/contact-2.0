@@ -35,4 +35,9 @@ export type IToolbarItem = IToolbarButton | IToolbarCheckbox;
 
 export interface IToolbar {
   items: Array<IToolbarItem>;
+  noBorder?: boolean;
+  label?: string;
+  // false by default
+  suppressCenterZone?: boolean;
+  suppressBorder?: boolean;
 }

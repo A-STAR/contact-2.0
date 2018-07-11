@@ -13,9 +13,9 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
 import { doOnceIf, invert } from '@app/core/utils';
 
 @Component({
-  selector: 'app-toolbar-2-item',
-  templateUrl: './toolbar2-item.component.html',
-  styleUrls: ['./toolbar2-item.component.scss'],
+  selector: 'app-toolbar-item',
+  templateUrl: './toolbar-item.component.html',
+  styleUrls: ['./toolbar-item.component.scss'],
 })
 export class Toolbar2ItemComponent implements OnInit, OnDestroy {
   static ITEM_DEBOUNCE_TIME = 500;

@@ -39,7 +39,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   readonly state: Observable<IOrganizationsState> = this.organizationsService.state;
 
   titlebar: ITitlebar = {
-    title: 'organizations.employees.title',
+    label: 'organizations.employees.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

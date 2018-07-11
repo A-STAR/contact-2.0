@@ -85,7 +85,7 @@ export class EntityGridComponent<T extends IGridEntity> implements OnInit, After
 
   createTitleBar(): ITitlebar {
     return {
-      title: `${this.translationKey}.titlebar.title`,
+      label: `${this.translationKey}.titlebar.title`,
       items: this.config.actions
         .map(metadataItem => ({ metadataItem, action: this.getAction(metadataItem.type) }))
         .map(({ metadataItem, action }) => ({
