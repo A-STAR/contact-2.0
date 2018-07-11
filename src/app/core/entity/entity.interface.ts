@@ -10,4 +10,5 @@ export enum EntityType {
   PLEDGE_CONTRACT = 63,
   PLEDGOR = 37,
   PORTFOLIO = 15,
+  PROPERTY = 33,
 }

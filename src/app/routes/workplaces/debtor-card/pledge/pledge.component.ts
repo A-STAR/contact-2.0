@@ -7,6 +7,9 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+
+import { EntityType } from '@app/core/entity/entity.interface';
+
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { SplitComponent, SplitAreaDirective } from 'angular-split';
@@ -28,11 +31,12 @@ export class PledgeComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
+    // NOTE: tab container has height 0 when component is initialized
     setTimeout(() => {
       this.areas.forEach(a => this.splitEl.updateArea(a, true, true));
       this.cdRef.markForCheck();
     }, 0);
   }
 
-  readonly displayAttributes$ = this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 32);
+  readonly displayAttributes$ = this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', EntityType.PROPERTY);
 }
