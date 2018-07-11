@@ -73,11 +73,26 @@
           class="ui-treenode"
           [ngClass]="{'ui-treenode-collapsed': !node.expanded, 'ui-treenode-ending': !node.children, 'ui-treenode-root': !node.parent.parent}"
         >
+          <!--
+            Dragula may be enabled/disabled in runtime, and there is no way to conditionally apply directives.
+            Hence templates.
+          -->
           <div
+            *ngIf="dragulaOptions"
             [attr.nodeid]="node.id"
             [dragula]='"tree-node"'
             [dragulaOptions]="dragulaOptions"
           >
+            <ng-container *ngTemplateOutlet="leafTemplate"></ng-container>
+          </div>
+          <div
+            *ngIf="!dragulaOptions"
+            [attr.nodeid]="node.id"
+          >
+            <ng-container *ngTemplateOutlet="leafTemplate"></ng-container>
+          </div>
+
+          <ng-template #leafTemplate>
             <div
               class="app-treenode-content ui-state-default ui-corner-all"
               [attr.nodeid]="node.id"
@@ -99,7 +114,7 @@
               </span>
               <ng-container *ngTemplateOutlet="treeNodeLabelTemplate"></ng-container>
             </div>
-          </div>
+          </ng-template>
         </td>
         <td
           class="ui-treenode-children-container"
