@@ -11,7 +11,7 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, map } from 'rxjs/operators';
+import { first, map, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
@@ -62,8 +62,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
+  @Input() dblClick: (address: IAddress) => void;
+
   @Output() add = new EventEmitter<void>();
-  @Output() dblClick = new EventEmitter<IAddress>();
   @Output() edit = new EventEmitter<IAddress>();
   @Output() register = new EventEmitter<IAddress>();
 
@@ -326,7 +327,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(address: IAddress): void {
-    this.dblClick.emit(address);
+    if (this.dblClick) {
+      this.dblClick(address);
+    } else {
+      this.registerContact();
+    }
   }
 
   onSelect(addresses: IAddress[]): void {
@@ -361,9 +366,16 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   registerContact(): void {
-    this.selectedAddress$
-      .pipe(first())
-      .subscribe(address => this.register.emit(address));
+    combineLatest(
+      this.canRegisterContact$,
+      this.selectedAddress$
+    )
+    .pipe(
+      first(),
+      map(([ canRegister, address ]) => canRegister && address),
+      filter(Boolean)
+    )
+    .subscribe(address => this.register.emit(address));
   }
 
   private get isDebtOpen(): boolean {
