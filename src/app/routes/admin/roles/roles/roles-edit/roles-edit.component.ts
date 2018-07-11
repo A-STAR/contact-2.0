@@ -9,9 +9,9 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { IPermissionRole } from '../../permissions.interface';
 
 @Component({

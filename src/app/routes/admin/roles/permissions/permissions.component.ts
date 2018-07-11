@@ -198,7 +198,7 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
   private onSuccess(type: string): void {
     this.permissionsService.getAction(type)
       .pipe(first())
-      .subscribe(_ => {
+      .subscribe(() => {
         this.setDialog();
         this.cdRef.markForCheck();
       });
