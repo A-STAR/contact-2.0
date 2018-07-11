@@ -14,6 +14,7 @@ export class SingleSelectComponent {
     // select3: new FormControl([ { label: 'Absolutely useless assignment, should be noop', value: 1 } ]),
     select3: new FormControl([3]),
     select4: new FormControl({ value: [6, 7], disabled: true }),
+    select5: new FormControl({ value: [6, 7] }),
   });
 
   get errors(): any {
