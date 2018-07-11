@@ -153,6 +153,7 @@ export class LetterGenerationComponent implements OnInit {
           type: DynamicLayoutItemType.CONTROL,
           dictCode: UserDictionariesService.DICTIONARY_REGION_SORT_TYPE,
           controlType: DynamicLayoutControlType.MULTISELECT,
+          orderable: true
         },
         {
           label: this.translateService.instant('widgets.mass.letter.dialog.reportId'),

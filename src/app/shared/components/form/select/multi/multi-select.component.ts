@@ -57,11 +57,11 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
   @Input() styles: CSSStyleDeclaration;
+  @Input() orderable = false;
 
   @Output() select = new EventEmitter<number[]>();
 
   @ViewChild('input') input: ElementRef;
-  @ViewChild('list') list: ElementRef;
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   open = false;
@@ -221,6 +221,30 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.options = this.tempOptions.map(o => ({ ...o, checked: false }));
     this.propagateChange(this.value);
     this.select.emit(this.value);
+    this.cdRef.markForCheck();
+  }
+
+  allowMove(index: number): boolean {
+    return index > -1 && index < this.tempOptions.length;
+  }
+
+  moveUp(index: number): void {
+    if (!this.allowMove(index)) {
+      return;
+    }
+    const tmp = this.tempOptions[index + 1];
+    this.tempOptions[index + 1] = this.tempOptions[index];
+    this.tempOptions[index] = tmp;
+    this.cdRef.markForCheck();
+  }
+
+  moveDown(index: number): void {
+    if (!this.allowMove(index)) {
+      return;
+    }
+    const tmp = this.tempOptions[index - 1];
+    this.tempOptions[index - 1] = this.tempOptions[index];
+    this.tempOptions[index] = tmp;
     this.cdRef.markForCheck();
   }
 

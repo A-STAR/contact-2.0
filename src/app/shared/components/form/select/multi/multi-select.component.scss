@@ -14,6 +14,15 @@ i.co {
   }
 }
 
+.dropdown-menu {
+  display: block;
+  z-index: $zindex-app-dialog;
+  padding: 0;
+  border: none;
+  min-width: unset;
+  overflow: hidden;
+}
+
 .select-controls {
   position: absolute;
   top: 0.55em;
@@ -29,34 +38,57 @@ i.co {
   cursor: pointer;
 }
 
+.orderable {
+  display: none;
+  position: absolute;
+  right: 0.4em;
+  top: 0.3em;
+  cursor: pointer;
+}
+
+.ordering {
+  display: inline-block;
+  margin: 0 2px;
+  &.move-up {
+    transform: rotateZ(90deg);
+  }
+  &.move-down {
+    transform: rotateZ(270deg);
+  }
+  &:hover {
+    color: $link-color;
+  }
+  &.disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
 .select-options {
   max-height: 180px;
   overflow-x: auto;
-
-  &.dropdown-menu {
-    border: 0;
-    padding: 0;
-    min-width: unset;
-  }
-
-  & > li {
-    border-left: 1px solid $gray;
-    border-right: 1px solid $gray;
-  }
+  border: none;
+  list-style: none;
+  padding: 0;
 
   .select-item {
     padding: 3px $padding-base-horizontal;
+    position: relative;
     &:hover {
       background-color: #eee;
+      & > .orderable {
+        display: block;
+      }
     }
   }
+}
 
   .select-buttons {
     padding: 3px $padding-base-horizontal;
     text-align: center;
     border-top: 1px solid $gray;
   }
-}
 
 .select-container {
   font-weight: normal;

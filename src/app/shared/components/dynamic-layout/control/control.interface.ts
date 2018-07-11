@@ -39,6 +39,7 @@ export interface IDynamicLayoutDialogSelectControl extends IDynamicLayoutGeneric
 
 export interface IDynamicLayoutMultiSelectControl extends IDynamicLayoutGenericControl {
   controlType: DynamicLayoutControlType.MULTISELECT;
+  orderable?: boolean;
 }
 
 export interface IDynamicLayoutDateTimeControl extends IDynamicLayoutGenericControl {
