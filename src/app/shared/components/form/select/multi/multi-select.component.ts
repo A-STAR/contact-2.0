@@ -57,7 +57,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
   @Input() styles: CSSStyleDeclaration;
-  @Input() orderable = false;
+  @Input() sortable = false;
 
   @Output() select = new EventEmitter<number[]>();
 
@@ -100,6 +100,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   isNullable = false;
+  curIndex: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -194,11 +195,12 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.renderer.setProperty(this.input.nativeElement, 'value', this.selectionLabel);
   }
 
-  onSelect(checked: boolean, option: IMultiSelectOption): void {
+  onSelect(checked: boolean, option: IMultiSelectOption, index: number): void {
     if (this.isClosed(option)) {
       return;
     }
     option.checked = checked;
+    this.curIndex = index;
     this.tempValue = checked
       ? Array.from(new Set([...this.tempValue, option.value ]))
       : this.tempValue.filter(o => o !== option.value);
@@ -224,6 +226,10 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.cdRef.markForCheck();
   }
 
+  isActive(index: number): boolean {
+    return this.sortable ? this.curIndex === index : false;
+  }
+
   allowMove(index: number): boolean {
     return index > -1 && index < this.tempOptions.length;
   }
@@ -235,6 +241,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     const tmp = this.tempOptions[index + 1];
     this.tempOptions[index + 1] = this.tempOptions[index];
     this.tempOptions[index] = tmp;
+    this.curIndex--;
     this.cdRef.markForCheck();
   }
 
@@ -245,6 +252,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     const tmp = this.tempOptions[index - 1];
     this.tempOptions[index - 1] = this.tempOptions[index];
     this.tempOptions[index] = tmp;
+    this.curIndex++;
     this.cdRef.markForCheck();
   }
 

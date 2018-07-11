@@ -216,7 +216,7 @@ export interface IDynamicFormMultiSelectControl extends IDynamicFormBaseControl 
   dictCode?: number;
   parentCode?: number;
   lookupKey?: ILookupKey;
-  orderable?: boolean;
+  sortable?: boolean;
 }
 
 export interface IDynamicFormTextControl extends IDynamicFormBaseControl {

@@ -38,33 +38,6 @@ i.co {
   cursor: pointer;
 }
 
-.orderable {
-  display: none;
-  position: absolute;
-  right: 0.4em;
-  top: 0.3em;
-  cursor: pointer;
-}
-
-.ordering {
-  display: inline-block;
-  margin: 0 2px;
-  &.move-up {
-    transform: rotateZ(90deg);
-  }
-  &.move-down {
-    transform: rotateZ(270deg);
-  }
-  &:hover {
-    color: $link-color;
-  }
-  &.disabled {
-    opacity: .5;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-}
-
 .select-options {
   max-height: 180px;
   overflow-x: auto;
@@ -77,18 +50,18 @@ i.co {
     position: relative;
     &:hover {
       background-color: #eee;
-      & > .orderable {
-        display: block;
-      }
+    }
+    &.active {
+      background-color: #E0E0E0;
     }
   }
 }
 
-  .select-buttons {
-    padding: 3px $padding-base-horizontal;
-    text-align: center;
-    border-top: 1px solid $gray;
-  }
+.select-buttons {
+  padding: $padding-base-horizontal;
+  text-align: center;
+  border-top: 1px solid $gray;
+}
 
 .select-container {
   font-weight: normal;

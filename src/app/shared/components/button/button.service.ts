@@ -34,6 +34,8 @@ export class ButtonService {
     [ ButtonType.LOAD_FROM_EXCEL, { iconCls: 'co co-upload', label: `default.buttons.${ButtonType.LOAD_FROM_EXCEL}` } ],
     [ ButtonType.MAP, { iconCls: 'co co-image', label: `default.buttons.${ButtonType.MAP}` } ],
     [ ButtonType.MOVE, { iconCls: 'co co-move', label: `default.buttons.${ButtonType.MOVE}` } ],
+    [ ButtonType.MOVE_UP, { iconCls: 'co co-back fa-rotate-90', label: `default.buttons.${ButtonType.MOVE_UP}` } ],
+    [ ButtonType.MOVE_DOWN, { iconCls: 'co co-back fa-rotate-270', label: `default.buttons.${ButtonType.MOVE_DOWN}` } ],
     [ ButtonType.NEXT, { iconCls: 'co co-back fa-rotate-180', label: `default.buttons.${ButtonType.NEXT}` } ],
     [ ButtonType.OK, { iconCls: 'co co-confirm', label: `default.buttons.${ButtonType.OK}` } ],
     [ ButtonType.PAUSE, { iconCls: 'co co-pause', label: `default.buttons.${ButtonType.PAUSE}` } ],

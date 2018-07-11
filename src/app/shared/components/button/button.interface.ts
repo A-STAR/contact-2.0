@@ -39,6 +39,8 @@ export enum ButtonType {
   LOAD_FROM_EXCEL   = 'loadFromExcel',
   MAP               = 'map',
   MOVE              = 'move',
+  MOVE_UP           = 'moveUp',
+  MOVE_DOWN         = 'moveDown',
   NEXT              = 'next',
   OK                = 'ok',
   PAUSE             = 'pause',

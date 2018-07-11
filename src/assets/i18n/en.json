@@ -3502,6 +3502,8 @@
       "loadFromExcel": "Load from Excel",
       "map": "Map",
       "move": "Move",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
       "next": "Next",
       "now": "Now",
       "ok": "OK",

@@ -33,22 +33,39 @@
     </div>
     <div class="dropdown-menu" #dropdownContent>
         <ul class="select-options">
-          <li class="select-item" *ngFor="let option of tempOptions; trackBy: trackByFn; let index = index;">
+          <li
+            class="select-item"
+            *ngFor="let option of tempOptions; trackBy: trackByFn; let index = index;"
+            [ngClass]="{ 'active': isActive(index) }"
+          >
             <app-checkbox
               [label]="option.label"
               [ngModel]="option.checked"
               [disabled]="isClosed(option)"
-              (ngModelChange)="onSelect($event, option)"
+              (ngModelChange)="onSelect($event, option, index)"
             ></app-checkbox>
-            <span class="orderable" *ngIf="orderable">
-              <i class="ordering move-up co co-back" (click)="moveUp(index - 1)" [ngClass]="{ 'disabled': !allowMove(index - 1) }"></i>
-              <i class="ordering move-down co co-back" (click)="moveDown(index + 1)" [ngClass]="{ 'disabled': !allowMove(index + 1) }" ></i>
-            </span>
           </li>
       </ul><!-- select-options -->
       <div class="select-buttons">
-          <button type="button" class="btn btn-default" (click)="onClear($event)">{{ 'default.buttons.clear' | translate }}</button>
-          <button type="button" class="btn btn-info" (click)="onApply($event)">{{ 'default.buttons.select' | translate }}</button>
+          <app-button type="clear" (click)="onClear($event)"></app-button>
+          <app-button type="select" (click)="onApply($event)"></app-button>
+          <ng-container *ngIf="sortable">
+            <app-button
+              type="moveUp"
+              [label]="false"
+              [hasIcon]="true"
+              [disabled]="!allowMove(curIndex - 1)"
+              (click)="moveUp(curIndex - 1)"
+            >
+            </app-button>
+            <app-button
+              type="moveDown"
+              [label]="false"
+              [hasIcon]="true"
+              [disabled]="!allowMove(curIndex + 1)"
+              (click)="moveDown(curIndex + 1)"
+            ></app-button>
+          </ng-container>
         </div>
     </div>
 
