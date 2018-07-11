@@ -118,7 +118,7 @@ export class PledgeService extends AbstractActionService {
     const params = { debtId, contractId, pledgorId, propertyId };
     const data = { ...property, ...propertyValue };
     return this.dataService
-      .create(`${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`, params, data)
+      .update(`${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`, params, data)
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
