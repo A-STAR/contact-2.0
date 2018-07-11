@@ -9,8 +9,8 @@ import { DebtorPropertyAttributesModule } from '../property/attributes/property-
 import { DebtsModule } from '../debts/debts.module';
 import { GuaranteeGridModule } from '../guarantee/grid/guarantee-grid.module';
 import { InformationModule } from '../information/information.module';
-import { PledgeGridModule } from '../pledge/grid/pledge-grid.module';
-import { PropertyGridModule } from '../property/grid/property-grid.module';
+import { PledgeModule } from '../pledge/pledge.module';
+import { PropertyModule } from '../property/property.module';
 import { RegisterContactModule } from '../register-contact/register-contact.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '../../shared/shared.module';
@@ -34,9 +34,9 @@ const routes: Routes = [
     DebtorAttributesModule,
     GuaranteeGridModule,
     DebtorPledgeAttributesModule,
-    PledgeGridModule,
     DebtorPropertyAttributesModule,
-    PropertyGridModule,
+    PledgeModule,
+    PropertyModule,
     DebtsModule,
     InformationModule,
     RegisterContactModule,

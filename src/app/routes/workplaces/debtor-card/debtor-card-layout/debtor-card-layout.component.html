@@ -63,20 +63,10 @@
         <app-guarantee-grid *ngIf="tabs[5].isInitialised"></app-guarantee-grid>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.pledgorsTab.title'" [visible]="tabs[6].permission | async">
-        <ng-container *ngIf="tabs[6].isInitialised">
-          <app-pledge-grid></app-pledge-grid>
-          <app-hdivider></app-hdivider>
-          <app-debtor-pledge-attributes></app-debtor-pledge-attributes>
-        </ng-container>
+        <app-pledge *ngIf="tabs[6].isInitialised"></app-pledge>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.propertyTab.title'" [visible]="tabs[7].permission | async">
-        <ng-container *ngIf="tabs[7].isInitialised">
-          <app-property-grid
-            [personId]="debtorId"
-          ></app-property-grid>
-          <app-hdivider></app-hdivider>
-          <app-debtor-property-attributes></app-debtor-property-attributes>
-        </ng-container>
+        <app-property *ngIf="tabs[7].isInitialised" [personId]="debtorId"></app-property>
       </app-tabview-tab>
       <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async" [visible]="tabs[8].permission | async">
         <app-identity-grid
