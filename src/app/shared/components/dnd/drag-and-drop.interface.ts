@@ -1,4 +1,4 @@
-import { ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { ElementRef, Renderer2 } from '@angular/core';
 
 export interface IDragAndDropPayload {
   swap: boolean;
@@ -20,7 +20,7 @@ export interface INodeCoordinates {
   y2: number;
 }
 
-export interface IDragAndDropView extends OnInit, OnDestroy {
+export interface IDragAndDropView {
   dragulaOptions: any;
   changeLocation(payload: IDragAndDropPayload): void;
 }

@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   Renderer2,
   ViewEncapsulation,
@@ -25,10 +24,9 @@ import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
   styleUrls: [ './styles.scss', './tree.component.scss' ],
   templateUrl: './tree.component.html',
 })
-export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
+export class TreeComponent implements IDragAndDropView, OnDestroy {
   @Input() canPaste = false;
   @Input() dblClickEnabled = true;
-  @Input() dndEnabled = false;
   @Input() collapseAdjacentNodes = false;
   @Input() expandNodeOnClick = false;
   @Input() value: ITreeNode[];
@@ -50,6 +48,25 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() metaKeySelection = true;
   @Input() propagateSelectionUp = true;
   @Input() propagateSelectionDown = true;
+
+  @Input()
+  set dndEnabled(dndEnabled: boolean) {
+    if (dndEnabled) {
+      this.dragAndDropPlugin = this.dragAndDropComponentPluginFactory.attachTo(this, {
+        viewElementRef: this.elementRef,
+        draggableNodesSelector: '.app-treenode-content',
+        renderer: this.renderer
+      });
+      if (this.dragAndDropPlugin && this.dragAndDropPlugin.ngOnDestroy) {
+        this.dragAndDropPlugin.ngOnInit();
+      }
+    } else {
+      if (this.dragAndDropPlugin && this.dragAndDropPlugin.ngOnDestroy) {
+        this.dragAndDropPlugin.ngOnDestroy();
+      }
+      this.dragAndDropPlugin = null;
+    }
+  }
 
   @Input('contextMenuEnabled')
   set contextMenuEnabled(contextMenuEnabled: boolean) {
@@ -83,10 +100,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   get dragulaOptions(): any {
     return this.dragAndDropPlugin
       ? this.dragAndDropPlugin.dragulaOptions
-      : {
-        // prevent any drags by default
-        invalid: () => true
-      };
+      : null;
   }
 
   constructor(
@@ -96,21 +110,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
     private dragAndDropComponentPluginFactory: DragAndDropComponentPluginFactory
   ) {}
 
-  ngOnInit(): void {
-    if (this.dndEnabled) {
-      this.dragAndDropPlugin = this.dragAndDropComponentPluginFactory.attachTo(this, {
-        viewElementRef: this.elementRef,
-        draggableNodesSelector: '.app-treenode-content',
-        renderer: this.renderer
-      });
-      this.dragAndDropPlugin.ngOnInit();
-    }
-  }
-
   ngOnDestroy(): void {
-    if (this.dndEnabled) {
-      this.dragAndDropPlugin.ngOnDestroy();
-    }
     this.removeListeners();
   }
 
@@ -358,9 +358,9 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
       sourceElement.parent = targetElement;
     }
 
-    const payloads: ITreeNodeInfo[] = R.addIndex(R.map)((node: ITreeNode, index: number) => {
+    const payloads: ITreeNodeInfo[] = R.addIndex(R.map as any)((node: ITreeNode, index: number) => {
       return { id: node.id, parentId: node.parent.id, sortOrder: index + 1 };
-    }, (payload.swap ? targetElement : sourceElement).parent.children);
+    }, (payload.swap ? targetElement : sourceElement).parent.children) as any;
 
     const nodeMoveEventPayload = payloads.find(p => p.id === Number(payload.sourceId));
     this.nodeMove.emit(nodeMoveEventPayload);
