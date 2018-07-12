@@ -17,6 +17,7 @@ import { of } from 'rxjs/observable/of';
 import { filter, first, map, mapTo, mergeMap } from 'rxjs/operators';
 import { isEmpty } from 'ramda';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
@@ -24,9 +25,7 @@ import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interfac
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DYNAMIC_MODULES } from '@app/core/dynamic-loader/dynamic-loader.service';
@@ -60,9 +59,9 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
-  @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('contractToolbar',    { read: TemplateRef }) contractToolbarTemplate:    TemplateRef<any>;
   @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('personTitlebar',      { read: TemplateRef }) personTitlebarTemplate:      TemplateRef<any>;
+  @ViewChild('personToolbar',      { read: TemplateRef }) personToolbarTemplate:      TemplateRef<any>;
   @ViewChild('personClearButton',   { read: TemplateRef }) personClearButtonTemplate:   TemplateRef<any>;
 
   readonly entityType = EntityType.GUARANTOR;
@@ -118,11 +117,11 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
 
   readonly showContractForm = this.route.snapshot.data.showContractForm;
 
-  readonly contractTitlebarConfig: ITitlebar = {
+  readonly contractToolbarConfig: Toolbar = {
     label: 'routes.workplaces.debtorCard.guarantee.card.forms.contract.title',
   };
 
-  readonly personTitlebarConfig: ITitlebar = {
+  readonly personToolbarConfig: Toolbar = {
     label: 'routes.workplaces.debtorCard.guarantee.card.forms.guarantor.title',
     items: [
       {
@@ -163,9 +162,9 @@ export class GuarantorCardComponent implements OnInit, AfterViewInit, OnDestroy 
       phones: this.phonesTemplate,
       emails: this.emailsTemplate,
       documents: this.documentsTemplate,
-      contractTitlebar: this.contractTitlebarTemplate,
+      contractToolbar: this.contractToolbarTemplate,
       contractClearButton: this.contractClearButtonTemplate,
-      personTitlebar: this.personTitlebarTemplate,
+      personToolbar: this.personToolbarTemplate,
       personClearButton: this.personClearButtonTemplate,
     };
 

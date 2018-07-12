@@ -12,11 +12,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IScheduleEvent } from './schedule-event.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ScheduleEventService } from './schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -62,65 +61,65 @@ export class ScheduleEventComponent extends DialogFunctions implements OnInit, O
     { prop: 'priority' },
   ].map(addGridLabel('widgets.scheduleEvents.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.scheduleEventService.canAdd$,
-      action: () => this.onAdd(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      enabled: combineLatestAnd([
-        this.scheduleEventService.canEdit$,
-        this.hasSingleSelection$,
-      ]),
-      action: () => this.onEdit(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: combineLatestAnd([
-        this.scheduleEventService.canDelete$,
-        this.hasSingleSelection$,
-      ]),
-      action: () => this.onDelete(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.START,
-      enabled: combineLatestAnd([
-        this.scheduleEventService.canStart$,
-        this.selectedEvents$.map(Boolean),
-      ]),
-      children: [
-        {
-          label: 'widgets.scheduleEvents.start.withCheckGroup',
-          action: () => this.onStart(1),
-          closeOnClick: true
-        },
-        {
-          label: 'widgets.scheduleEvents.start.withoutCheckGroup',
-          action: () => this.onStart(0),
-          closeOnClick: true
-        },
-      ],
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      enabled: this.scheduleEventService.canView$,
-      action: () => this.fetch(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.INFO,
-      label: 'utilities.schedule.log.buttons.history',
-      enabled: this.canViewLog$,
-      action: () => this.setDialog('scheduleLogView'),
-    },
-  ];
+  toolbar: Toolbar = {
+    items:  [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.scheduleEventService.canAdd$,
+        action: () => this.onAdd(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        enabled: combineLatestAnd([
+          this.scheduleEventService.canEdit$,
+          this.hasSingleSelection$,
+        ]),
+        action: () => this.onEdit(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: combineLatestAnd([
+          this.scheduleEventService.canDelete$,
+          this.hasSingleSelection$,
+        ]),
+        action: () => this.onDelete(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.START,
+        enabled: combineLatestAnd([
+          this.scheduleEventService.canStart$,
+          this.selectedEvents$.map(Boolean),
+        ]),
+        children: [
+          {
+            label: 'widgets.scheduleEvents.start.withCheckGroup',
+            action: () => this.onStart(1),
+          },
+          {
+            label: 'widgets.scheduleEvents.start.withoutCheckGroup',
+            action: () => this.onStart(0),
+          },
+        ],
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        enabled: this.scheduleEventService.canView$,
+        action: () => this.fetch(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.INFO,
+        label: 'utilities.schedule.log.buttons.history',
+        enabled: this.canViewLog$,
+        action: () => this.setDialog('scheduleLogView'),
+      },
+    ]
+  };
 
   events: IScheduleEvent[] = [];
 

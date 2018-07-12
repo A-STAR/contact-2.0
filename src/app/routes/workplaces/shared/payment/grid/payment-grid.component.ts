@@ -6,11 +6,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IPayment } from '../payment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -45,55 +44,57 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   displayCanceled = false;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([ this.canAdd$, this.debtId$.map(Boolean) ]),
-      action: () => this.onAdd(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      enabled: combineLatestAnd([
-        this.canEdit$,
-        this.selectedPayment$.map(payment => payment && !payment.isCanceled),
-      ]),
-      action: () => this.onEdit()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.OK,
-      label: 'debtor.paymentsTab.confirm.buttonLabel',
-      enabled: combineLatestAnd([
-        this.canСonfirm$,
-        this.selectedPayment$.map(payment => payment && !payment.isCanceled && !payment.isConfirmed),
-      ]),
-      action: () => this.setDialog('confirm')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.UNDO,
-      label: 'debtor.paymentsTab.cancel.buttonLabel',
-      action: () => this.setDialog('cancel'),
-      enabled: combineLatestAnd([
-        this.canCancel$,
-        this.selectedPayment$.map(payment => payment && !payment.isCanceled),
-      ]),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: this.canRefresh$
-    },
-    {
-      type: ToolbarItemType.CHECKBOX,
-      action: () => this.toggleFilter(),
-      label: 'widgets.payment.toolbar.showCanceled',
-      state: of(this.displayCanceled)
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([ this.canAdd$, this.debtId$.map(Boolean) ]),
+        action: () => this.onAdd(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        enabled: combineLatestAnd([
+          this.canEdit$,
+          this.selectedPayment$.map(payment => payment && !payment.isCanceled),
+        ]),
+        action: () => this.onEdit()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.OK,
+        label: 'debtor.paymentsTab.confirm.buttonLabel',
+        enabled: combineLatestAnd([
+          this.canСonfirm$,
+          this.selectedPayment$.map(payment => payment && !payment.isCanceled && !payment.isConfirmed),
+        ]),
+        action: () => this.setDialog('confirm')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.UNDO,
+        label: 'debtor.paymentsTab.cancel.buttonLabel',
+        action: () => this.setDialog('cancel'),
+        enabled: combineLatestAnd([
+          this.canCancel$,
+          this.selectedPayment$.map(payment => payment && !payment.isCanceled),
+        ]),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: this.canRefresh$
+      },
+      {
+        type: ToolbarItemType.CHECKBOX,
+        action: () => this.toggleFilter(),
+        label: 'widgets.payment.toolbar.showCanceled',
+        state: of(this.displayCanceled)
+      }
+    ]
+  };
 
   columns: ISimpleGridColumn<IPayment>[] = [
     { prop: 'amount', minWidth: 110, maxWidth: 130, renderer: NumberRendererComponent },

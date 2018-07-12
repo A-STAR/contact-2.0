@@ -10,11 +10,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IGroupEvent } from './group-events.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { GroupEventService } from './group-events.service';
 import { ScheduleEventService } from '../../events/schedule-event.service';
@@ -57,75 +56,75 @@ export class GroupEventsComponent extends DialogFunctions implements OnInit, OnD
     { prop: 'priority' },
   ].map(addGridLabel('widgets.scheduleEvents.grid'));
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([
-        this.groupId$.map(Boolean),
-        this.scheduleEventService.canView$,
-      ]),
-      action: () => this.onAdd(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      enabled: combineLatestAnd([
-        this.scheduleEventService.canEdit$,
-        this.hasSingleSelection$,
-      ]),
-      action: () => this.onEdit(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: combineLatestAnd([
-        this.scheduleEventService.canDelete$,
-        this.hasSingleSelection$,
-      ]),
-      action: () => this.onDelete(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.START,
-      enabled: combineLatestAnd([
-        this.scheduleEventService.canStart$,
-        this.selectedEvents$.map(Boolean),
-      ]),
-      children: [
-        {
-          label: 'widgets.scheduleEvents.start.withCheckGroup',
-          action: () => this.onStart(1),
-          closeOnClick: true
-        },
-        {
-          label: 'widgets.scheduleEvents.start.withoutCheckGroup',
-          action: () => this.onStart(0),
-          closeOnClick: true
-        },
-      ],
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      enabled: combineLatestAnd([
-        this.groupId$.map(Boolean),
-        this.scheduleEventService.canView$
-      ]),
-      action: () => this.fetch(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.INFO,
-      label: 'utilities.schedule.log.buttons.history',
-      enabled: combineLatestAnd([
-        this.groupId$.map(Boolean),
-        this.scheduleEventService.canViewLog$,
-        this.hasSingleSelection$
-      ]),
-      action: () => this.setDialog('scheduleLogView'),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([
+          this.groupId$.map(Boolean),
+          this.scheduleEventService.canView$,
+        ]),
+        action: () => this.onAdd(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        enabled: combineLatestAnd([
+          this.scheduleEventService.canEdit$,
+          this.hasSingleSelection$,
+        ]),
+        action: () => this.onEdit(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: combineLatestAnd([
+          this.scheduleEventService.canDelete$,
+          this.hasSingleSelection$,
+        ]),
+        action: () => this.onDelete(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.START,
+        enabled: combineLatestAnd([
+          this.scheduleEventService.canStart$,
+          this.selectedEvents$.map(Boolean),
+        ]),
+        children: [
+          {
+            label: 'widgets.scheduleEvents.start.withCheckGroup',
+            action: () => this.onStart(1)
+          },
+          {
+            label: 'widgets.scheduleEvents.start.withoutCheckGroup',
+            action: () => this.onStart(0)
+          },
+        ],
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        enabled: combineLatestAnd([
+          this.groupId$.map(Boolean),
+          this.scheduleEventService.canView$
+        ]),
+        action: () => this.fetch(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.INFO,
+        label: 'utilities.schedule.log.buttons.history',
+        enabled: combineLatestAnd([
+          this.groupId$.map(Boolean),
+          this.scheduleEventService.canViewLog$,
+          this.hasSingleSelection$
+        ]),
+        action: () => this.setDialog('scheduleLogView'),
+      },
+    ]
+  };
 
   events: IGroupEvent[] = [];
 

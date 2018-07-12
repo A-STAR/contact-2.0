@@ -13,11 +13,10 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUserStatistic, ICampaign } from '../campaigns.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CampaignsService } from '../campaigns.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -62,23 +61,25 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   private campaignStatisticSub: Subscription;
   private selectedCampaign: ICampaign;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
-        .pipe(first())
-        .map(statistic => statistic && statistic.userStatistic)
-        .subscribe((statistics: IUserStatistic[]) => {
-          this.campaignUserStatistics = statistics;
-          this.cdRef.markForCheck();
-        }),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_VIEW_STATISTICS'),
-        this.campaignsService.selectedCampaign)
-      .map(([hasRights, selected]) => hasRights && !!selected)
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
+          .pipe(first())
+          .map(statistic => statistic && statistic.userStatistic)
+          .subscribe((statistics: IUserStatistic[]) => {
+            this.campaignUserStatistics = statistics;
+            this.cdRef.markForCheck();
+          }),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_VIEW_STATISTICS'),
+          this.campaignsService.selectedCampaign)
+        .map(([hasRights, selected]) => hasRights && !!selected)
+      }
+    ]
+  };
 
   constructor(
     private cdRef: ChangeDetectorRef,

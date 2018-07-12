@@ -12,11 +12,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ICampaign, IParticipant } from '../campaigns.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CampaignsService } from '../campaigns.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -51,7 +50,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     { prop: 'position', minWidth: 100 }
   ].map(addGridLabel('utilities.campaigns.participants.grid'));
 
-  readonly titlebar: ITitlebar = {
+  readonly toolbar: Toolbar = {
     label: 'utilities.campaigns.tabs.participants',
     items: [
       {

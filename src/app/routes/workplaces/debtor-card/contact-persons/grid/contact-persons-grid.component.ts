@@ -5,11 +5,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IContactPerson } from '@app/routes/workplaces/core/contact-persons/contact-persons.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -29,41 +28,43 @@ export class ContactPersonsGridComponent implements OnInit, OnDestroy {
 
   private selectedContact$ = new BehaviorSubject<IContactPerson>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => {
-        const { contactId } = this.selectedContact$.value;
-        this.onEdit(contactId);
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.canAdd$,
+        action: () => this.onAdd()
       },
-      enabled: combineLatest(
-        this.canEdit$,
-        this.selectedContact$
-      ).map(([canEdit, selectedContact]) => !!canEdit && !!selectedContact)
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('removeContact'),
-      enabled: combineLatest(
-        this.canDelete$,
-        this.selectedContact$
-      ).map(([canDelete, selectedContact]) => !!canDelete && !!selectedContact),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: this.canView$
-    },
-  ];
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => {
+          const { contactId } = this.selectedContact$.value;
+          this.onEdit(contactId);
+        },
+        enabled: combineLatest(
+          this.canEdit$,
+          this.selectedContact$
+        ).map(([canEdit, selectedContact]) => !!canEdit && !!selectedContact)
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('removeContact'),
+        enabled: combineLatest(
+          this.canDelete$,
+          this.selectedContact$
+        ).map(([canDelete, selectedContact]) => !!canDelete && !!selectedContact),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: this.canView$
+      },
+    ]
+  };
 
   columns: Array<ISimpleGridColumn<IContactPerson>> = [
     { prop: 'fullName' },

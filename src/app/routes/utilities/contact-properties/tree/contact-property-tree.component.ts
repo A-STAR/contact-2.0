@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IOption } from '@app/core/converter/value-converter.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
@@ -56,31 +55,33 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   treeType: number = null;
   treeTypeOptions = [];
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.setDialog('add'),
-      enabled: this.canAdd$,
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: this.canEditSelectedNode$,
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('delete'),
-      enabled: this.canDeleteSelectedNode$,
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.setDialog('add'),
+        enabled: this.canAdd$,
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: this.canEditSelectedNode$,
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('delete'),
+        enabled: this.canDeleteSelectedNode$,
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+      },
+    ]
+  };
 
   dialog: 'add' | 'edit' | 'delete';
 

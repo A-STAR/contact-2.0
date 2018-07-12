@@ -12,12 +12,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IGroup } from '../groups.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { GroupsService } from '../groups.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -53,46 +52,48 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'formDateTime' },
   ].map(addGridLabel('widgets.groups.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.groupService.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selectedGroup$.value),
-      enabled: this.selectedGroup$.flatMap(
-        selectedGroup => selectedGroup
-          ? this.groupService.canEdit$(selectedGroup).map(canEdit => !!canEdit && !!selectedGroup)
-          : of(false)
-      ),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('removeGroup'),
-      enabled: this.selectedGroup$.flatMap(
-        selectedGroup => selectedGroup
-          ? this.groupService.canDelete$(selectedGroup).map(canDelete => !!canDelete && !!selectedGroup)
-          : of(false)
-      ),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: this.groupService.canView$
-    },
-    {
-      type: ToolbarItemType.CHECKBOX,
-      action: () => this.toggleForCurrentUser(),
-      label: 'widgets.groups.toolbar.action.forCurrentUser',
-      state: of(this.forCurrentUser)
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.groupService.canAdd$,
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selectedGroup$.value),
+        enabled: this.selectedGroup$.flatMap(
+          selectedGroup => selectedGroup
+            ? this.groupService.canEdit$(selectedGroup).map(canEdit => !!canEdit && !!selectedGroup)
+            : of(false)
+        ),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('removeGroup'),
+        enabled: this.selectedGroup$.flatMap(
+          selectedGroup => selectedGroup
+            ? this.groupService.canDelete$(selectedGroup).map(canDelete => !!canDelete && !!selectedGroup)
+            : of(false)
+        ),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: this.groupService.canView$
+      },
+      {
+        type: ToolbarItemType.CHECKBOX,
+        action: () => this.toggleForCurrentUser(),
+        label: 'widgets.groups.toolbar.action.forCurrentUser',
+        state: of(this.forCurrentUser)
+      }
+    ]
+  };
 
   actions: IMetadataAction[] = [
     {

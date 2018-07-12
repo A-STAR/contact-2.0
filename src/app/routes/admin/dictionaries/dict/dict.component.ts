@@ -33,7 +33,7 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     ]);
   readonly canEdit: Observable<boolean> = this.userPermissionsService.has('DICT_EDIT');
 
-  toolbarItems: Toolbar = {
+  toolbar: Toolbar = {
     items: [
       {
         type: ToolbarItemType.BUTTON,

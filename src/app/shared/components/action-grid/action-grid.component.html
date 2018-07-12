@@ -44,7 +44,6 @@
     <app-grid2
       #grid
       *ngIf="initialized"
-      [toolbar]="toolbarItems"
       [actions]="gridActions$ | async"
       [columnIds]="columnIds"
       [columns]="columnsDef"
@@ -74,7 +73,6 @@
       [selection]="selectedRows"
       [columns]="columns"
       [rows]="rows"
-      [toolbar]="toolbarItems"
       (action)="onAction($event)"
       (selectRow)="onSelect($event)"
       (dblClick)="onDblClick($event)">

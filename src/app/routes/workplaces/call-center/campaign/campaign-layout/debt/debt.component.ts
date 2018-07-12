@@ -5,13 +5,13 @@ import { first } from 'rxjs/operators';
 import { ICampaignDebt } from '../../campaign.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IViewFormItem } from '@app/shared/components/form/view-form/view-form.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { addFormLabel, range } from '@app/core/utils';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +22,7 @@ import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 export class DebtComponent implements OnInit {
 
   controls: IViewFormItem[];
-  titlebar: ITitlebar = {
+  toolbar: Toolbar = {
     label: 'modules.callCenter.overview.info.title',
   };
 

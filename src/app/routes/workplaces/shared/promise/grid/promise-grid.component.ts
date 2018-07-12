@@ -5,11 +5,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IPromise } from '../promise.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -77,40 +76,42 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   readonly canDelete$ = this.userPermissionsService.has('PROMISE_DELETE');
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.OK,
-      label: 'debtor.promisesTab.approve.buttonLabel',
-      enabled: combineLatestAnd([
-        this.canСonfirm$,
-        this.selectedPromise$.map(promise => promise && promise.statusCode === 6),
-      ]),
-      action: () => this.setDialog('approve')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: combineLatestAnd([
-        this.canDelete$,
-        this.canСonfirm$,
-        this.selectedPromise$.map(promise => promise && promise.statusCode === 6),
-      ]),
-      action: () => this.setDialog('remove'),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: this.canRefresh$
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.canAdd$,
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.OK,
+        label: 'debtor.promisesTab.approve.buttonLabel',
+        enabled: combineLatestAnd([
+          this.canСonfirm$,
+          this.selectedPromise$.map(promise => promise && promise.statusCode === 6),
+        ]),
+        action: () => this.setDialog('approve')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: combineLatestAnd([
+          this.canDelete$,
+          this.canСonfirm$,
+          this.selectedPromise$.map(promise => promise && promise.statusCode === 6),
+        ]),
+        action: () => this.setDialog('remove'),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: this.canRefresh$
+      },
+    ]
+  };
 
   columns: ISimpleGridColumn<IPromise>[] = [
     // TODO(d.maltsev): should be just date

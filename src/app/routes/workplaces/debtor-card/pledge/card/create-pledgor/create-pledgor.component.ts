@@ -12,9 +12,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map } from 'rxjs/operators';
 
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { LayoutService } from '@app/core/layout/layout.service';
 import { PledgeCardCreatePledgorService } from './create-pledgor.service';
@@ -46,9 +45,9 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
   @ViewChild(PropertySearchComponent) propertySearch: PropertySearchComponent;
 
   @ViewChild('pledgorClearButton',  { read: TemplateRef }) pledgorClearButtonTemplate:  TemplateRef<any>;
-  @ViewChild('pledgorTitlebar',     { read: TemplateRef }) pledgorTitlebarTemplate:     TemplateRef<any>;
+  @ViewChild('pledgorToolbar',     { read: TemplateRef }) pledgorToolbarTemplate:     TemplateRef<any>;
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('propertyToolbar',    { read: TemplateRef }) propertyToolbarTemplate:    TemplateRef<any>;
 
   readonly layoutConfig = createPledgorLayout;
 
@@ -74,7 +73,7 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
     map(pledgor => pledgor ? pledgor.id : null),
   );
 
-  readonly pledgorTitlebarConfig: ITitlebar = {
+  readonly pledgorToolbarConfig: Toolbar = {
     label: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
     items: [
       {
@@ -85,7 +84,7 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
     ]
   };
 
-  readonly propertyTitlebarConfig: ITitlebar = {
+  readonly propertyToolbarConfig: Toolbar = {
     label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
@@ -130,9 +129,9 @@ export class PledgeCardCreatePledgorComponent extends DialogFunctions implements
   ngOnInit(): void {
     this.templates = {
       pledgorClearButton: this.pledgorClearButtonTemplate,
-      pledgorTitlebar: this.pledgorTitlebarTemplate,
+      pledgorToolbar: this.pledgorToolbarTemplate,
       propertyClearButton: this.propertyClearButtonTemplate,
-      propertyTitlebar: this.propertyTitlebarTemplate,
+      propertyToolbar: this.propertyToolbarTemplate,
     };
 
     // One of many reasons route reuse is inconvenient

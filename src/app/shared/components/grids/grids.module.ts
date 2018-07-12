@@ -11,7 +11,7 @@ import { InputModule } from '@app/shared/components/form/input/input.module';
 
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
-import { Toolbar2Module } from '@app/shared/components/toolbar/toolbar.module';
+import { ToolbarModule } from '@app/shared/components/toolbar/toolbar.module';
 
 import { ContextMenuService } from './context-menu/context-menu.service';
 import { GridsDefaultsService } from '@app/shared/components/grids/grids-defaults.service';
@@ -72,7 +72,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     InputModule,
     MomentModule,
     SelectModule,
-    Toolbar2Module,
+    ToolbarModule,
     TranslateModule,
   ],
   exports: [

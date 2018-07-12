@@ -14,8 +14,6 @@ export interface ToolbarElement {
   action?: ToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
-  // TODO(i.lobanov): move it to some type which would work with IToolbarItem
-  closeOnClick?: boolean;
   align?: 'right' | 'left';
   classes?: Observable<string>;
 }
@@ -35,7 +33,7 @@ export interface ToolbarCheckbox extends ToolbarElement {
 export type ToolbarItem = ToolbarButton | ToolbarCheckbox;
 
 export interface Toolbar {
-  items: Array<ToolbarItem>;
+  items?: ToolbarItem[];
   label?: string;
   // false by default
   suppressCenterZone?: boolean;

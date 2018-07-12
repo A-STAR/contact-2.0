@@ -49,8 +49,7 @@ import {
   MetadataActionType,
   IMetadataTitlebar,
 } from '@app/core/metadata/metadata.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType, ToolbarItem, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
@@ -67,7 +66,6 @@ import { ActionGridFilterComponent } from './filter/action-grid-filter.component
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
-import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
 import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
@@ -95,10 +93,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() defaultAction: string;
   @Input() selectionAction: string;
   @Input() columnIds: string[];
-  @Input() toolbarItems: ToolbarItem[];
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
-  @Input() toolbar: IMetadataTitlebar;
+  @Input() toolbar: IMetadataTitlebar | Toolbar;
   @Input() fullHeight = false;
   /**
    * Shows whether to use simple grid
@@ -151,7 +148,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private _rows: T[];
 
   private actions$ = new BehaviorSubject<any[]>(null);
-  private toolbarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
+  private toolbarConfig$ = new BehaviorSubject<IMetadataTitlebar | Toolbar>(null);
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
@@ -556,7 +553,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
   private buildToolbar(config: IMetadataTitlebar): Toolbar {
     // TODO(i.lobanov): move to action grid service and refactor
-    const toolbarItems = {
+    const toolbar = {
       refresh: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
         buttonType: ButtonType.REFRESH,
@@ -592,7 +589,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         .concat([
           { name: 'filter', permissions: null },
         ])
-        .map(item => toolbarItems[item.name](item.permissions)),
+        .map(item => toolbar[item.name](item.permissions)),
     };
   }
 

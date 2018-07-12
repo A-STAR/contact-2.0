@@ -14,11 +14,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAddress, IAddressMarkData } from '@app/routes/workplaces/core/address/address.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { AddressService } from '@app/routes/workplaces/core/address/address.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -136,80 +135,82 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.userPermissionsService.has('MAP_ADDRESS_VIEW')
   ]);
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
-      action: () => this.onAdd(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      enabled: this.canEdit$,
-      action: () => this.onEdit(),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.BLOCK,
-      enabled: this.canBlock$,
-      action: () => this.setDialog('block')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.UNBLOCK,
-      enabled: this.canUnblock$,
-      action: () => this.setDialog('unblock')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.VISIT,
-      enabled: combineLatestOr([ this.canViewVisitLog$, this.canMarkVisit$ ]),
-      children: [
-        {
-          label: 'widgets.phone.toolbar.visits.view',
-          enabled: this.canViewVisitLog$,
-          action: () => this.setDialog('visits')
-        },
-        {
-          label: 'widgets.phone.toolbar.visits.mark',
-          enabled: this.canMarkVisit$,
-          action: () => this.onMarkClick()
-        },
-      ]
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.MAP,
-      enabled: this.canViewMap$,
-      action: () => this.setDialog('map')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REGISTER_CONTACT,
-      enabled: this.canRegisterContact$,
-      action: () => this.registerContact()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: this.canDelete$,
-      action: () => this.setDialog('delete')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EMAIL,
-      label: 'routes.workplaces.shared.address.toolbar.letter',
-      enabled: this.canGenerateLetter$,
-      action: () => this.setDialog('letterGeneration')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
-      action: () => this.fetch()
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
+        action: () => this.onAdd(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        enabled: this.canEdit$,
+        action: () => this.onEdit(),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.BLOCK,
+        enabled: this.canBlock$,
+        action: () => this.setDialog('block')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.UNBLOCK,
+        enabled: this.canUnblock$,
+        action: () => this.setDialog('unblock')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.VISIT,
+        enabled: combineLatestOr([ this.canViewVisitLog$, this.canMarkVisit$ ]),
+        children: [
+          {
+            label: 'widgets.phone.toolbar.visits.view',
+            enabled: this.canViewVisitLog$,
+            action: () => this.setDialog('visits')
+          },
+          {
+            label: 'widgets.phone.toolbar.visits.mark',
+            enabled: this.canMarkVisit$,
+            action: () => this.onMarkClick()
+          },
+        ]
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.MAP,
+        enabled: this.canViewMap$,
+        action: () => this.setDialog('map')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REGISTER_CONTACT,
+        enabled: this.canRegisterContact$,
+        action: () => this.registerContact()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: this.canDelete$,
+        action: () => this.setDialog('delete')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EMAIL,
+        label: 'routes.workplaces.shared.address.toolbar.letter',
+        enabled: this.canGenerateLetter$,
+        action: () => this.setDialog('letterGeneration')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
+        action: () => this.fetch()
+      },
+    ]
+  };
 
   columns: ISimpleGridColumn<IAddress>[] = [];
 

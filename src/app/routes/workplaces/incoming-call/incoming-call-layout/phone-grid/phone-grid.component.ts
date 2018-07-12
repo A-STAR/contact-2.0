@@ -26,7 +26,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   personRole = null;
 
   readonly contactType = 2;
-  readonly titlebar$ = this.incomingCallService.selectedDebtor$.pipe(
+  readonly toolbar$ = this.incomingCallService.selectedDebtor$.pipe(
     map(debtor => {
       const title = this.translateService.instant('routes.workplaces.incomingCall.debtor.title');
       const { fullName } = debtor || {} as any;

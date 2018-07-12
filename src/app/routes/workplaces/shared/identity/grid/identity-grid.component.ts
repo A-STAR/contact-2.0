@@ -7,11 +7,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { IdentityService } from '@app/routes/workplaces/core/identity/identity.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -63,32 +62,34 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     { prop: 'isMain', width: 70 , renderer: TickRendererComponent },
   ].map(addGridLabel('debtor.identityDocs.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      enabled: combineLatestAnd([this.canEdit$, this.selectedRows$.map(s => !!s.length)]),
-      action: () => this.onEdit(this.identityDoc)
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: combineLatestAnd([this.canDelete$, this.selectedRows$.map(s => !!s.length)]),
-      action: () => this.setDialog('removeIdentity')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
-      action: () => this.fetch()
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        enabled: combineLatestAnd([this.canEdit$, this.selectedRows$.map(s => !!s.length)]),
+        action: () => this.onEdit(this.identityDoc)
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: combineLatestAnd([this.canDelete$, this.selectedRows$.map(s => !!s.length)]),
+        action: () => this.setDialog('removeIdentity')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
+        action: () => this.fetch()
+      },
+    ]
+  };
 
   constructor(
     private cdRef: ChangeDetectorRef,

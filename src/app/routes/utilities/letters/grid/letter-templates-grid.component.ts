@@ -3,11 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ILetterTemplate } from '../letters.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { LettersService } from '@app/routes/utilities/letters/letters.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -39,7 +38,7 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     { prop: 'comment' },
   ].map(addGridLabel('routes.utilities.letters.grid'));
 
-  titlebar: ITitlebar = {
+  toolbar: Toolbar = {
     label: 'routes.utilities.letters.titlebar.title',
     items: [
       {

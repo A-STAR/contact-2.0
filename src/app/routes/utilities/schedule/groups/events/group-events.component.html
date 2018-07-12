@@ -33,7 +33,7 @@
   [columns]="columns"
   [rows]="events"
   [selection]="selectedEvents$ | async"
-  [toolbar]="toolbarItems"
+  [toolbar]="toolbar"
   (selectRow)="onSelect($event)"
   (dblClick)="onEdit()"
 ></app-simple-grid>

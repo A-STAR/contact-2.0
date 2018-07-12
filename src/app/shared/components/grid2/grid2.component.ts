@@ -39,9 +39,9 @@ import {
   IToolbarAction,
   IToolbarActionSelect,
   ToolbarActionTypeEnum,
-  ToolbarControlEnum
+  ToolbarControlEnum,
 } from './toolbar/toolbar.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -99,7 +99,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
   @Input() translateColumnLabels = false;
-  @Input() toolbar: IToolbarItem[];
+  @Input() toolbar: Toolbar;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();

@@ -10,10 +10,10 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, map, switchMap } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ICampaign, CampaignStatus } from './campaigns.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ToolbarItemType, IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CampaignsService } from './campaigns.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -65,56 +65,58 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   //   { isInitialised: false, },
   // ];
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.setDialog('CAMPAIGN_ADD'),
-      enabled: this.userPermissionsService.has('CAMPAIGN_ADD')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.setDialog('CAMPAIGN_EDIT'),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.selectedCampaign
-      ).map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign)
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('CAMPAIGN_REMOVE'),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_DELETE'),
-        this.selectedCampaign
-      ).pipe(hasPermissionAndNotStarted),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
-      enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.START,
-      action: () => this.onStart(),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.selectedCampaign
-      ).pipe(hasPermissionAndNotStarted),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.STOP,
-      action: () => this.onStop(),
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.selectedCampaign
-      ).pipe(hasPermissionAndStarted),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.setDialog('CAMPAIGN_ADD'),
+        enabled: this.userPermissionsService.has('CAMPAIGN_ADD')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.setDialog('CAMPAIGN_EDIT'),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.selectedCampaign
+        ).map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign)
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('CAMPAIGN_REMOVE'),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_DELETE'),
+          this.selectedCampaign
+        ).pipe(hasPermissionAndNotStarted),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
+        enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.START,
+        action: () => this.onStart(),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.selectedCampaign
+        ).pipe(hasPermissionAndNotStarted),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.STOP,
+        action: () => this.onStop(),
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.selectedCampaign
+        ).pipe(hasPermissionAndStarted),
+      },
+    ]
+  };
 
   constructor(
     private campaignsService: CampaignsService,

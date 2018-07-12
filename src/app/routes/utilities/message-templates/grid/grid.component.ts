@@ -2,11 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IMessageTemplate } from '../message-templates.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { MessageTemplatesService } from '../message-templates.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -30,37 +29,39 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   selectedTemplateId$ = new BehaviorSubject<number>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.onAdd(),
-      enabled: this.userPermissionsService.has('TEMPLATE_ADD'),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('TEMPLATE_EDIT'),
-        this.selectedTemplateId$.map(Boolean)
-      ]),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.onDelete(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('TEMPLATE_DELETE'),
-        this.selectedTemplateId$.map(Boolean)
-      ]),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.onAdd(),
+        enabled: this.userPermissionsService.has('TEMPLATE_ADD'),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('TEMPLATE_EDIT'),
+          this.selectedTemplateId$.map(Boolean)
+        ]),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.onDelete(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('TEMPLATE_DELETE'),
+          this.selectedTemplateId$.map(Boolean)
+        ]),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+      }
+    ]
+  };
 
   columns: ISimpleGridColumn<IMessageTemplate>[] = [
     { prop: 'id', maxWidth: 80 },

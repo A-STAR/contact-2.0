@@ -4,11 +4,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IContactLog } from '../contact-log.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactLogService } from '../contact-log.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -35,18 +34,20 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
   contactLogList: IContactLog[];
   readonly canView$ = this.userPermissionsService.has('CONTACT_LOG_VIEW');
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selected[0]),
-      enabled: combineLatest(
-        this.canView$,
-        this.selectedChanged$
-      )
-      .map(([canView, selected]) => canView && selected)
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selected[0]),
+        enabled: combineLatest(
+          this.canView$,
+          this.selectedChanged$
+        )
+        .map(([canView, selected]) => canView && selected)
+      }
+    ]
+  };
 
   private selectionSubpscription: Subscription;
   private viewCommentUpdate: Subscription;

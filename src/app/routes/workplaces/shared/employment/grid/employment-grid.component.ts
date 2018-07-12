@@ -7,11 +7,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { EmploymentService } from '@app/routes/workplaces/core/employment/employment.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -45,38 +44,40 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selectedEmployment$.value),
-      enabled: combineLatestAnd([
-        this.canEdit$,
-        this.selectedEmployment$.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('removeEmployment'),
-      enabled: combineLatestAnd([
-        this.canDelete$,
-        this.selectedEmployment$.map(o => !!o)
-      ]),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selectedEmployment$.value),
+        enabled: combineLatestAnd([
+          this.canEdit$,
+          this.selectedEmployment$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('removeEmployment'),
+        enabled: combineLatestAnd([
+          this.canDelete$,
+          this.selectedEmployment$.map(o => !!o)
+        ]),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
+      },
+    ]
+  };
 
   columns: Array<ISimpleGridColumn<IEmployment>> = [
     { prop: 'workTypeCode', dictCode: UserDictionariesService.DICTIONARY_WORK_TYPE },
