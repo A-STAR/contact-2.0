@@ -66,8 +66,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() personRole: number;
   @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
 
+  @Input() dblClick: (phone: IPhone) => void;
+
   @Output() add = new EventEmitter<void>();
-  @Output() dblClick = new EventEmitter<IPhone>();
   @Output() edit = new EventEmitter<IPhone>();
   @Output() register = new EventEmitter<IPhone>();
   @Output() onSelect = new EventEmitter<IPhone>();
@@ -255,7 +256,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(phone: IPhone): void {
-    this.dblClick.emit(phone);
+    if (this.dblClick) {
+      this.dblClick(phone);
+    } else {
+      this.registerContact();
+    }
   }
 
   onSelectRow(phones: IPhone[]): void {
@@ -307,9 +312,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   registerContact(): void {
-    this.selectedPhone$
-      .pipe(first())
-      .subscribe(phone => this.register.emit(phone));
+    combineLatest(
+      this.canRegisterContact$,
+      this.selectedPhone$
+    )
+    .pipe(
+      first(),
+      map(([ canRegister, phone ]) => canRegister && phone),
+      filter(Boolean)
+    )
+    .subscribe(phone => this.register.emit(phone));
   }
 
   readonly person$ = this.personId$
