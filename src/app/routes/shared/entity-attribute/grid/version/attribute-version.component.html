@@ -7,14 +7,10 @@
   (cancel)="onCloseDialog()">
 </app-attribute-version-edit>
 
-<div class="flex vertical">
-  <div class="flex-item grow">
-    <app-simple-grid
-      [columns]="columns"
-      [rows]="rows"
-      [toolbar]="toolbarItems"
-      (selectRow)="onRowSelect($event)"
-      (dblClick)="onRowDblClick($event)">
-    </app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  [columns]="columns"
+  [rows]="rows"
+  [toolbar]="toolbar"
+  (selectRow)="onRowSelect($event)"
+  (dblClick)="onRowDblClick($event)">
+</app-simple-grid>

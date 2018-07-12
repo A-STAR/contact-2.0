@@ -15,18 +15,12 @@
   (close)="onCloseDialog()"
 ></app-arbitrary-input-params-dialog>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] reports/arbitrary/reports"
-      [columns]="columns"
-      [selection]="selection"
-      [rows]="reports"
-      (dblClick)="onEdit($event)"
-      (selectRow)="onSelect($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] reports/arbitrary/reports"
+  [columns]="columns"
+  [toolbar]="toolbars"
+  [selection]="selection"
+  [rows]="reports"
+  (dblClick)="onEdit($event)"
+  (selectRow)="onSelect($event)"
+></app-simple-grid>

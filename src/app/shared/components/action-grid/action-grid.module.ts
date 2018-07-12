@@ -21,7 +21,7 @@ import { PersonTypeModule } from '@app/shared/mass-ops/person-type/person-type.m
 import { PromiseResolveModule } from '@app/shared/mass-ops/promise-resolve/promise-resolve.module';
 import { RegisterContactOpenModule } from '@app/shared/mass-ops/register-contact-open/register-contact-open.module';
 import { SmsDeleteModule } from '@app/shared/mass-ops/sms-delete/sms-delete.module';
-import { TitlebarModule } from '../titlebar/titlebar.module';
+import { ToolbarModule } from '../toolbar/toolbar.module';
 import { VisitAddModule } from '@app/shared/mass-ops/visit-add/visit-add.module';
 import { VisitPrepareModule } from '@app/shared/mass-ops/visit-prepare/visit-prepare.module';
 
@@ -51,7 +51,7 @@ import { ActionGridComponent } from './action-grid.component';
     PersonTypeModule,
     PromiseResolveModule,
     SmsDeleteModule,
-    TitlebarModule,
+    ToolbarModule,
     VisitAddModule,
     VisitPrepareModule,
     RegisterContactOpenModule,

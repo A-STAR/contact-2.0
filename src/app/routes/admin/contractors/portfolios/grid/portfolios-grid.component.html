@@ -42,22 +42,16 @@
 >
 </app-portfolio-send>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-action-grid
-      columnTranslationKey="portfolios"
-      persistenceKey="[grid] admin/portfolios-and-contractors/portfolios"
-      selectionType="single"
-      [isSimple]="true"
-      [columns]="columns"
-      [rows]="portfolios"
-      [actions]="actions"
-      (action)="onAction($event)"
-      (dblClick)="onEdit()"
-      (selectRow)="onSelect($event)">
-    </app-action-grid>
-  </div>
-</div>
+<app-action-grid
+  columnTranslationKey="portfolios"
+  persistenceKey="[grid] admin/portfolios-and-contractors/portfolios"
+  selectionType="single"
+  [isSimple]="true"
+  [columns]="columns"
+  [rows]="portfolios"
+  [toolbar]="toolbar"
+  [actions]="actions"
+  (action)="onAction($event)"
+  (dblClick)="onEdit()"
+  (selectRow)="onSelect($event)">
+</app-action-grid>

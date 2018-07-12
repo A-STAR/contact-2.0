@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IReportField } from '../fields.interface';
@@ -37,44 +36,46 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'textWidth' },
   ].map(addGridLabel('modules.reports.arbitrary.fields.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([
-        this.reportId$.map(Boolean),
-        this.fieldsService.canEdit$
-      ]),
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selectedField$.value),
-      enabled: combineLatestAnd([
-        this.selectedField$.map(Boolean),
-        this.fieldsService.canEdit$
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.selectedField$.map(Boolean),
-        this.fieldsService.canEdit$
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: combineLatestAnd([
-        this.reportId$.map(Boolean),
-        this.fieldsService.canEdit$
-      ])
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([
+          this.reportId$.map(Boolean),
+          this.fieldsService.canEdit$
+        ]),
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selectedField$.value),
+        enabled: combineLatestAnd([
+          this.selectedField$.map(Boolean),
+          this.fieldsService.canEdit$
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.selectedField$.map(Boolean),
+          this.fieldsService.canEdit$
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: combineLatestAnd([
+          this.reportId$.map(Boolean),
+          this.fieldsService.canEdit$
+        ])
+      }
+    ]
+  };
 
   dialog: string;
   fields: IReportField[] = [];

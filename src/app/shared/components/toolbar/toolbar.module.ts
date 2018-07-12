@@ -7,8 +7,8 @@ import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { DropdownModule } from '../dropdown/dropdown.module';
 
-import { ToolbarComponent } from './toolbar-2.component';
-import { Toolbar2ItemComponent } from './item/toolbar2-item.component';
+import { ToolbarComponent } from './toolbar.component';
+import { ToolbarItemComponent } from './item/toolbar-item.component';
 
 @NgModule({
   imports: [
@@ -24,7 +24,7 @@ import { Toolbar2ItemComponent } from './item/toolbar2-item.component';
   ],
   declarations: [
     ToolbarComponent,
-    Toolbar2ItemComponent,
+    ToolbarItemComponent,
   ]
 })
-export class Toolbar2Module {}
+export class ToolbarModule {}

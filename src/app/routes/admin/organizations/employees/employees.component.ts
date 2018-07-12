@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import {
   IEmployee,
   IOrganizationsState,
@@ -11,9 +12,7 @@ import {
   IEmployeeCreateRequest,
 } from '../organizations.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -38,7 +37,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
 
   readonly state: Observable<IOrganizationsState> = this.organizationsService.state;
 
-  titlebar: ITitlebar = {
+  toolbar: Toolbar = {
     label: 'organizations.employees.title',
     items: [
       {

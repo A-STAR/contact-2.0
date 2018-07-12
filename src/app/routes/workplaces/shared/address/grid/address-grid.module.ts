@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BlockDialogModule } from '@app/shared/components/dialog/block/block-dialog.module';
 import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
-import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar/toolbar.module';
 import { LetterGenerationModule } from '../letter-generation/letter-generation.module';
 
 import { AddressGridMapModule } from './map/map.module';

@@ -13,10 +13,10 @@
 
 <div class="flex vertical">
   <div class="flex-item">
-    <app-titlebar
-      *ngIf="titlebar$ | async"
-      [titlebar]="titlebar$ | async"
-    ></app-titlebar>
+    <app-toolbar
+      *ngIf="toolbar$ | async"
+      [toolbar]="toolbar$ | async"
+    ></app-toolbar>
 
     <app-action-grid-filter
       [metadataKey]="metadataKey"

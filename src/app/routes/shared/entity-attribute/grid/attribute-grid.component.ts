@@ -14,11 +14,10 @@ import { of } from 'rxjs/observable/of';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAttribute } from '../attribute.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { AttributeService } from '../attribute.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -75,7 +74,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
-  toolbarItems: IToolbarItem[];
+  toolbar: Toolbar;
 
   dialog: 'edit';
 
@@ -93,7 +92,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
   ngOnInit(): void {
 
-    this.toolbarItems = this.getToolbarItems();
+    this.toolbar = this.getToolbarConfig();
 
     this.entitySubscription = combineLatest(this.entityTypeId$, this.entityId$)
       .pipe(
@@ -169,36 +168,38 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     );
   }
 
-  private getToolbarItems(): IToolbarItem[] {
-    return [
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.EDIT,
-        action: () => this.setDialog('edit'),
-        enabled: combineLatestAnd([
-          this.entityTypeId$.flatMap(
-            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', entityTypeId)
-          ),
-          this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
-        ])
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.VERSION,
-        action: () => this.onVersionClick(),
-        enabled: combineLatestAnd([
-          this.entityTypeId$.flatMap(
-            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', entityTypeId)
-          ),
-          this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
-        ])
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.REFRESH,
-        action: () => this.fetch(),
-      },
-    ];
+  private getToolbarConfig(): Toolbar {
+    return {
+      items: [
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.EDIT,
+          action: () => this.setDialog('edit'),
+          enabled: combineLatestAnd([
+            this.entityTypeId$.flatMap(
+              entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', entityTypeId)
+            ),
+            this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
+          ])
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.VERSION,
+          action: () => this.onVersionClick(),
+          enabled: combineLatestAnd([
+            this.entityTypeId$.flatMap(
+              entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', entityTypeId)
+            ),
+            this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
+          ])
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.REFRESH,
+          action: () => this.fetch(),
+        },
+      ]
+    };
   }
 
   private removeSelection(): void {

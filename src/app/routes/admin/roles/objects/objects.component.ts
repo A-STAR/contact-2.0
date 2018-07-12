@@ -4,11 +4,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { distinctUntilKeyChanged, map } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IObject } from './objects.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ObjectsService } from './objects.service';
 import { PermissionsService } from '@app/routes/admin/roles/permissions.service';
@@ -34,26 +33,28 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
 
   readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('OBJECT_ROLE_EDIT');
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([ this.masterRoleId$.pipe(map(Boolean)), this.canEdit$ ]),
-      action: () => this.setDialog('add'),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: combineLatestAnd([ this.selectedObject$.pipe(map(Boolean)), this.canEdit$ ]),
-      action: () => this.setDialog('delete'),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      enabled: this.selectedObject$.pipe(map(Boolean)),
-      action: () => this.fetch(),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([ this.masterRoleId$.pipe(map(Boolean)), this.canEdit$ ]),
+        action: () => this.setDialog('add'),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: combineLatestAnd([ this.selectedObject$.pipe(map(Boolean)), this.canEdit$ ]),
+        action: () => this.setDialog('delete'),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        enabled: this.selectedObject$.pipe(map(Boolean)),
+        action: () => this.fetch(),
+      },
+    ]
+  };
 
   columns: ISimpleGridColumn<IObject>[] = [
     { prop: 'id' },

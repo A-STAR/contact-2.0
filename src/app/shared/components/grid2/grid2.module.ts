@@ -10,7 +10,7 @@ import { DateTimeModule } from '../form/datetime/datetime.module';
 import { EditorsModule } from './editors/editors.module';
 import { SelectModule } from '../form/select/select.module';
 import { ToolbarModule } from './toolbar/toolbar.module';
-import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar/toolbar.module';
 
 import { GridService } from '../grid/grid.service';
 

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 
 import { ButtonType } from '@app/shared/components/button/button.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 export type ITitlebarAction = (item?: ITitlebarElement) => void;
 

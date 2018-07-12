@@ -72,8 +72,8 @@ export interface IMetadataFilterOperator {
   columnName: string;
   controls: string[];
 }
-
 export interface IMetadataResponse {
+
   name: string;
   actions: IMetadataAction[];
   data: IMetadataColumn[];

@@ -8,8 +8,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { CompleteStatus } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
+import { ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { DebtComponentService } from '../debt-component.service';

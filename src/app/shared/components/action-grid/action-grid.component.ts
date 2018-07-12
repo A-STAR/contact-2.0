@@ -50,9 +50,8 @@ import {
   IMetadataTitlebar,
 } from '@app/core/metadata/metadata.interface';
 import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType, ToolbarItem, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { ActionGridService } from './action-grid.service';
@@ -74,6 +73,7 @@ import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
+import { ToolbarComponent } from '@app/shared/components/toolbar/toolbar.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,10 +95,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() defaultAction: string;
   @Input() selectionAction: string;
   @Input() columnIds: string[];
-  @Input() toolbarItems: IToolbarItem[];
+  @Input() toolbarItems: ToolbarItem[];
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
-  @Input() titlebar: IMetadataTitlebar;
+  @Input() toolbar: IMetadataTitlebar;
   @Input() fullHeight = false;
   /**
    * Shows whether to use simple grid
@@ -142,7 +142,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @ViewChild('grid') grid: SimpleGridComponent<T> | Grid2Component;
   @ViewChild('gridTpl', { read: TemplateRef }) gridTpl: TemplateRef<T>;
   @ViewChild('details', { read: TemplateRef }) details: TemplateRef<T>;
-  @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
+  @ViewChild(ToolbarComponent) gridBar: ToolbarComponent;
 
   initialized = false;
   templates: Record<string, TemplateRef<any>>;
@@ -151,7 +151,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private _rows: T[];
 
   private actions$ = new BehaviorSubject<any[]>(null);
-  private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
+  private toolbarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
@@ -166,7 +166,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   selectionActionData: IGridAction;
   selectionActionName: string;
 
-  titlebar$: Observable<ITitlebar>;
+  toolbar$: Observable<Toolbar>;
   layoutConfig: IDynamicLayoutConfig = {
     key: 'action-grid',
     items: [
@@ -220,14 +220,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       this.initGrid(
         {
           actions: this.actions,
-          titlebar: this.titlebar,
+          titlebar: this.toolbar,
           defaultAction: this.defaultAction,
           selectionAction: this.selectionAction,
         }
       );
     }
 
-    this.titlebar$ = this.getGridTitlebar();
+    this.toolbar$ = this.getGridToolbar();
 
     const selectActionSub = this.selectRow.pipe(
       filter(selection => selection && selection.length && !!this.currentSelectionAction),
@@ -330,11 +330,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     })
   );
 
-  getGridTitlebar(): Observable<ITitlebar> {
-    return this.titlebarConfig$
+  getGridToolbar(): Observable<Toolbar> {
+    return this.toolbarConfig$
       .pipe(
         filter(Boolean),
-        map(config => this.buildTitlebar(config))
+        map(config => this.buildToolbar(config))
       );
   }
 
@@ -510,7 +510,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.rowIdKey = data.primary || this.rowIdKey || 'id';
     this.defaultActionName = data.defaultAction;
     this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
-    this.titlebarConfig$.next(data.titlebar || this.titlebar);
+    this.toolbarConfig$.next(data.titlebar || this.toolbar);
     this._columns = data.columns ? [...data.columns] : null;
     this.initialized = true;
     this.templates = { gridTpl: this.gridTpl, details: this.details };
@@ -554,9 +554,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     );
   }
 
-  private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
+  private buildToolbar(config: IMetadataTitlebar): Toolbar {
     // TODO(i.lobanov): move to action grid service and refactor
-    const titlebarItems = {
+    const toolbarItems = {
       refresh: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
         buttonType: ButtonType.REFRESH,
@@ -592,7 +592,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         .concat([
           { name: 'filter', permissions: null },
         ])
-        .map(item => titlebarItems[item.name](item.permissions)),
+        .map(item => toolbarItems[item.name](item.permissions)),
     };
   }
 

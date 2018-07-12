@@ -6,12 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -39,7 +38,7 @@ export class ContractorGridComponent extends DialogFunctions implements OnInit, 
   readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_EDIT');
   readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_DELETE');
 
-  titlebar: ITitlebar = {
+  toolbar: Toolbar = {
     label: 'contractors.title',
     items: [
       {

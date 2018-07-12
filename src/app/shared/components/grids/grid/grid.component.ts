@@ -31,7 +31,7 @@ import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-
 import { IGridSelectionType, IGridTreePath } from '../grids.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from './grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContextMenuService } from '../context-menu/context-menu.service';
 import { GridsDefaultsService } from '@app/shared/components/grids/grids-defaults.service';
@@ -73,7 +73,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
-  @Input() toolbar: IToolbarItem[];
+  @Input() toolbar: Toolbar;
   @Input() treeData: boolean;
 
   // Form Control's Properties

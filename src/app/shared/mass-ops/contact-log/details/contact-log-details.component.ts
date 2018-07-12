@@ -3,16 +3,15 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IContact } from '../contact-log.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IUserTerm, IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { ContactLogDetailsService } from './contact-log-details.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
 
 @Component({
   selector: 'app-contact-log-details',
@@ -63,7 +62,8 @@ export class ContactLogDetailsComponent {
 
   dicts: IUserDictionaries;
 
-  titlebar: ITitlebar = {
+  toolbar: Toolbar = {
+    showBorder: true,
     items: [
       {
         type: ToolbarItemType.BUTTON,

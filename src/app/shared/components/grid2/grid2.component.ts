@@ -41,7 +41,7 @@ import {
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from './toolbar/toolbar.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';

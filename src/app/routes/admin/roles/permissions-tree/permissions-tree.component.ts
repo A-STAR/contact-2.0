@@ -11,7 +11,7 @@ import { IPermissionRole } from '../permissions.interface';
 import {
   IToolbarItem,
   ToolbarItemType
-} from '@app/shared/components/toolbar-2/toolbar-2.interface';
+} from '@app/shared/components/toolbar/toolbar.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';

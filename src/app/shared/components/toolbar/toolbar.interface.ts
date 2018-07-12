@@ -8,36 +8,37 @@ export enum ToolbarItemType {
   CHECKBOX = 'checkbox',
 }
 
-export type IToolbarAction = () => void;
+export type ToolbarAction = (item?: ToolbarElement) => void;
 
-export interface IToolbarElement {
-  action?: IToolbarAction | Action;
+export interface ToolbarElement {
+  action?: ToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
-  align?: 'right';
   // TODO(i.lobanov): move it to some type which would work with IToolbarItem
   closeOnClick?: boolean;
+  align?: 'right' | 'left';
+  classes?: Observable<string>;
 }
 
-export interface IToolbarButton extends IToolbarElement {
+export interface ToolbarButton extends ToolbarElement {
   type: ToolbarItemType;
   buttonType: ButtonType;
   icon?: string;
-  children?: Array<IToolbarElement>;
+  children?: Array<ToolbarElement>;
 }
 
-export interface IToolbarCheckbox extends IToolbarElement {
+export interface ToolbarCheckbox extends ToolbarElement {
   type: ToolbarItemType.CHECKBOX;
   state: Observable<boolean>;
 }
 
-export type IToolbarItem = IToolbarButton | IToolbarCheckbox;
+export type ToolbarItem = ToolbarButton | ToolbarCheckbox;
 
-export interface IToolbar {
-  items: Array<IToolbarItem>;
-  noBorder?: boolean;
+export interface Toolbar {
+  items: Array<ToolbarItem>;
   label?: string;
   // false by default
   suppressCenterZone?: boolean;
-  suppressBorder?: boolean;
+  // false by default
+  showBorder?: boolean;
 }

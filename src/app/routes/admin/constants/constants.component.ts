@@ -11,11 +11,10 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IConstant } from './constants.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ConstantsService } from './constants.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -38,7 +37,7 @@ import { combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
 export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
   @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IConstant>;
 
-  titlebar: ITitlebar = {
+  toolbar: Toolbar = {
     label: 'constants.title',
     items: [
       {

@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, A
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 import { IMetadataEntityGridConfig, IGridEntity, IEntityGridAction, IEntityActionMetadata } from './entity-grid.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { EntityGridService } from './entity-grid.service';
 
 import { addGridLabel } from '@app/core/utils';
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +24,7 @@ export class EntityGridComponent<T extends IGridEntity> implements OnInit, After
 
   columns: ISimpleGridColumn<T>[];
 
-  titlebar: ITitlebar;
+  toolbar: Toolbar;
 
   readonly selectedRows$ = new BehaviorSubject<T[]>(null);
 
@@ -40,7 +41,7 @@ export class EntityGridComponent<T extends IGridEntity> implements OnInit, After
 
   ngAfterViewInit(): void {
     this.columns = this.createColumns();
-    this.titlebar = this.createTitleBar();
+    this.toolbar = this.createToolBar();
   }
 
   get persistenceKey(): string {
@@ -83,7 +84,7 @@ export class EntityGridComponent<T extends IGridEntity> implements OnInit, After
     return this.config.actions.find(a => a.type === type);
   }
 
-  createTitleBar(): ITitlebar {
+  createToolBar(): Toolbar {
     return {
       label: `${this.translationKey}.titlebar.title`,
       items: this.config.actions

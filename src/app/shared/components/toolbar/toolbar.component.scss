@@ -1,0 +1,80 @@
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  margin-bottom: 7px;
+  user-select: none;
+  border-bottom: 0;
+  // width: 100%;
+  // padding-top: 8px;
+  // background-color: #fff;
+  // user-select: none;
+}
+
+.has-border {
+  border-bottom: 1px solid $form-toolbar-border-color;
+}
+
+/*
+ * The titlebar has the zone: left, center and right.
+ * The left zone holds the title, the right zone - action buttons,
+ * and the center zone - arbitrary content throught the use of ng-content.
+ */
+ .toolbar-zone {
+  order: 0;
+  flex: 0 0 auto;
+  align-self: auto;
+  overflow: hidden;
+  // The title itself
+  // &.right {
+  //   flex: 1 0 40%;
+  // }
+  // The middle part should shrink
+  &.center {
+    flex: 1 1 0%;
+  }
+  // The toolbar with buttons
+  // &.right {
+  //   flex: 1 0 40%;
+  // }
+
+  color: $form-toolbar-title-color;
+  height: 30px;
+  line-height: 30px;
+
+  .form-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .toolbar-items {
+    text-align: right;
+    color: $form-toolbar-icon-color;
+  }
+
+  .button-active {
+    color: $brand-danger;
+  }
+}
+
+
+:host(.bordered) > .toolbar {
+  border: 1px solid #d5d5d5;
+  border-bottom: none;
+}
+
+:host(.bh) > .toolbar {
+  border-left: 1px solid #d5d5d5;
+  border-right: 1px solid #d5d5d5;
+}
+
+:host(.bt) > .toolbar {
+  border-top: 1px solid #d5d5d5;
+}
+
+:host(.bb) > .toolbar {
+  border-bottom: 1px solid #d5d5d5;
+}
