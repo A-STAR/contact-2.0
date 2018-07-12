@@ -23,7 +23,6 @@
           [personId]="debtorId$ | async"
           [personRole]="personRole"
           (add)="onPhoneAdd()"
-          (dblClick)="onPhoneRegister($event)"
           (edit)="onPhoneEdit($event)"
           (register)="onPhoneRegister($event)"
         ></app-phone-grid>
@@ -36,7 +35,6 @@
           [personId]="debtorId$ | async"
           [personRole]="personRole"
           (add)="onAddressAdd()"
-          (dblClick)="onAddressRegister($event)"
           (edit)="onAddressEdit($event)"
           (register)="onAddressRegister($event)"
         ></app-address-grid>
