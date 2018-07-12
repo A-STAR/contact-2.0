@@ -170,17 +170,14 @@
                 "operator": "and",
                 "value": [
                   {
-                    "operator": "not",
-                    "value": {
-                      "operator": "equals",
-                      "value": [
-                        {
-                          "operator": "uiState",
-                          "value": "pbxCampaigns.firstSelectedRow.statusCode"
-                        },
-                        3
-                      ]
-                    }
+                    "operator": "equals",
+                    "value": [
+                      {
+                        "operator": "uiState",
+                        "value": "pbxCampaigns.firstSelectedRow.statusCode"
+                      },
+                      3
+                    ]
                   },
                   {
                     "operator": "equals",
