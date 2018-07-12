@@ -3,7 +3,7 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
-import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarElement } from '@app/shared/components/toolbar/toolbar.interface';
 
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
@@ -80,7 +80,7 @@ export interface IMetadataResponse {
   baseFilters: IMetadataFilter[];
 }
 
-export interface IMetadataTitlebarItem extends ITitlebarElement {
+export interface IMetadataTitlebarItem extends ToolbarElement {
   name: string;
   params?: any[];
   permissions?: string[];
@@ -88,7 +88,7 @@ export interface IMetadataTitlebarItem extends ITitlebarElement {
 
 export interface IMetadataTitlebar {
   items?: IMetadataTitlebarItem[];
-  title?: string;
+  label?: string;
 }
 
 export interface IMetadata {

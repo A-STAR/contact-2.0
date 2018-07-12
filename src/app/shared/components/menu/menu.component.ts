@@ -1,30 +1,27 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarElement } from '@app/shared/components/toolbar/toolbar.interface';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
-  @Input() items: ITitlebarElement[];
+export class MenuComponent {
+  @Input() items: ToolbarElement[];
   @Input() menuClass: string;
 
-  @Output() action = new EventEmitter<ITitlebarElement>();
+  @Output() action = new EventEmitter<ToolbarElement>();
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
-  isDisabled(item: ITitlebarElement): Observable<boolean> {
+  isDisabled(item: ToolbarElement): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
-  onAction(item: ITitlebarElement): void {
+  onAction(item: ToolbarElement): void {
     if (item.action && typeof item.action === 'function') {
       item.action(item);
     }

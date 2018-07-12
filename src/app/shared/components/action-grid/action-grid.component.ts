@@ -583,9 +583,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         ),
       }),
     };
-    const label = config.title || (this.toolbar && (this.toolbar as Toolbar).label) || '';
     return {
-      label,
+      label: (config && config.label) || '',
       showBorder: true,
       items: config.items
         .concat([
