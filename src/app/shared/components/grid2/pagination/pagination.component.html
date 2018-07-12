@@ -10,7 +10,7 @@
 
     <ng-container [ngSwitch]="action.control">
 
-      <ng-container *ngSwitchCase="ToolbarControlEnum.SELECT">
+      <ng-container *ngSwitchCase="PaginationControl.SELECT">
         <app-select
           [isDisabled]="!!action.disabled"
           [isRequired]="true"
@@ -22,7 +22,7 @@
         </app-select>
       </ng-container>
 
-      <ng-container *ngSwitchCase="ToolbarControlEnum.LABEL">
+      <ng-container *ngSwitchCase="PaginationControl.LABEL">
         <span class="app-label">{{ action.text }}</span>
       </ng-container>
 

@@ -18,13 +18,13 @@
     ></ag-grid-angular>
   </div>
 
-  <!-- Bottom Toolbar -->
+  <!-- Pagination -->
   <div class="flex-item">
-    <app-toolbar
+    <app-pagination
       class="app-toolbar"
       [actions]="paginationPanel"
       (actionClick)="onPageChange($event)"
       (actionSelect)="onPageSizeChange($event)"
-    ></app-toolbar>
+    ></app-pagination>
   </div>
 </div>

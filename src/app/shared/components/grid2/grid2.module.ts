@@ -9,7 +9,7 @@ import { ActionDialogModule } from '../dialog/action/action-dialog.module';
 import { DateTimeModule } from '../form/datetime/datetime.module';
 import { EditorsModule } from './editors/editors.module';
 import { SelectModule } from '../form/select/select.module';
-import { ToolbarModule as GridToolbarModule } from './toolbar/toolbar.module';
+import { PaginationModule } from './pagination/pagination.module';
 import { ToolbarModule } from '@app/shared/components/toolbar/toolbar.module';
 
 import { GridService } from '../grid/grid.service';
@@ -27,7 +27,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
     DateTimeModule,
     EditorsModule,
     FormsModule,
-    GridToolbarModule,
+    PaginationModule,
     SelectModule,
     ToolbarModule,
     TranslateModule,
