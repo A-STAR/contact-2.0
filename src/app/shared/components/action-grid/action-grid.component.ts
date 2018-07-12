@@ -95,7 +95,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() columnIds: string[];
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
-  @Input() toolbar: IMetadataTitlebar | Toolbar;
+  @Input() toolbar: Toolbar;
   @Input() fullHeight = false;
   /**
    * Shows whether to use simple grid
@@ -583,13 +583,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         ),
       }),
     };
+    const label = config.title || (this.toolbar && (this.toolbar as Toolbar).label) || '';
     return {
-      label: config.title,
+      label,
+      showBorder: true,
       items: config.items
         .concat([
           { name: 'filter', permissions: null },
         ])
-        .map(item => toolbar[item.name](item.permissions)),
+        .map(item => item.name ? toolbar[item.name](item.permissions) : item)
     };
   }
 

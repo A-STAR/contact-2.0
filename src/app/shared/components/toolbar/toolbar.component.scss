@@ -1,3 +1,4 @@
+@import '../../../shared/styles/app/variables.scss';
 .toolbar {
   display: flex;
   flex-direction: row;
@@ -5,17 +6,13 @@
   justify-content: space-around;
   padding-top: 5px;
   padding-bottom: 3px;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   user-select: none;
   border-bottom: 0;
-  // width: 100%;
-  // padding-top: 8px;
-  // background-color: #fff;
-  // user-select: none;
-}
-
-.has-border {
-  border-bottom: 1px solid $form-toolbar-border-color;
+  &.has-border {
+    border-bottom: 1px solid $form-toolbar-border-color;
+    padding-bottom: 2px;
+  }
 }
 
 /*
@@ -42,8 +39,6 @@
   // }
 
   color: $form-toolbar-title-color;
-  height: 30px;
-  line-height: 30px;
 
   .form-title {
     font-size: 20px;
@@ -51,8 +46,8 @@
   }
 
   .toolbar-items {
-    text-align: right;
     color: $form-toolbar-icon-color;
+    display: flex;
   }
 
   .button-active {

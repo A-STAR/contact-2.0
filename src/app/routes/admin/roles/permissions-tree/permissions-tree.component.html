@@ -1,9 +1,11 @@
 <div class="flex vertical">
-  <app-toolbar
-    class="flex-item bordered"
-    [toolbar]="toolbar"
-    (actionClick)="onSaveChanges()"
-  ></app-toolbar>
+
+  <div class="flex-item">
+    <app-toolbar
+      [toolbar]="toolbar"
+      (action)="onSaveChanges()"
+    ></app-toolbar>
+  </div>
 
   <ng-container *ngIf="hasViewPermission | async; else message">
     <div *ngIf="value" class="flex-item grow">

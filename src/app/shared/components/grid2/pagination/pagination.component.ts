@@ -18,6 +18,8 @@ export class PaginationComponent {
   @Output() actionClick: EventEmitter<PaginationAction> = new EventEmitter<PaginationAction>();
   @Output() actionSelect: EventEmitter<PaginationActionSelect> = new EventEmitter<PaginationActionSelect>();
 
+  control = PaginationControl;
+
   constructor(
     private paginationService: PaginationService,
     private userPermissionsService: UserPermissionsService

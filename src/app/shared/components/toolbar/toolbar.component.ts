@@ -22,7 +22,7 @@ import { defaultTo } from 'ramda';
 })
 export class ToolbarComponent implements OnInit, OnChanges {
   @Input() toolbar: Toolbar;
-  @Input() toolbarClass: any;
+  @Input() toolbarClass: any = '';
   @Output() action = new EventEmitter<ToolbarItem>();
 
   customCls: object;
