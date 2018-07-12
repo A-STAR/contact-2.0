@@ -10,7 +10,7 @@ export class IncomingCallApiService {
     private routingService: RoutingService
   ) { }
 
-  openIncomingCallCard(phoneNumber?: string): Promise<boolean> {
-    return this.routingService.navigate([ `/app/workplaces/incoming-call/main` ], this.route, { phoneNumber });
+  openIncomingCallCard(params?: any): Promise<boolean> {
+    return this.routingService.navigate([ `/app/workplaces/incoming-call/main` ], this.route, params);
   }
 }
