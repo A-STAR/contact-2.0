@@ -48,7 +48,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   readonly hasCopiedNode$ = this.copiedNode$.map(Boolean);
 
-  readonly selectedNodeId = this.selectedNode$.map(node => node && node.id);
+  readonly selectedNodeId$ = this.selectedNode$.map(node => node && node.id);
 
   contactType: number = null;
   contactTypeOptions = [];
