@@ -509,11 +509,22 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.rowIdKey = data.primary || this.rowIdKey || 'id';
     this.defaultActionName = data.defaultAction;
     this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
-    this.toolbarConfig$.next(mergeDeep(data.titlebar, this.toolbar));
     this._columns = data.columns ? [...data.columns] : null;
     this.initialized = true;
     this.templates = { gridTpl: this.gridTpl, details: this.details };
+    this.initToolbar(data.titlebar);
     this.cdRef.markForCheck();
+  }
+
+  private initToolbar(config: IMetadataToolbar): void {
+    let srcConfig = config;
+    if (!srcConfig) {
+      srcConfig = {};
+    }
+    if (!srcConfig.items) {
+      srcConfig.items = [];
+    }
+    this.toolbarConfig$.next(mergeDeep(srcConfig, this.toolbar));
   }
 
   private getGridFilters(): FilterObject {
