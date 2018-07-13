@@ -1,14 +1,35 @@
-<ul [ngClass]="{ 'no-margin': noMargin }">
-  <ng-container *ngFor="let tab of tabs$ | async">
-    <li
-      *ngIf="tab.hasPermission | async"
-      [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
-      [routerLink]="tab.link"
-      routerLinkActive="active"
-    >
-      {{ tab.title | translate }}
-      <button *ngIf="tab.closable" (click)="closeTab($event, tab.id)"></button>
-      <div class="selection"></div>
-    </li>
-  </ng-container>
+<ul class="tabs" [ngClass]="{ 'no-margin': noMargin }">
+  <li
+    #tabHeader
+    *ngFor="let tab of visibleTabs"
+    [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
+    [routerLink]="tab.link"
+    routerLinkActive="active"
+    [class.invisible]="!feetsInView(tab)"
+  >
+    {{ tab.title | translate }}
+    <button *ngIf="tab.closable" (click)="closeTab($event, tab.id)"></button>
+    <div class="selection"></div>
+  </li>
+  <li menu #tabHeaderMenu *ngIf="menuTabs.length">
+    <div appDropdown fitWidthToContent="true">
+      <div #dropdownTrigger>
+        <i class="fa fa-ellipsis-h"></i>
+      </div>
+      <div #dropdownContent class="dropdown">
+        <ul class="list-group m0">
+          <li
+            *ngFor="let tab of menuTabs"
+            class="list-group-item b0 clickable"
+            routerLinkActive="active"
+            [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
+            [routerLink]="tab.link"
+            (click)="onSelectTab($event, tab)"
+          >
+            {{ tab.title | translate }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </li>
 </ul>
