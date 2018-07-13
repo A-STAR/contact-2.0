@@ -207,13 +207,8 @@ export class PledgeCardEditContractComponent implements OnInit, AfterViewInit {
 
   private fetchProperty(): void {
     this.propertyService
-      .fetch(this.pledgorId, this.propertyId)
-      .subscribe(property => this.layout.setData({
-        property: {
-          propertyName: property.name,
-          propertyType: property.typeCode,
-        },
-      }));
+      .fetchForContract(this.debtId, this.contractId, this.propertyId)
+      .subscribe(property => this.layout.setData({ property }));
   }
 
   private onSuccess(): void {

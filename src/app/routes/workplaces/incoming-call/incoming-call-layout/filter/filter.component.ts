@@ -80,9 +80,9 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
     if (debtId) {
       this.patchControl('debtId', debtId);
       this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
-      this.onSearchClick();
-      this.addEnterPressListener();
     }
+    this.onSearchClick();
+    this.addEnterPressListener();
   }
 
   ngOnDestroy(): void {

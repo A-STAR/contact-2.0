@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { catchError, map } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IProperty } from './property.interface';
+import { IProperty, IPledgeContractProperty } from './property.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -44,6 +44,15 @@ export class PropertyService extends AbstractActionService {
   fetch(personId: number, propertyId: number): Observable<IProperty> {
     return this.dataService.read(this.extUrl, { personId, propertyId })
       .catch(this.notificationsService.fetchError().entity(this.entitySingular).dispatchCallback());
+  }
+
+  fetchForContract(debtId: number, pledgeContractId: number, propertyId: number): Observable<IPledgeContractProperty> {
+    const params = { debtId, pledgeContractId, propertyId };
+    return this.dataService
+      .read('/debts/{debtId}/pledgeContract/{pledgeContractId}/property/{propertyId}', params)
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity(this.entitySingular).dispatchCallback()),
+      );
   }
 
   create(personId: number, property: IProperty): Observable<IProperty> {

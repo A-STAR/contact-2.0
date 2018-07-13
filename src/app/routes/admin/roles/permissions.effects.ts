@@ -64,6 +64,8 @@ export class PermissionsEffects {
         .mergeMap(() => [
           this.rolesFetchAction,
           { type: PermissionsService.ROLE_COPY_SUCCESS },
+          { type: PermissionsService.ROLE_SELECTED, payload: { role: null } },
+          { type: PermissionsService.PERMISSION_CLEAR }
         ])
         .catch(this.notifications.copyError().entity('entities.roles.gen.singular').callback());
     });
@@ -79,6 +81,8 @@ export class PermissionsEffects {
           this.rolesFetchAction,
           this.userPermissionsService.createRefreshAction(),
           { type: PermissionsService.ROLE_UPDATE_SUCCESS },
+          { type: PermissionsService.ROLE_SELECTED, payload: { role: null } },
+          { type: PermissionsService.PERMISSION_CLEAR }
         ])
         .catch(this.notifications.updateError().entity('entities.roles.gen.singular').callback());
     });
@@ -94,6 +98,7 @@ export class PermissionsEffects {
           this.userPermissionsService.createRefreshAction(),
           { type: PermissionsService.ROLE_DELETE_SUCCESS },
           { type: PermissionsService.ROLE_SELECTED, payload: { role: null } },
+          { type: PermissionsService.PERMISSION_CLEAR }
         ])
         .catch(this.notifications.deleteError().entity('entities.roles.gen.singular').callback());
     });
@@ -104,10 +109,10 @@ export class PermissionsEffects {
     .withLatestFrom(this.store)
     .switchMap(([_, store]) => {
       return this.readPermissions(store.permissions.currentRole.id)
-        .map(permissions => ({
-          type: PermissionsService.PERMISSION_FETCH_SUCCESS,
-          payload: { permissions }
-        }))
+        .mergeMap(permissions => [
+            { type: PermissionsService.PERMISSION_FETCH_SUCCESS, payload: { permissions } },
+            { type: PermissionsService.PERMISSION_SELECTED, payload: null }
+        ])
         .catch(this.notifications.fetchError().entity('entities.permissions.gen.plural').callback());
     });
 
@@ -137,6 +142,7 @@ export class PermissionsEffects {
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
           { type: PermissionsService.PERMISSION_UPDATE_SUCCESS },
+          { type: PermissionsService.PERMISSION_SELECTED, payload: null }
         ])
         .catch(this.notifications.updateError().entity('entities.permissions.gen.singular').callback());
     });

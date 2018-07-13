@@ -6,7 +6,7 @@
     <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="{}"></app-dynamic-form>
   </div>
   <div dialog-footer>
-    <app-button color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
     <app-button type="cancel" (click)="onClose()"></app-button>
   </div>
 </app-dialog>

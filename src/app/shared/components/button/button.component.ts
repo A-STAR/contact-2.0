@@ -19,18 +19,18 @@ export class ButtonComponent {
   @Input() type: ButtonType;
   // TODO(i.lobanov): remove it when btn service is refactored
   @Input() btnClass: string;
+  @Input() hasIcon = false;
   @Input() withBtnClass = true;
 
   constructor(private buttonService: ButtonService) {}
 
   get buttonClass(): string {
     return (this.btnClass ? this.btnClass + ' ' : '')
-      // + (this.iconClass ? 'btn-icon ' : '')
       + this.buttonService.getClass(this.color, this.withBtnClass);
   }
 
   get iconClass(): string {
-    return this.icon || this.buttonService.getIcon(this.type);
+    return this.hasIcon ? (this.icon || this.buttonService.getIcon(this.type)) : null;
   }
 
   get displayLabel(): string {

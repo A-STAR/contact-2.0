@@ -22,6 +22,7 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 @Component({
   selector: 'app-pledge-grid',
   templateUrl: './pledge-grid.component.html',
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDestroy {

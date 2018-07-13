@@ -11,7 +11,6 @@
       [personId]="personId"
       [personRole]="personRole"
       (add)="onPhoneAdd()"
-      (dblClick)="onPhoneRegister($event)"
       (edit)="onPhoneEdit($event)"
       (register)="onPhoneRegister($event)"
       (onSelect)="onSelect($event)"
@@ -21,7 +20,6 @@
   <div class="flex-item">
 
     <app-button
-      color="none"
       label="routes.workplaces.incomingCall.debtor.toolbar.registerContact"
       [disabled]="contactButtonDisabled"
       (click)="onRegisterContact()"
@@ -30,7 +28,6 @@
     &nbsp;
 
     <app-button
-      color="none"
       label="routes.workplaces.incomingCall.debtor.toolbar.registerUnidentifiedPhone"
       [disabled]="unidentifiedContactButtonDisabled$ | async"
       (click)="onRegisterUnidentifiedContact()"
@@ -39,7 +36,6 @@
     &nbsp;
 
     <app-button
-      color="none"
       label="routes.workplaces.incomingCall.debtor.toolbar.registerOfficeVisit"
       [disabled]="officeVisitButtonDisabled$ | async"
       (click)="onRegisterOfficeVisit()"

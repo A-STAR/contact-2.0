@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Observable } from 'rxjs/Observable';
 
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -28,14 +27,34 @@ import { Subscription } from 'rxjs/Subscription';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactPropertyTreeComponent extends DialogFunctions implements OnInit, OnDestroy {
+
+  readonly selectedNode$ = new BehaviorSubject<ITreeNode>(null);
+  readonly copiedNode$ = new BehaviorSubject<{ node: ITreeNode, contactType: number, treeType: number }>(null);
+
+  readonly canAdd$    = this.userPermissionsService.has('CONTACT_TREE_ADD');
+  readonly canCopy$   = this.userPermissionsService.has('CONTACT_TREE_COPY');
+  readonly canEdit$   = this.userPermissionsService.has('CONTACT_TREE_EDIT');
+  readonly canDelete$ = this.userPermissionsService.has('CONTACT_TREE_DELETE');
+
+  readonly canEditSelectedNode$ = combineLatestAnd([
+    this.canEdit$,
+    this.selectedNode$.map(Boolean),
+  ]);
+
+  readonly canDeleteSelectedNode$ = combineLatestAnd([
+    this.canDelete$,
+    this.selectedNode$.map(node => node && isEmpty(node.children)),
+  ]);
+
+  readonly hasCopiedNode$ = this.copiedNode$.map(Boolean);
+
+  readonly selectedNodeId$ = this.selectedNode$.map(node => node && node.id);
+
   contactType: number = null;
   contactTypeOptions = [];
 
   treeType: number = null;
   treeTypeOptions = [];
-
-  copiedNode$ = new BehaviorSubject<{ node: ITreeNode, contactType: number, treeType: number }>(null);
-  selectedNode$ = new BehaviorSubject<ITreeNode>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -48,13 +67,13 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
       type: ToolbarItemType.BUTTON,
       buttonType: ButtonType.EDIT,
       action: () => this.setDialog('edit'),
-      enabled: this.canEdit$,
+      enabled: this.canEditSelectedNode$,
     },
     {
       type: ToolbarItemType.BUTTON,
       buttonType: ButtonType.DELETE,
       action: () => this.setDialog('delete'),
-      enabled: this.canDelete$,
+      enabled: this.canDeleteSelectedNode$,
     },
     {
       type: ToolbarItemType.BUTTON,
@@ -103,18 +122,6 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     return this._nodes;
   }
 
-  get hasCopiedNode$(): Observable<boolean> {
-    return this.copiedNode$.map(Boolean);
-  }
-
-  get selectedNodeId$(): Observable<number> {
-    return this.selectedNode$.map(node => node && node.id);
-  }
-
-  get canCopy$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTACT_TREE_COPY');
-  }
-
   onContactTypeChange(contactType: number): void {
     this.contactType = Number(contactType);
     this.fetch();
@@ -138,7 +145,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   onNodeDoubleClick(node: ITreeNode): void {
     this.selectedNode$.next(node);
-    doOnceIf(this.canEdit$, () => this.setDialog('edit'));
+    doOnceIf(this.canEditSelectedNode$, () => this.setDialog('edit'));
   }
 
   onNodeCopy(node: ITreeNode): void {
@@ -174,7 +181,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }, types: IUserConstant): void {
     this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TYPE]
-      .filter(option => types.valueS === 'ALL' || types.valueS.split(',').includes(String(option.value)));
+      .filter(option => types.valueS === 'ALL' || types.valueS.split(/,\s*/).includes(String(option.value)));
     this.contactType = this.contactTypeOptions.length ? this.contactTypeOptions[0].value : null;
   }
 
@@ -192,24 +199,6 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
           this.cdRef.markForCheck();
         });
     }
-  }
-
-  private get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTACT_TREE_ADD');
-  }
-
-  private get canEdit$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('CONTACT_TREE_EDIT'),
-      this.selectedNode$.map(Boolean),
-    ]);
-  }
-
-  private get canDelete$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('CONTACT_TREE_DELETE'),
-      this.selectedNode$.map(node => node && isEmpty(node.children)),
-    ]);
   }
 
   private onSuccess(clearSelection: boolean = false): void {

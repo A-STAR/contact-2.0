@@ -35,5 +35,14 @@
     ></app-multi-select>
   </label>
 
+  <label>
+    Sortable
+    <app-multi-select
+      lookupKey="languages"
+      formControlName="select5"
+      [sortable]="true"
+    ></app-multi-select>
+  </label>
+
   <button class="btn btn-default" (click)="disableControl4()">{{ lookupDisabled ? 'Enable' : 'Disable' }} Languages Lookup</button>
 </section>

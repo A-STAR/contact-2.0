@@ -59,7 +59,7 @@
   selectionMode="single"
   [canPaste]="hasCopiedNode$ | async"
   [contextMenuEnabled]="canCopy$ | async"
-  [dndEnabled]="true"
+  [dndEnabled]="canEdit$ | async"
   [dblClickEnabled]="true"
   [collapseAdjacentNodes]="true"
   [expandNodeOnClick]="true"

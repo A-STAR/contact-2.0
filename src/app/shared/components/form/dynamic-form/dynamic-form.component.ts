@@ -197,11 +197,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get isValid(): boolean {
-    return this.form.valid;
+    return this.form && this.form.valid;
   }
 
   get isDirty(): boolean {
-    return this.form.dirty;
+    return this.form && this.form.dirty;
   }
 
   /**

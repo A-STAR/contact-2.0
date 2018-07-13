@@ -329,14 +329,14 @@ export const editContractLayout: IDynamicLayoutConfig = {
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.TEXT,
+                  controlType: DynamicLayoutControlType.NUMBER,
                   form: 'property',
                   label: 'routes.workplaces.debtorCard.pledge.card.forms.property.form.pledgeValue',
                   name: 'pledgeValue',
                 },
                 {
                   type: DynamicLayoutItemType.CONTROL,
-                  controlType: DynamicLayoutControlType.TEXT,
+                  controlType: DynamicLayoutControlType.NUMBER,
                   form: 'property',
                   label: 'routes.workplaces.debtorCard.pledge.card.forms.property.form.marketValue',
                   name: 'marketValue',
