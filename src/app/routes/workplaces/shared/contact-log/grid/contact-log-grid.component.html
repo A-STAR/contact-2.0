@@ -7,7 +7,7 @@
   [rows]="contactLogList"
   [rowCount]="rowCount"
   [actionData]="{ callCenter: callCenter }"
-  (selectRow)="onSelect()"
+  (selectRow)="onSelect($event)"
   (dblClick)="onEdit($event)"
   (request)="onRequest()"
 ></app-action-grid>
