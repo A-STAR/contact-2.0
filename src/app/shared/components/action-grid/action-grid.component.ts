@@ -47,7 +47,7 @@ import { IMetadataDefs } from '../grid/grid.interface';
 import {
   IMetadataAction,
   MetadataActionType,
-  IMetadataTitlebar,
+  IMetadataToolbar,
 } from '@app/core/metadata/metadata.interface';
 import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
@@ -72,6 +72,8 @@ import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
 import { ToolbarComponent } from '@app/shared/components/toolbar/toolbar.component';
+
+import { mergeDeep } from 'immutable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -148,7 +150,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private _rows: T[];
 
   private actions$ = new BehaviorSubject<any[]>(null);
-  private toolbarConfig$ = new BehaviorSubject<IMetadataTitlebar | Toolbar>(null);
+  private toolbarConfig$ = new BehaviorSubject<IMetadataToolbar | Toolbar>(null);
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
@@ -499,7 +501,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         return never();
       })
       .pipe(first())
-      .subscribe(this.initGrid.bind(this));
+      .subscribe((data: IMetadataDefs) => this.initGrid(data));
   }
 
   private initGrid(data: IMetadataDefs): void {
@@ -507,7 +509,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.rowIdKey = data.primary || this.rowIdKey || 'id';
     this.defaultActionName = data.defaultAction;
     this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
-    this.toolbarConfig$.next(data.titlebar || this.toolbar);
+    this.toolbarConfig$.next(mergeDeep(data.titlebar, this.toolbar));
     this._columns = data.columns ? [...data.columns] : null;
     this.initialized = true;
     this.templates = { gridTpl: this.gridTpl, details: this.details };
@@ -551,7 +553,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     );
   }
 
-  private buildToolbar(config: IMetadataTitlebar): Toolbar {
+  private buildToolbar(config: IMetadataToolbar): Toolbar {
     // TODO(i.lobanov): move to action grid service and refactor
     const toolbar = {
       refresh: (permissions: string[]) => ({

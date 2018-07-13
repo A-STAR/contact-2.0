@@ -73,21 +73,22 @@ export interface IMetadataFilterOperator {
   controls: string[];
 }
 export interface IMetadataResponse {
-
+  primary: string;
   name: string;
   actions: IMetadataAction[];
   data: IMetadataColumn[];
   baseFilters: IMetadataFilter[];
+  titlebar?: IMetadataToolbar;
 }
 
-export interface IMetadataTitlebarItem extends ToolbarElement {
-  name: string;
+export interface IMetadataToolbarItem extends ToolbarElement {
+  name?: string;
   params?: any[];
   permissions?: string[];
 }
 
-export interface IMetadataTitlebar {
-  items?: IMetadataTitlebarItem[];
+export interface IMetadataToolbar {
+  items?: IMetadataToolbarItem[];
   label?: string;
 }
 
@@ -96,7 +97,7 @@ export interface IMetadata {
   columns: Array<IMetadataColumn>;
   status: MetadataListStatusEnum;
   filters: IMetadataFilter[];
-  titlebar?: IMetadataTitlebar;
+  titlebar?: IMetadataToolbar;
   defaultAction?: string;
   selectionAction?: string;
   permits?: string[];
