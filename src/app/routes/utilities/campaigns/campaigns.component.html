@@ -3,6 +3,6 @@
     <app-simple-campaigns></app-simple-campaigns>
   </app-tabview-tab>
   <app-tabview-tab [title]="'Genesys'" [visible]="canDisplayPredictiveCampaigns$ | async">
-    <app-genesys-campaigns></app-genesys-campaigns>
+    <app-genesys-campaigns *ngIf="canDisplayPredictiveCampaigns$ | async"></app-genesys-campaigns>
   </app-tabview-tab>
 </app-tabview>
