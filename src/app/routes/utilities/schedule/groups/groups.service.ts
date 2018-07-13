@@ -21,7 +21,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 @Injectable()
 export class GroupsService extends AbstractActionService implements CanActivateChild {
   static MESSAGE_GROUP_SAVED = 'MESSAGE_GROUP_SAVED';
-
   private baseUrl = '/groups';
 
   constructor(

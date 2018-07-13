@@ -170,7 +170,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
   private contractorSubscription: Subscription;
   private portfoliosUpdateSub: Subscription;
   private userPermsSub: Subscription;
-  private portfolioBackSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -207,15 +206,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
 
-    this.portfolioBackSub = this.contractorsAndPortfoliosService
-      .getAction(IActionType.PORTFOLIO_BACK)
-      .subscribe(() => {
-        // NOTE: this AWESOME code is because of WEB20-1010
-        this.portfolios = this.portfolios.slice();
-        this.deselectPortfolio();
-        this.cdRef.markForCheck();
-      });
-
     this.userPermsSub = this.userPermissionsService.bag()
       .subscribe(bag => {
         this.permissions = bag;
@@ -231,9 +221,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
     }
     if (this.userPermsSub) {
       this.userPermsSub.unsubscribe();
-    }
-    if (this.portfolioBackSub) {
-      this.portfolioBackSub.unsubscribe();
     }
   }
 

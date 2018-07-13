@@ -16,7 +16,6 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { GridOptions } from 'ag-grid';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, filter, map, takeUntil, delay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { never } from 'rxjs/observable/never';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
@@ -149,6 +148,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
 
   private _columns: IAGridColumn[];
   private _rows: T[];
+  private _originalRows: T[];
 
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
@@ -212,20 +212,25 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   ngOnInit(): void {
-    // get data from the server
-    if (this.metadataKey) {
-      this.getMetadata();
-    } else {
-      // proceed manually
-      this.initGrid(
-        {
-          actions: this.actions,
-          titlebar: this.titlebar,
-          defaultAction: this.defaultAction,
-          selectionAction: this.selectionAction,
+    const permissionsSub = this.getMetadata()
+      .pipe(
+        first(),
+        tap(metadata => this.initGrid(metadata))
+      )
+      .switchMap((metadata: IMetadataDefs) => this.getGridPermissions(metadata.permits))
+      .subscribe(isAllowed => {
+        if (isAllowed && this._originalRows) {
+          this._rows = this._originalRows.slice();
+          this._originalRows = null;
+          this.cdRef.markForCheck();
         }
-      );
-    }
+        if (!isAllowed) {
+          this._originalRows = this._rows;
+          this._rows = [];
+          this.onPermissionDenied();
+          this.cdRef.markForCheck();
+        }
+      });
 
     this.titlebar$ = this.getGridTitlebar();
 
@@ -260,21 +265,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
           }
         });
 
-    const permissionsSub = combineLatest(
-      this.userPermissionsService.bag(),
-      this.router.events
-      )
-      .pipe(
-        filter(([ _, e ]) => e instanceof NavigationEnd),
-        filter(([ _, e ]) => this.routingService.isRouteMatchesUrl(this.route, (e as NavigationEnd).urlAfterRedirects)),
-        filter(() => this.initialized),
-        // NOTE: what if grid doesn't have onRequest output binded?
-        tap(() => this.rows = [])
-      )
-      .subscribe(() => {
-        this.onRequest();
-      });
-
     this.subs.add(selectActionSub);
     this.subs.add(closeSelectActionSub);
     this.subs.add(permissionsSub);
@@ -285,8 +275,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.subs.unsubscribe();
   }
 
-  getGridPermission(permissionKey?: string): Observable<boolean> {
-    return permissionKey ? this.userPermissionsService.has(permissionKey) : of(true);
+  getGridPermissions(perms?: string[]): Observable<boolean> {
+    const permissions = perms && perms.filter(Boolean);
+    return permissions && permissions.length ? this.userPermissionsService.hasAll(permissions) : of(true);
+  }
+
+  onPermissionDenied(): void {
+    if (this.metadataKey) {
+      this.notificationsService.permissionError()
+        .entity(`entities.${this.metadataKey}.gen.plural`).dispatch();
+    } else {
+      this.notificationsService.permissionError().dispatchCallback();
+    }
   }
 
   readonly gridActions$: Observable<IMetadataAction[]> = this.actions$.pipe(
@@ -492,17 +492,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     return () => this.close ? this.close.emit(actionData) : actionData;
   }
 
-  private getMetadata(): void {
-    this.getGridPermission(this.permissionKey)
-      .switchMap(isAllowed => {
-        if (isAllowed) {
-          return this.gridService.getMetadata(this.metadataKey, {});
-        }
-        this.notificationsService.permissionError().entity(`entities.${this.metadataKey}.gen.plural`).dispatch();
-        return never();
-      })
-      .pipe(first())
-      .subscribe(this.initGrid.bind(this));
+  private getMetadata(): Observable<IMetadataDefs> {
+    return this.metadataKey ? this.gridService.getMetadata(this.metadataKey, {}) : of({
+      actions: this.actions,
+      titlebar: this.titlebar,
+      defaultAction: this.defaultAction,
+      selectionAction: this.selectionAction,
+      permits: [ this.permissionKey ]
+    });
   }
 
   private initGrid(data: IMetadataDefs): void {

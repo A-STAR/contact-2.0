@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,6 +15,7 @@ import { EntityTranslationsConstants } from '@app/core/entity/translations/entit
 import { IGroup } from '../groups.interface';
 
 import { GroupsService } from '../groups.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -39,7 +39,7 @@ export class GroupCardComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private groupService: GroupsService,
     private route: ActivatedRoute,
-    private location: Location,
+    private routingService: RoutingService,
   ) {}
 
   ngOnInit(): void {
@@ -85,7 +85,7 @@ export class GroupCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/app/utilities/schedule/all' ]);
   }
 
   private getGroup(groupId: number): Observable<Partial<IGroup>> {
