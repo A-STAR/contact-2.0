@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, filter, throttleTime, tap } from 'rxjs/operators';
+import { map, filter, throttleTime, tap, distinctUntilChanged } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -57,32 +57,37 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const subscription = combineLatest(
+    const callSubscription = combineLatest(
       this.route.queryParams,
       this.callService.pbxState$,
     )
-      .pipe(
-        filter(([ params, state ]) =>
-          state && state.payload && params.phoneNumber && params.phoneNumber === state.payload.phoneNumber
-        ),
-        map(([ _, state ]) => state)
-      )
-      .subscribe(state => {
-        this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
-        this.cdRef.markForCheck();
-      });
+    .pipe(
+      filter(([ params, state ]) =>
+        state && state.payload && params.phoneNumber && params.phoneNumber === state.payload.phoneNumber
+      ),
+      map(([ _, state ]) => state)
+    )
+    .subscribe(state => {
+      this.incomingCallService.searchParams = { phoneNumber: state.payload.phoneNumber };
+      this.cdRef.markForCheck();
+    });
 
-    this.subscription.add(subscription);
+    this.subscription.add(callSubscription);
   }
 
   ngAfterViewInit(): void {
-    const debtId = Number(this.route.snapshot.queryParamMap.get('debtId'));
-    if (debtId) {
-      this.patchControl('debtId', debtId);
-      this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
-    }
-    this.onSearchClick();
-    this.addEnterPressListener();
+    const paramsSubscription = this.route.queryParams
+      .pipe(
+        map(params => params.debtId),
+        distinctUntilChanged()
+      )
+      .subscribe(debtId => {
+        this.patchControl('debtId', debtId || '');
+        this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
+        this.onSearchClick();
+        this.addEnterPressListener();
+      });
+    this.subscription.add(paramsSubscription);
   }
 
   ngOnDestroy(): void {
