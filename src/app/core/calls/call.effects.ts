@@ -361,7 +361,7 @@ export class CallEffects {
     .map((action: UnsafeAction) => action.payload)
     .filter(state => state.lineStatus === PBXStateEnum.PBX_CALL)
     .filter(state => state.payload && state.payload.callTypeCode === CallTypeEnum.INCOMING)
-    .map(state => this.incomingCallApiService.openIncomingCallCard(state.payload.phoneNumber));
+    .map(state => this.incomingCallApiService.openIncomingCallCard({ phoneNumber: state.payload.phoneNumber }));
 
   constructor(
     private actions: Actions,
