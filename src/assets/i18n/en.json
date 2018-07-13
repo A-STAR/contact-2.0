@@ -3682,7 +3682,10 @@
         "registerContact": "Register Contact",
         "changePersonType": "Change person type",
         "letterGenerate": "Letter generation",
-        "letterExport": "Letter export"
+        "letterExport": "Letter export",
+        "callList": "Campaign",
+        "callListCreate": "New",
+        "callListUpdate": "Update"
       }
     },
     "filter": {
