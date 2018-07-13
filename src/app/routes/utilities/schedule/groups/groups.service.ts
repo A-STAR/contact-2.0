@@ -37,28 +37,17 @@ export class GroupsService extends AbstractActionService implements CanActivateC
     super();
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('GROUP_VIEW');
-  }
+  readonly canView$: Observable<boolean> = this.userPermissionsService.has('GROUP_VIEW');
 
-  get canViewDebtGroup$(): Observable<boolean> {
-    return this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP');
-  }
+  readonly canViewDebtGroup$: Observable<boolean> = this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP');
 
-  get canViewSchedule$(): Observable<boolean> {
-    return this.userPermissionsService.has('SCHEDULE_VIEW');
-  }
+  readonly canViewSchedule$: Observable<boolean> = this.userPermissionsService.has('SCHEDULE_VIEW');
 
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('GROUP_ADD');
-  }
+  readonly canAdd$: Observable<boolean> = this.userPermissionsService.has('GROUP_ADD');
 
-  get canConditionEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('GROUP_CONDITION_EDIT');
-  }
+  readonly canConditionEdit$: Observable<boolean> = this.userPermissionsService.has('GROUP_CONDITION_EDIT');
 
-  get groupEntityTypeOptions$(): Observable<IOption[]> {
-    return combineLatest(
+  readonly groupEntityTypeOptions$: Observable<IOption[]> = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ENTITY_TYPE),
       this.userConstantsService.get('Group.EntityType.List').map(constant => constant.valueS)
     ).map(([ options, groupEntityTypeCodes ]) =>
@@ -66,7 +55,6 @@ export class GroupsService extends AbstractActionService implements CanActivateC
         ? options
         : options.filter(option => groupEntityTypeCodes.split(/,\s*/).map(Number).includes(<number>option.value))
     );
-  }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot): Observable<boolean> {
     let routePerm: Observable<boolean>;
