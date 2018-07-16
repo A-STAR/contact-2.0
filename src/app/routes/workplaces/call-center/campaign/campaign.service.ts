@@ -54,8 +54,7 @@ export class CampaignService {
 
   fetchProcessedDebtsForCurrentCampaign(): Observable<ICampaignProcessedDebt[]> {
     const { campaignId } = this;
-    return this.dataService.readAll('/campaigns/{campaignId}/debts/processed', { campaignId })
-      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
+    return this.dataService.readAll('/campaigns/{campaignId}/debts/processed', { campaignId });
   }
 
   markCurrentDebtAsFinished(): Observable<null> {

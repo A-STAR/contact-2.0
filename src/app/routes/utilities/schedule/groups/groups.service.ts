@@ -94,8 +94,7 @@ export class GroupsService extends AbstractActionService implements CanActivateC
   }
 
   fetchAll(forCurrentUser: boolean): Observable<IGroup[]> {
-    return this.dataService.readAll(`${this.baseUrl}?forCurrentUser=${forCurrentUser ? 1 : 0}`)
-      .catch(this.notificationsService.fetchError().entity('entities.group.gen.plural').dispatchCallback());
+    return this.dataService.readAll(`${this.baseUrl}?forCurrentUser=${forCurrentUser ? 1 : 0}`);
   }
 
   fetch(groupId: number): Observable<IGroup> {

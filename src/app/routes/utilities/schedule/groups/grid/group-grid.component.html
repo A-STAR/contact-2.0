@@ -17,6 +17,7 @@
   [actions]="actions"
   [rows]="groups"
   [columns]="columns"
+  (request)="fetch()"
   [toolbarItems]="toolbarItems"
   (selectRow)="onSelectRow($event)"
   (dblClick)="onEdit($event)"

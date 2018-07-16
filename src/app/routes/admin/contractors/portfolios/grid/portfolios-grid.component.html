@@ -59,6 +59,7 @@
       [actions]="actions"
       (action)="onAction($event)"
       (dblClick)="onEdit()"
+      (request)="fetchAll()"
       (selectRow)="onSelect($event)">
     </app-action-grid>
   </div>

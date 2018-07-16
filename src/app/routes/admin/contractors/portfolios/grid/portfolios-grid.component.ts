@@ -360,7 +360,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
       });
   }
 
-  private fetchAll(): Observable<IPortfolio[]> {
+  fetchAll(): Observable<IPortfolio[]> {
     return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractor.id);
   }
 
