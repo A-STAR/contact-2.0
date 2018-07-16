@@ -63,10 +63,10 @@ export interface IPBXStatePayload {
 
 export interface IPBXState {
   lineStatus: PBXStateEnum;
-  userStatus?: number;
-  date: string;
-  username?: string;
-  payload?: IPBXStatePayload;
+  userStatus: number;
+  payload: IPBXStatePayload;
+  // date: string;
+  // username?: string;
 }
 
 export enum CallTypeEnum {
