@@ -1,6 +1,12 @@
 @import '../../../../styles/app/variables.scss';
 
-ul {
+:host {
+  width: 100%;
+}
+
+ul.tabs {
+  display: flex;
+  overflow: hidden;
   border-bottom: 1px solid $gray-light;
   font-size: 0;
   margin: 0 0 10px 0;
@@ -11,70 +17,83 @@ ul {
   &.no-margin {
     margin-bottom: 0;
   }
+
+  li {
+    flex-shrink: 0;
+    background: transparent;
+    color: $text-color;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    height: 40px;
+    line-height: 42px;
+    overflow: hidden;
+    padding: 0 16px;
+    position: relative;
+    text-align: center;
+    &[menu] {
+      position: absolute;
+      right: 0;
+    }
+    &.active {
+      color: black;
+      .selection {
+        background-color: $brand-primary;
+      }
+    }
+    &.disabled {
+      color: $navbar-default-link-disabled-color;
+      cursor: default;
+    }
+    &.closable {
+      padding-right: 16px + (11px + 16px) / 2;
+
+      button {
+        position: absolute;
+        top: 50%;
+        right: (16px / 2);
+        transform: translateY(-50%);
+        width: 16px;
+        padding: initial;
+        border: initial;
+        background: initial;
+        line-height: 0;
+        text-align: center;
+
+        &::before {
+          content: "\f00d";
+          // content: "\f05c";
+          display: inline-block;
+          font: normal normal normal 14px/1 FontAwesome;
+          font-size: inherit;
+          text-rendering: auto;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        &:hover::before {
+          content: "\f057";
+          font-size: 18px;
+          color: indianred;
+        }
+      }
+
+    }
+    .selection {
+      height: 2px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: transparent;
+    }
+  }
 }
 
-li {
-  background: transparent;
-  color: $text-color;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 14px;
-  height: 40px;
-  line-height: 42px;
-  overflow: hidden;
-  padding: 0 16px;
-  position: relative;
-  text-align: center;
-  &.active {
-    color: black;
-    .selection {
-      background-color: $brand-primary;
-    }
-  }
-  &.disabled {
-    color: $navbar-default-link-disabled-color;
-    cursor: default;
-  }
-  &.closable {
-    padding-right: 16px + (11px + 16px) / 2;
-
-    button {
-      position: absolute;
-      top: 50%;
-      right: (16px / 2);
-      transform: translateY(-50%);
-      width: 16px;
-      padding: initial;
-      border: initial;
-      background: initial;
-      line-height: 0;
-      text-align: center;
-
-      &::before {
-        content: "\f00d";
-        // content: "\f05c";
-        display: inline-block;
-        font: normal normal normal 14px/1 FontAwesome;
-        font-size: inherit;
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      &:hover::before {
-        content: "\f057";
-        font-size: 18px;
-        color: indianred;
-      }
-    }
-
-  }
-  .selection {
-    height: 2px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: transparent;
+.dropdown {
+  border: 1px solid #d5d5d5;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  li {
+    padding: 15px 25px;
   }
 }

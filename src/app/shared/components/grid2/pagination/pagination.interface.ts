@@ -1,11 +1,11 @@
-export enum ToolbarControlEnum {
+export enum PaginationControl {
   BUTTON,
   CHECKBOX,
   LABEL,
   SELECT,
 }
 
-export enum ToolbarActionTypeEnum {
+export enum PaginationActionType {
   REFRESH,
   GO_FORWARD,
   GO_BACKWARD,
@@ -13,26 +13,25 @@ export enum ToolbarActionTypeEnum {
   GO_LAST,
 }
 
-export interface IToolbarButton {
+export interface PaginationButton {
   disabled: boolean;
-  type?: ToolbarActionTypeEnum;
-
+  type?: PaginationActionType;
 }
 
-export interface IToolbarAction {
+export interface PaginationAction {
   activeValue?: any;
-  control?: ToolbarControlEnum;
+  control?: PaginationControl;
   disabled?: boolean;
   hasLabel?: boolean;
   permission?: string | Array<string>;
   styles?: { width?: string };
   text?: string;
-  type?: ToolbarActionTypeEnum;
+  type?: PaginationActionType;
   value?: any;
   visible?: boolean;
 }
 
-export interface IToolbarActionSelect {
-  action: IToolbarAction;
+export interface PaginationActionSelect {
+  action: PaginationAction;
   value: any;
 }

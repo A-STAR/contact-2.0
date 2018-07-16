@@ -3,11 +3,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IObject } from '../objects.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ObjectsService } from '../objects.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
@@ -30,29 +29,31 @@ export class ObjectsGridComponent extends DialogFunctions implements OnInit, OnD
 
   selectedObjects$ = new BehaviorSubject<IObject[]>(null);
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.objectsService.canAdd$,
-      action: () => this.setDialog('add'),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: combineLatestAnd([
-        this.objectsService.canDelete$,
-        this.selectedObjects$.map(objects => objects && !!objects.length)
-      ]),
-      action: () => this.setDialog('delete'),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      enabled: this.objectsService.canView$,
-      action: () => this.fetch(),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.objectsService.canAdd$,
+        action: () => this.setDialog('add'),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: combineLatestAnd([
+          this.objectsService.canDelete$,
+          this.selectedObjects$.map(objects => objects && !!objects.length)
+        ]),
+        action: () => this.setDialog('delete'),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        enabled: this.objectsService.canView$,
+        action: () => this.fetch(),
+      },
+    ]
+  };
 
   columns: Array<ISimpleGridColumn<IObject>> = [
     { prop: 'id' },

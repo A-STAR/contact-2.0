@@ -6,7 +6,7 @@ export const click = async (selector: string) => {
 };
 
 export const clickTitleBarButton = async (selector: string, i: number) => {
-  await click(`${selector} app-titlebar .titlebar-zone.right button:nth-child(${i})`);
+  await click(`${selector} app-toolbar .toolbar-zone.right button:nth-child(${i})`);
 };
 
 export const clickDialogOkButton = async () => {

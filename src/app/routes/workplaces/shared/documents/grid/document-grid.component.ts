@@ -13,12 +13,11 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { first, map, mergeMap } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IDocument } from '@app/core/document/document.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar, ToolbarItem } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DocumentService } from '@app/core/document/document.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -51,7 +50,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   documents: Array<IDocument> = [];
 
-  toolbarItems: IToolbarItem[];
+  toolbar: Toolbar;
 
   columns: ISimpleGridColumn<IDocument>[] = [
     { prop: 'docName' },
@@ -78,7 +77,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
       .getAction(DocumentService.MESSAGE_DOCUMENT_SAVED)
       .subscribe(() => this.fetch());
 
-    this.toolbarItems = this.buildToolbarItems();
+    this.toolbar = this.buildToolbar();
     this.fetch();
   }
 
@@ -178,44 +177,46 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private buildToolbarItems(): IToolbarItem[] {
-    return [
-      this.buildToolbarAddButton(),
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.EDIT,
-        enabled: this.selectedDocument$.pipe(
-          map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
-          mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_EDIT_LIST', entityTypeCode)),
-        ),
-        action: () => this.onEdit(this.selectedDocumentId$.value)
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.DOWNLOAD,
-        enabled: this.selectedDocument$.map(Boolean),
-        action: () => this.onDownload(),
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.DELETE,
-        enabled: this.selectedDocument$.pipe(
-          map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
-          mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_DELETE_LIST', entityTypeCode)),
-        ),
-        action: () => this.setDialog('delete'),
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.REFRESH,
-        action: () => this.fetch(),
-      },
-    ].filter(Boolean);
+  private buildToolbar(): Toolbar {
+    return {
+      items: [
+        this.buildToolbarAddButton(),
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.EDIT,
+          enabled: this.selectedDocument$.pipe(
+            map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
+            mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_EDIT_LIST', entityTypeCode)),
+          ),
+          action: () => this.onEdit(this.selectedDocumentId$.value)
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.DOWNLOAD,
+          enabled: this.selectedDocument$.map(Boolean),
+          action: () => this.onDownload(),
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.DELETE,
+          enabled: this.selectedDocument$.pipe(
+            map(selectedDocument => selectedDocument ? selectedDocument.entityTypeCode : null),
+            mergeMap(entityTypeCode => this.userPermissionsService.contains('FILE_ATTACHMENT_DELETE_LIST', entityTypeCode)),
+          ),
+          action: () => this.setDialog('delete'),
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.REFRESH,
+          action: () => this.fetch(),
+        },
+      ].filter(Boolean)
+    };
   }
 
   // See:
   // http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=109576221
-  private buildToolbarAddButton(): IToolbarItem {
+  private buildToolbarAddButton(): ToolbarItem {
     switch (this.addForEntity.length) {
       case 0:
         return null;

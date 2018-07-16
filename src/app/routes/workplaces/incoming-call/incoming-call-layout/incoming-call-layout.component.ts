@@ -5,6 +5,7 @@ import {
   DynamicLayoutGroupType,
   DynamicLayoutGroupMode,
 } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,13 +15,17 @@ import {
 })
 export class IncomingCallLayoutComponent implements OnInit {
 
-  @ViewChild('incomingCallTitlebar', { read: TemplateRef }) titlebar: TemplateRef<any>;
-  @ViewChild('incomingCallFilter', { read: TemplateRef }) filter:     TemplateRef<any>;
+  @ViewChild('incomingCallToolbar', { read: TemplateRef }) toolbarTpl: TemplateRef<any>;
+  @ViewChild('incomingCallFilter', { read: TemplateRef }) filter: TemplateRef<any>;
   @ViewChild('incomingCallDebtorGrid', { read: TemplateRef }) debtorGrid: TemplateRef<any>;
   @ViewChild('incomingCallPhoneGrid', { read: TemplateRef }) phoneGrid: TemplateRef<any>;
   @ViewChild('incomingCallDebtorCard', { read: TemplateRef }) debtorCard: TemplateRef<any>;
 
   templates: Record<string, TemplateRef<any>>;
+
+  toolbar: Toolbar = {
+    label: 'routes.workplaces.incomingCall.search.title'
+  };
 
   readonly layout: IDynamicLayoutConfig = {
     key: 'workplaces/incoming-call',
@@ -32,7 +37,7 @@ export class IncomingCallLayoutComponent implements OnInit {
         children: [
           {
             type: DynamicLayoutItemType.TEMPLATE,
-            value: 'incomingCallTitlebar',
+            value: 'incomingCallToolbar',
           },
           {
             type: DynamicLayoutItemType.GROUP,
@@ -85,7 +90,7 @@ export class IncomingCallLayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.templates = {
-      incomingCallTitlebar: this.titlebar,
+      incomingCallToolbar: this.toolbarTpl,
       incomingCallFilter: this.filter,
       incomingCallDebtorGrid: this.debtorGrid,
       incomingCallPhoneGrid: this.phoneGrid,

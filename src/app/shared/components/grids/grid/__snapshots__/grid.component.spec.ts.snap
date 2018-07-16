@@ -33,8 +33,5 @@ exports[`SimpleGridComponent should render empty grid 1`] = `
   </div>
   
 
-
-  
-
 </div>
 `;

@@ -3,7 +3,7 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 import { IDynamicLayoutConfig } from '@app/shared/components/dynamic-layout/dynamic-layout.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 import { IContextMenuParams } from '@app/shared/components/grids/context-menu/context-menu.interface';
-import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarElement } from '@app/shared/components/toolbar/toolbar.interface';
 
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
@@ -72,23 +72,24 @@ export interface IMetadataFilterOperator {
   columnName: string;
   controls: string[];
 }
-
 export interface IMetadataResponse {
+  primary: string;
   name: string;
   actions: IMetadataAction[];
   data: IMetadataColumn[];
   baseFilters: IMetadataFilter[];
+  titlebar?: IMetadataToolbar;
 }
 
-export interface IMetadataTitlebarItem extends ITitlebarElement {
-  name: string;
+export interface IMetadataToolbarItem extends ToolbarElement {
+  name?: string;
   params?: any[];
   permissions?: string[];
 }
 
-export interface IMetadataTitlebar {
-  items?: IMetadataTitlebarItem[];
-  title?: string;
+export interface IMetadataToolbar {
+  items?: IMetadataToolbarItem[];
+  label?: string;
 }
 
 export interface IMetadata {
@@ -96,7 +97,7 @@ export interface IMetadata {
   columns: Array<IMetadataColumn>;
   status: MetadataListStatusEnum;
   filters: IMetadataFilter[];
-  titlebar?: IMetadataTitlebar;
+  titlebar?: IMetadataToolbar;
   defaultAction?: string;
   selectionAction?: string;
   permits?: string[];

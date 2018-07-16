@@ -29,6 +29,7 @@ export const load = (configUrl: string) => new Promise((resolve, reject) => {
         maps: response.maps,
         help: response.help,
         customOperations: response.customOperations,
+        licenses: response.licenses,
       };
 
       resolve(config);

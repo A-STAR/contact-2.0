@@ -9,10 +9,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { merge } from 'rxjs/observable/merge';
 
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ITreeNode, ITreeNodeInfo } from '@app/shared/components/flowtree/treenode/treenode.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -35,8 +34,8 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   readonly canViewOrganization: Observable<boolean> = this.userPermissionsService.has('ORGANIZATION_VIEW');
   readonly canEditOrganization: Observable<boolean> = this.userPermissionsService.has('ORGANIZATION_EDIT');
 
-  titlebar: ITitlebar = {
-    title: 'organizations.title',
+  toolbar: Toolbar = {
+    label: 'organizations.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

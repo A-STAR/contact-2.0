@@ -28,6 +28,7 @@ export class TextComponent implements ControlValueAccessor, Validator, AfterView
   @Input() label: string;
   @Input() minLength: number;
   @Input() maxLength: number;
+  @Input() placeholder = '';
   @Input() required = false;
   @Input() autofocus = false;
 

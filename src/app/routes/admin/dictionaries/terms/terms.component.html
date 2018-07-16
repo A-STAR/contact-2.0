@@ -34,19 +34,13 @@
 >
 </app-dialog-action>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      columnTranslationKey="terms"
-      persistenceKey="[grid] admin/dictionaries/terms"
-      selectionType="single"
-      [columns]="columns"
-      [rows]="rows"
-      (dblClick)="edit()"
-      (selectRow)="onSelect($event)">
-    </app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  columnTranslationKey="terms"
+  persistenceKey="[grid] admin/dictionaries/terms"
+  selectionType="single"
+  [columns]="columns"
+  [toolbar]="toolbar"
+  [rows]="rows"
+  (dblClick)="edit()"
+  (selectRow)="onSelect($event)">
+</app-simple-grid>

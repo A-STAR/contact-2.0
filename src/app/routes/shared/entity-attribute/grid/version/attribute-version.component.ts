@@ -13,11 +13,10 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { AttributeService } from '../../attribute.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -45,7 +44,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
   selectedAttribute: IAttribute;
 
-  toolbarItems: Array<IToolbarItem>;
+  toolbar: Toolbar;
 
   dialog: string;
 
@@ -90,7 +89,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       })
       .subscribe(versions => {
         this.onVersionsFetch(versions);
-        this.toolbarItems = this.getToolbarItems();
+        this.toolbar = this.getToolbarConfig();
       });
   }
 
@@ -150,25 +149,27 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     ]);
   }
 
-  private getToolbarItems(): IToolbarItem[] {
-    return [
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.EDIT,
-        action: () => this.setDialog('edit'),
-        enabled: combineLatestAnd([
-          this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-          of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
-          this.selectedVersion$.map(version => !!version)
-        ]),
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.REFRESH,
-        action: () => this.entityTypeId && this.entityId && this.selectedAttribute
-          && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
-      },
-    ];
+  private getToolbarConfig(): Toolbar {
+    return {
+      items: [
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.EDIT,
+          action: () => this.setDialog('edit'),
+          enabled: combineLatestAnd([
+            this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+            of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
+            this.selectedVersion$.map(version => !!version)
+          ]),
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.REFRESH,
+          action: () => this.entityTypeId && this.entityId && this.selectedAttribute
+            && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
+        },
+      ]
+    };
   }
 
   private processVersions(versions: IAttributeVersion[]): IAttributeVersion[] {

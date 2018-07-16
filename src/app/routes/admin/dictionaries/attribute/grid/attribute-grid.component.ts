@@ -4,14 +4,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { map, first } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAttribute } from '../attribute.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 import { IGridTreeRow } from './gridtree.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { AttributeService } from '../attribute.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -59,31 +58,33 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   attributes: IGridTreeRow<IAttribute>[] = [];
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.setDialog('add'),
-      enabled: this.canAdd$,
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('delete'),
-      enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.setDialog('add'),
+        enabled: this.canAdd$,
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([ this.canEdit$, this.selectedAttribute$.map(Boolean) ]),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('delete'),
+        enabled: combineLatestAnd([ this.canDelete$, this.selectedAttribute$.map(Boolean) ]),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+      },
+    ]
+  };
 
   dialog: 'add' | 'edit' | 'delete';
 

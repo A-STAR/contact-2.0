@@ -3,11 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IProperty } from '@app/routes/workplaces/core/property/property.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -38,32 +37,34 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     { prop: 'comment' }
   ].map(addGridLabel('widgets.property.grid'));
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.propertyService.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selectedProperty$.value),
-      enabled: combineLatestAnd([
-        this.propertyService.canEdit$,
-        this.selectedProperty$.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('removeProperty'),
-      enabled: combineLatestAnd([
-        this.propertyService.canDelete$,
-        this.selectedProperty$.map(o => !!o)
-      ])
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.propertyService.canAdd$,
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selectedProperty$.value),
+        enabled: combineLatestAnd([
+          this.propertyService.canEdit$,
+          this.selectedProperty$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('removeProperty'),
+        enabled: combineLatestAnd([
+          this.propertyService.canDelete$,
+          this.selectedProperty$.map(o => !!o)
+        ])
+      },
+    ]
+  };
 
   dialog: 'delete';
 

@@ -3,8 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactRegistrationService } from '../../../shared/contact-registration/contact-registration.service';
 import { IncomingCallService } from '../../incoming-call.service';
@@ -26,12 +28,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   personRole = null;
 
   readonly contactType = 2;
-  readonly titlebar$ = this.incomingCallService.selectedDebtor$.pipe(
+  readonly toolbar$: Observable<Toolbar> = this.incomingCallService.selectedDebtor$.pipe(
     map(debtor => {
       const title = this.translateService.instant('routes.workplaces.incomingCall.debtor.title');
       const { fullName } = debtor || {} as any;
       return {
-        title: fullName ? `${title}: ${fullName}` : title,
+        label: fullName ? `${title}: ${fullName}` : title,
       };
     }),
   );

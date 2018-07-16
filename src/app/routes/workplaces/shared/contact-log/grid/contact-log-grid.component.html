@@ -2,12 +2,12 @@
   #grid
   persistenceKey="[grid] workplaces/shared/contact-log"
   metadataKey="contactSearchFull"
-  [toolbarItems]="hideToolbar ? null : toolbarItems"
+  [toolbar]="hideToolbar ? null : toolbar"
   [fullHeight]="true"
   [rows]="contactLogList"
   [rowCount]="rowCount"
   [actionData]="{ callCenter: callCenter }"
-  (selectRow)="onSelect()"
+  (selectRow)="onSelect($event)"
   (dblClick)="onEdit($event)"
   (request)="onRequest()"
 ></app-action-grid>

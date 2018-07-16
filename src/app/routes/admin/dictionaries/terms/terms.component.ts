@@ -3,11 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { map, first, filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITerm } from '../dictionaries.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -37,8 +36,8 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     map(terms => !!terms),
   );
 
-  titlebar: ITitlebar = {
-    title: 'terms.title',
+  toolbar: Toolbar = {
+    label: 'terms.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

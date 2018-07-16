@@ -1,13 +1,8 @@
-<div class="flex vertical">
-  <app-titlebar class="flex-item" [titlebar]="titlebar"></app-titlebar>
-
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] admin/users"
-      [columns]="columns"
-      [rows]="users"
-      (selectRow)="onSelect($event)"
-      (dblClick)="onEdit($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] admin/users"
+  [columns]="columns"
+  [toolbar]="toolbar"
+  [rows]="users"
+  (selectRow)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

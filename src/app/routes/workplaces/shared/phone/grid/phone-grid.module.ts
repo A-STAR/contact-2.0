@@ -5,7 +5,6 @@ import { BlockDialogModule } from '@app/shared/components/dialog/block/block-dia
 import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 import { PhoneGridScheduleModule } from './schedule/phone-grid-schedule.module';
-import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 import { OperatorModule } from '@app/shared/components/operator/operator.module';
 
 import { PhoneGridComponent } from './phone-grid.component';
@@ -17,7 +16,6 @@ import { PhoneGridComponent } from './phone-grid.component';
     DialogActionModule,
     GridsModule,
     PhoneGridScheduleModule,
-    Toolbar2Module,
     OperatorModule
   ],
   exports: [

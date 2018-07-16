@@ -10,7 +10,7 @@ import { FormulasService } from '@app/routes/utilities/formulas/formulas.service
 import { GridsComponent } from './grids.component';
 import {
   FormulaCalculateActionComponent
-} from './entity-grid/cusom-actions/formula-calculate/formula-calculate-action.component';
+} from './entity-grid/custom-actions/formula-calculate/formula-calculate-action.component';
 
 const routes: Routes = [
   {

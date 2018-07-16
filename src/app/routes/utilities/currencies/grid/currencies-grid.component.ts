@@ -3,12 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ICurrency } from '../currencies.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CurrenciesService } from '../currencies.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -37,41 +35,40 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     { prop: 'isMain', renderer: TickRendererComponent },
   ].map(addGridLabel('widgets.currencies.grid'));
 
-  titlebar: ITitlebar = {
-    title: 'widgets.currencies.titlebar.title'
+  toolbar: Toolbar = {
+    label: 'widgets.currencies.titlebar.title',
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.currenciesService.canAdd$,
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selectedCurrency$.value),
+        enabled: combineLatestAnd([
+          this.currenciesService.canEdit$,
+          this.selectedCurrency$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('removeCurrency'),
+        enabled: this.selectedCurrency$.flatMap(
+          selectedCurrency => this.currenciesService.canDelete$(selectedCurrency),
+        ),
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: this.currenciesService.canView$
+      }
+    ]
   };
-
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.currenciesService.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selectedCurrency$.value),
-      enabled: combineLatestAnd([
-        this.currenciesService.canEdit$,
-        this.selectedCurrency$.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('removeCurrency'),
-      enabled: this.selectedCurrency$.flatMap(
-        selectedCurrency => this.currenciesService.canDelete$(selectedCurrency),
-      ),
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: this.currenciesService.canView$
-    }
-  ];
 
   dialog: string;
 

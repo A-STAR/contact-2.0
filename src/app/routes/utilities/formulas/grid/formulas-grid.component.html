@@ -14,18 +14,12 @@
   (close)="onCloseDialog()"
 ></app-formula-calculate-dialog>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] utilities/formulas"
-      [columns]="columns"
-      [selection]="selection"
-      [rows]="formulas"
-      (selectRow)="onSelect($event)"
-      (dblClick)="onEdit($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] utilities/formulas"
+  [columns]="columns"
+  [selection]="selection"
+  [toolbar]="toolbar"
+  [rows]="formulas"
+  (selectRow)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

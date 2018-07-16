@@ -46,12 +46,10 @@ import { IMetadataDefs } from '../grid/grid.interface';
 import {
   IMetadataAction,
   MetadataActionType,
-  IMetadataTitlebar,
+  IMetadataToolbar,
 } from '@app/core/metadata/metadata.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { ActionGridService } from './action-grid.service';
@@ -67,12 +65,14 @@ import { ActionGridFilterComponent } from './filter/action-grid-filter.component
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
-import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
 import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
+import { ToolbarComponent } from '@app/shared/components/toolbar/toolbar.component';
+
+import { mergeDeep } from 'immutable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,10 +94,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @Input() defaultAction: string;
   @Input() selectionAction: string;
   @Input() columnIds: string[];
-  @Input() toolbarItems: IToolbarItem[];
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
-  @Input() titlebar: IMetadataTitlebar;
+  @Input() toolbar: Toolbar;
   @Input() fullHeight = false;
   /**
    * Shows whether to use simple grid
@@ -142,7 +141,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   @ViewChild('grid') grid: SimpleGridComponent<T> | Grid2Component;
   @ViewChild('gridTpl', { read: TemplateRef }) gridTpl: TemplateRef<T>;
   @ViewChild('details', { read: TemplateRef }) details: TemplateRef<T>;
-  @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
+  @ViewChild(ToolbarComponent) gridBar: ToolbarComponent;
 
   initialized = false;
   templates: Record<string, TemplateRef<any>>;
@@ -152,7 +151,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private gridPermitState = true;
 
   private actions$ = new BehaviorSubject<any[]>(null);
-  private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
+  private toolbarConfig$ = new BehaviorSubject<IMetadataToolbar | Toolbar>(null);
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
@@ -167,7 +166,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   selectionActionData: IGridAction;
   selectionActionName: string;
 
-  titlebar$: Observable<ITitlebar>;
+  toolbar$: Observable<Toolbar>;
   layoutConfig: IDynamicLayoutConfig = {
     key: 'action-grid',
     items: [
@@ -232,7 +231,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
         }
       });
 
-    this.titlebar$ = this.getGridTitlebar();
+    this.toolbar$ = this.getGridToolbar();
 
     const selectActionSub = this.selectRow.pipe(
       filter(selection => selection && selection.length && !!this.currentSelectionAction),
@@ -330,11 +329,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     })
   );
 
-  getGridTitlebar(): Observable<ITitlebar> {
-    return this.titlebarConfig$
+  getGridToolbar(): Observable<Toolbar> {
+    return this.toolbarConfig$
       .pipe(
         filter(Boolean),
-        map(config => this.buildTitlebar(config))
+        map(config => this.buildToolbar(config))
       );
   }
 
@@ -507,11 +506,22 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     this.rowIdKey = data.primary || this.rowIdKey || 'id';
     this.defaultActionName = data.defaultAction;
     this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
-    this.titlebarConfig$.next(data.titlebar || this.titlebar);
     this._columns = data.columns ? [...data.columns] : null;
     this.initialized = true;
     this.templates = { gridTpl: this.gridTpl, details: this.details };
+    this.initToolbar(data.titlebar);
     this.cdRef.markForCheck();
+  }
+
+  private initToolbar(config: IMetadataToolbar): void {
+    let srcConfig = config;
+    if (!srcConfig) {
+      srcConfig = {};
+    }
+    if (!srcConfig.items) {
+      srcConfig.items = [];
+    }
+    this.toolbarConfig$.next(mergeDeep(srcConfig, this.toolbar));
   }
 
   private getGridFilters(): FilterObject {
@@ -551,9 +561,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     );
   }
 
-  private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
+  private buildToolbar(config: IMetadataToolbar): Toolbar {
     // TODO(i.lobanov): move to action grid service and refactor
-    const titlebarItems = {
+    const toolbar = {
       refresh: (permissions: string[]) => ({
         type: ToolbarItemType.BUTTON,
         buttonType: ButtonType.REFRESH,
@@ -584,12 +594,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       }),
     };
     return {
-      title: config.title,
+      label: (config && config.label) || '',
+      showBorder: true,
       items: config.items
         .concat([
           { name: 'filter', permissions: null },
         ])
-        .map(item => titlebarItems[item.name](item.permissions)),
+        .map(item => item.name ? toolbar[item.name](item.permissions) : item)
     };
   }
 

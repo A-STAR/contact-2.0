@@ -8,19 +8,12 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] utilities/currencies"
-      [columns]="columns"
-      [selection]="selection"
-      [rows]="currencies"
-      [toolbar]="toolbarItems"
-      (selectRow)="onSelect($event)"
-      (dblClick)="onEdit($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] utilities/currencies"
+  [columns]="columns"
+  [selection]="selection"
+  [rows]="currencies"
+  [toolbar]="toolbar"
+  (selectRow)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

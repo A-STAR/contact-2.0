@@ -16,17 +16,11 @@
 >
 </app-dialog-action>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] utilities/campaigns/participants"
-      selectionType="multiple"
-      [columns]="columns"
-      [rows]="participants"
-      (selectRow)="onSelectParticipant($event)">
-    </app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] utilities/campaigns/participants"
+  selectionType="multiple"
+  [toolbar]="toolbar"
+  [columns]="columns"
+  [rows]="participants"
+  (selectRow)="onSelectParticipant($event)">
+</app-simple-grid>

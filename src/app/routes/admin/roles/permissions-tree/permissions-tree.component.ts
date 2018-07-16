@@ -8,11 +8,11 @@ import { distinctUntilKeyChanged } from 'rxjs/operators';
 
 import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IPermissionRole } from '../permissions.interface';
-import {
-  IToolbarItem,
-  ToolbarItemType
-} from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
+import {
+  ToolbarItemType,
+  Toolbar,
+} from '@app/shared/components/toolbar/toolbar.interface';
 
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 import { PermissionsTreeService } from './permissions-tree.service';
@@ -35,17 +35,19 @@ export class PermissionsTreeComponent implements OnDestroy {
   readonly hasViewPermission: Observable<boolean> = this.userPermissionsService.has('GUI_TREE_VIEW');
   readonly hasEditPermission: Observable<boolean> = this.userPermissionsService.has('GUI_TREE_EDIT');
 
-  toolbarActions: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.SAVE,
-      action: () => this.onSaveChanges(),
-      enabled: combineLatest(
-        this.userPermissionsService.has('GUI_TREE_EDIT'),
-        this.changes
-      ).map(([rights, changes]) => rights && changes)
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.SAVE,
+        action: () => this.onSaveChanges(),
+        enabled: combineLatest(
+          this.userPermissionsService.has('GUI_TREE_EDIT'),
+          this.changes
+        ).map(([rights, changes]) => rights && changes)
+      },
+    ]
+  };
 
   private currentRole: IPermissionRole;
   private permissionsServiceSub: Subscription;

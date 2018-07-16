@@ -14,18 +14,12 @@
   [url]="exportUrl"
 ></app-downloader>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] utilities/letterTemplates"
-      [columns]="columns"
-      [selection]="selection"
-      [rows]="templates"
-      (selectRow)="onSelect($event)"
-      (dblClick)="onEdit($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] utilities/letterTemplates"
+  [columns]="columns"
+  [toolbar]="toolbar"
+  [selection]="selection"
+  [rows]="templates"
+  (selectRow)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

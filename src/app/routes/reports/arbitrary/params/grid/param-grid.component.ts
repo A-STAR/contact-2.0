@@ -4,8 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IReportParam } from '../params.interface';
@@ -44,44 +43,46 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'multiSelect', renderer: TickRendererComponent }
   ].map(addGridLabel('modules.reports.arbitrary.params.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: combineLatestAnd([
-        this.reportId$.map(Boolean),
-        this.paramsService.canEdit$
-      ]),
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(this.selectedParam$.value),
-      enabled: combineLatestAnd([
-        this.selectedParam$.map(Boolean),
-        this.paramsService.canEdit$
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.selectedParam$.map(Boolean),
-        this.paramsService.canEdit$
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch(),
-      enabled: combineLatestAnd([
-        this.reportId$.map(Boolean),
-        this.paramsService.canEdit$
-      ])
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: combineLatestAnd([
+          this.reportId$.map(Boolean),
+          this.paramsService.canEdit$
+        ]),
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(this.selectedParam$.value),
+        enabled: combineLatestAnd([
+          this.selectedParam$.map(Boolean),
+          this.paramsService.canEdit$
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.selectedParam$.map(Boolean),
+          this.paramsService.canEdit$
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch(),
+        enabled: combineLatestAnd([
+          this.reportId$.map(Boolean),
+          this.paramsService.canEdit$
+        ])
+      }
+    ]
+  };
 
   dialog: string;
 

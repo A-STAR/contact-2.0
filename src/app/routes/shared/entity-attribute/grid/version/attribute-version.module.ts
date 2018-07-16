@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { DynamicFormModule } from '@app/shared/components/form/dynamic-form/dynamic-form.module';
 import { AttributeVersionEditModule } from './edit/attribute-version-edit.module';
-import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { AttributeVersionComponent } from './attribute-version.component';
@@ -16,7 +15,6 @@ import { AttributeVersionComponent } from './attribute-version.component';
     DialogModule,
     DynamicFormModule,
     GridsModule,
-    Toolbar2Module,
     TranslateModule,
     AttributeVersionEditModule
   ],

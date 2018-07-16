@@ -69,10 +69,28 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
       };
     }
     case CallService.PBX_STATE_CHANGE: {
-      return {
-        ...state,
-        pbxState: action.payload
-      };
+      const { lineStatus, userStatus, payload } = action.payload;
+      if (lineStatus) {
+        return {
+          ...state,
+          pbxState: {
+            ...state.pbxState,
+            lineStatus,
+            payload,
+          },
+        };
+      }
+      if (userStatus) {
+        return {
+          ...state,
+          pbxState: {
+            ...state.pbxState,
+            userStatus,
+            payload,
+          },
+        };
+      }
+      return state;
     }
     case CallService.PBX_PARAMS_CHANGE: {
       return {

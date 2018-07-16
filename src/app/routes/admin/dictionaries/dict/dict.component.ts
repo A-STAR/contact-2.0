@@ -3,10 +3,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { map, first, filter, switchMap } from 'rxjs/operators';
 
-import { IDictionary, ITerm } from '../dictionaries.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { IDictionary, ITerm } from '../dictionaries.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -34,37 +33,39 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     ]);
   readonly canEdit: Observable<boolean> = this.userPermissionsService.has('DICT_EDIT');
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.create(),
-      enabled: this.userPermissionsService.has('DICT_ADD')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.edit(),
-      enabled: combineLatestAnd([
-        this.canEdit,
-        this.dictionariesService.hasSelectedDictionary
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('DICT_DELETE'),
-        this.dictionariesService.hasSelectedDictionary
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.dictionariesService.fetchDictionaries()
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.create(),
+        enabled: this.userPermissionsService.has('DICT_ADD')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.edit(),
+        enabled: combineLatestAnd([
+          this.canEdit,
+          this.dictionariesService.hasSelectedDictionary
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('DICT_DELETE'),
+          this.dictionariesService.hasSelectedDictionary
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.dictionariesService.fetchDictionaries()
+      }
+    ]
+  };
 
   dialog: 'create' | 'edit' | 'remove';
   dictionary: IDictionary;

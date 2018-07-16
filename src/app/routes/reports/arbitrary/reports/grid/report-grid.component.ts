@@ -3,11 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IReport } from '../reports.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { ReportsService } from '../reports.service';
@@ -35,8 +34,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     { prop: 'comment' },
   ].map(addGridLabel('modules.reports.arbitrary.grid'));
 
-  titlebar: ITitlebar = {
-    title: 'modules.reports.arbitrary.title',
+  toolbar: Toolbar = {
+    label: 'modules.reports.arbitrary.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

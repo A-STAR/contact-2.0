@@ -64,8 +64,7 @@ import { ScriptEditorModule } from './components/form/script-editor/script-edito
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TaskResultModule } from '@app/shared/components/task/task-result.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
-import { TitlebarModule } from './components/titlebar/titlebar.module';
-import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
+import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
 import { ViewFormModule } from './components/form/view-form/view-form.module';
@@ -141,8 +140,7 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     TabViewModule,
     TaskResultModule,
     TextEditorModule,
-    TitlebarModule,
-    Toolbar2Module,
+    ToolbarModule,
     TreeModule,
     ValueInputModule,
     ViewFormModule,
@@ -225,8 +223,7 @@ import { DynamicLayoutModule } from '@app/shared/components/dynamic-layout/dynam
     TabViewModule,
     TaskResultModule,
     TextEditorModule,
-    TitlebarModule,
-    Toolbar2Module,
+    ToolbarModule,
     TreeModule,
     ValueInputModule,
     ViewFormModule,

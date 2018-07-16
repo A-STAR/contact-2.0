@@ -1,0 +1,21 @@
+<div class="toolbar flex justify-end" [ngClass]="customCls">
+  <div *ngIf="label" class="toolbar-zone left">
+    <div class="form-title mt0">{{ label | translate }}</div>
+  </div>
+
+  <div *ngIf="!suppressCenterZone" class="toolbar-zone center">
+    <ng-content></ng-content>
+  </div>
+
+  <div *ngIf="items?.length" class="toolbar-zone right">
+    <div class="toolbar-items">
+      <ng-container *ngFor="let item of items">
+        <app-toolbar-item
+          [item]="item"
+          (action)="onAction($event)"
+        ></app-toolbar-item>
+      </ng-container>
+    </div>
+  </div>
+
+</div>

@@ -3,10 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map, distinctUntilChanged, first } from 'rxjs/operators';
 
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DebtorService } from '@app/routes/workplaces/debtor-card/debtor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -54,80 +53,82 @@ export class DebtGridComponent extends DialogFunctions implements OnDestroy, OnI
       distinctUntilChanged()
     );
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      enabled: this.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      enabled: combineLatestAnd([ this.canEdit$, this.selectedDebt$.map(debt => debt && !!debt.id) ]),
-      action: () => this.onEdit()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.CHANGE_STATUS,
-      label: 'widgets.debt.toolbar.changeStatus',
-      enabled: combineLatestAnd([
-        this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
-        this.userPermissionsService.bag().map(bag => (
-          bag.containsOneOf('DEBT_STATUS_EDIT_LIST', [ 9, 12, 15 ]) ||
-          bag.containsCustom('DEBT_STATUS_EDIT_LIST'))
-        )
-      ]),
-      action: () => this.onChangeStatus()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.CALL,
-      label: 'widgets.debt.toolbar.call',
-      enabled: combineLatestAnd([
-        this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
-        this.userPermissionsService.has('DEBT_NEXT_CALL_DATE_SET'),
-      ]),
-      action: () => this.onNextCall()
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.CLEAR,
-      label: 'widgets.debt.toolbar.terminate',
-      enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
-      children: [
-        {
-          label: 'widgets.debt.toolbar.forRepayment',
-          action: () => this.onClose(10),
-          enabled: combineLatestAnd([
-            this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
-            this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 10),
-          ])
-        },
-        {
-          label: 'widgets.debt.toolbar.withdrawn',
-          action: () => this.onClose(8),
-          enabled: combineLatestAnd([
-            this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8),
-            this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 8),
-          ])
-        },
-        {
-          label: 'widgets.debt.toolbar.terminate',
-          action: () => this.onClose(6),
-          enabled: combineLatestAnd([
-            this.selectedDebt$.map(debt => debt && !!debt.id && !(debt.statusCode >= 6 && debt.statusCode <= 8)),
-            this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 6),
-          ])
-        },
-      ]
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetch()
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        enabled: this.canAdd$,
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        enabled: combineLatestAnd([ this.canEdit$, this.selectedDebt$.map(debt => debt && !!debt.id) ]),
+        action: () => this.onEdit()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.CHANGE_STATUS,
+        label: 'widgets.debt.toolbar.changeStatus',
+        enabled: combineLatestAnd([
+          this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
+          this.userPermissionsService.bag().map(bag => (
+            bag.containsOneOf('DEBT_STATUS_EDIT_LIST', [ 9, 12, 15 ]) ||
+            bag.containsCustom('DEBT_STATUS_EDIT_LIST'))
+          )
+        ]),
+        action: () => this.onChangeStatus()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.CALL,
+        label: 'widgets.debt.toolbar.call',
+        enabled: combineLatestAnd([
+          this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
+          this.userPermissionsService.has('DEBT_NEXT_CALL_DATE_SET'),
+        ]),
+        action: () => this.onNextCall()
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.CLEAR,
+        label: 'widgets.debt.toolbar.terminate',
+        enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
+        children: [
+          {
+            label: 'widgets.debt.toolbar.forRepayment',
+            action: () => this.onClose(10),
+            enabled: combineLatestAnd([
+              this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8 && debt.statusCode !== 10),
+              this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 10),
+            ])
+          },
+          {
+            label: 'widgets.debt.toolbar.withdrawn',
+            action: () => this.onClose(8),
+            enabled: combineLatestAnd([
+              this.selectedDebt$.map(debt => debt && !!debt.id && debt.statusCode !== 8),
+              this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 8),
+            ])
+          },
+          {
+            label: 'widgets.debt.toolbar.terminate',
+            action: () => this.onClose(6),
+            enabled: combineLatestAnd([
+              this.selectedDebt$.map(debt => debt && !!debt.id && !(debt.statusCode >= 6 && debt.statusCode <= 8)),
+              this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 6),
+            ])
+          },
+        ]
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetch()
+      },
+    ]
+  };
 
   columns: ISimpleGridColumn<Debt>[] = [
     { prop: 'id' },

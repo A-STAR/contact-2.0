@@ -5,19 +5,13 @@
 
 <ng-content></ng-content>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar *ngIf="titlebar" [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      *ngIf="columns"
-      [persistenceKey]="persistenceKey"
-      [columns]="columns"
-      [selection]="selectedRows"
-      [rows]="rows"
-      (selectRow)="onSelect($event)"
-      (dblClick)="onEdit($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  *ngIf="columns"
+  [persistenceKey]="persistenceKey"
+  [columns]="columns"
+  [toolbar]="toolbar"
+  [selection]="selectedRows"
+  [rows]="rows"
+  (selectRow)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

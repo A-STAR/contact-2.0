@@ -464,6 +464,9 @@
         }
       },
       "grids": {
+        "grid": {
+          "quickFilter": "Быстрый поиск"
+        },
         "overlays": {
           "empty": "Нет данных"
         },
@@ -3683,7 +3686,10 @@
         "registerContact": "Регистрация контакта",
         "changePersonType": "Изменить тип персоны",
         "letterGenerate": "Массовое формирование писем",
-        "letterExport": "Сохранение файла письма"
+        "letterExport": "Сохранение файла письма",
+        "callList": "Компания обзвона",
+        "callListCreate": "Новая",
+        "callListUpdate": "Дозагрузка"
       }
     },
     "filter": {

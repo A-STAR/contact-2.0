@@ -18,7 +18,7 @@
 ></app-dialog-action>
 
 <div class="flex vertical">
-  <div class="flex-item panel m0 pt">
+  <div class="flex-item m0 pt">
     <app-select
       [ngModel]="selectedTypeCode"
       [isRequired]="true"
@@ -32,7 +32,7 @@
       persistenceKey="[grid] admin/roles/objects"
       [columns]="columns"
       [rows]="rows"
-      [toolbar]="toolbarItems"
+      [toolbar]="toolbar"
       (selectRow)="onSelect($event)"
     ></app-simple-grid>
   </div>

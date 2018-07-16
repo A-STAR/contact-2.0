@@ -6,34 +6,34 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ToolbarItem } from '../toolbar.interface';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 import { doOnceIf, invert } from '@app/core/utils';
 
 @Component({
-  selector: 'app-toolbar-2-item',
-  templateUrl: './toolbar2-item.component.html',
-  styleUrls: ['./toolbar2-item.component.scss'],
+  selector: 'app-toolbar-item',
+  templateUrl: './toolbar-item.component.html',
+  styleUrls: ['./toolbar-item.component.scss'],
 })
-export class Toolbar2ItemComponent implements OnInit, OnDestroy {
+export class ToolbarItemComponent implements OnInit, OnDestroy {
   static ITEM_DEBOUNCE_TIME = 500;
 
-  @Input() item: IToolbarItem;
+  @Input() item: ToolbarItem;
 
-  @Output() action = new EventEmitter<IToolbarItem>();
+  @Output() action = new EventEmitter<ToolbarItem>();
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  private click$ = new Subject<IToolbarItem>();
+  private click$ = new Subject<ToolbarItem>();
   private clickSub: Subscription;
 
   constructor(private store: Store<IAppState>) {}
 
   ngOnInit(): void {
     this.clickSub = this.click$
-      .debounceTime(Toolbar2ItemComponent.ITEM_DEBOUNCE_TIME)
+      .debounceTime(ToolbarItemComponent.ITEM_DEBOUNCE_TIME)
       .subscribe(item => doOnceIf(this.isDisabled(item).map(invert), () => {
         if (typeof item.action === 'function') {
           item.action();
@@ -48,16 +48,32 @@ export class Toolbar2ItemComponent implements OnInit, OnDestroy {
     this.clickSub.unsubscribe();
   }
 
-  onClick(item: IToolbarItem): void {
+  onClick(item: ToolbarItem): void {
     this.click$.next(item);
   }
 
-  onDropdownItemClick(item: IToolbarItem): void {
+  onDropdownItemClick(item: ToolbarItem): void {
     this.dropdown.close();
     this.onClick(item);
   }
 
-  isDisabled(item: IToolbarItem): Observable<boolean> {
+  isDisabled(item: ToolbarItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
+
+  /**
+   * Get the icon's css class, or show an exclamation if the icon class is not listed
+   * @param item {ITitlebarButton}
+   */
+  // getIconCls(item: ITitlebarButton): object {
+  //   const iconCls = this.buttonService.getIcon(item.buttonType) || 'co-dialog-exclamation';
+  //   const cls = { 'align-right': item.align === 'right' };
+  //   return iconCls
+  //     ? { ...cls, [iconCls]: true }
+  //     : cls;
+  // }
+
+  // getLabel(item: ITitlebarButton): string {
+  //   return this.buttonService.getLabel(item.buttonType) || null;
+  // }
 }

@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SelectModule } from '../../form/select/select.module';
-import { ToolbarComponent } from './toolbar.component';
-import { ToolbarService } from './toolbar.service';
+
+import { PaginationComponent } from './pagination.component';
+import { PaginationService } from './pagination.service';
 
 @NgModule({
   imports: [
@@ -15,13 +16,13 @@ import { ToolbarService } from './toolbar.service';
     TranslateModule,
   ],
   exports: [
-    ToolbarComponent,
+    PaginationComponent,
   ],
   declarations: [
-    ToolbarComponent,
+    PaginationComponent,
   ],
   providers: [
-    ToolbarService,
+    PaginationService,
   ]
 })
-export class ToolbarModule { }
+export class PaginationModule { }

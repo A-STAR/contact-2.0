@@ -14,15 +14,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { of } from 'rxjs/observable/of';
 import { first, map, mapTo, mergeMap } from 'rxjs/operators';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { EntityType } from '@app/core/entity/entity.interface';
 import { IAddress } from '@app/routes/workplaces/core/address/address.interface';
 import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactPersonCardService } from './contact-person-card.service';
 import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
@@ -99,8 +98,8 @@ export class ContactPersonCardComponent implements OnInit, AfterViewInit, OnDest
     ? editContactPersonLayout
     : createContactPersonLayout;
 
-  readonly contactPersonTitlebar: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
+  readonly contactPersonToolbar: Toolbar = {
+    label: 'routes.workplaces.debtorCard.contactPerson.card.forms.contactPerson.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

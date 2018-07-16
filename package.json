@@ -88,5 +88,8 @@
     "puppeteer": "^1.0.0",
     "ts-node": "~3.3.0",
     "tslint": "~5.6.0"
+  },
+  "publishConfig": {
+    "registry": "http://repository2.luxbase.int:8081/repository/npm-private"
   }
 }
