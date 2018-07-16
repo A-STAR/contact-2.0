@@ -39,7 +39,7 @@ export class RegisterContactComponent {
   }
 
   onPhoneAction(contactId: any): void {
-    this.submit.emit({ contactType: 2, contactId });
+    this.submit.emit({ contactType: 1, contactId });
   }
 
   onSpecialAction(): void {
