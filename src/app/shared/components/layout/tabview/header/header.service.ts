@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
@@ -11,15 +10,26 @@ export class TabHeaderService {
 
   constructor() { }
 
-  tabs$ = new BehaviorSubject<ITab[]>([]);
+  set tabs(tabs: ITab[]) {
+    this._tabs = tabs;
+  }
+
+  get tabs():  ITab[] {
+    return this._tabs;
+  }
+
+  getTabPerms(): Observable<boolean[]> {
+    return combineLatest(this.tabs.map(t => t.hasPermission));
+  }
+
+  private _tabs: ITab[] = [];
 }
 
 @Injectable()
 export class CanActivateTabGuard implements CanActivateChild {
   constructor(private headerService: TabHeaderService) {}
   canActivateChild(next: ActivatedRouteSnapshot): Observable<boolean> {
-    return this.headerService.tabs$
-      .switchMap(tabs => combineLatest(...tabs.map(t => t.hasPermission)))
+    return this.headerService.getTabPerms()
       .map(perms => {
         return perms.some(Boolean);
       });

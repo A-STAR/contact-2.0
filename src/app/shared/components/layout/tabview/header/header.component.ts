@@ -1,11 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter } from 'rxjs/operators/filter';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
-import { map, flatMap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { map } from 'rxjs/operators';
 
 import { ITab } from './header.interface';
 
@@ -13,19 +24,19 @@ import { LayoutService } from '@app/layout/layout.service';
 
 import { TabHeaderService } from './header.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-tabview-header',
   templateUrl: 'header.component.html',
   styleUrls: ['./header.component.scss'],
-  // providers: [ TabHeaderService ],
+  providers: [ TabHeaderService ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabHeaderComponent implements OnInit, OnDestroy {
   private static MENU_BTN_SPACE = 50;
 
   private tabHeaders: QueryList<ElementRef>;
-
   private tabPermsChangeSub: Subscription;
   private routeChangeSub: Subscription;
 
@@ -39,7 +50,7 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     if (tabs !== null) {
       const tabsWithPermissions = this.setTabPermissions(tabs);
 
-      this.headerService.tabs$.next(tabsWithPermissions);
+      this.headerService.tabs = tabsWithPermissions;
 
       if (this.tabPermsChangeSub) {
         this.tabPermsChangeSub.unsubscribe();
@@ -76,11 +87,9 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
 
-    this.visibleTabsSub = this.tabs$
+    this.visibleTabsSub = this.headerService.getTabPerms()
       .pipe(
-        map(tabs => tabs.map(tab => tab.hasPermission)),
-        flatMap(tabPermissions$ => combineLatest(tabPermissions$)),
-        map(tabPermissions => tabPermissions.map((p, index) => p && this.tabs$.value[index]).filter(Boolean))
+        map(tabPermissions => tabPermissions.map((p, index) => p && this.headerService.tabs[index]).filter(Boolean))
       )
       .subscribe(tabs => {
         this.visibleTabs$.next(tabs);
@@ -101,7 +110,6 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
         this._clicked = false;
       });
   }
-  }
 
   ngOnDestroy(): void {
     this.visibleTabsSub.unsubscribe();
@@ -110,7 +118,7 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     }
     this.routeChangeSub.unsubscribe();
   }
-  
+
   onClick(tabIndex: number): void {
     this.tabIndex = tabIndex;
     this._clicked = true;
@@ -126,7 +134,7 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
   }
 
   get menuTabs(): ITab[] {
-    return this.tabs$.value.filter(tab => this.visibleTabs.includes(tab) && !this.feetsInView(tab));
+    return this.headerService.tabs.filter(tab => this.visibleTabs.includes(tab) && !this.feetsInView(tab));
   }
 
   feetsInView(tab: ITab): boolean {
