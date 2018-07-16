@@ -12,9 +12,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map } from 'rxjs/operators';
 
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { LayoutService } from '@app/core/layout/layout.service';
 import { PledgeCardCreatePropertyService } from './create-property.service';
@@ -44,7 +43,7 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
   @ViewChild(PropertySearchComponent) propertySearch: PropertySearchComponent;
 
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('propertyToolbar',    { read: TemplateRef }) propertyToolbarTemplate:    TemplateRef<any>;
 
   readonly layoutConfig = createPropertyLayout;
 
@@ -67,8 +66,8 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
 
   readonly property$ = this.pledgeCardCreatePropertyService.property$;
 
-  readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+  readonly propertyToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -106,7 +105,7 @@ export class PledgeCardCreatePropertyComponent extends DialogFunctions implement
   ngOnInit(): void {
     this.templates = {
       propertyClearButton: this.propertyClearButtonTemplate,
-      propertyTitlebar: this.propertyTitlebarTemplate,
+      propertyToolbar: this.propertyToolbarTemplate,
     };
 
     const { url } = this.router;

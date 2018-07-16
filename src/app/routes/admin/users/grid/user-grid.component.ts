@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
@@ -49,8 +48,8 @@ export class UserGridComponent implements OnInit, OnDestroy {
 
   displayInactiveUsers: boolean;
 
-  titlebar: ITitlebar = {
-    title: 'users.title',
+  toolbar: Toolbar = {
+    label: 'users.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

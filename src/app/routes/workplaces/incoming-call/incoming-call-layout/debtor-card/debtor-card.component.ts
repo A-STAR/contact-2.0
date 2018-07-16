@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DebtorCardService } from './debtor-card.service';
 import { IncomingCallService } from '../../incoming-call.service';
@@ -29,6 +29,7 @@ export class DebtorCardComponent implements AfterViewInit, OnDestroy {
   ].map(control => ({ ...control, disabled: true }));
 
   data: any = {};
+  toolbar: Toolbar;
 
   private selectedDebtorSubscription: Subscription;
 
@@ -44,6 +45,7 @@ export class DebtorCardComponent implements AfterViewInit, OnDestroy {
       .flatMap(debtor => debtor ? this.debtorCardService.fetch(debtor.debtId) : of({}))
       .subscribe(data => {
         this.data = data;
+        this.toolbar = this.setToolbar(data);
         this.cdRef.markForCheck();
       });
   }
@@ -52,11 +54,11 @@ export class DebtorCardComponent implements AfterViewInit, OnDestroy {
     this.selectedDebtorSubscription.unsubscribe();
   }
 
-  get titlebar(): ITitlebar {
+  setToolbar(data: any): Toolbar {
     const title = this.translateService.instant('routes.workplaces.incomingCall.operator.title');
-    const { userFullName } = this.data;
+    const { userFullName } = data;
     return {
-      title: userFullName ? `${title}: ${userFullName}` : title,
+      label: userFullName ? `${title}: ${userFullName}` : title,
     };
   }
 }

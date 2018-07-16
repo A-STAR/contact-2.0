@@ -4,11 +4,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 
-import { IPermissionModel, IPermissionRole } from '../permissions.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IValueEntity } from '@app/core/converter/value-converter.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -47,44 +46,46 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
     { prop: 'comment', minWidth: 300 },
   ].map(addGridLabel('roles.permissions.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.onBeforeAdd(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('PERMIT_ADD'),
-        this.permissionsService.permissions.map(state => !!state.currentRole)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('PERMIT_EDIT'),
-        this.permissionsService.permissions.map(state => !!state.currentPermission)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('PERMIT_DELETE'),
-        this.permissionsService.permissions.map(state => !!state.currentPermission)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.permissionsService.fetchPermissions(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('PERMIT_VIEW'),
-        this.permissionsService.permissions.map(state => !!state.currentRole)
-      ])
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.onBeforeAdd(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('PERMIT_ADD'),
+          this.permissionsService.permissions.map(state => !!state.currentRole)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('PERMIT_EDIT'),
+          this.permissionsService.permissions.map(state => !!state.currentPermission)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('PERMIT_DELETE'),
+          this.permissionsService.permissions.map(state => !!state.currentPermission)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.permissionsService.fetchPermissions(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('PERMIT_VIEW'),
+          this.permissionsService.permissions.map(state => !!state.currentRole)
+        ])
+      },
+    ]
+  };
 
   private currentRole: IPermissionRole;
   private permissionsSubscription: Subscription;

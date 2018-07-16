@@ -3,9 +3,6 @@
 $toolbar-button-size: 32px;
 
 .toolbar-item {
-  display: inline-block;
-  vertical-align: middle;
-  line-height: $toolbar-button-size;
   &:not(:last-child) {
     margin-right: 8px;
   }
@@ -13,21 +10,22 @@ $toolbar-button-size: 32px;
 
 .toolbar-item-checkbox {
   margin-left: 5px;
+  line-height: 30px;
+  color: $text;
 }
 
 .disabled {
   opacity: .5;
 }
 
-::ng-deep .toolbar2-button {
-  display: inline-block;
+::ng-deep .toolbar-button {
   width: $toolbar-button-size;
   height: $toolbar-button-size;
   border: 1px solid transparent;
   text-align: center;
   font-size: 18px;
   padding: 0;
-  line-height: $toolbar-button-size + 4px;
+  line-height: $toolbar-button-size + 2px;
   &.btn-default {
     color: $form-toolbar-icon-color;
     border-color: transparent;
@@ -40,12 +38,6 @@ $toolbar-button-size: 32px;
     }
   }
   transition: 100ms all ease-in-out;
-  i {
-    display: inline-block;
-    font-size: inherit;
-    height: 1em;
-    width: 1em;
-  }
   // This prevents changing default button styles on hover
   &[disabled] {
     color: $form-toolbar-icon-disabled-color;

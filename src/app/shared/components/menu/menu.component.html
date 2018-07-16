@@ -11,7 +11,7 @@
       [ngClass]="{'disabled': isDisabled(item) | async }"
     >
     <span *ngIf="item.children" class="menu__arrow fa fa-caret-left"></span>
-    <span>{{ item.title | translate }}</span>
+    <span>{{ item.label | translate }}</span>
     <app-menu
       *ngIf="item.children"
       [items]="item.children"

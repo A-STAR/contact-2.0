@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit } from '@
 import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
-import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -26,8 +25,8 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
   dialog: 'processed-debts' | 'change-status' = null;
 
   // TODO(d.maltsev): i18n
-  private titlebar: ITitlebar = {
-    title: 'Сальников Андрей Юрьевич',
+  private toolbar: Toolbar = {
+    label: 'Сальников Андрей Юрьевич',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -55,7 +54,7 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
     ]
   };
 
-  titlebar$: Observable<ITitlebar>;
+  toolbar$: Observable<Toolbar>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -68,12 +67,12 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.titlebar$ = this.campaignService.campaignDebt$.pipe(
+    this.toolbar$ = this.campaignService.campaignDebt$.pipe(
       map(campaignDebt => {
         const { personLastName, personFirstName, personMiddleName } = campaignDebt;
         const title = [ personLastName, personFirstName, personMiddleName ].filter(Boolean).join(' ');
-        this.titlebar.title = title;
-        return { ...this.titlebar };
+        this.toolbar.label = title;
+        return { ...this.toolbar };
       }),
     );
   }

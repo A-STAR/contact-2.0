@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAttachment, IAttachmentFormData } from './attachment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { AttachmentService } from './attachment.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
@@ -25,19 +24,21 @@ import { map, first } from 'rxjs/operators';
 export class ContactRegistrationAttachmentsComponent extends DialogFunctions implements OnInit {
   private selectedDocumentGuid$ = new BehaviorSubject<string>(null);
 
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.setDialog('edit')
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      enabled: this.selectedDocumentGuid$.map(Boolean),
-      action: () => this.setDialog('delete')
-    },
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.setDialog('edit')
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        enabled: this.selectedDocumentGuid$.map(Boolean),
+        action: () => this.setDialog('delete')
+      },
+    ]
+  };
 
   columns: ISimpleGridColumn<IAttachment>[] = [
     { prop: 'docName' },

@@ -1,7 +1,7 @@
 <div class="flex vertical">
   <!-- Toolbar -->
   <div *ngIf="toolbar" class="flex-item">
-    <app-toolbar-2 [items]="toolbar"></app-toolbar-2>
+    <app-toolbar [toolbar]="toolbar"></app-toolbar>
   </div>
   <!-- Grid -->
   <div class="flex-item" [ngClass]="{ grow: fullHeight }">
@@ -18,13 +18,13 @@
     ></ag-grid-angular>
   </div>
 
-  <!-- Bottom Toolbar -->
+  <!-- Pagination -->
   <div class="flex-item">
-    <app-toolbar
+    <app-pagination
       class="app-toolbar"
       [actions]="paginationPanel"
       (actionClick)="onPageChange($event)"
       (actionSelect)="onPageSizeChange($event)"
-    ></app-toolbar>
+    ></app-pagination>
   </div>
 </div>

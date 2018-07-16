@@ -5,11 +5,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { ICurrencyRate } from '../currency-rates.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -36,7 +35,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     { prop: 'rate' }
   ].map(addGridLabel('widgets.currencyRates.grid'));
 
-  toolbarItems: Array<IToolbarItem>;
+  toolbar: Toolbar;
 
   dialog: 'delete';
   private _currencyRates: Array<ICurrencyRate> = [];
@@ -53,7 +52,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.toolbarItems = this.createToolbar();
+    this.toolbar = this.createToolbar();
 
     this.viewPermissionSubscription = combineLatest(
       this.currencyRatesService.canView$,
@@ -126,35 +125,37 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private createToolbar(): IToolbarItem[] {
-    return [
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.ADD,
-        enabled: combineLatestAnd([
-          this.currencyRatesService.canAdd$,
-          this.currencyId$.map(Boolean)
-        ]),
-        action: () => this.onAdd()
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.EDIT,
-        action: () => this.onEdit(this.selectedCurrencyRate$.value),
-        enabled: combineLatestAnd([
-          this.currencyRatesService.canEdit$,
-          this.selectedCurrencyRate$.map(o => !!o)
-        ])
-      },
-      {
-        type: ToolbarItemType.BUTTON,
-        buttonType: ButtonType.REFRESH,
-        action: () => this.fetch(),
-        enabled: combineLatestAnd([
-          this.currencyRatesService.canView$,
-          this.currencyId$.map(Boolean)
-        ])
-      }
-    ];
+  private createToolbar(): Toolbar {
+    return {
+      items: [
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.ADD,
+          enabled: combineLatestAnd([
+            this.currencyRatesService.canAdd$,
+            this.currencyId$.map(Boolean)
+          ]),
+          action: () => this.onAdd()
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.EDIT,
+          action: () => this.onEdit(this.selectedCurrencyRate$.value),
+          enabled: combineLatestAnd([
+            this.currencyRatesService.canEdit$,
+            this.selectedCurrencyRate$.map(o => !!o)
+          ])
+        },
+        {
+          type: ToolbarItemType.BUTTON,
+          buttonType: ButtonType.REFRESH,
+          action: () => this.fetch(),
+          enabled: combineLatestAnd([
+            this.currencyRatesService.canView$,
+            this.currencyId$.map(Boolean)
+          ])
+        }
+      ]
+    };
   }
 }

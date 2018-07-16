@@ -14,7 +14,7 @@ import { IAddress } from '@app/routes/workplaces/core/address/address.interface'
 import { IEmployment } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/core/phone/phone.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { PersonService } from '@app/routes/workplaces/core/person/person.service';
@@ -49,9 +49,9 @@ export class PledgeCardEditContractComponent implements OnInit, AfterViewInit {
   @ViewChild('emails',         { read: TemplateRef }) emailsTemplate:         TemplateRef<any>;
   @ViewChild('documents',      { read: TemplateRef }) documentsTemplate:      TemplateRef<any>;
 
-  @ViewChild('contractTitlebar', { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
-  @ViewChild('pledgorTitlebar',  { read: TemplateRef }) pledgorTitlebarTemplate:     TemplateRef<any>;
-  @ViewChild('propertyTitlebar', { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('contractToolbar', { read: TemplateRef }) contractToolbarTemplate:    TemplateRef<any>;
+  @ViewChild('pledgorToolbar',  { read: TemplateRef }) pledgorToolbarTemplate:     TemplateRef<any>;
+  @ViewChild('propertyToolbar', { read: TemplateRef }) propertyToolbarTemplate:    TemplateRef<any>;
 
   readonly layoutConfig = editContractLayout;
 
@@ -76,16 +76,16 @@ export class PledgeCardEditContractComponent implements OnInit, AfterViewInit {
 
   readonly propertyId = Number(this.paramMap.get('propertyId'));
 
-  readonly contractTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+  readonly contractToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
   };
 
-  readonly pledgorTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+  readonly pledgorToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
   };
 
-  readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+  readonly propertyToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
   };
 
   readonly isSubmitDisabled$ = new BehaviorSubject<boolean>(false);
@@ -113,9 +113,9 @@ export class PledgeCardEditContractComponent implements OnInit, AfterViewInit {
       phones: this.phonesTemplate,
       emails: this.emailsTemplate,
       documents: this.documentsTemplate,
-      contractTitlebar: this.contractTitlebarTemplate,
-      pledgorTitlebar: this.pledgorTitlebarTemplate,
-      propertyTitlebar: this.propertyTitlebarTemplate,
+      contractToolbar: this.contractToolbarTemplate,
+      pledgorToolbar: this.pledgorToolbarTemplate,
+      propertyToolbar: this.propertyToolbarTemplate,
     };
   }
 

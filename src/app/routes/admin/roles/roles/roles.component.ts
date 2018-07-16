@@ -10,8 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { map, first } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -38,8 +37,8 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
     map(permissions => !!permissions.currentRole),
   );
 
-  titlebar: ITitlebar = {
-    title: 'roles.roles.title',
+  toolbar: Toolbar = {
+    label: 'roles.roles.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,

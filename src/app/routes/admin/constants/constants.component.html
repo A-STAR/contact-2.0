@@ -5,18 +5,12 @@
   (cancel)="onCloseDialog()"
 ></app-constant-edit>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] admin/constants"
-      [columns]="columns"
-      [selection]="selection"
-      [rows]="rows"
-      (dblClick)="onDblClick()"
-      (selectRow)="onSelect($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] admin/constants"
+  [columns]="columns"
+  [selection]="selection"
+  [rows]="rows"
+  [toolbar]="toolbar"
+  (dblClick)="onDblClick()"
+  (selectRow)="onSelect($event)"
+></app-simple-grid>

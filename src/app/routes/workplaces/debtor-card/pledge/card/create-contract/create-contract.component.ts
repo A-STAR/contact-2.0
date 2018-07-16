@@ -12,9 +12,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map } from 'rxjs/operators';
 
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ButtonType } from '@app/shared/components/button/button.interface';
+import { ToolbarItemType, Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { LayoutService } from '@app/core/layout/layout.service';
 import { PledgeCardCreateContractService } from './create-contract.service';
@@ -46,11 +45,11 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
   @ViewChild(PropertySearchComponent) propertySearch: PropertySearchComponent;
 
   @ViewChild('contractClearButton', { read: TemplateRef }) contractClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('contractTitlebar',    { read: TemplateRef }) contractTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('contractToolbar',    { read: TemplateRef }) contractToolbarTemplate:    TemplateRef<any>;
   @ViewChild('pledgorClearButton',  { read: TemplateRef }) pledgorClearButtonTemplate:  TemplateRef<any>;
-  @ViewChild('pledgorTitlebar',     { read: TemplateRef }) pledgorTitlebarTemplate:     TemplateRef<any>;
+  @ViewChild('pledgorToolbar',     { read: TemplateRef }) pledgorToolbarTemplate:     TemplateRef<any>;
   @ViewChild('propertyClearButton', { read: TemplateRef }) propertyClearButtonTemplate: TemplateRef<any>;
-  @ViewChild('propertyTitlebar',    { read: TemplateRef }) propertyTitlebarTemplate:    TemplateRef<any>;
+  @ViewChild('propertyToolbar',    { read: TemplateRef }) propertyToolbarTemplate:    TemplateRef<any>;
 
   readonly layoutConfig = createContractLayout;
 
@@ -71,12 +70,12 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
     map(pledgor => pledgor ? pledgor.id : null),
   );
 
-  readonly contractTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
+  readonly contractToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.contract.title',
   };
 
-  readonly pledgorTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
+  readonly pledgorToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.pledgor.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -86,8 +85,8 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
     ]
   };
 
-  readonly propertyTitlebarConfig: ITitlebar = {
-    title: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
+  readonly propertyToolbarConfig: Toolbar = {
+    label: 'routes.workplaces.debtorCard.pledge.card.forms.property.title',
     items: [
       {
         type: ToolbarItemType.BUTTON,
@@ -131,11 +130,11 @@ export class PledgeCardCreateContractComponent extends DialogFunctions implement
   ngOnInit(): void {
     this.templates = {
       contractClearButton: this.contractClearButtonTemplate,
-      contractTitlebar: this.contractTitlebarTemplate,
+      contractToolbar: this.contractToolbarTemplate,
       pledgorClearButton: this.pledgorClearButtonTemplate,
-      pledgorTitlebar: this.pledgorTitlebarTemplate,
+      pledgorToolbar: this.pledgorToolbarTemplate,
       propertyClearButton: this.propertyClearButtonTemplate,
-      propertyTitlebar: this.propertyTitlebarTemplate,
+      propertyToolbar: this.propertyToolbarTemplate,
     };
 
     const { url } = this.router;

@@ -1,0 +1,43 @@
+<div class="toolbar-item">
+  <ng-container [ngSwitch]="item.type">
+    <!-- Button -->
+    <div *ngSwitchCase="'button'" appDropdown fitWidthToContent="true">
+      <div #dropdownTrigger>
+        <app-button
+          [disabled]="isDisabled(item) | async"
+          [ngClass]="{ 'disabled': isDisabled(item) | async }"
+          [icon]="item.icon"
+          [label]="false"
+          [title]="item.label"
+          [type]="item.buttonType"
+          [btnClass]="'toolbar-button'"
+          [hasIcon]="true"
+          [withBtnClass]="false"
+          (click)="onClick(item)">
+        </app-button>
+      </div>
+      <div #dropdownContent>
+        <ul *ngIf="item.children" class="list-group mb0">
+          <li *ngFor="let child of item.children" class="list-group-item p-sm b0">
+            <button
+              class="btn btn-link"
+              [disabled]="isDisabled(child) | async"
+              (click)="onDropdownItemClick(child)"
+            >
+              {{ child.label | translate }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Checkbox -->
+    <app-checkbox
+      *ngSwitchCase="'checkbox'"
+      [disabled]="item.disabled | async"
+      class="toolbar-item-checkbox"
+      [label]="item.label"
+      [ngModel]="item.state | async"
+      (change)="onClick(item)"
+    ></app-checkbox>
+  </ng-container>
+</div>

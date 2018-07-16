@@ -29,16 +29,11 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<div class="flex vertical">
-  <app-titlebar [titlebar]="titlebar" class="flex-item"></app-titlebar>
-
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] admin/roles"
-      [columns]="columns"
-      [rows]="roles$ | async"
-      (dblClick)="onDblClick()"
-      (selectRow)="onSelect($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] admin/roles"
+  [columns]="columns"
+  [toolbar]="toolbar"
+  [rows]="roles$ | async"
+  (dblClick)="onDblClick()"
+  (selectRow)="onSelect($event)"
+></app-simple-grid>

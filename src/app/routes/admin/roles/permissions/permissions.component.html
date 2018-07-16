@@ -27,7 +27,7 @@
   persistenceKey="[grid] admin/roles/permissions"
   [columns]="columns"
   [rows]="permissions$ | async"
-  [toolbar]="toolbarItems"
+  [toolbar]="toolbar"
   (dblClick)="onDblClick()"
   (selectRow)="onSelect($event)"
 ></app-simple-grid>

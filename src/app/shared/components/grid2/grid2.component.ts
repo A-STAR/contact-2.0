@@ -36,12 +36,12 @@ import {
 import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import {
-  IToolbarAction,
-  IToolbarActionSelect,
-  ToolbarActionTypeEnum,
-  ToolbarControlEnum
-} from './toolbar/toolbar.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+  PaginationAction,
+  PaginationActionSelect,
+  PaginationActionType,
+  PaginationControl,
+} from './pagination/pagination.interface';
+import { Toolbar } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -99,7 +99,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
   @Input() translateColumnLabels = false;
-  @Input() toolbar: IToolbarItem[];
+  @Input() toolbar: Toolbar;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -120,7 +120,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     localeTextFunc: this.contextMenuService.translateNameAndShortcut.bind(this.contextMenuService),
   };
   page: number = this.startPage;
-  paginationPanel: IToolbarAction[] = [];
+  paginationPanel: PaginationAction[] = [];
   initCallbacks: Function[] = [];
 
   private originalColSettings: IAgridColSetting[] = [];
@@ -289,37 +289,37 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onPageChange(action: IToolbarAction): void {
+  onPageChange(action: PaginationAction): void {
     switch (action.type) {
-      case ToolbarActionTypeEnum.GO_BACKWARD:
+      case PaginationActionType.GO_BACKWARD:
         if (this.page === 1) {
           this.notificationService.info(`Can't fetch page no ${this.page}`).noAlert().dispatch();
           return;
         }
         this.onPage.emit(--this.page);
         break;
-      case ToolbarActionTypeEnum.GO_FORWARD:
+      case PaginationActionType.GO_FORWARD:
         if (this.page === this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
         this.onPage.emit(++this.page);
         break;
-      case ToolbarActionTypeEnum.GO_FIRST:
+      case PaginationActionType.GO_FIRST:
         this.page = 1;
         this.onPage.emit(1);
         break;
-      case ToolbarActionTypeEnum.GO_LAST:
+      case PaginationActionType.GO_LAST:
         this.page = this.getPageCount();
         this.onPage.emit(this.page);
         break;
-      case ToolbarActionTypeEnum.REFRESH:
+      case PaginationActionType.REFRESH:
         this.onPage.emit(this.page);
         break;
     }
   }
 
-  onPageSizeChange(payload: IToolbarActionSelect): void {
+  onPageSizeChange(payload: PaginationActionSelect): void {
     const newSize = payload.value;
     const lastPage = Math.ceil(this.rowCount / newSize);
     if (this.page > lastPage) {
@@ -518,20 +518,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
 
     this.paginationPanel = [
-      { control: ToolbarControlEnum.LABEL,  text: '0 выбрано / 0 всего' },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
-      { control: ToolbarControlEnum.LABEL,  text: '0 / 0' },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
+      { control: PaginationControl.LABEL,  text: '0 выбрано / 0 всего' },
+      { control: PaginationControl.BUTTON, type: PaginationActionType.GO_FIRST, disabled: true },
+      { control: PaginationControl.BUTTON, type: PaginationActionType.GO_BACKWARD, disabled: true },
+      { control: PaginationControl.LABEL,  text: '0 / 0' },
+      { control: PaginationControl.BUTTON, type: PaginationActionType.GO_FORWARD, disabled: true },
+      { control: PaginationControl.BUTTON, type: PaginationActionType.GO_LAST, disabled: true },
       {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
-        control: ToolbarControlEnum.SELECT,
+        control: PaginationControl.SELECT,
         disabled: true,
         styles: { width: '80px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize, label: String(pageSize) })),
       },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },
+      { control: PaginationControl.BUTTON, type: PaginationActionType.REFRESH, disabled: false },
     ];
   }
 

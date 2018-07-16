@@ -66,11 +66,11 @@ export class DebtorService extends AbstractActionService {
       switchMap(debtId => this.workplacesService.fetchDebt(debtId)),
     );
 
-  readonly debts$ = this.debtorId$
+  readonly debts$: Observable<Debt[]> = this.debtorId$
     .pipe(
       filter(Boolean),
       switchMap(debtorId => this.workplacesService.fetchDebtsForPerson(debtorId)),
-      distinctUntilChanged(equals),
+      distinctUntilChanged(equals) as any,
     );
 
   readonly isCompany$ = this.debtor$

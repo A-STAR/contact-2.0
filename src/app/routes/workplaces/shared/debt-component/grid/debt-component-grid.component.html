@@ -9,17 +9,11 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<div class="flex vertical">
-  <div *ngIf="displayToolbar" class="flex-item">
-    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] workplaces/shared/debt-component"
-      [columns]="columns"
-      [rows]="components"
-      (selectRow)="onSelect($event)"
-      (dblClick)="onDoubleClick($event)">
-    </app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] workplaces/shared/debt-component"
+  [columns]="columns"
+  [toolbar]="displayToolbar ? toolbar : null"
+  [rows]="components"
+  (selectRow)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)">
+</app-simple-grid>

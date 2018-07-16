@@ -5,12 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';
 
+import { ButtonType } from '@app/shared/components/button/button.interface';
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { ButtonType } from '@app/shared/components/button/button.interface';
+import { Toolbar, ToolbarItemType } from '@app/shared/components/toolbar/toolbar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -36,38 +35,40 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
   readonly canEdit$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_MANAGER_EDIT');
   readonly canDelete$: Observable<boolean> = this.userPermissionsService.has('CONTRACTOR_MANAGER_DELETE');
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.ADD,
-      action: () => this.onAdd(),
-      enabled: this.canAdd$
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.EDIT,
-      action: () => this.onEdit(),
-      enabled: combineLatestAnd([
-        this.canEdit$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedManager).map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.DELETE,
-      action: () => this.setDialog('delete'),
-      enabled: combineLatestAnd([
-        this.canDelete$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedManager).map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemType.BUTTON,
-      buttonType: ButtonType.REFRESH,
-      action: () => this.fetchAll(),
-      enabled: this.canView$
-    }
-  ];
+  toolbar: Toolbar = {
+    items: [
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.ADD,
+        action: () => this.onAdd(),
+        enabled: this.canAdd$
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.EDIT,
+        action: () => this.onEdit(),
+        enabled: combineLatestAnd([
+          this.canEdit$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedManager).map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.DELETE,
+        action: () => this.setDialog('delete'),
+        enabled: combineLatestAnd([
+          this.canDelete$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedManager).map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemType.BUTTON,
+        buttonType: ButtonType.REFRESH,
+        action: () => this.fetchAll(),
+        enabled: this.canView$
+      }
+    ]
+  };
 
   columns: ISimpleGridColumn<IContractorManager>[] = [
     // { prop: 'fullName' },
