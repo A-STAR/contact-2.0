@@ -20,6 +20,7 @@ exports[`TextComponent should handle input 1`] = `
         class="form-control ng-untouched ng-valid ng-dirty"
         ng-reflect-is-disabled="false"
         ng-reflect-model="a"
+        placeholder="undefined"
         type="text"
       />
       
@@ -61,6 +62,7 @@ exports[`TextComponent should handle losing focus 1`] = `
       <input
         class="form-control ng-pristine ng-valid ng-touched"
         ng-reflect-is-disabled="false"
+        placeholder="undefined"
         type="text"
       />
       
@@ -102,6 +104,7 @@ exports[`TextComponent should render 1`] = `
       <input
         class="form-control ng-untouched ng-pristine ng-valid"
         ng-reflect-is-disabled="false"
+        placeholder="undefined"
         type="text"
       />
       

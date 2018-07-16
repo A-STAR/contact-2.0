@@ -464,6 +464,9 @@
         }
       },
       "grids": {
+        "grid": {
+          "quickFilter": "Быстрый поиск"
+        },
         "overlays": {
           "empty": "Нет данных"
         },

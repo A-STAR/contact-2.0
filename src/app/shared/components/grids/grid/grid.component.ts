@@ -269,6 +269,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     this.updateToolbar();
   }
 
+  onQuickFilterChange(text: string): void {
+    this.gridApi.setQuickFilter(text);
+  }
+
   private onSelectionChanged(): void {
     const selection = this.gridApi.getSelectedRows();
     this.selectRow.emit(selection);
