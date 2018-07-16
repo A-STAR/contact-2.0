@@ -6,6 +6,7 @@
   <div style="height: 75vh;">
     <app-simple-grid
       persistenceKey="[grid] admin/roles/permissions/add"
+      selectionType="multiple"
       [columns]="columns"
       [rows]="availablePermissions"
       (dblClick)="onAddPermissions()"
