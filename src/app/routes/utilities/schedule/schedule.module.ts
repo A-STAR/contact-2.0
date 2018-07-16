@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 
+import { CanActivateTabGuard } from '@app/shared/components/layout/tabview/header/header.service';
+
 import { ScheduleComponent } from './schedule.component';
 
 const routes: Routes = [
@@ -12,6 +14,7 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
+    canActivateChild: [ CanActivateTabGuard ],
     children: [
       {
         path: '',

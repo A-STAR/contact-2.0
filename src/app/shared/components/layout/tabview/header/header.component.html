@@ -1,9 +1,10 @@
 <ul [ngClass]="{ 'no-margin': noMargin }">
-  <ng-container *ngFor="let tab of tabs$ | async">
+  <ng-container *ngFor="let tab of tabs$ | async; let index = index;">
     <li
       *ngIf="tab.hasPermission | async"
       [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
       [routerLink]="tab.link"
+      (click)="onClick(index)"
       routerLinkActive="active"
     >
       {{ tab.title | translate }}
