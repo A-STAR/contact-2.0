@@ -110,6 +110,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
    * config retrieved from the server
    */
   @Input() metadataKey: string;
+  @Input() entityKey: string;
   @Input() persistenceKey: string;
   /**
    * @deprecated
@@ -147,8 +148,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   templates: Record<string, TemplateRef<any>>;
 
   private _columns: IAGridColumn[];
-  private _rows: T[];
-  private _originalRows: T[];
+  private _rows: T[] = [];
+  private _originalRows: T[] = [];
 
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
@@ -219,16 +220,16 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       )
       .switchMap((metadata: IMetadataDefs) => this.getGridPermissions(metadata.permits))
       .subscribe(isAllowed => {
-        if (isAllowed && this._originalRows) {
+        if (isAllowed && this._originalRows && this._originalRows.length) {
           this._rows = this._originalRows.slice();
-          this._originalRows = null;
-          this.cdRef.markForCheck();
+          this._originalRows = [];
+          this.cdRef.detectChanges();
         }
         if (!isAllowed) {
           this._originalRows = this._rows;
           this._rows = [];
           this.onPermissionDenied();
-          this.cdRef.markForCheck();
+          this.cdRef.detectChanges();
         }
       });
 
@@ -281,11 +282,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   onPermissionDenied(): void {
-    if (this.metadataKey) {
+    if (this.metadataKey || this.entityKey) {
       this.notificationsService.permissionError()
-        .entity(`entities.${this.metadataKey}.gen.plural`).dispatch();
+        .entity(`entities.${this.metadataKey || this.entityKey}.gen.plural`).dispatch();
     } else {
-      this.notificationsService.permissionError().dispatchCallback();
+      this.notificationsService.permissionDefaultError().dispatch();
     }
   }
 

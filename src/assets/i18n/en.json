@@ -3413,6 +3413,7 @@
     "default": {
       "read": {
         "403": "You don't have permissions to load {{ entity }}",
+        "403.default": "You don't have permissions to load this entity",
         "*": "Could not load {{ entity }}"
       },
       "create": {

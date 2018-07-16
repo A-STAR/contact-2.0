@@ -20,7 +20,6 @@ import { ToolbarItemType } from '@app/shared/components/toolbar-2/toolbar-2.inte
 import { ButtonType } from '@app/shared/components/button/button.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -162,7 +161,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
   ].map(addGridLabel('portfolios.grid'));
 
   dialog: string;
-  portfolios: IPortfolio[];
+  portfolios: IPortfolio[] = [];
   selectedContractor: IContractor;
   selectedPortfolio: IPortfolio;
 
@@ -174,7 +173,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private store: Store<IAppState>,
@@ -194,10 +192,7 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
           this.selectedContractor = contractor;
           this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
         } else {
-          if (!canView) {
-            this.notificationsService.permissionError().entity('entities.portfolios.gen.plural').dispatch();
-          }
-          this.clearPortfolios();
+          this.deselectPortfolio();
         }
       });
 
@@ -367,12 +362,6 @@ export class PortfoliosGridComponent extends DialogFunctions implements OnInit, 
 
   private fetchAll(): Observable<IPortfolio[]> {
     return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractor.id);
-  }
-
-  private clearPortfolios(): void {
-    this.deselectPortfolio();
-    this.portfolios = [];
-    this.cdRef.markForCheck();
   }
 
   private deselectPortfolio(): void {
