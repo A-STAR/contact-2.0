@@ -18,6 +18,9 @@ export interface IConfig {
       url: string;
     };
   };
+  licenses: {
+    agGrid: string;
+  };
 }
 
 interface MapProviders {

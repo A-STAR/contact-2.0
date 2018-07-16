@@ -23,5 +23,8 @@
     "<id>": {
       "url": "<custom operation front-end url>"
     }
+  },
+  "licenses": {
+    "agGrid": "<ag-grid license key>"
   }
 }

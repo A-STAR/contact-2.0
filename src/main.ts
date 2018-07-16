@@ -6,6 +6,8 @@ import { LicenseManager } from 'ag-grid-enterprise/main';
 
 import { AppModule } from './app/app.module';
 
+import { IConfig } from '@app/core/config/config.interface';
+
 import { environment } from './environments/environment';
 import { load } from 'config';
 
@@ -13,12 +15,10 @@ if (environment.production) {
   enableProdMode();
 }
 
-// tslint:disable-next-line
-LicenseManager.setLicenseKey('CRIF_LLC_Contact_Collection_Solution_1Devs19_February_2019__MTU1MDUzNDQwMDAwMA==19f9da3e1e632091854eee1e76adf484');
-
 load('/assets/server/root.json')
-  .then(config => {
+  .then((config: IConfig) => {
     window['__CONFIG__'] = config;
+    LicenseManager.setLicenseKey(config.licenses.agGrid);
     platformBrowserDynamic().bootstrapModule(AppModule);
   })
   .catch(error => console.error(error));
