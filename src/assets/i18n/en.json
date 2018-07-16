@@ -464,6 +464,9 @@
         }
       },
       "grids": {
+        "grid": {
+          "quickFilter": "Quick Search"
+        },
         "overlays": {
           "empty": "No Data"
         },
