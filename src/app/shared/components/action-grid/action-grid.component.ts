@@ -66,14 +66,12 @@ import { ActionGridFilterComponent } from './filter/action-grid-filter.component
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+import { ToolbarComponent } from '@app/shared/components/toolbar/toolbar.component';
 
-import { combineLatestAnd, flatten } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { SubscriptionBag } from '@app/core/subscription-bag/subscription-bag';
-import { ToolbarComponent } from '@app/shared/components/toolbar/toolbar.component';
-
-import { mergeDeep } from 'immutable';
+import { combineLatestAnd, flatten, mergeDeep } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -524,7 +522,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
     if (!srcConfig.items) {
       srcConfig.items = [];
     }
-    this.toolbarConfig$.next(mergeDeep(srcConfig, this.toolbar));
+    this.toolbarConfig$.next(mergeDeep(srcConfig, this.toolbar, obj => obj instanceof Observable ));
   }
 
   private getGridFilters(): FilterObject {
