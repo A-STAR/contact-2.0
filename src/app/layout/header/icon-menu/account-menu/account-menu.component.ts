@@ -91,7 +91,7 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
   }
 
   onCloseDialog(): void {
-    this.callService.changePBXParams({ intPhone: '' });
+    this.callService.updatePBXParams({ intPhone: null });
     this.setDialog(null);
   }
 
