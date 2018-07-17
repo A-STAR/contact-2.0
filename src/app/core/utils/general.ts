@@ -245,31 +245,19 @@ const emptyTarget = (val: any) => {
 };
 
 /**
- * Immutable deep merge
- * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
- */
-export const mergeDeep = (dst: any, src: any, refFn?: (val: any) => boolean): any => {
-  const isArray = Array.isArray(src);
-  if (isArray) {
-    return Array.isArray(dst) ? mergeArray(dst, src, refFn) : clone(src, refFn);
-  }
-  return mergeObject(dst, src, refFn);
-};
-
-/**
  * Immutable clone
  * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
-export const clone = (val: any, refFn?: (val: any) => boolean) => {
+export function clone(val: any, refFn?: (val: any) => boolean): any {
   const refPredicate = refFn || (() => false);
   return isMergeableObject(val) && !refPredicate(val) ? mergeDeep(emptyTarget(val), val) : val;
-};
+}
 
 /**
  * Immutable merge arrays
  * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
-export const mergeArray = (dst: any[], src: any[], refFn?: (val: any) => boolean): any[] => {
+export function mergeArray(dst: any[], src: any[], refFn?: (val: any) => boolean): any[] {
   const result = dst.slice();
   const refPredicate = refFn || (() => false);
 
@@ -284,12 +272,13 @@ export const mergeArray = (dst: any[], src: any[], refFn?: (val: any) => boolean
   });
 
   return result;
-};
+}
+
 /**
  * Immutable merge objects
  * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
-export const mergeObject = (dst: object, src: object, refFn?: (val: any) => boolean): object => {
+export function mergeObject(dst: object, src: object, refFn?: (val: any) => boolean): object {
   const result = {};
   const refPredicate = refFn || (() => false);
 
@@ -312,5 +301,17 @@ export const mergeObject = (dst: object, src: object, refFn?: (val: any) => bool
   }
 
   return result;
-};
+}
+
+/**
+ * Immutable deep merge
+ * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
+ */
+export function mergeDeep(dst: any, src: any, refFn?: (val: any) => boolean): any {
+  const isArray = Array.isArray(src);
+  if (isArray) {
+    return Array.isArray(dst) ? mergeArray(dst, src, refFn) : clone(src, refFn);
+  }
+  return mergeObject(dst, src, refFn);
+}
 
