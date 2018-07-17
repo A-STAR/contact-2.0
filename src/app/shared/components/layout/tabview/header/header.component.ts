@@ -87,7 +87,7 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
 
-    this.visibleTabsSub = this.headerService.getTabPerms()
+    this.visibleTabsSub = this.headerService.tabPerms$
       .pipe(
         map(tabPermissions => tabPermissions.map((p, index) => p && this.headerService.tabs[index]).filter(Boolean))
       )

@@ -494,7 +494,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   private getMetadata(): Observable<IMetadataDefs> {
     return this.metadataKey ? this.gridService.getMetadata(this.metadataKey, {}) : of({
       actions: this.actions,
-      titlebar: this.titlebar,
+      titlebar: this.toolbar,
       defaultAction: this.defaultAction,
       selectionAction: this.selectionAction,
       permits: [ this.permissionKey ]

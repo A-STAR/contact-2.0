@@ -3,7 +3,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
 import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
-import { ActivatedRouteSnapshot, CanActivateChild } from '@angular/router';
+import { CanActivateChild } from '@angular/router';
 
 @Injectable()
 export class TabHeaderService {
@@ -18,9 +18,7 @@ export class TabHeaderService {
     return this._tabs;
   }
 
-  getTabPerms(): Observable<boolean[]> {
-    return combineLatest(this.tabs.map(t => t.hasPermission));
-  }
+  readonly tabPerms$: Observable<boolean[]> = combineLatest(this.tabs.map(t => t.hasPermission));
 
   private _tabs: ITab[] = [];
 }
@@ -28,8 +26,8 @@ export class TabHeaderService {
 @Injectable()
 export class CanActivateTabGuard implements CanActivateChild {
   constructor(private headerService: TabHeaderService) {}
-  canActivateChild(next: ActivatedRouteSnapshot): Observable<boolean> {
-    return this.headerService.getTabPerms()
+  canActivateChild(): Observable<boolean> {
+    return this.headerService.tabPerms$
       .map(perms => {
         return perms.some(Boolean);
       });
