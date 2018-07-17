@@ -14,7 +14,15 @@
   }
 }
 
-::ng-deep app-progressbar .progress {
-  height: 8px;
-  margin-bottom: 0;
+::ng-deep app-progressbar {
+  display: block;
+  position: relative;
+  width: 100%;
+
+  .progress {
+    height: 8px;
+    margin-bottom: 0;
+    position: absolute;
+    width: 100%;
+  }
 }

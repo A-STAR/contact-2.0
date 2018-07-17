@@ -163,7 +163,7 @@ export class DebtorComponent implements OnInit, OnDestroy {
       )
       .subscribe(postCall => {
         this.closeTab(debtorId);
-
+        this.callService.dropCall();
         if (postCall) {
           this.debtorService.dispatchAction<void>(ProgressBarService.MESSAGE_PROGRESS_STOP);
         }
