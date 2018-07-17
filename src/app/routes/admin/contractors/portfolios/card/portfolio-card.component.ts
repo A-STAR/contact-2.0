@@ -115,6 +115,7 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
         {
           label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
           disabled: !!editedPortfolio, options: directionOptions,
+          markAsDirty: !editedPortfolio,
           onChange: directionCode => this.onDirectionCodeChange(directionCode)
         },
         {
