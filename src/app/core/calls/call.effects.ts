@@ -349,7 +349,6 @@ export class CallEffects {
       && state.payload.callTypeCode === CallTypeEnum.OUTGOING
     )
     .map(state => state.payload.afterCallPeriod)
-    .distinctUntilChanged()
     .map(afterCallPeriod =>
       this.progressBarService.dispatchAction<number>(ProgressBarService.MESSAGE_PROGRESS_START, afterCallPeriod)
     );
