@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '../../button/button.module';
 import { DropdownModule } from '@app/shared/components/dropdown/dropdown.module';
 
-import { TabHeaderService, CanActivateTabGuard } from './header/header.service';
+import { CanActivateTabGuard } from './header/header.service';
 
 import { TabHeaderComponent } from './header/header.component';
 import { TabViewTabComponent } from './tab/tab.component';
@@ -27,7 +27,6 @@ import { TabViewComponent } from './tabview/tabview.component';
   ],
   providers: [
     CanActivateTabGuard,
-    TabHeaderService,
   ],
   declarations: [
     TabHeaderComponent,

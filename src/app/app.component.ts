@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, HostBinding, NgZone } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, NavigationCancel } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -61,7 +61,7 @@ export class AppComponent {
     combineLatest(
       this.dataService.isLoading$,
       this.router.events,
-      (isLoading, event) => isLoading || !(event instanceof NavigationEnd)
+      (isLoading, event) => isLoading || !(event instanceof NavigationEnd || event instanceof NavigationCancel)
     )
     .pipe(
       distinctUntilChanged(),

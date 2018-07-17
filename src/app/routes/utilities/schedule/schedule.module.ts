@@ -13,7 +13,13 @@ const routes: Routes = [
     component: ScheduleComponent,
     data: {
       reuse: true,
+      tabs: [
+        { link: 'all', permission: 'GROUP_VIEW' },
+        { link: 'debts', permission: 'GROUP_TAB_DEBT_GROUP' },
+        { link: 'events', permission: 'SCHEDULE_VIEW' },
+      ],
     },
+    canActivate: [ CanActivateTabGuard ],
     canActivateChild: [ CanActivateTabGuard ],
     children: [
       {

@@ -8,3 +8,8 @@ export interface ITab {
   closable?: boolean;
   hasPermission?: Observable<boolean>;
 }
+
+export interface RouteTab {
+  link: string;
+  permission?: string;
+}

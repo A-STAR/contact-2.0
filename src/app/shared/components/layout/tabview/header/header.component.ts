@@ -11,9 +11,7 @@ import {
   ElementRef,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter } from 'rxjs/operators/filter';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
@@ -22,23 +20,20 @@ import { ITab } from './header.interface';
 
 import { LayoutService } from '@app/layout/layout.service';
 
-import { TabHeaderService } from './header.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-tabview-header',
   templateUrl: 'header.component.html',
   styleUrls: ['./header.component.scss'],
-  providers: [ TabHeaderService ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabHeaderComponent implements OnInit, OnDestroy {
   private static MENU_BTN_SPACE = 50;
 
   private tabHeaders: QueryList<ElementRef>;
-  private tabPermsChangeSub: Subscription;
-  private routeChangeSub: Subscription;
+  private _tabs: ITab[];
 
   @ViewChildren('tabHeader') set headers (tabHeaders: QueryList<ElementRef>) {
     this.tabHeaders = tabHeaders;
@@ -50,25 +45,13 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     if (tabs !== null) {
       const tabsWithPermissions = this.setTabPermissions(tabs);
 
-      this.headerService.tabs = tabsWithPermissions;
-
-      if (this.tabPermsChangeSub) {
-        this.tabPermsChangeSub.unsubscribe();
-      }
-
-      this.tabPermsChangeSub = this.onTabPermChange(tabsWithPermissions);
+      this._tabs = tabsWithPermissions;
     }
   }
 
   @Input() noMargin = false;
 
   @Output() tabClose = new EventEmitter<number>();
-
-  activatedLink: string;
-  tabIndex = 0;
-  private currentUrl: string;
-  private _initialized = false;
-  private _clicked = false;
   private visibleTabs$ = new BehaviorSubject<ITab[]>([]);
   private visibleTabsSub: Subscription;
 
@@ -76,10 +59,6 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private el: ElementRef,
     private layoutService: LayoutService,
-    private headerService: TabHeaderService,
-    private routingService: RoutingService,
-    private route: ActivatedRoute,
-    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -87,41 +66,18 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
 
-    this.visibleTabsSub = this.headerService.tabPerms$
+    this.visibleTabsSub = this.tabPerms$
       .pipe(
-        map(tabPermissions => tabPermissions.map((p, index) => p && this.headerService.tabs[index]).filter(Boolean))
+        map(tabPermissions => tabPermissions.map((p, index) => p && this._tabs[index]).filter(Boolean))
       )
       .subscribe(tabs => {
         this.visibleTabs$.next(tabs);
         this.cdRef.markForCheck();
       });
-
-      this.currentUrl = this.router.url;
-      this.routeChangeSub = this.router.events
-      .pipe(
-        filter(e => e instanceof NavigationEnd && this.currentUrl === e.urlAfterRedirects),
-        filter(() => Boolean(this.activatedLink))
-      )
-      .subscribe(() => {
-        if (!this._clicked) {
-          this.navigate();
-          this.activatedLink = null;
-        }
-        this._clicked = false;
-      });
   }
 
   ngOnDestroy(): void {
     this.visibleTabsSub.unsubscribe();
-    if (this.tabPermsChangeSub) {
-      this.tabPermsChangeSub.unsubscribe();
-    }
-    this.routeChangeSub.unsubscribe();
-  }
-
-  onClick(tabIndex: number): void {
-    this.tabIndex = tabIndex;
-    this._clicked = true;
   }
 
   closeTab(event: MouseEvent, id: number): void {
@@ -134,7 +90,11 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
   }
 
   get menuTabs(): ITab[] {
-    return this.headerService.tabs.filter(tab => this.visibleTabs.includes(tab) && !this.feetsInView(tab));
+    return this._tabs.filter(tab => this.visibleTabs.includes(tab) && !this.feetsInView(tab));
+  }
+
+  get tabPerms$(): Observable<boolean[]> {
+    return combineLatest(this._tabs.map(t => t.hasPermission));
   }
 
   feetsInView(tab: ITab): boolean {
@@ -172,30 +132,5 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     });
 
     return tabsWithPermissions;
-  }
-
-  private onTabPermChange(tabs: ITab[]): Subscription {
-    return combineLatest(...tabs.map(tab => tab.hasPermission))
-      .subscribe((tabPerms: boolean[]) => {
-        const tabIndex = tabPerms.findIndex(Boolean);
-        if (tabIndex !== -1 && !tabPerms[this.tabIndex]) {
-
-          this.activatedLink = tabs[tabIndex].link;
-          this.tabIndex = tabIndex;
-          this._clicked = false;
-
-          if (!this._initialized) {
-            this.navigate();
-            this._initialized = true;
-          }
-
-        }
-      });
-  }
-
-
-  private navigate(): void {
-    this.routingService
-      .navigate([this.activatedLink], this.route);
   }
 }

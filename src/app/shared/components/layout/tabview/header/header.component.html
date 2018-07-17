@@ -4,7 +4,6 @@
     *ngFor="let tab of visibleTabs; let index = index;"
     [ngClass]="{ closable: tab.closable, disabled: tab.disabled }"
     [routerLink]="tab.link"
-    (click)="onClick(index)"
     routerLinkActive="active"
     [class.invisible]="!feetsInView(tab)"
   >
