@@ -245,6 +245,18 @@ const emptyTarget = (val: any) => {
 };
 
 /**
+ * Immutable deep merge
+ * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
+ */
+export const mergeDeep = (dst: any, src: any, refFn?: (val: any) => boolean): any => {
+  const isArray = Array.isArray(src);
+  if (isArray) {
+    return Array.isArray(dst) ? mergeArray(dst, src, refFn) : clone(src, refFn);
+  }
+  return mergeObject(dst, src, refFn);
+};
+
+/**
  * Immutable clone
  * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
@@ -300,17 +312,5 @@ export const mergeObject = (dst: object, src: object, refFn?: (val: any) => bool
   }
 
   return result;
-};
-
-/**
- * Immutable deep merge
- * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
- */
-export const mergeDeep = (dst: any, src: any, refFn?: (val: any) => boolean): any => {
-  const isArray = Array.isArray(src);
-  if (isArray) {
-    return Array.isArray(dst) ? mergeArray(dst, src, refFn) : clone(src, refFn);
-  }
-  return mergeObject(dst, src, refFn);
 };
 
