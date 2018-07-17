@@ -6,6 +6,8 @@ import {
   toBoolArray,
   toBoolSizedArray,
   pickExisting,
+  mergeDeep,
+  mergeArray,
 } from './general';
 
 describe('General helper:', () => {
@@ -246,6 +248,42 @@ describe('General helper:', () => {
       expect(obj).toEqual(null);
 
     });
+  });
+
+
+  describe('mergeArray', () => {
+    it('should merge plain arrays', () => {
+      const dst = [ 1, 2, 'test' ];
+      const src = [ 4, 2, 'test', 'test1' ];
+      expect(mergeArray(dst, src)).toEqual( [ 1, 2, 'test', 4, 'test1' ] );
+    });
+
+    it('should merge nested arrays', () => {
+      const dst = [ 1, 2, 'test', { a: 1 } ];
+      const src = [ 4, 2, 'test', 'test1', { a: 1, b: 1 } ];
+      expect(mergeArray(dst, src)).toEqual( [ 1, 2, 'test', 4, 'test1', { a: 1, b: 1 } ] );
+    });
+  });
+
+  describe('mergeDeep', () => {
+    it('should merge plain objects', () => {
+      const dst = { a: 1, b: 1, d: 1 };
+      const src = { a: 2, b: 2, c: 1 };
+      expect(mergeDeep(dst, src)).toEqual( { a: 2, b: 2, c: 1, d: 1 } );
+    });
+
+    it('should merge nested objects', () => {
+      const dst = { a: 1, b: 1, c: { d: 1, e: 1 }, d: 1 };
+      const src = { a: 2, b: 2, c: { d: 2, f: 1 }, d: { a: 1, b: { a: 1 } } };
+      expect(mergeDeep(dst, src)).toEqual( { a: 2, b: 2, c: { d: 2, e: 1, f: 1 }, d: { a: 1, b: { a: 1 } } } );
+    });
+
+    it('should merge objets with nested arrays', () => {
+      const dst = { a: 1, b: [ { a: 1 }, { b: 2 } ] };
+      const src = { a: 2, b: [ { a: 1 }, { b: 3 } ] };
+      expect(mergeDeep(dst, src)).toEqual( { a: 2, b: [ { a: 1 }, { b: 2 }, { b: 3 } ] } );
+    });
+
   });
 
 });

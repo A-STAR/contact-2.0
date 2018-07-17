@@ -234,3 +234,62 @@ export function pickDifference(filterObj: any, data: any): any {
   return pickBy((_, key: string) => !filterKeys.includes(key), data);
 }
 
+const isMergeableObject = (obj: any): boolean => {
+  return obj && typeof obj === 'object' &&
+    Object.prototype.toString.call(obj) !== '[object RegExp]' &&
+    Object.prototype.toString.call(obj) !== '[object Date]';
+};
+
+const emptyTarget = (val: any) => {
+  return Array.isArray(val) ? [] : {};
+};
+
+export const clone = (val: any) => {
+  return isMergeableObject(val) ? mergeDeep(emptyTarget(val), val) : val;
+};
+
+export const mergeArray = (dst: any[], src: any[]): any[] => {
+  const result = dst.slice();
+  src.forEach((val, i) => {
+    if (typeof result[i] === 'undefined') {
+      result[i] = val;
+    } else if (isMergeableObject(val)) {
+      result[i] = mergeDeep(dst[i], val);
+    } else if (dst.indexOf(val) === -1) {
+      result.push(val);
+    }
+  });
+  return result;
+};
+
+export const mergeObject = (dst: object, src: object): object => {
+  const result = {};
+
+  if (isMergeableObject(dst)) {
+    Object.keys(dst).forEach(key => {
+      result[key] = clone(dst[key]);
+    });
+  }
+
+  Object.keys(src).forEach(key => {
+    if (!isMergeableObject(src[key]) || !dst[key]) {
+      result[key] = clone(src[key]);
+    } else {
+      result[key] = mergeDeep(dst[key], src[key]);
+    }
+  });
+
+  return result;
+};
+
+/**
+ * Immutable deep merge
+ */
+export const mergeDeep = (dst: any, src: any): any => {
+  const isArray = Array.isArray(src);
+  if (isArray) {
+    return Array.isArray(dst) ? mergeArray(dst, src) : clone(src);
+  }
+  return mergeObject(dst, src);
+};
+
