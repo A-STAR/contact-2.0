@@ -7,6 +7,7 @@ import {
   Input,
   Output,
   ViewChild,
+  OnChanges,
   OnInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -35,7 +36,7 @@ import { isEmpty } from '@app/core/utils';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor, OnInit {
+export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor, OnChanges, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
   @Input() filterParams: any = {};
   @Input() label: string;
@@ -67,6 +68,10 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     private dialogMultiSelectService: DialogMultiSelectService,
   ) {
     super();
+  }
+
+  ngOnChanges(): void {
+    this.updateRows();
   }
 
   ngOnInit(): void {
@@ -216,7 +221,12 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   }
 
   writeValue(value?: IDialogMultiSelectValue[]): void {
-    this.value = value || [];
+    const newValue = Array.isArray(value)
+      ? value
+      : String(value).split(',').map(Number);
+    this.value = newValue;
+    this.previousValue = newValue;
+    this.updateRows();
     this.cdRef.markForCheck();
   }
 

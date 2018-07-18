@@ -240,6 +240,11 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           this.cdRef.markForCheck();
         });
 
+      const operation = this.type.additionalParameters.find(p => p.name === 'operationId');
+      if (operation) {
+        const operationIdValue = operation.value;
+        this.selectedOperation$.next(operationIdValue);
+      }
       this.selectedOperationSub = this.selectedOperation$
         .filter(Boolean)
         .do(() => this.addDynamicParams = null)
