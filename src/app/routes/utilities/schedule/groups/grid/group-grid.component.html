@@ -10,11 +10,14 @@
 
 <app-action-grid
   persistenceKey="[grid] utilities/schedule/groups"
+  permissionKey="GROUP_VIEW"
+  entityKey="group"
   [isSimple]="true"
   [fullHeight]="true"
   [actions]="actions"
   [rows]="groups"
   [columns]="columns"
+  (request)="fetch()"
   [toolbar]="toolbar"
   (selectRow)="onSelectRow($event)"
   (dblClick)="onEdit($event)"

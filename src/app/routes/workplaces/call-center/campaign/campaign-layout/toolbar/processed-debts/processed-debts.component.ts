@@ -75,16 +75,20 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.campaignService.fetchProcessedDebtsForCurrentCampaign()
-      .subscribe(debts => {
-        this.debts = debts;
-        this.cdRef.markForCheck();
-      });
+
     this.registerContactActionSub = this.registerContactOpenService
       .registerContactAction$
       .pipe(first())
       .filter(Boolean)
       .subscribe(this.onRegisterContactDialogSubmit.bind(this));
+  }
+
+  onRequest(): void {
+    this.campaignService.fetchProcessedDebtsForCurrentCampaign()
+      .subscribe(debts => {
+        this.debts = debts;
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {

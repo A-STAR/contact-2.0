@@ -73,7 +73,6 @@ export enum IActionType {
   PORTFOLIO_SAVE                         = 'PORTFOLIO_SAVE',
   PORTFOLIO_MOVE                         = 'PORTFOLIO_MOVE',
   PORTFOLIO_DELETE                       = 'PORTFOLIO_DELETE',
-  PORTFOLIO_BACK                         = 'PORTFOLIO_BACK',
 }
 
 export interface IContractorSelectAction {
@@ -125,11 +124,6 @@ export interface IManagerSelectAction {
   };
 }
 
-export interface IPortfolioBackAction {
-  type: IActionType.PORTFOLIO_BACK;
-  payload: {};
-}
-
 export type IContractorAndPorfolioAction =
   IContractorSelectAction |
   IContractorSaveAction |
@@ -138,8 +132,7 @@ export type IContractorAndPorfolioAction =
   IManagerSelectAction |
   IManagerEditAction |
   IPortfolioSaveAction |
-  IPortfolioSelectAction |
-  IPortfolioBackAction;
+  IPortfolioSelectAction;
 
 export interface IContractorsAndPortfoliosState {
   selectedManager: IContractorManager;

@@ -169,6 +169,14 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     this.actionSubscription.unsubscribe();
   }
 
+  fetch(): void {
+    this.selectedGroup$.next(null);
+    this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
+      this.groups = groups;
+      this.cdRef.markForCheck();
+    });
+  }
+
   get selectedGroup(): IGroup {
     return (this.groups || [])
       .find(group => this.selectedGroup$.value && group.id === this.selectedGroup$.value.id);
@@ -207,13 +215,5 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private onAdd(): void {
     this.router.navigate([ `${this.router.url}/create` ]);
-  }
-
-  private fetch(): void {
-    this.selectedGroup$.next(null);
-    this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
-      this.groups = groups;
-      this.cdRef.markForCheck();
-    });
   }
 }

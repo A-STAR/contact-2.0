@@ -105,6 +105,10 @@ export class NotificationsService implements OnDestroy {
     return this.error(text);
   }
 
+  permissionDefaultError(text: string = 'errors.default.read.403.default'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
   error(text: string = null): NotificationActionBuilder {
     return new NotificationActionBuilder(this.store, this.translateService, NotificationTypeEnum.ERROR, text);
   }

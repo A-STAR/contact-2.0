@@ -1,16 +1,27 @@
 import {
-  ChangeDetectionStrategy, Component, Input, Output, EventEmitter,
-  OnInit, ChangeDetectorRef, OnDestroy, ViewChildren, QueryList, ElementRef
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
-import { map, flatMap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { map } from 'rxjs/operators';
 
 import { ITab } from './header.interface';
 
 import { LayoutService } from '@app/layout/layout.service';
+
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-tabview-header',
@@ -22,8 +33,7 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
   private static MENU_BTN_SPACE = 50;
 
   private tabHeaders: QueryList<ElementRef>;
-
-  tabs$ = new BehaviorSubject<ITab[]>([]);
+  private _tabs: ITab[];
 
   @ViewChildren('tabHeader') set headers (tabHeaders: QueryList<ElementRef>) {
     this.tabHeaders = tabHeaders;
@@ -35,14 +45,13 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
     if (tabs !== null) {
       const tabsWithPermissions = this.setTabPermissions(tabs);
 
-      this.tabs$.next(tabsWithPermissions);
+      this._tabs = tabsWithPermissions;
     }
   }
 
   @Input() noMargin = false;
 
   @Output() tabClose = new EventEmitter<number>();
-
   private visibleTabs$ = new BehaviorSubject<ITab[]>([]);
   private visibleTabsSub: Subscription;
 
@@ -57,11 +66,9 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .subscribe(() => this.cdRef.markForCheck());
 
-    this.visibleTabsSub = this.tabs$
+    this.visibleTabsSub = this.tabPerms$
       .pipe(
-        map(tabs => tabs.map(tab => tab.hasPermission)),
-        flatMap(tabPermissions$ => combineLatest(tabPermissions$)),
-        map(tabPermissions => tabPermissions.map((p, index) => p && this.tabs$.value[index]).filter(Boolean))
+        map(tabPermissions => tabPermissions.map((p, index) => p && this._tabs[index]).filter(Boolean))
       )
       .subscribe(tabs => {
         this.visibleTabs$.next(tabs);
@@ -83,7 +90,11 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
   }
 
   get menuTabs(): ITab[] {
-    return this.tabs$.value.filter(tab => this.visibleTabs.includes(tab) && !this.feetsInView(tab));
+    return this._tabs.filter(tab => this.visibleTabs.includes(tab) && !this.feetsInView(tab));
+  }
+
+  get tabPerms$(): Observable<boolean[]> {
+    return combineLatest(this._tabs.map(t => t.hasPermission));
   }
 
   feetsInView(tab: ITab): boolean {
@@ -122,5 +133,4 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
 
     return tabsWithPermissions;
   }
-
 }

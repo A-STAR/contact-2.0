@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { DebtProcessingService } from './debt-processing.service';
+import { CanActivateTabGuard } from '@app/shared/components/layout/tabview/header/header.service';
 
 import { DebtProcessingComponent } from './debt-processing.component';
 
@@ -11,8 +12,44 @@ const routes: Routes = [
   {
     path: '',
     component: DebtProcessingComponent,
+    canActivate: [ CanActivateTabGuard ],
+    canActivateChild: [ CanActivateTabGuard ],
     data: {
       reuse: true,
+      tabs: [
+        {
+          link: 'all',
+          permission: 'DEBT_PROCESSING_TAB_ALL'
+        },
+        {
+          link: 'callBack',
+          permission: 'DEBT_PROCESSING_TAB_CALL_BACK'
+        },
+        {
+          link: 'currentJob',
+          permission: 'DEBT_PROCESSING_TAB_CURRENT_JOB'
+        },
+        {
+          link: 'visits',
+          permission: 'DEBT_PROCESSING_TAB_VISITS'
+        },
+        {
+          link: 'promisePay',
+          permission: 'DEBT_PROCESSING_TAB_PROMISE_PAY'
+        },
+        {
+          link: 'partPay',
+          permission: 'DEBT_PROCESSING_TAB_PART_PAY'
+        },
+        {
+          link: 'problem',
+          permission: 'DEBT_PROCESSING_TAB_PROBLEM'
+        },
+        {
+          link: 'returned',
+          permission: 'DEBT_PROCESSING_TAB_RETURN'
+        }
+      ]
     },
     children: [
       {

@@ -24,7 +24,6 @@ export function reducer(
     case IActionType.CONTRACTOR_SAVE:
     case IActionType.PORTFOLIO_SAVE:
     case IActionType.MANAGER_SAVE:
-    case IActionType.PORTFOLIO_BACK:
       return {
         ...state
       };

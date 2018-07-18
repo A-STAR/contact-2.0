@@ -18,9 +18,7 @@ export class GroupsComponent {
     private scheduleEventService: ScheduleEventService
   ) {}
 
-  get showEvents$(): Observable<boolean> {
-    return this.scheduleEventService.canView$;
-  }
+  readonly showEvents$: Observable<boolean> = this.scheduleEventService.canView$;
 
   onGroupSelect(groupId: number): void {
     this.groupId = groupId;
