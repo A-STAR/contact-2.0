@@ -6,6 +6,9 @@ import {
   toBoolArray,
   toBoolSizedArray,
   pickExisting,
+  mergeDeep,
+  mergeArray,
+  mergeObject,
 } from './general';
 
 describe('General helper:', () => {
@@ -246,6 +249,92 @@ describe('General helper:', () => {
       expect(obj).toEqual(null);
 
     });
+  });
+
+  describe('mergeObject', () => {
+    it('should merge plain objects', () => {
+      const dst = { a: 1, b: 1, d: 1 };
+      const src = { a: 2, b: 2, c: 1 };
+      expect(mergeObject(dst, src)).toEqual( { a: 2, b: 2, c: 1, d: 1 } );
+    });
+
+    it('should merge nested objects', () => {
+      const dst = { a: 1, b: 1, c: { d: 1, e: 1 }, d: 1 };
+      const src = { a: 2, b: 2, c: { d: 2, f: 1 }, d: { a: 1, b: { a: 1 } } };
+      expect(mergeObject(dst, src)).toEqual( { a: 2, b: 2, c: { d: 2, e: 1, f: 1 }, d: { a: 1, b: { a: 1 } } } );
+    });
+  });
+
+  describe('mergeArray', () => {
+    it('should merge plain arrays', () => {
+      const dst = [ 1, 2, 'test' ];
+      const src = [ 4, 2, 'test', 'test1' ];
+      expect(mergeArray(dst, src)).toEqual( [ 1, 2, 'test', 4, 'test1' ] );
+    });
+
+    it('should merge arrays with nested objects', () => {
+      const dst = [ 1, 2, 'test', { a: 1 } ];
+      const src = [ 4, 2, 'test', { a: 2, b: 1 }, 'test1' ];
+      expect(mergeArray(dst, src)).toEqual( [ 1, 2, 'test', { a: 2, b: 1 }, 4, 'test1' ] );
+    });
+
+    it('should merge nested arrays', () => {
+      const dst = [ [ 1, 2 ], { a: [1, 2] } ];
+      const src = [ [ 3, 2, 4], { a: [ 3, 2, 4 ], b: 1 } ];
+      expect(mergeArray(dst, src)).toEqual( [ [ 1, 2, 3, 4 ], { a: [ 1, 2, 3, 4 ], b: 1 } ] );
+    });
+  });
+
+  describe('mergeDeep', () => {
+
+    it('should handle non mergeable arguments', () => {
+      let dst = { a: 1 } as any;
+      let src = 4 as any;
+      expect(mergeDeep(dst, src)).toEqual( dst );
+      src = undefined;
+      expect(mergeDeep(dst, src)).toEqual( dst );
+      dst = 4;
+      src = { b: 1 };
+      expect(mergeDeep(dst, src)).toEqual( { b: 1 } );
+      dst = undefined;
+      src = null;
+      expect(mergeDeep(dst, src)).toEqual( {} );
+      dst = undefined;
+      src = { a: [ 1, 2, 3 ] };
+      expect(mergeDeep(dst, src)).toEqual( {  a: [ 1, 2, 3 ] } );
+    });
+
+    it('should merge objects with nested arrays', () => {
+      const dst = { a: 1, b: [ { a: 1 }, { b: 2 } ], c: { d: [1, 2] } };
+      const src = { a: 2, b: [ { a: 1 }, { b: 2 }, { c: 3 } ], c: { d: [1, 3] } };
+      expect(mergeDeep(dst, src)).toEqual( { a: 2, b: [ { a: 1 }, { b: 2 }, { c: 3 } ], c: { d: [ 1, 2, 3 ] } } );
+    });
+
+    it('should change nested objects reference', () => {
+      const dst = { a: { b: { c: 1 } } };
+      const result = mergeDeep(dst, dst);
+      expect( result.a.b.c ).toBe( dst.a.b.c );
+      expect( result.a ).not.toBe( dst.a );
+      expect( result.a.b ).not.toBe( dst.a.b );
+    });
+
+    it('should change nested arrays reference', () => {
+      const dst = { a: { b: [ 1 ] } };
+      const result = mergeDeep(dst, dst);
+      expect( result.a.b[0] ).toBe( dst.a.b[0] );
+      expect( result.a.b ).not.toBe( dst.a.b );
+    });
+
+    it('should copy non plain objects by reference', () => {
+      class MyClass { test = 'a'; }
+      const refObj = new MyClass();
+      const dst = { a: refObj, b: { c: refObj } };
+
+      const result = mergeDeep(dst, dst);
+      expect(result.a).toBe(refObj);
+      expect(result.b.c).toBe(refObj);
+    });
+
   });
 
 });

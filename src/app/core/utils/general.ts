@@ -233,4 +233,85 @@ export function pickDifference(filterObj: any, data: any): any {
   const filterKeys = Object.keys(filterObj);
   return pickBy((_, key: string) => !filterKeys.includes(key), data);
 }
+/**
+ * Tests if object is constructed via literal or Object constructor
+ * Returns false on:
+ * - built-in objects like Date, Regex
+ * - contructed via class keyword or constructor function
+ * - primitives
+ */
+export function isPlainObject(obj: any): boolean {
+  return obj && typeof obj === 'object' && Object.getPrototypeOf(obj).constructor === Object;
+}
+
+const isMergeableObject = (obj: any): boolean => {
+  return Array.isArray(obj) || isPlainObject(obj);
+};
+
+const emptyTarget = (val: any) => {
+  return Array.isArray(val) ? [] : {};
+};
+
+/**
+ * Immutable clone
+ * NOTE: only plain objects (literal or created by new Object) and arrays are merged!
+ */
+export function clone(val: any): any {
+  return isMergeableObject(val) ? mergeDeep(emptyTarget(val), val) : val;
+}
+
+/**
+ * Immutable merge arrays
+ */
+export function mergeArray(dst: any[], src: any[]): any[] {
+  const result = dst.slice();
+
+  src.forEach((val, i) => {
+    if (typeof result[i] === 'undefined') {
+      result[i] = val;
+    } else if (isMergeableObject(val)) {
+      result[i] = mergeDeep(dst[i], val);
+    } else if (dst.indexOf(val) === -1) {
+      result.push(val);
+    }
+  });
+
+  return result;
+}
+
+/**
+ * Immutable merge objects
+ */
+export function mergeObject(dst: object, src: object): object {
+  const result = {};
+
+  if (isMergeableObject(dst)) {
+    Object.keys(dst).forEach(key => {
+      result[key] = clone(dst[key]);
+    });
+  }
+
+  if (isMergeableObject(src)) {
+    Object.keys(src).forEach(key => {
+      if (!isMergeableObject(src[key]) || !dst || !dst[key]) {
+        result[key] = clone(src[key]);
+      } else {
+        result[key] = mergeDeep(dst[key], src[key]);
+      }
+    });
+  }
+
+  return result;
+}
+
+/**
+ * Immutable deep merge
+ */
+export function mergeDeep(dst: any, src: any): any {
+  const isArray = Array.isArray(src);
+  if (isArray) {
+    return Array.isArray(dst) ? mergeArray(dst, src) : clone(src);
+  }
+  return mergeObject(dst, src);
+}
 
