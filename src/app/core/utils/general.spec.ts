@@ -299,6 +299,9 @@ describe('General helper:', () => {
       dst = undefined;
       src = null;
       expect(mergeDeep(dst, src)).toEqual( {} );
+      dst = undefined;
+      src = { a: [ 1, 2, 3 ] };
+      expect(mergeDeep(dst, src)).toEqual( {  a: [ 1, 2, 3 ] } );
     });
 
     it('should merge objects with nested arrays', () => {
@@ -322,16 +325,12 @@ describe('General helper:', () => {
       expect( result.a.b ).not.toBe( dst.a.b );
     });
 
-    it('should pass objects by reference by predicate fn', () => {
+    it('should copy non plain objects by reference', () => {
       class MyClass { test = 'a'; }
       const refObj = new MyClass();
       const dst = { a: refObj, b: { c: refObj } };
 
-      let result = mergeDeep(dst, dst);
-      expect(result.a).not.toBe(refObj);
-      expect(result.b.c).not.toBe(refObj);
-
-      result = mergeDeep(dst, dst, val => val instanceof MyClass);
+      const result = mergeDeep(dst, dst);
       expect(result.a).toBe(refObj);
       expect(result.b.c).toBe(refObj);
     });
