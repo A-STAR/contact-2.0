@@ -113,7 +113,7 @@ export class FilterComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         filter((event: KeyboardEvent) => event.keyCode === 13),
         throttleTime(300),
-        tap(this.onClearClick.bind(this)),
+        tap(() => this.incomingCallService.searchParams = null),
         tap(this.onSearchClick.bind(this)),
       )
       .subscribe();
