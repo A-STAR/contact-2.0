@@ -217,7 +217,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
       this.initGrid(
         {
           actions: this.actions,
-          titlebar: this.toolbar,
           defaultAction: this.defaultAction,
           selectionAction: this.selectionAction,
         }
@@ -515,14 +514,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit, O
   }
 
   private initToolbar(config: IMetadataToolbar): void {
-    let srcConfig = config;
-    if (!srcConfig) {
-      srcConfig = {};
-    }
-    if (!srcConfig.items) {
-      srcConfig.items = [];
-    }
-    this.toolbarConfig$.next(mergeDeep(srcConfig, this.toolbar, obj => obj instanceof Observable ));
+    this.toolbarConfig$.next(mergeDeep(config, this.toolbar));
   }
 
   private getGridFilters(): FilterObject {

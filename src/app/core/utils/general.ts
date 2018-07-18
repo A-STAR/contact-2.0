@@ -233,11 +233,20 @@ export function pickDifference(filterObj: any, data: any): any {
   const filterKeys = Object.keys(filterObj);
   return pickBy((_, key: string) => !filterKeys.includes(key), data);
 }
+/**
+ * Tests if object is constructed via literal or Object constructor
+ * Returns false on:
+ * - built-in objects like Date, Regex
+ * - contructed via class keyword or constructor function
+ * - primitives
+ */
+export function isPlainObject(obj: any): boolean {
+  return obj != null && Object.getPrototypeOf(obj).constructor === Object;
+}
 
 const isMergeableObject = (obj: any): boolean => {
   return obj && typeof obj === 'object' &&
-    Object.prototype.toString.call(obj) !== '[object RegExp]' &&
-    Object.prototype.toString.call(obj) !== '[object Date]';
+    (Array.isArray(obj) || isPlainObject(obj));
 };
 
 const emptyTarget = (val: any) => {
@@ -246,26 +255,23 @@ const emptyTarget = (val: any) => {
 
 /**
  * Immutable clone
- * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
+ * NOTE: only plain objects (literal or created by new Object) and arrays are merged!
  */
-export function clone(val: any, refFn?: (val: any) => boolean): any {
-  const refPredicate = refFn || (() => false);
-  return isMergeableObject(val) && !refPredicate(val) ? mergeDeep(emptyTarget(val), val) : val;
+export function clone(val: any): any {
+  return isMergeableObject(val) ? mergeDeep(emptyTarget(val), val) : val;
 }
 
 /**
  * Immutable merge arrays
- * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
-export function mergeArray(dst: any[], src: any[], refFn?: (val: any) => boolean): any[] {
+export function mergeArray(dst: any[], src: any[]): any[] {
   const result = dst.slice();
-  const refPredicate = refFn || (() => false);
 
   src.forEach((val, i) => {
     if (typeof result[i] === 'undefined') {
       result[i] = val;
     } else if (isMergeableObject(val)) {
-      result[i] = mergeDeep(dst[i], val, refPredicate);
+      result[i] = mergeDeep(dst[i], val);
     } else if (dst.indexOf(val) === -1) {
       result.push(val);
     }
@@ -276,26 +282,22 @@ export function mergeArray(dst: any[], src: any[], refFn?: (val: any) => boolean
 
 /**
  * Immutable merge objects
- * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
-export function mergeObject(dst: object, src: object, refFn?: (val: any) => boolean): object {
+export function mergeObject(dst: object, src: object): object {
   const result = {};
-  const refPredicate = refFn || (() => false);
 
   if (isMergeableObject(dst)) {
     Object.keys(dst).forEach(key => {
-      result[key] = clone(dst[key], refPredicate);
+      result[key] = clone(dst[key]);
     });
   }
 
   if (isMergeableObject(src)) {
     Object.keys(src).forEach(key => {
-      if (!isMergeableObject(src[key]) || !dst[key]) {
+      if (!isMergeableObject(src[key]) || !dst || !dst[key]) {
         result[key] = clone(src[key]);
-      } else if (!refPredicate(src[key])) {
-        result[key] = mergeDeep(dst[key], src[key], refPredicate);
       } else {
-        result[key] = src[key];
+        result[key] = mergeDeep(dst[key], src[key]);
       }
     });
   }
@@ -305,13 +307,12 @@ export function mergeObject(dst: object, src: object, refFn?: (val: any) => bool
 
 /**
  * Immutable deep merge
- * @param refFn Predicate which determines, should this value be passed by reference (without deep cloning)
  */
-export function mergeDeep(dst: any, src: any, refFn?: (val: any) => boolean): any {
+export function mergeDeep(dst: any, src: any): any {
   const isArray = Array.isArray(src);
   if (isArray) {
-    return Array.isArray(dst) ? mergeArray(dst, src, refFn) : clone(src, refFn);
+    return Array.isArray(dst) ? mergeArray(dst, src) : clone(src);
   }
-  return mergeObject(dst, src, refFn);
+  return mergeObject(dst, src);
 }
 
