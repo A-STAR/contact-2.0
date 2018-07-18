@@ -241,12 +241,11 @@ export function pickDifference(filterObj: any, data: any): any {
  * - primitives
  */
 export function isPlainObject(obj: any): boolean {
-  return obj != null && Object.getPrototypeOf(obj).constructor === Object;
+  return obj && typeof obj === 'object' && Object.getPrototypeOf(obj).constructor === Object;
 }
 
 const isMergeableObject = (obj: any): boolean => {
-  return obj && typeof obj === 'object' &&
-    (Array.isArray(obj) || isPlainObject(obj));
+  return Array.isArray(obj) || isPlainObject(obj);
 };
 
 const emptyTarget = (val: any) => {
